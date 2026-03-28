@@ -137,7 +137,7 @@
 | `login` | Begin session on the system | Not started |
 | `lslogins` | Display information about known users in the system | Not started |
 | `newgrp` | Log in to a new group | Not started |
-| `nologin` | Politely refuse a login | Not started |
+| `nologin` | Politely refuse a login | Done |
 | `runuser` | Run a command with substitute user and group ID | Not started |
 | `su` | Run a command with substitute user and group ID | Not started |
 | `sulogin` | Single-user login | Not started |
