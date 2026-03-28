@@ -96,7 +96,7 @@
 | `kill` | Terminate a process | Not started |
 | `lastlog2` | Display date of last login for all users or a specific one | Not started |
 | `logger` | Enter messages into the system log | Not started |
-| `look` | Display lines beginning with a given string | Not started |
+| `look` | Display lines beginning with a given string | Done |
 | `lsblk` | List block devices | Not started |
 | `lsclocks` | Display system clocks | Not started |
 | `lslocks` | List local system locks | Not started |

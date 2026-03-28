@@ -6,6 +6,7 @@ fn main() -> ExitCode {
         .multicall(true)
         .subcommand(rustutils_colrm::Args::command())
         .subcommand(rustutils_line::Args::command())
+        .subcommand(rustutils_look::Args::command())
         .subcommand(rustutils_mcookie::Args::command())
         .subcommand(rustutils_nologin::Args::command())
         .subcommand(rustutils_rev::Args::command());
@@ -18,6 +19,9 @@ fn main() -> ExitCode {
         ),
         Some(("line", m)) => rustutils_line::run(
             rustutils_line::Args::from_arg_matches(m).unwrap(),
+        ),
+        Some(("look", m)) => rustutils_look::run(
+            rustutils_look::Args::from_arg_matches(m).unwrap(),
         ),
         Some(("mcookie", m)) => rustutils_mcookie::run(
             rustutils_mcookie::Args::from_arg_matches(m).unwrap(),

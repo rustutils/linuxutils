@@ -18,6 +18,7 @@
       tools = [
         "colrm"
         "line"
+        "look"
         "mcookie"
         "nologin"
         "rev"

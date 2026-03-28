@@ -15,6 +15,7 @@ fn main() -> ExitCode {
     let tools: Vec<clap::Command> = vec![
         rustutils_colrm::Args::command(),
         rustutils_line::Args::command(),
+        rustutils_look::Args::command(),
         rustutils_mcookie::Args::command(),
         rustutils_nologin::Args::command(),
         rustutils_rev::Args::command(),

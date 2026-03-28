@@ -4,6 +4,7 @@ members = [
     "multicall",
     "tools/colrm",
     "tools/line",
+    "tools/look",
     "tools/mcookie",
     "tools/nologin",
     "tools/rev",
