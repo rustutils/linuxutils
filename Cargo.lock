@@ -163,6 +163,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "rustutils-util-linux"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "rustutils-line",
+ "rustutils-mcookie",
+ "rustutils-nologin",
+ "rustutils-rev",
+]
+
+[[package]]
 name = "strsim"
 version = "0.11.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"

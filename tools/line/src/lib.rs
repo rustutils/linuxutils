@@ -1,4 +1,28 @@
-use std::io::{self, BufRead, Write};
+use clap::Parser;
+use std::{
+    io::{self, BufRead, Write},
+    process::ExitCode,
+};
+
+/// Read one line from standard input and write it to standard output.
+#[derive(Parser)]
+#[command(name = "line", version, about)]
+pub struct Args {}
+
+pub fn run(_args: Args) -> ExitCode {
+    let stdin = io::stdin();
+    let reader = stdin.lock();
+    let mut stdout = io::stdout().lock();
+
+    match line(reader, &mut stdout) {
+        Ok(true) => ExitCode::SUCCESS,
+        Ok(false) => ExitCode::from(1),
+        Err(e) => {
+            eprintln!("line: {e}");
+            ExitCode::FAILURE
+        }
+    }
+}
 
 /// Read one line from `reader` and write it to `writer`, followed by a newline.
 ///

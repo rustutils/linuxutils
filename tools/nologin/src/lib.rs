@@ -1,10 +1,66 @@
+use clap::Parser;
 use std::{
     io::{self, Write},
-    path::Path,
+    path::{Path, PathBuf},
+    process::ExitCode,
 };
 
 const DEFAULT_MESSAGE: &str = "This account is currently not available.";
 const NOLOGIN_TXT: &str = "/etc/nologin.txt";
+
+/// Politely refuse a login.
+///
+/// Displays a message that an account is not available and exits non-zero.
+/// Intended as a replacement shell field to deny login access to an account.
+#[derive(Parser)]
+#[command(name = "nologin", version, about)]
+pub struct Args {
+    /// Ignored (shell compatibility).
+    #[arg(short, long, hide = true)]
+    command: Option<String>,
+
+    /// Ignored (shell compatibility).
+    #[arg(long, hide = true)]
+    init_file: Option<PathBuf>,
+
+    /// Ignored (shell compatibility).
+    #[arg(short, long, hide = true)]
+    interactive: bool,
+
+    /// Ignored (shell compatibility).
+    #[arg(short, long, hide = true)]
+    login: bool,
+
+    /// Ignored (shell compatibility).
+    #[arg(long, hide = true)]
+    noprofile: bool,
+
+    /// Ignored (shell compatibility).
+    #[arg(long, hide = true)]
+    norc: bool,
+
+    /// Ignored (shell compatibility).
+    #[arg(long, hide = true)]
+    posix: bool,
+
+    /// Ignored (shell compatibility).
+    #[arg(long, hide = true)]
+    rcfile: Option<PathBuf>,
+
+    /// Ignored (shell compatibility).
+    #[arg(short, long, hide = true)]
+    restricted: bool,
+}
+
+pub fn run(_args: Args) -> ExitCode {
+    let mut stderr = io::stderr().lock();
+
+    if let Err(e) = nologin(&mut stderr) {
+        eprintln!("nologin: {e}");
+    }
+
+    ExitCode::from(1)
+}
 
 /// Print the nologin message to `writer`.
 ///
@@ -28,8 +84,6 @@ mod tests {
     #[test]
     fn default_message() {
         let mut buf = Vec::new();
-        // This test will use the default message unless /etc/nologin.txt
-        // happens to exist on the test machine, which is fine either way.
         nologin(&mut buf).unwrap();
         let output = String::from_utf8(buf).unwrap();
         assert!(!output.is_empty());

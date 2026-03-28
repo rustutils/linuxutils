@@ -1,6 +1,7 @@
 [workspace]
 resolver = "2"
 members = [
+    "multicall",
     "tools/line",
     "tools/mcookie",
     "tools/nologin",
