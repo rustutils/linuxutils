@@ -135,6 +135,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "rustutils-line"
+version = "0.1.0"
+dependencies = [
+ "clap",
+]
+
+[[package]]
+name = "rustutils-mcookie"
+version = "0.1.0"
+dependencies = [
+ "clap",
+]
+
+[[package]]
 name = "rustutils-nologin"
 version = "0.1.0"
 dependencies = [

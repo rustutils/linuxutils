@@ -100,7 +100,7 @@
 | `lsblk` | List block devices | Not started |
 | `lsclocks` | Display system clocks | Not started |
 | `lslocks` | List local system locks | Not started |
-| `mcookie` | Generate magic cookies for xauth | Not started |
+| `mcookie` | Generate magic cookies for xauth | Done |
 | `namei` | Follow a pathname until a terminal point is found | Not started |
 | `pipesz` | Set or examine pipe and FIFO buffer sizes | Not started |
 | `rename` | Rename files | Not started |
@@ -121,7 +121,7 @@
 | `colrm` | Remove columns from a file | Not started |
 | `column` | Columnate lists | Not started |
 | `hexdump` | Display file contents in hexadecimal, decimal, octal, or ascii | Not started |
-| `line` | Read one line | Not started |
+| `line` | Read one line | Done |
 | `more` | Display the contents of a file in a terminal | Not started |
 | `pg` | Browse pagewise through text files | Not started |
 | `rev` | Reverse lines characterwise | Done |

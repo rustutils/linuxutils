@@ -1,6 +1,8 @@
 [workspace]
 resolver = "2"
 members = [
+    "tools/line",
+    "tools/mcookie",
     "tools/nologin",
     "tools/rev",
 ]

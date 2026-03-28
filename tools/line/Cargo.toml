@@ -1,0 +1,10 @@
+[package]
+name = "rustutils-line"
+description = "Read one line"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
