@@ -1,0 +1,31 @@
+# rustutils util-linux
+
+A collection of Linux utilities written in Rust, aspiring to be drop-in compatible with [util-linux](https://github.com/util-linux/util-linux).
+
+Each tool is its own crate, and ABI-compatible versions of the original C libraries are provided via FFI.
+
+## Project Structure
+
+| Directory | Contents |
+|-----------|----------|
+| `tools/` | Tool crates (one per util-linux command) |
+| `common/` | Shared library crates used across tools |
+| `libs/` | ABI-compatible C library crates (libblkid, libmount, etc.) |
+
+All crates are prefixed with `rustutils-` to avoid naming collisions (e.g., `rustutils-cal`, `rustutils-libmount`).
+
+## Status
+
+See [TOOLS.md](TOOLS.md) for a full list of tools, libraries, and their implementation status.
+
+## Building
+
+```sh
+cargo build --workspace
+```
+
+## License
+
+This project is licensed under the [MIT License](LICENSE.md).
+
+No original util-linux source code was referenced during development. Only man pages and public header files were used as reference material.

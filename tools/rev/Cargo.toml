@@ -1,0 +1,10 @@
+[package]
+name = "rustutils-rev"
+description = "Reverse lines characterwise"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
