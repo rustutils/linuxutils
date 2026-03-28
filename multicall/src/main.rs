@@ -4,6 +4,7 @@ use std::process::ExitCode;
 fn main() -> ExitCode {
     let cmd = Command::new("rustutils-util-linux")
         .multicall(true)
+        .subcommand(rustutils_colrm::Args::command())
         .subcommand(rustutils_line::Args::command())
         .subcommand(rustutils_mcookie::Args::command())
         .subcommand(rustutils_nologin::Args::command())
@@ -12,6 +13,9 @@ fn main() -> ExitCode {
     let matches = cmd.get_matches();
 
     match matches.subcommand() {
+        Some(("colrm", m)) => rustutils_colrm::run(
+            rustutils_colrm::Args::from_arg_matches(m).unwrap(),
+        ),
         Some(("line", m)) => rustutils_line::run(
             rustutils_line::Args::from_arg_matches(m).unwrap(),
         ),

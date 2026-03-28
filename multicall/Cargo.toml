@@ -8,6 +8,7 @@ repository.workspace = true
 
 [dependencies]
 clap = { version = "4", features = ["derive"] }
+rustutils-colrm = { path = "../tools/colrm" }
 rustutils-line = { path = "../tools/line" }
 rustutils-mcookie = { path = "../tools/mcookie" }
 rustutils-nologin = { path = "../tools/nologin" }

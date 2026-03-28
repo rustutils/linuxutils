@@ -2,6 +2,7 @@
 resolver = "2"
 members = [
     "multicall",
+    "tools/colrm",
     "tools/line",
     "tools/mcookie",
     "tools/nologin",

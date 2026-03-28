@@ -118,7 +118,7 @@
 | `bits` | Convert bit masks or lists from/to various formats | Not started |
 | `col` | Filter reverse line feeds from input | Not started |
 | `colcrt` | Filter nroff output for CRT previewing | Not started |
-| `colrm` | Remove columns from a file | Not started |
+| `colrm` | Remove columns from a file | Done |
 | `column` | Columnate lists | Not started |
 | `hexdump` | Display file contents in hexadecimal, decimal, octal, or ascii | Not started |
 | `line` | Read one line | Done |

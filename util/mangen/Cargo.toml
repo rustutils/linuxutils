@@ -10,6 +10,7 @@ publish = false
 [dependencies]
 clap = "4"
 clap_mangen = "0.2"
+rustutils-colrm = { path = "../../tools/colrm" }
 rustutils-line = { path = "../../tools/line" }
 rustutils-mcookie = { path = "../../tools/mcookie" }
 rustutils-nologin = { path = "../../tools/nologin" }
