@@ -6,6 +6,7 @@ members = [
     "tools/mcookie",
     "tools/nologin",
     "tools/rev",
+    "util/mangen",
 ]
 
 [workspace.package]

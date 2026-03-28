@@ -1,0 +1,16 @@
+[package]
+name = "rustutils-mangen"
+description = "Man page generator for rustutils util-linux tools"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+publish = false
+
+[dependencies]
+clap = "4"
+clap_mangen = "0.2"
+rustutils-line = { path = "../../tools/line" }
+rustutils-mcookie = { path = "../../tools/mcookie" }
+rustutils-nologin = { path = "../../tools/nologin" }
+rustutils-rev = { path = "../../tools/rev" }
