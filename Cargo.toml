@@ -9,6 +9,7 @@ members = [
     "tools/mesg",
     "tools/mountpoint",
     "tools/nologin",
+    "tools/setsid",
     "tools/rev",
     "util/mangen",
 ]
@@ -20,7 +21,7 @@ license = "MIT"
 repository = "https://github.com/rustutils/util-linux"
 
 [workspace.dependencies]
-rustix = { version = "1", features = ["fs", "termios"] }
+rustix = { version = "1", features = ["fs", "process", "termios"] }
 
 [workspace.metadata.crane]
 name = "rustutils-util-linux"

@@ -11,6 +11,7 @@ fn main() -> ExitCode {
         .subcommand(rustutils_mesg::Args::command())
         .subcommand(rustutils_mountpoint::Args::command())
         .subcommand(rustutils_nologin::Args::command())
+        .subcommand(rustutils_setsid::Args::command())
         .subcommand(rustutils_rev::Args::command());
 
     let matches = cmd.get_matches();
@@ -36,6 +37,9 @@ fn main() -> ExitCode {
         ),
         Some(("nologin", m)) => rustutils_nologin::run(
             rustutils_nologin::Args::from_arg_matches(m).unwrap(),
+        ),
+        Some(("setsid", m)) => rustutils_setsid::run(
+            rustutils_setsid::Args::from_arg_matches(m).unwrap(),
         ),
         Some(("rev", m)) => rustutils_rev::run(
             rustutils_rev::Args::from_arg_matches(m).unwrap(),

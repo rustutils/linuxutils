@@ -1,0 +1,16 @@
+[package]
+name = "rustutils-setsid"
+description = "Run a program in a new session"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[[bin]]
+name = "setsid"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+libc = "0.2"
+rustix.workspace = true

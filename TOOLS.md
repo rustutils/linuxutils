@@ -67,7 +67,7 @@
 | `setarch` | Change reported architecture in new program environment and/or set personality flags | Not started |
 | `setpgid` | Run a program in a new process group | Not started |
 | `setpriv` | Run a program with different Linux privilege settings | Not started |
-| `setsid` | Run a program in a new session | Not started |
+| `setsid` | Run a program in a new session | Done |
 | `swapoff` | Disable devices and files for paging and swapping | Not started |
 | `swapon` | Enable devices and files for paging and swapping | Not started |
 | `switch_root` | Switch to another filesystem as the root of the mount tree | Not started |
