@@ -19,6 +19,7 @@ fn main() -> ExitCode {
         rustutils_look::Args::command(),
         rustutils_lsirq::Args::command(),
         rustutils_lsmem::Args::command(),
+        rustutils_lsns::Args::command(),
         rustutils_mcookie::Args::command(),
         rustutils_mesg::Args::command(),
         rustutils_mountpoint::Args::command(),

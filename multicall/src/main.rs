@@ -10,6 +10,7 @@ fn main() -> ExitCode {
         .subcommand(rustutils_look::Args::command())
         .subcommand(rustutils_lsirq::Args::command())
         .subcommand(rustutils_lsmem::Args::command())
+        .subcommand(rustutils_lsns::Args::command())
         .subcommand(rustutils_mcookie::Args::command())
         .subcommand(rustutils_mesg::Args::command())
         .subcommand(rustutils_mountpoint::Args::command())
@@ -41,6 +42,9 @@ fn main() -> ExitCode {
         ),
         Some(("lsmem", m)) => rustutils_lsmem::run(
             rustutils_lsmem::Args::from_arg_matches(m).unwrap(),
+        ),
+        Some(("lsns", m)) => rustutils_lsns::run(
+            rustutils_lsns::Args::from_arg_matches(m).unwrap(),
         ),
         Some(("mcookie", m)) => rustutils_mcookie::run(
             rustutils_mcookie::Args::from_arg_matches(m).unwrap(),

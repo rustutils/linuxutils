@@ -26,6 +26,7 @@
         "look"
         "lsirq"
         "lsmem"
+        "lsns"
         "mcookie"
         "mesg"
         "mountpoint"

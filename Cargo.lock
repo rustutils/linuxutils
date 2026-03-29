@@ -701,6 +701,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "rustutils-lsns"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "rustutils-libsmartcols",
+]
+
+[[package]]
 name = "rustutils-mangen"
 version = "0.1.0"
 dependencies = [
@@ -712,6 +720,7 @@ dependencies = [
  "rustutils-look",
  "rustutils-lsirq",
  "rustutils-lsmem",
+ "rustutils-lsns",
  "rustutils-mcookie",
  "rustutils-mesg",
  "rustutils-mountpoint",
@@ -790,6 +799,7 @@ dependencies = [
  "rustutils-look",
  "rustutils-lsirq",
  "rustutils-lsmem",
+ "rustutils-lsns",
  "rustutils-mcookie",
  "rustutils-mesg",
  "rustutils-mountpoint",

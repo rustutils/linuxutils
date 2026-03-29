@@ -14,6 +14,7 @@ rustutils-line.workspace = true
 rustutils-look.workspace = true
 rustutils-lsirq.workspace = true
 rustutils-lsmem.workspace = true
+rustutils-lsns.workspace = true
 rustutils-mcookie.workspace = true
 rustutils-mesg.workspace = true
 rustutils-mountpoint.workspace = true

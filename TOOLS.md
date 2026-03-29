@@ -54,7 +54,7 @@
 | `lsipc` | Show information on IPC facilities currently employed in the system | Not started |
 | `lsirq` | Display kernel interrupt information | Done |
 | `lsmem` | List the ranges of available memory with their online status | Done |
-| `lsns` | List namespaces | Not started |
+| `lsns` | List namespaces | Done |
 | `mount` | Mount a filesystem | Not started |
 | `mountpoint` | See if a directory or file is a mountpoint | Done |
 | `nsenter` | Run a program in different namespaces | Not started |
