@@ -1,0 +1,18 @@
+[package]
+name = "rustutils-lslocks"
+description = "List local system locks"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+name = "rustutils_lslocks"
+
+[[bin]]
+name = "lslocks"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+rustutils-libsmartcols.workspace = true

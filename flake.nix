@@ -28,6 +28,7 @@
         "line"
         "look"
         "lsirq"
+        "lslocks"
         "lsmem"
         "lsns"
         "mcookie"

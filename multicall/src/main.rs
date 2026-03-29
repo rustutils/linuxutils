@@ -12,6 +12,7 @@ fn main() -> ExitCode {
         .subcommand(rustutils_line::Args::command())
         .subcommand(rustutils_look::Args::command())
         .subcommand(rustutils_lsirq::Args::command())
+        .subcommand(rustutils_lslocks::Args::command())
         .subcommand(rustutils_lsmem::Args::command())
         .subcommand(rustutils_lsns::Args::command())
         .subcommand(rustutils_mcookie::Args::command())
@@ -53,6 +54,9 @@ fn main() -> ExitCode {
         ),
         Some(("lsirq", m)) => rustutils_lsirq::run(
             rustutils_lsirq::Args::from_arg_matches(m).unwrap(),
+        ),
+        Some(("lslocks", m)) => rustutils_lslocks::run(
+            rustutils_lslocks::Args::from_arg_matches(m).unwrap(),
         ),
         Some(("lsmem", m)) => rustutils_lsmem::run(
             rustutils_lsmem::Args::from_arg_matches(m).unwrap(),

@@ -99,7 +99,7 @@
 | `look` | Display lines beginning with a given string | Done |
 | `lsblk` | List block devices | Not started |
 | `lsclocks` | Display system clocks | Not started |
-| `lslocks` | List local system locks | Not started |
+| `lslocks` | List local system locks | Done |
 | `mcookie` | Generate magic cookies for xauth | Done |
 | `namei` | Follow a pathname until a terminal point is found | Not started |
 | `pipesz` | Set or examine pipe and FIFO buffer sizes | Not started |
