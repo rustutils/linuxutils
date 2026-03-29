@@ -1,6 +1,8 @@
 use clap::Parser;
-use std::io::{self, BufRead};
-use std::process::ExitCode;
+use std::{
+    io::{self, BufRead},
+    process::ExitCode,
+};
 use uuid::Uuid;
 
 const ALL_COLUMNS: &[&str] = &["UUID", "VARIANT", "TYPE", "TIME"];
@@ -75,7 +77,8 @@ pub fn run(args: Args) -> ExitCode {
         return ExitCode::SUCCESS;
     }
 
-    let infos: Vec<UuidInfo> = inputs.iter().map(|s| parse_uuid_info(s)).collect();
+    let infos: Vec<UuidInfo> =
+        inputs.iter().map(|s| parse_uuid_info(s)).collect();
 
     if args.json {
         print_json(&infos, &columns);
@@ -153,7 +156,7 @@ fn format_time(u: &Uuid) -> String {
         libc::strftime(
             tz_buf.as_mut_ptr() as *mut libc::c_char,
             tz_buf.len(),
-            b"%z\0".as_ptr() as *const libc::c_char,
+            c"%z".as_ptr(),
             &tm,
         )
     };
@@ -200,9 +203,15 @@ fn min_column_width(col: &str) -> usize {
     }
 }
 
-fn print_table(infos: &[UuidInfo], columns: &[String], header: bool, raw: bool) {
+fn print_table(
+    infos: &[UuidInfo],
+    columns: &[String],
+    header: bool,
+    raw: bool,
+) {
     // Calculate column widths.
-    let mut widths: Vec<usize> = columns.iter().map(|c| min_column_width(c)).collect();
+    let mut widths: Vec<usize> =
+        columns.iter().map(|c| min_column_width(c)).collect();
     if !raw {
         for info in infos {
             for (i, col) in columns.iter().enumerate() {

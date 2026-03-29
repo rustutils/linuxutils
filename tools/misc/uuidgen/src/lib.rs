@@ -22,11 +22,21 @@ pub struct Args {
     time_v7: bool,
 
     /// Use MD5 as the hash algorithm (v3)
-    #[arg(short = 'm', long = "md5", requires = "namespace", requires = "name")]
+    #[arg(
+        short = 'm',
+        long = "md5",
+        requires = "namespace",
+        requires = "name"
+    )]
     md5: bool,
 
     /// Use SHA1 as the hash algorithm (v5)
-    #[arg(short = 's', long = "sha1", requires = "namespace", requires = "name")]
+    #[arg(
+        short = 's',
+        long = "sha1",
+        requires = "namespace",
+        requires = "name"
+    )]
     sha1: bool,
 
     /// Namespace UUID or alias (@dns, @url, @oid, @x500)
@@ -95,18 +105,22 @@ fn parse_namespace(ns: &str) -> Result<Uuid, String> {
         "@url" => Ok(Uuid::NAMESPACE_URL),
         "@oid" => Ok(Uuid::NAMESPACE_OID),
         "@x500" => Ok(Uuid::NAMESPACE_X500),
-        other => Uuid::parse_str(other).map_err(|e| format!("invalid namespace: {e}")),
+        other => Uuid::parse_str(other)
+            .map_err(|e| format!("invalid namespace: {e}")),
     }
 }
 
 fn hex_decode(s: &str) -> Result<Vec<u8>, String> {
     let s = s.replace([' ', '-', ':'], "");
-    if s.len() % 2 != 0 {
+    if !s.len().is_multiple_of(2) {
         return Err("hex string must have even length".to_string());
     }
     (0..s.len())
         .step_by(2)
-        .map(|i| u8::from_str_radix(&s[i..i + 2], 16).map_err(|e| format!("invalid hex: {e}")))
+        .map(|i| {
+            u8::from_str_radix(&s[i..i + 2], 16)
+                .map_err(|e| format!("invalid hex: {e}"))
+        })
         .collect()
 }
 
@@ -131,9 +145,16 @@ mod tests {
     #[test]
     fn default_generates_v4() {
         let args = Args {
-            random: false, time: false, time_v6: false, time_v7: false,
-            md5: false, sha1: false, namespace: None, name: None,
-            count: 1, hex: false,
+            random: false,
+            time: false,
+            time_v6: false,
+            time_v7: false,
+            md5: false,
+            sha1: false,
+            namespace: None,
+            name: None,
+            count: 1,
+            hex: false,
         };
         let u = generate(&args).unwrap();
         assert_eq!(u.get_version(), Some(uuid::Version::Random));
@@ -142,11 +163,16 @@ mod tests {
     #[test]
     fn sha1_is_deterministic() {
         let args = Args {
-            random: false, time: false, time_v6: false, time_v7: false,
-            md5: false, sha1: true,
+            random: false,
+            time: false,
+            time_v6: false,
+            time_v7: false,
+            md5: false,
+            sha1: true,
             namespace: Some("@dns".to_string()),
             name: Some("example.com".to_string()),
-            count: 1, hex: false,
+            count: 1,
+            hex: false,
         };
         let u1 = generate(&args).unwrap();
         let u2 = generate(&args).unwrap();
@@ -157,11 +183,16 @@ mod tests {
     #[test]
     fn md5_is_deterministic() {
         let args = Args {
-            random: false, time: false, time_v6: false, time_v7: false,
-            md5: true, sha1: false,
+            random: false,
+            time: false,
+            time_v6: false,
+            time_v7: false,
+            md5: true,
+            sha1: false,
             namespace: Some("@dns".to_string()),
             name: Some("example.com".to_string()),
-            count: 1, hex: false,
+            count: 1,
+            hex: false,
         };
         let u1 = generate(&args).unwrap();
         let u2 = generate(&args).unwrap();

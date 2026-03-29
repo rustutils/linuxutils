@@ -1,6 +1,8 @@
 use clap::Parser;
-use std::io::{self, BufRead, Write};
-use std::process::ExitCode;
+use std::{
+    io::{self, BufRead, Write},
+    process::ExitCode,
+};
 
 const TAB_WIDTH: usize = 8;
 
@@ -25,11 +27,11 @@ pub fn run(args: Args) -> ExitCode {
 
     let last = args.last;
 
-    if let (Some(f), Some(l)) = (first, last) {
-        if l < f {
-            eprintln!("colrm: last column must be >= first column");
-            return ExitCode::FAILURE;
-        }
+    if let (Some(f), Some(l)) = (first, last)
+        && l < f
+    {
+        eprintln!("colrm: last column must be >= first column");
+        return ExitCode::FAILURE;
     }
 
     let stdin = io::stdin();
@@ -110,7 +112,11 @@ fn next_tab_stop(col: usize) -> usize {
 mod tests {
     use super::*;
 
-    fn run_colrm(input: &str, first: Option<usize>, last: Option<usize>) -> String {
+    fn run_colrm(
+        input: &str,
+        first: Option<usize>,
+        last: Option<usize>,
+    ) -> String {
         let mut out = Vec::new();
         process_line(input, first, last, &mut out).unwrap();
         String::from_utf8(out).unwrap()

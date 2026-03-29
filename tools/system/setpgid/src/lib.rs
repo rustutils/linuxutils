@@ -1,18 +1,27 @@
 use clap::Parser;
-use rustix::process::{getpid, setpgid as do_setpgid};
-use rustix::termios::tcsetpgrp;
-use std::ffi::CString;
-use std::process::ExitCode;
+use rustix::{
+    process::{getpid, setpgid as do_setpgid},
+    termios::tcsetpgrp,
+};
+use std::{ffi::CString, process::ExitCode};
 
 #[derive(Parser)]
-#[command(name = "setpgid", version, about = "Run a program in a new process group")]
+#[command(
+    name = "setpgid",
+    version,
+    about = "Run a program in a new process group"
+)]
 pub struct Args {
     /// Make the new process group the foreground process group
     #[arg(short = 'f', long = "foreground")]
     foreground: bool,
 
     /// Program and its arguments
-    #[arg(trailing_var_arg = true, allow_hyphen_values = true, required = true)]
+    #[arg(
+        trailing_var_arg = true,
+        allow_hyphen_values = true,
+        required = true
+    )]
     pub command: Vec<String>,
 }
 
@@ -68,6 +77,9 @@ fn exec_program(program: &str, arguments: &[String]) -> ExitCode {
     }
 
     // execvp only returns on error.
-    eprintln!("setpgid: exec {program}: {}", std::io::Error::last_os_error());
+    eprintln!(
+        "setpgid: exec {program}: {}",
+        std::io::Error::last_os_error()
+    );
     ExitCode::from(127)
 }

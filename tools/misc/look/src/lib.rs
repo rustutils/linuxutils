@@ -1,13 +1,19 @@
 use clap::Parser;
-use std::fs;
-use std::io::{self, Write};
-use std::process::ExitCode;
+use std::{
+    fs,
+    io::{self, Write},
+    process::ExitCode,
+};
 
 const DEFAULT_DICT: &str = "/usr/share/dict/words";
 const ALT_DICT: &str = "/usr/share/dict/web2";
 
 #[derive(Parser)]
-#[command(name = "look", version, about = "Display lines beginning with a given string")]
+#[command(
+    name = "look",
+    version,
+    about = "Display lines beginning with a given string"
+)]
 pub struct Args {
     /// Use the alternative dictionary file
     #[arg(short = 'a', long = "alternative")]
@@ -57,7 +63,8 @@ pub fn run(args: Args) -> ExitCode {
         }
     };
 
-    let search = prepare_key(&args.string, args.terminate, alphanum, ignore_case);
+    let search =
+        prepare_key(&args.string, args.terminate, alphanum, ignore_case);
 
     let lines: Vec<&str> = content.lines().collect();
 
@@ -91,7 +98,12 @@ pub fn run(args: Args) -> ExitCode {
 }
 
 /// Prepare the search key: apply terminator, then normalize.
-fn prepare_key(s: &str, terminate: Option<char>, alphanum: bool, ignore_case: bool) -> String {
+fn prepare_key(
+    s: &str,
+    terminate: Option<char>,
+    alphanum: bool,
+    ignore_case: bool,
+) -> String {
     let s = match terminate {
         Some(t) => match s.find(t) {
             Some(pos) => &s[..pos + t.len_utf8()],
@@ -104,7 +116,12 @@ fn prepare_key(s: &str, terminate: Option<char>, alphanum: bool, ignore_case: bo
 
 /// Extract a comparable key from the beginning of a line.
 /// The key length is bounded by the search key length (in normalized chars).
-fn line_key(line: &str, key_len: usize, alphanum: bool, ignore_case: bool) -> String {
+fn line_key(
+    line: &str,
+    key_len: usize,
+    alphanum: bool,
+    ignore_case: bool,
+) -> String {
     if alphanum {
         let mut result = String::with_capacity(key_len);
         for ch in line.chars() {
@@ -160,7 +177,13 @@ mod tests {
         f
     }
 
-    fn run_look(string: &str, content: &str, alphanum: bool, ignore_case: bool, terminate: Option<char>) -> (ExitCode, String) {
+    fn run_look(
+        string: &str,
+        content: &str,
+        alphanum: bool,
+        ignore_case: bool,
+        terminate: Option<char>,
+    ) -> (ExitCode, String) {
         let file = make_file(content);
         let args = Args {
             alternative: false,
@@ -172,7 +195,8 @@ mod tests {
         };
 
         // Capture stdout by running the core logic directly.
-        let search = prepare_key(&args.string, args.terminate, alphanum, ignore_case);
+        let search =
+            prepare_key(&args.string, args.terminate, alphanum, ignore_case);
         let content = fs::read_to_string(file.path()).unwrap();
         let lines: Vec<&str> = content.lines().collect();
         let start = lines.partition_point(|line| {
@@ -191,13 +215,18 @@ mod tests {
             writeln!(output, "{line}").unwrap();
         }
 
-        let code = if found { ExitCode::SUCCESS } else { ExitCode::from(1) };
+        let code = if found {
+            ExitCode::SUCCESS
+        } else {
+            ExitCode::from(1)
+        };
         (code, String::from_utf8(output).unwrap())
     }
 
     #[test]
     fn basic_prefix_match() {
-        let (_, out) = run_look("b", "apple\nbanana\nberry\ncherry", false, false, None);
+        let (_, out) =
+            run_look("b", "apple\nbanana\nberry\ncherry", false, false, None);
         assert_eq!(out, "banana\nberry\n");
     }
 
@@ -216,13 +245,20 @@ mod tests {
 
     #[test]
     fn alphanum_mode() {
-        let (_, out) = run_look("ban", "ban-ana\nbanana\nberry", true, false, None);
+        let (_, out) =
+            run_look("ban", "ban-ana\nbanana\nberry", true, false, None);
         assert_eq!(out, "ban-ana\nbanana\n");
     }
 
     #[test]
     fn terminate_char() {
-        let (_, out) = run_look("apple pie", "apple\napple pie\nbanana", false, false, Some(' '));
+        let (_, out) = run_look(
+            "apple pie",
+            "apple\napple pie\nbanana",
+            false,
+            false,
+            Some(' '),
+        );
         // -t ' ' means only compare up to and including the first space: "apple "
         // "apple" is shorter than the key so it doesn't match.
         assert_eq!(out, "apple pie\n");

@@ -1,13 +1,19 @@
 use clap::Parser;
-use rustix::fs::{stat, lstat, major, minor, FileType};
-use std::io::{self, BufRead};
-use std::path::PathBuf;
-use std::process::ExitCode;
+use rustix::fs::{FileType, lstat, major, minor, stat};
+use std::{
+    io::{self, BufRead},
+    path::{Path, PathBuf},
+    process::ExitCode,
+};
 
 const EXIT_NOTMOUNT: u8 = 32;
 
 #[derive(Parser)]
-#[command(name = "mountpoint", version, about = "See if a directory or file is a mountpoint")]
+#[command(
+    name = "mountpoint",
+    version,
+    about = "See if a directory or file is a mountpoint"
+)]
 pub struct Args {
     /// Show the major/minor numbers of the device mounted on the given directory
     #[arg(short = 'd', long = "fs-devno", conflicts_with = "devno")]
@@ -70,12 +76,11 @@ pub fn run(args: Args) -> ExitCode {
     }
 }
 
-fn do_stat(path: &PathBuf, nofollow: bool) -> Result<rustix::fs::Stat, rustix::io::Errno> {
-    if nofollow {
-        lstat(path)
-    } else {
-        stat(path)
-    }
+fn do_stat(
+    path: &PathBuf,
+    nofollow: bool,
+) -> Result<rustix::fs::Stat, rustix::io::Errno> {
+    if nofollow { lstat(path) } else { stat(path) }
 }
 
 fn show_devno(args: &Args) -> ExitCode {
@@ -92,7 +97,10 @@ fn show_devno(args: &Args) -> ExitCode {
     // Check if it's a block device.
     if !FileType::from_raw_mode(st.st_mode).is_block_device() {
         if !args.quiet {
-            eprintln!("mountpoint: {}: not a block device", args.path.display());
+            eprintln!(
+                "mountpoint: {}: not a block device",
+                args.path.display()
+            );
         }
         return ExitCode::from(EXIT_NOTMOUNT);
     }
@@ -103,7 +111,7 @@ fn show_devno(args: &Args) -> ExitCode {
 
 /// Check if a path is a mountpoint by looking it up in /proc/self/mountinfo.
 fn is_mountpoint(path: &PathBuf) -> bool {
-    if let Some(_) = find_in_mountinfo(path) {
+    if find_in_mountinfo(path).is_some() {
         return true;
     }
     // Fallback: compare device IDs of path and its parent.
@@ -126,10 +134,14 @@ fn find_in_mountinfo(path: &PathBuf) -> Option<(u32, u32)> {
         // mountinfo format: ID PARENT_ID MAJOR:MINOR ROOT MOUNT_POINT ...
         let mut fields = line.split_whitespace();
         let Some(_id) = fields.next() else { continue };
-        let Some(_parent) = fields.next() else { continue };
+        let Some(_parent) = fields.next() else {
+            continue;
+        };
         let Some(devno) = fields.next() else { continue };
         let Some(_root) = fields.next() else { continue };
-        let Some(mount_point) = fields.next() else { continue };
+        let Some(mount_point) = fields.next() else {
+            continue;
+        };
 
         let decoded = unescape_mountinfo(mount_point);
         if *canonical == decoded {
@@ -149,7 +161,7 @@ fn mountinfo_devno(path: &PathBuf) -> Option<(u32, u32)> {
 }
 
 /// Fallback: a path is a mountpoint if its device ID differs from its parent's.
-fn is_mountpoint_by_stat(st: &rustix::fs::Stat, path: &PathBuf) -> bool {
+fn is_mountpoint_by_stat(st: &rustix::fs::Stat, path: &Path) -> bool {
     let parent = path.join("..");
     match stat(&parent) {
         Ok(parent_st) => st.st_dev != parent_st.st_dev,

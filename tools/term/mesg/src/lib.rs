@@ -1,11 +1,16 @@
 use clap::Parser;
-use rustix::fs::{fstat, fchmod, Mode};
-use rustix::termios::isatty;
-use std::io;
-use std::process::ExitCode;
+use rustix::{
+    fs::{Mode, fchmod, fstat},
+    termios::isatty,
+};
+use std::{io, process::ExitCode};
 
 #[derive(Parser)]
-#[command(name = "mesg", version, about = "Display (or do not display) messages from other users")]
+#[command(
+    name = "mesg",
+    version,
+    about = "Display (or do not display) messages from other users"
+)]
 pub struct Args {
     /// Explain what is being done
     #[arg(short = 'v', long = "verbose")]

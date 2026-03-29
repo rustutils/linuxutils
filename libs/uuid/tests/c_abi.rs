@@ -1,5 +1,4 @@
-use std::path::PathBuf;
-use std::process::Command;
+use std::{path::PathBuf, process::Command};
 
 /// Build a C test program, link it against our libuuid.so, run it, and
 /// return its stdout.

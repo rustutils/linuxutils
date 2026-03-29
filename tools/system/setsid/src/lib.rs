@@ -1,8 +1,8 @@
 use clap::Parser;
-use rustix::process::{getpid, getpgrp, setsid as do_setsid, waitpid, Pid, WaitOptions};
-use std::ffi::CString;
-use std::os::unix::io::AsRawFd;
-use std::process::ExitCode;
+use rustix::process::{
+    Pid, WaitOptions, getpgrp, getpid, setsid as do_setsid, waitpid,
+};
+use std::{ffi::CString, os::unix::io::AsRawFd, process::ExitCode};
 
 #[derive(Parser)]
 #[command(name = "setsid", version, about = "Run a program in a new session")]
@@ -20,7 +20,11 @@ pub struct Args {
     wait: bool,
 
     /// Program and its arguments
-    #[arg(trailing_var_arg = true, allow_hyphen_values = true, required = true)]
+    #[arg(
+        trailing_var_arg = true,
+        allow_hyphen_values = true,
+        required = true
+    )]
     pub command: Vec<String>,
 }
 
@@ -59,7 +63,10 @@ pub fn run(args: Args) -> ExitCode {
         // TIOCSCTTY: set controlling terminal.
         let ret = unsafe { libc::ioctl(fd, libc::TIOCSCTTY, 0) };
         if ret < 0 {
-            eprintln!("setsid: ioctl TIOCSCTTY: {}", std::io::Error::last_os_error());
+            eprintln!(
+                "setsid: ioctl TIOCSCTTY: {}",
+                std::io::Error::last_os_error()
+            );
             return ExitCode::FAILURE;
         }
     }
@@ -131,6 +138,9 @@ fn exec_program(program: &str, arguments: &[String]) -> ExitCode {
     }
 
     // execvp only returns on error.
-    eprintln!("setsid: exec {program}: {}", std::io::Error::last_os_error());
+    eprintln!(
+        "setsid: exec {program}: {}",
+        std::io::Error::last_os_error()
+    );
     ExitCode::from(127)
 }
