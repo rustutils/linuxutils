@@ -1,5 +1,6 @@
 pub mod cell;
 pub mod column;
+pub mod ffi;
 pub mod filter;
 pub mod line;
 pub mod print;
