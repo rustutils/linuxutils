@@ -10,13 +10,13 @@ publish = false
 [dependencies]
 clap = "4"
 clap_mangen = "0.2"
-rustutils-colrm = { path = "../../tools/colrm" }
-rustutils-line = { path = "../../tools/line" }
-rustutils-look = { path = "../../tools/look" }
-rustutils-mcookie = { path = "../../tools/mcookie" }
-rustutils-mesg = { path = "../../tools/mesg" }
-rustutils-mountpoint = { path = "../../tools/mountpoint" }
-rustutils-nologin = { path = "../../tools/nologin" }
-rustutils-setpgid = { path = "../../tools/setpgid" }
-rustutils-setsid = { path = "../../tools/setsid" }
-rustutils-rev = { path = "../../tools/rev" }
+rustutils-colrm.workspace = true
+rustutils-line.workspace = true
+rustutils-look.workspace = true
+rustutils-mcookie.workspace = true
+rustutils-mesg.workspace = true
+rustutils-mountpoint.workspace = true
+rustutils-nologin.workspace = true
+rustutils-rev.workspace = true
+rustutils-setpgid.workspace = true
+rustutils-setsid.workspace = true

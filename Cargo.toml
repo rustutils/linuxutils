@@ -2,16 +2,16 @@
 resolver = "2"
 members = [
     "multicall",
-    "tools/colrm",
-    "tools/line",
-    "tools/look",
-    "tools/mcookie",
-    "tools/mesg",
-    "tools/mountpoint",
-    "tools/nologin",
-    "tools/setpgid",
-    "tools/setsid",
-    "tools/rev",
+    "tools/login/nologin",
+    "tools/misc/look",
+    "tools/misc/mcookie",
+    "tools/system/mountpoint",
+    "tools/system/setpgid",
+    "tools/system/setsid",
+    "tools/term/mesg",
+    "tools/text/colrm",
+    "tools/text/line",
+    "tools/text/rev",
     "util/mangen",
 ]
 
@@ -23,6 +23,18 @@ repository = "https://github.com/rustutils/util-linux"
 
 [workspace.dependencies]
 rustix = { version = "1", features = ["fs", "process", "termios"] }
+
+# workspace crates
+rustutils-colrm = { path = "tools/text/colrm" }
+rustutils-line = { path = "tools/text/line" }
+rustutils-look = { path = "tools/misc/look" }
+rustutils-mcookie = { path = "tools/misc/mcookie" }
+rustutils-mesg = { path = "tools/term/mesg" }
+rustutils-mountpoint = { path = "tools/system/mountpoint" }
+rustutils-nologin = { path = "tools/login/nologin" }
+rustutils-rev = { path = "tools/text/rev" }
+rustutils-setpgid = { path = "tools/system/setpgid" }
+rustutils-setsid = { path = "tools/system/setsid" }
 
 [workspace.metadata.crane]
 name = "rustutils-util-linux"

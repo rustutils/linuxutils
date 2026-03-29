@@ -8,7 +8,7 @@ Each tool is its own crate, and ABI-compatible versions of the original C librar
 
 | Directory | Contents |
 |-----------|----------|
-| `tools/` | Tool crates (one per util-linux command) |
+| `tools/` | Tool crates, organized by category (`disk/`, `system/`, `misc/`, `text/`, `login/`, `term/`, `sched/`) |
 | `common/` | Shared library crates used across tools |
 | `libs/` | ABI-compatible C library crates (libblkid, libmount, etc.) |
 | `multicall/` | Multicall binary that dispatches to tools by `argv[0]` |
