@@ -13,6 +13,10 @@
 
       pkgsFor = system: nixpkgs.legacyPackages.${system};
 
+      # Library names — used for installing .so files and headers.
+      # Keep in sync with libs/ workspace members.
+      libs = [ "blkid" "fdisk" "mount" "smartcols" "uuid" ];
+
       # Tool names — used for installing individual binaries and creating
       # multicall symlinks. Keep in sync with workspace members.
       tools = [
@@ -98,8 +102,13 @@
                 "install -m755 target/release/${tool} $out/bin/"
               ) tools}
 
-              install -m755 target/release/libuuid.so $out/lib/
-              install -m644 libs/uuid/include/uuid.h $out/include/
+              ${nixpkgs.lib.concatMapStringsSep "\n" (lib:
+                "install -m755 target/release/lib${lib}.so $out/lib/ || true"
+              ) libs}
+
+              for hdr in libs/*/include/*.h; do
+                install -m644 "$hdr" $out/include/ || true
+              done
 
               install -m644 target/man/*.1 $out/share/man/man1/
 
@@ -122,8 +131,13 @@
                   "ln -s $out/bin/rustutils-util-linux $out/bin/${tool}"
                 ) tools}
 
-                install -m755 target/release/libuuid.so $out/lib/
-                install -m644 libs/uuid/include/uuid.h $out/include/
+                ${nixpkgs.lib.concatMapStringsSep "\n" (lib:
+                  "install -m755 target/release/lib${lib}.so $out/lib/ || true"
+                ) libs}
+
+                for hdr in libs/*/include/*.h; do
+                  install -m644 "$hdr" $out/include/ || true
+                done
 
                 install -m644 target/man/*.1 $out/share/man/man1/
 

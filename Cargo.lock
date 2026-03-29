@@ -417,6 +417,34 @@ dependencies = [
 ]
 
 [[package]]
+name = "rustutils-libblkid"
+version = "0.1.0"
+dependencies = [
+ "libc",
+]
+
+[[package]]
+name = "rustutils-libfdisk"
+version = "0.1.0"
+dependencies = [
+ "libc",
+]
+
+[[package]]
+name = "rustutils-libmount"
+version = "0.1.0"
+dependencies = [
+ "libc",
+]
+
+[[package]]
+name = "rustutils-libsmartcols"
+version = "0.1.0"
+dependencies = [
+ "libc",
+]
+
+[[package]]
 name = "rustutils-libuuid"
 version = "0.1.0"
 dependencies = [

@@ -1,0 +1,14 @@
+[package]
+name = "rustutils-libmount"
+description = "ABI-compatible libmount implementation for filesystem mounting"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+name = "mount"
+crate-type = ["cdylib"]
+
+[dependencies]
+libc = "0.2"

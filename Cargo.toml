@@ -1,6 +1,10 @@
 [workspace]
 resolver = "2"
 members = [
+    "libs/blkid",
+    "libs/fdisk",
+    "libs/mount",
+    "libs/smartcols",
     "libs/uuid",
     "multicall",
     "tools/login/nologin",
