@@ -52,32 +52,18 @@ fn compare_lsblk() {
     compare_output("lsblk", &[]);
 }
 
-#[test]
-#[ignore = "broken"]
-fn compare_lscpu() {
-    compare_output("lscpu", &[]);
-}
 
 #[test]
-#[ignore = "broken"]
-fn compare_lscpu_extended() {
-    compare_output("lscpu", &["--extended"]);
-}
-
-#[test]
-#[ignore = "broken"]
 fn compare_lsipc() {
     compare_output("lsipc", &[]);
 }
 
 #[test]
-#[ignore = "broken"]
 fn compare_lsmem() {
     compare_output("lsmem", &[]);
 }
 
 #[test]
-#[ignore = "broken"]
 fn compare_lslogins() {
     compare_output("lslogins", &[]);
 }

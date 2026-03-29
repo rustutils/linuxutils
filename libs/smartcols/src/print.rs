@@ -123,8 +123,8 @@ fn print_normal_header(
             write!(out, "{}", table.column_separator())?;
         }
 
-        if is_last && !table.is_maxout() {
-            // Last column: no trailing padding unless maxout.
+        if is_last && !table.is_maxout() && !col.is_right() {
+            // Left-aligned last column: no trailing padding unless maxout.
             write!(out, "{header_text}")?;
         } else if col.is_right() {
             write!(out, "{header_text:>width$}")?;
@@ -172,8 +172,8 @@ fn print_normal_line(
 
         let data_width = display_width(&data);
 
-        if is_last && !table.is_maxout() {
-            // Last column: no trailing padding unless maxout.
+        if is_last && !table.is_maxout() && !col.is_right() {
+            // Left-aligned last column: no trailing padding unless maxout.
             if table.is_minout() && data.is_empty() {
                 // minout: skip trailing empty columns
             } else {
@@ -483,7 +483,9 @@ fn calculate_widths(
         .map(|&col_idx| {
             let col = &table.columns()[col_idx];
             let header_w = col.header().data().map_or(0, display_width);
-            let max_data_w = table
+
+            // Collect all data widths for this column.
+            let data_widths: Vec<usize> = table
                 .line_ids()
                 .enumerate()
                 .map(|(li, id)| {
@@ -497,8 +499,9 @@ fn calculate_widths(
                         data_w
                     }
                 })
-                .max()
-                .unwrap_or(0);
+                .collect();
+
+            let max_data_w = data_widths.into_iter().max().unwrap_or(0);
             ColInfo {
                 header_w,
                 max_data_w,
@@ -622,7 +625,10 @@ fn use_terminal_width(table: &Table) -> bool {
     match table.termforce() {
         TermForce::Always => true,
         TermForce::Never => false,
-        TermForce::Auto => true, // default: respect terminal width
+        // Auto: only apply a width constraint if an explicit termwidth was set.
+        // Without one, we behave like the system libsmartcols does when stdout
+        // is not a terminal — natural column widths, no truncation.
+        TermForce::Auto => table.termwidth_is_explicit(),
     }
 }
 

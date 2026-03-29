@@ -453,6 +453,10 @@ impl Table {
         self.termwidth.unwrap_or(80)
     }
 
+    pub fn termwidth_is_explicit(&self) -> bool {
+        self.termwidth.is_some()
+    }
+
     pub fn set_termheight(&mut self, height: usize) -> &mut Self {
         self.termheight = Some(height);
         self

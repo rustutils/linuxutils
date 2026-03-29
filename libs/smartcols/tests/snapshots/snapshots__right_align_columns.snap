@@ -2,7 +2,7 @@
 source: libs/smartcols/tests/snapshots.rs
 expression: output
 ---
-LEFT       RIGHT
-a          1
-bb         22
-ccc        333
+LEFT            RIGHT
+a                   1
+bb                 22
+ccc               333
