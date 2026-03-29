@@ -71,3 +71,8 @@ fn compare_lslogins() {
 fn compare_rfkill() {
     compare_output("rfkill", &[]);
 }
+
+#[test]
+fn compare_prlimit() {
+    compare_output("prlimit", &[]);
+}

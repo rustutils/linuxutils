@@ -146,63 +146,88 @@ fn print_normal_line(
 ) -> io::Result<()> {
     let line = table.line(id);
 
-    for (vi, &col_idx) in visible.iter().enumerate() {
-        let col = &table.columns()[col_idx];
-        let raw_data = line.get_data(col_idx).unwrap_or("");
-        let is_last = vi == visible.len() - 1;
-        let width = widths[vi];
+    // Prepare encoded cell data for each visible column.
+    let cell_data: Vec<String> = visible
+        .iter()
+        .enumerate()
+        .map(|(vi, &col_idx)| {
+            let col = &table.columns()[col_idx];
+            let raw = line.get_data(col_idx).unwrap_or("");
+            let data = if table.is_no_encoding() {
+                raw.to_string()
+            } else {
+                encode_data(raw, col.safechars())
+            };
+            if col.is_tree() && vi == 0 && !tree_prefix.is_empty() {
+                format!("{tree_prefix}{data}")
+            } else {
+                data
+            }
+        })
+        .collect();
 
-        if vi > 0 {
-            write!(out, "{}", table.column_separator())?;
-        }
+    // Wrap columns that have the WRAP flag set.
+    let wrapped: Vec<Vec<String>> = visible
+        .iter()
+        .enumerate()
+        .map(|(vi, &col_idx)| {
+            let col = &table.columns()[col_idx];
+            let width = widths[vi];
+            if col.is_wrap() && !table.is_no_wrap() && width > 0 {
+                wrap_text(&cell_data[vi], width)
+            } else {
+                vec![cell_data[vi].clone()]
+            }
+        })
+        .collect();
 
-        // Encode non-printable characters unless disabled.
-        let data = if table.is_no_encoding() {
-            raw_data.to_string()
-        } else {
-            encode_data(raw_data, col.safechars())
-        };
+    let max_rows = wrapped.iter().map(|w| w.len()).max().unwrap_or(1);
 
-        // Prepend tree prefix for the tree column.
-        let data = if col.is_tree() && !tree_prefix.is_empty() {
-            format!("{tree_prefix}{data}")
-        } else {
-            data
-        };
+    for row in 0..max_rows {
+        for (vi, &col_idx) in visible.iter().enumerate() {
+            let col = &table.columns()[col_idx];
+            let is_last = vi == visible.len() - 1;
+            let width = widths[vi];
 
-        let data_width = display_width(&data);
+            if vi > 0 {
+                write!(out, "{}", table.column_separator())?;
+            }
 
-        if is_last && !table.is_maxout() && !col.is_right() {
-            // Left-aligned last column: no trailing padding unless maxout.
-            if table.is_minout() && data.is_empty() {
-                // minout: skip trailing empty columns
+            let data = wrapped[vi].get(row).map(|s| s.as_str()).unwrap_or("");
+            let data_width = display_width(data);
+
+            if is_last && !table.is_maxout() && !col.is_right() {
+                if table.is_minout() && data.is_empty() {
+                    // minout: skip trailing empty
+                } else {
+                    write!(out, "{data}")?;
+                }
+            } else if col.is_right() {
+                if data_width < width {
+                    let pad = width - data_width;
+                    for _ in 0..pad {
+                        write!(out, " ")?;
+                    }
+                }
+                write!(out, "{data}")?;
+            } else if col.is_trunc() && data_width > width {
+                write!(out, "{}", truncate_to_width(data, width))?;
             } else {
                 write!(out, "{data}")?;
-            }
-        } else if col.is_right() {
-            if data_width < width {
-                let pad = width - data_width;
-                for _ in 0..pad {
-                    write!(out, " ")?;
-                }
-            }
-            write!(out, "{data}")?;
-        } else if col.is_trunc() && data_width > width {
-            write!(out, "{}", truncate_to_width(&data, width))?;
-        } else {
-            write!(out, "{data}")?;
-            if data_width < width {
-                let pad = width - data_width;
-                for _ in 0..pad {
-                    write!(out, " ")?;
+                if data_width < width {
+                    let pad = width - data_width;
+                    for _ in 0..pad {
+                        write!(out, " ")?;
+                    }
                 }
             }
         }
+
+        if !table.is_no_linesep() {
+            write!(out, "{}", table.line_separator())?;
+        }
     }
 
-    if !table.is_no_linesep() {
-        write!(out, "{}", table.line_separator())?;
-    }
     Ok(())
 }
 
@@ -513,14 +538,18 @@ fn calculate_widths(
         })
         .collect();
 
+    let has_terminal = use_terminal_width(table);
+
     // Phase 1: compute each column's desired width from its hint.
-    // Hints are starting points, not final widths.
+    // Fractional hints (0 < hint < 1) are percentages of terminal width and
+    // only apply when a terminal width constraint is active. Without a
+    // terminal, only absolute hints (>= 1.0) are used; content drives sizing.
     let mut widths: Vec<usize> = infos
         .iter()
         .map(|info| {
             let hint_w = if info.hint >= 1.0 {
                 info.hint as usize
-            } else if info.hint > 0.0 {
+            } else if info.hint > 0.0 && has_terminal {
                 (available as f64 * info.hint) as usize
             } else {
                 0
@@ -530,7 +559,7 @@ fn calculate_widths(
         })
         .collect();
 
-    if !use_terminal_width(table) {
+    if !has_terminal {
         // No terminal constraint: use natural content widths.
         for (i, info) in infos.iter().enumerate() {
             widths[i] = widths[i].max(info.max_data_w);
@@ -625,16 +654,45 @@ fn use_terminal_width(table: &Table) -> bool {
     match table.termforce() {
         TermForce::Always => true,
         TermForce::Never => false,
-        // Auto: only apply a width constraint if an explicit termwidth was set.
-        // Without one, we behave like the system libsmartcols does when stdout
-        // is not a terminal — natural column widths, no truncation.
-        TermForce::Auto => table.termwidth_is_explicit(),
+        // Auto: apply terminal-width constraints only if stdout is actually a
+        // tty. This matches system libsmartcols behavior — callers may set a
+        // termwidth (e.g. as a fallback hint) even when output is piped, but
+        // formatting should not be constrained in that case.
+        TermForce::Auto => {
+            use std::io::IsTerminal;
+            std::io::stdout().is_terminal()
+        }
     }
 }
 
 fn effective_termwidth(table: &Table) -> usize {
     let w = table.termwidth();
     w.saturating_sub(0) // placeholder for reduce; table already has reduce_termwidth
+}
+
+/// Split `s` into lines no wider than `max_width` display columns.
+/// Always returns at least one element (which may be empty).
+fn wrap_text(s: &str, max_width: usize) -> Vec<String> {
+    if s.is_empty() {
+        return vec![String::new()];
+    }
+    let mut lines = Vec::new();
+    let mut current = String::new();
+    let mut cur_width = 0;
+    for c in s.chars() {
+        let cw = unicode_width::UnicodeWidthChar::width(c).unwrap_or(0);
+        if cur_width + cw > max_width && !current.is_empty() {
+            lines.push(current.clone());
+            current.clear();
+            cur_width = 0;
+        }
+        current.push(c);
+        cur_width += cw;
+    }
+    if !current.is_empty() {
+        lines.push(current);
+    }
+    lines
 }
 
 /// Visible (display) width of a string, accounting for Unicode.

@@ -45,7 +45,7 @@ pub(crate) struct Group {
 }
 
 /// The top-level table object. Owns all columns, lines, and configuration.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Table {
     name: Option<String>,
     columns: Vec<Column>,

@@ -1,9 +1,12 @@
-use smartcols::{ColumnFlags, OutputMode, Table, print_table_to_string};
+use smartcols::{
+    ColumnFlags, OutputMode, Table, TermForce, print_table_to_string,
+};
 
 fn lsblk_table() -> Table {
     let mut t = Table::new();
     t.set_name("blockdevices");
     t.set_termwidth(80);
+    t.set_termforce(TermForce::Always);
     t.new_column("NAME", 0.25, ColumnFlags::TREE | ColumnFlags::NO_EXTREMES);
     t.new_column("MAJ:MIN", 6.0, ColumnFlags::empty());
     t.new_column("RM", 1.0, ColumnFlags::RIGHT);
@@ -114,6 +117,7 @@ fn lsblk_noheadings() {
 fn simple_table() -> Table {
     let mut t = Table::new();
     t.set_termwidth(40);
+    t.set_termforce(TermForce::Always);
     t.new_column("NAME", 10.0, ColumnFlags::empty());
     t.new_column("VALUE", 10.0, ColumnFlags::RIGHT);
 

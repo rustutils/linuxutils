@@ -7,7 +7,7 @@
 
 use crate::cell::Cell;
 use bitflags::bitflags;
-use std::{cmp::Ordering, fmt};
+use std::{cmp::Ordering, fmt, sync::Arc};
 
 bitflags! {
     /// Behavioral flags for a column.
@@ -57,6 +57,7 @@ pub enum DataType {
 
 /// A column definition — describes formatting, type, and behavior for one
 /// vertical slice of the table.
+#[derive(Clone)]
 pub struct Column {
     name: Option<String>,
     header: Cell,
@@ -74,7 +75,7 @@ pub struct Column {
     width: Option<usize>,
 }
 
-type CmpFunc = Box<dyn Fn(&Cell, &Cell) -> Ordering>;
+type CmpFunc = Arc<dyn Fn(&Cell, &Cell) -> Ordering + Send + Sync>;
 
 impl Column {
     /// Create a column with default settings (no name, zero width hint, no flags).
@@ -256,9 +257,9 @@ impl Column {
 
     pub fn set_cmp_func<F>(&mut self, f: F) -> &mut Self
     where
-        F: Fn(&Cell, &Cell) -> Ordering + 'static,
+        F: Fn(&Cell, &Cell) -> Ordering + Send + Sync + 'static,
     {
-        self.cmp_func = Some(Box::new(f));
+        self.cmp_func = Some(Arc::new(f));
         self
     }
 
