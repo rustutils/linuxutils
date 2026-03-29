@@ -11,6 +11,7 @@ publish = false
 clap = "4"
 clap_mangen = "0.2"
 rustutils-cal.workspace = true
+rustutils-choom.workspace = true
 rustutils-colrm.workspace = true
 rustutils-flock.workspace = true
 rustutils-hexdump.workspace = true

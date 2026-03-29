@@ -15,6 +15,7 @@ members = [
     "tools/misc/uuidgen",
     "tools/misc/uuidparse",
     "tools/misc/waitpid",
+    "tools/system/choom",
     "tools/system/flock",
     "tools/system/lsirq",
     "tools/system/lsmem",
@@ -46,6 +47,7 @@ uuid = { version = "1", features = ["v1", "v3", "v4", "v5", "v6", "v7"] }
 rustutils-common-sysfs = { path = "common/sysfs" }
 rustutils-libsmartcols = { path = "libs/smartcols" }
 rustutils-cal = { path = "tools/misc/cal" }
+rustutils-choom = { path = "tools/system/choom" }
 rustutils-flock = { path = "tools/system/flock" }
 rustutils-colrm = { path = "tools/text/colrm" }
 rustutils-hexdump = { path = "tools/text/hexdump" }

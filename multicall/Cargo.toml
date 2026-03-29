@@ -9,6 +9,7 @@ repository.workspace = true
 [dependencies]
 clap = { version = "4", features = ["derive"] }
 rustutils-cal.workspace = true
+rustutils-choom.workspace = true
 rustutils-colrm.workspace = true
 rustutils-flock.workspace = true
 rustutils-hexdump.workspace = true

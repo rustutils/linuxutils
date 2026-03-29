@@ -21,6 +21,7 @@
       # multicall symlinks. Keep in sync with workspace members.
       tools = [
         "cal"
+        "choom"
         "colrm"
         "flock"
         "hexdump"

@@ -35,7 +35,7 @@
 | `blkzone` | Run zone command on a device | Not started |
 | `chcpu` | Configure CPUs | Not started |
 | `chmem` | Configure memory | Not started |
-| `choom` | Display or adjust OOM-killer score | Not started |
+| `choom` | Display or adjust OOM-killer score | Done |
 | `ctrlaltdel` | Set the function of the Ctrl-Alt-Del combination | Not started |
 | `dmesg` | Print or control the kernel ring buffer | Not started |
 | `eject` | Eject removable media | Not started |
