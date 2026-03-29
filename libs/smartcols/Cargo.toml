@@ -8,7 +8,10 @@ repository.workspace = true
 
 [lib]
 name = "smartcols"
-crate-type = ["cdylib"]
+crate-type = ["cdylib", "rlib"]
 
 [dependencies]
+bitflags = "2"
 libc = "0.2"
+regex = "1"
+unicode-width = "0.2"
