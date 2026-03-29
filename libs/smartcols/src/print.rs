@@ -1,3 +1,13 @@
+//! Print engine — formats a [`Table`](crate::Table) to a writer.
+//!
+//! Supports five output modes:
+//! - **Normal** — human-readable with automatic column width calculation,
+//!   padding, alignment, and tree rendering.
+//! - **Raw** — compact unpadded output with column separator between fields.
+//! - **Export** — `NAME="value"` pairs for shell consumption.
+//! - **Json** — JSON array of objects with typed values.
+//! - **ShellVar** — like export with shell-safe column names.
+
 use crate::{
     column::JsonType,
     line::LineId,
@@ -9,7 +19,7 @@ use std::{
 };
 use unicode_width::UnicodeWidthStr;
 
-/// Print the table to a writer.
+/// Print the table to a writer using the table's configured output mode.
 pub fn print_table(table: &Table, out: &mut dyn Write) -> io::Result<()> {
     match table.output_mode() {
         OutputMode::Normal => print_normal(table, out),
@@ -20,7 +30,7 @@ pub fn print_table(table: &Table, out: &mut dyn Write) -> io::Result<()> {
     }
 }
 
-/// Render the table to a String.
+/// Render the table to a `String` using the table's configured output mode.
 pub fn print_table_to_string(table: &Table) -> io::Result<String> {
     let mut buf = Vec::new();
     print_table(table, &mut buf)?;

@@ -1,3 +1,9 @@
+//! Table — the top-level container that owns columns, lines, and
+//! output configuration.
+//!
+//! Build a table by adding columns and lines, configure output settings,
+//! then print with [`print_table`](crate::print_table).
+
 use crate::{
     cell::Cell,
     column::{Column, ColumnFlags},
@@ -5,7 +11,7 @@ use crate::{
     symbols::Symbols,
 };
 
-/// Output format mode.
+/// Selects the output format used by the print engine.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum OutputMode {
     /// Human-readable columnar output with padding and alignment.
@@ -73,6 +79,7 @@ pub struct Table {
 }
 
 impl Table {
+    /// Create an empty table with default settings.
     pub fn new() -> Self {
         Self {
             name: None,
@@ -104,6 +111,7 @@ impl Table {
         }
     }
 
+    /// Set the table name (used as the top-level key in JSON output).
     pub fn set_name(&mut self, name: &str) -> &mut Self {
         self.name = Some(name.to_string());
         self

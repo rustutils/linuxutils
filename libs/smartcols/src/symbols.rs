@@ -1,4 +1,22 @@
+//! Symbols — characters used for drawing tree and group connectors.
+//!
+//! The default symbol set uses Unicode box-drawing characters. An ASCII
+//! fallback is available via [`Symbols::ascii`] or by calling
+//! [`Table::enable_ascii`](crate::Table::enable_ascii).
+
 /// Characters used for rendering tree hierarchies and group relationships.
+///
+/// # Defaults
+///
+/// Unicode (`Symbols::unicode()`):
+/// ```text
+/// ├─ branch      │  vertical     └─ right (last child)
+/// ```
+///
+/// ASCII (`Symbols::ascii()`):
+/// ```text
+/// |- branch      |  vertical     `- right (last child)
+/// ```
 #[derive(Debug, Clone)]
 pub struct Symbols {
     pub branch: String,

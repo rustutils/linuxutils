@@ -1,15 +1,27 @@
+//! Cell — the smallest unit in a table.
+//!
+//! Each cell holds an optional data string plus formatting metadata (color,
+//! URI, alignment flags). Cells are stored inside [`Line`](crate::Line)s,
+//! one per column.
+
 use bitflags::bitflags;
 
 bitflags! {
-    /// Alignment flags for a cell.
+    /// Per-cell alignment flags.
+    ///
+    /// Evaluated in order: if `RIGHT` is set it wins, then `CENTER`, then
+    /// the default left alignment.
     #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
     pub struct CellFlags: u32 {
+        /// Center the cell content within the column width.
         const CENTER = 1 << 0;
+        /// Right-align the cell content within the column width.
         const RIGHT  = 1 << 1;
     }
 }
 
-/// The smallest unit in a table — holds a data string plus optional formatting.
+/// The smallest unit in a table — holds a data string plus optional
+/// color, URI, and alignment.
 #[derive(Debug, Clone, Default)]
 pub struct Cell {
     data: Option<String>,

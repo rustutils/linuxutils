@@ -1,3 +1,10 @@
+//! Column — defines formatting, type, and behavior for one vertical slice
+//! of the table.
+//!
+//! Each column has a name (shown in headers), a width hint that guides the
+//! print engine's layout algorithm, behavioral flags, and optional metadata
+//! for JSON/filter output.
+
 use crate::cell::Cell;
 use bitflags::bitflags;
 use std::{cmp::Ordering, fmt};
@@ -23,7 +30,7 @@ bitflags! {
     }
 }
 
-/// JSON output type for a column.
+/// Controls how a column's data is serialized in JSON output mode.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum JsonType {
     #[default]
@@ -36,7 +43,8 @@ pub enum JsonType {
     Float,
 }
 
-/// Data type for filter/counter operations.
+/// Data type used when evaluating filter expressions and counters against
+/// column values.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum DataType {
     #[default]
@@ -69,6 +77,7 @@ pub struct Column {
 type CmpFunc = Box<dyn Fn(&Cell, &Cell) -> Ordering>;
 
 impl Column {
+    /// Create a column with default settings (no name, zero width hint, no flags).
     pub fn new() -> Self {
         Self {
             name: None,
@@ -87,6 +96,12 @@ impl Column {
         }
     }
 
+    /// Create a column with a name, width hint, and flags.
+    ///
+    /// The `whint` value guides the print engine's layout:
+    /// - `>= 1.0` — absolute character width (e.g., `6.0` = 6 chars)
+    /// - `0.0 < whint < 1.0` — fraction of terminal width (e.g., `0.25` = 25%)
+    /// - `0.0` — no hint, size to content
     pub fn with_name(name: &str, whint: f64, flags: ColumnFlags) -> Self {
         let mut col = Self::new();
         col.set_name(name);
@@ -95,6 +110,7 @@ impl Column {
         col
     }
 
+    /// Set the column name. Also sets the header cell text.
     pub fn set_name(&mut self, name: &str) -> &mut Self {
         self.name = Some(name.to_string());
         self.header.set_data(name);

@@ -1,7 +1,33 @@
+//! Filter — expression parser and evaluator for filtering table lines.
+//!
+//! Implements the `scols-filter(5)` expression language. Supports:
+//! - Boolean operators: `&&` / `AND`, `||` / `OR`, `!` / `NOT`
+//! - Comparisons: `==`, `!=`, `<`, `<=`, `>`, `>=` (and word forms)
+//! - Regex matching: `=~`, `!~`
+//! - Literals: integers (with K/M/G/T suffixes), floats, quoted strings,
+//!   booleans (`true`/`false`)
+//! - Holders: unquoted column name references
+//!
+//! # Example
+//!
+//! ```
+//! use smartcols::Filter;
+//!
+//! let filter = Filter::parse(r#"SIZE > 1G && TYPE == "disk""#).unwrap();
+//! let result = filter.evaluate(|col| match col {
+//!     "SIZE" => Some("2147483648".into()),
+//!     "TYPE" => Some("disk".into()),
+//!     _ => None,
+//! }).unwrap();
+//! assert!(result);
+//! ```
+//!
+//! Operator precedence (lowest to highest): `OR`, `AND`, comparisons, `NOT`.
+
 use regex::Regex;
 use std::fmt;
 
-/// A parsed filter expression.
+/// A parsed filter expression, ready to evaluate against line data.
 #[derive(Debug, Clone)]
 pub struct Filter {
     root: Expr,

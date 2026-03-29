@@ -1,6 +1,16 @@
+//! Line — a row in the table.
+//!
+//! Each line holds one [`Cell`](crate::Cell) per column and can participate
+//! in tree hierarchies (parent/child) and group relationships.
+//! Lines are created via [`Table::new_line`](crate::Table::new_line) and
+//! accessed via [`LineId`] handles.
+
 use crate::cell::Cell;
 
-/// A handle to a line within a table. Used for parent/child references.
+/// Opaque handle to a line within a [`Table`](crate::Table).
+///
+/// Obtained from [`Table::new_line`](crate::Table::new_line) and used to
+/// reference lines in tree and data operations.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct LineId(pub(crate) usize);
 
@@ -16,7 +26,9 @@ pub struct Line {
     pub(crate) group_child: Option<GroupId>,
 }
 
-/// A handle to a group within a table.
+/// Opaque handle to a group within a [`Table`](crate::Table).
+///
+/// Obtained from [`Table::new_group`](crate::Table::new_group).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct GroupId(pub(crate) usize);
 

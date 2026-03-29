@@ -1,3 +1,23 @@
+//! C FFI layer — `extern "C"` functions matching the `libsmartcols` ABI.
+//!
+//! This module provides the ABI-compatible C interface so that programs
+//! linked against `libsmartcols.so` (such as `lsblk`, `findmnt`, `lsns`)
+//! can use our Rust implementation as a drop-in replacement via
+//! `LD_PRELOAD` or direct linking.
+//!
+//! All types are represented as opaque pointers to the caller. The table
+//! owns all data; column, line, and cell handles hold a back-pointer to
+//! the table plus an index.
+//!
+//! # Safety
+//!
+//! Every function in this module is `unsafe extern "C"`. Callers must
+//! ensure:
+//! - Pointers passed in are valid and were obtained from the corresponding
+//!   `scols_new_*` / `scols_table_new_*` function.
+//! - The table pointer outlives all column/line/cell handles derived from it.
+//! - `scols_unref_table` is called exactly once per `scols_new_table`.
+
 #![allow(clippy::missing_safety_doc, private_interfaces)]
 
 use crate::{
@@ -13,6 +33,7 @@ use std::{
     ptr,
 };
 
+/// Bindgen-generated constants from `libsmartcols.h`.
 #[allow(
     dead_code,
     non_camel_case_types,
@@ -23,10 +44,12 @@ mod sys {
     include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 }
 
+/// Convert a C `SCOLS_FL_*` bitmask to Rust [`ColumnFlags`].
 fn c_to_flags(flags: c_int) -> ColumnFlags {
     ColumnFlags::from_bits_truncate(flags as u32)
 }
 
+/// Convert a C `SCOLS_JSON_*` constant to Rust [`JsonType`].
 fn c_to_json_type(jt: c_int) -> JsonType {
     match jt as u32 {
         sys::SCOLS_JSON_NUMBER => JsonType::Number,
@@ -39,6 +62,7 @@ fn c_to_json_type(jt: c_int) -> JsonType {
     }
 }
 
+/// Convert a C `SCOLS_DATA_*` constant to Rust [`DataType`].
 fn c_to_data_type(dt: c_int) -> DataType {
     match dt as u32 {
         sys::SCOLS_DATA_U64 => DataType::U64,
@@ -49,6 +73,8 @@ fn c_to_data_type(dt: c_int) -> DataType {
     }
 }
 
+/// Convert a C string pointer to a Rust `&str`, returning `None` if null
+/// or not valid UTF-8.
 unsafe fn cstr_to_str<'a>(s: *const c_char) -> Option<&'a str> {
     if s.is_null() {
         None
@@ -84,19 +110,18 @@ struct FfiCell {
     col_idx: usize,
 }
 
-// Table
-
+/// Allocate a new empty table. Free with [`scols_unref_table`].
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_new_table() -> *mut Table {
     Box::into_raw(Box::new(Table::new()))
 }
 
+/// Increment the table's reference count. Currently a no-op — the caller
+/// must ensure exactly one [`scols_unref_table`] per allocation.
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn scols_ref_table(_tb: *mut Table) {
-    // No-op: we don't do ref counting. The caller must ensure
-    // exactly one unref per allocation.
-}
+pub unsafe extern "C" fn scols_ref_table(_tb: *mut Table) {}
 
+/// Drop the table and free all associated memory.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_unref_table(tb: *mut Table) {
     if !tb.is_null() {
@@ -104,8 +129,7 @@ pub unsafe extern "C" fn scols_unref_table(tb: *mut Table) {
     }
 }
 
-// Table — columns
-
+/// Create a new column and add it to the table. Returns an opaque column handle.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_new_column(
     tb: *mut Table,
@@ -119,6 +143,7 @@ pub unsafe extern "C" fn scols_table_new_column(
     Box::into_raw(Box::new(FfiColumn { table: tb, idx }))
 }
 
+/// Get a column handle by index. Returns null if out of bounds.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_get_column(
     tb: *mut Table,
@@ -131,18 +156,19 @@ pub unsafe extern "C" fn scols_table_get_column(
     Box::into_raw(Box::new(FfiColumn { table: tb, idx: n }))
 }
 
+/// Return the number of columns in the table.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_get_ncols(tb: *const Table) -> usize {
     unsafe { &*tb }.ncols()
 }
 
+/// Return the number of lines in the table.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_get_nlines(tb: *const Table) -> usize {
     unsafe { &*tb }.nlines()
 }
 
-// Table — lines
-
+/// Create a new line, optionally as a child of `parent`. Returns a line handle.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_new_line(
     tb: *mut Table,
@@ -158,8 +184,7 @@ pub unsafe extern "C" fn scols_table_new_line(
     Box::into_raw(Box::new(FfiLine { table: tb, id }))
 }
 
-// Table — iterator-based line traversal
-
+/// Advance the iterator and return the next line. Returns 0 on success, 1 when done.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_next_line(
     tb: *mut Table,
@@ -199,8 +224,7 @@ pub unsafe extern "C" fn scols_table_next_line(
     0
 }
 
-// Table — output mode toggles
-
+/// Enable or disable raw output mode.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_enable_raw(
     tb: *mut Table,
@@ -215,6 +239,7 @@ pub unsafe extern "C" fn scols_table_enable_raw(
     0
 }
 
+/// Enable or disable export output mode.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_enable_export(
     tb: *mut Table,
@@ -229,6 +254,7 @@ pub unsafe extern "C" fn scols_table_enable_export(
     0
 }
 
+/// Enable or disable ASCII-only symbols.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_enable_ascii(
     tb: *mut Table,
@@ -238,6 +264,7 @@ pub unsafe extern "C" fn scols_table_enable_ascii(
     0
 }
 
+/// Enable or disable JSON output mode.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_enable_json(
     tb: *mut Table,
@@ -252,6 +279,7 @@ pub unsafe extern "C" fn scols_table_enable_json(
     0
 }
 
+/// Enable or disable shell variable output mode.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_enable_shellvar(
     tb: *mut Table,
@@ -266,6 +294,7 @@ pub unsafe extern "C" fn scols_table_enable_shellvar(
     0
 }
 
+/// Suppress column headers in output.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_enable_noheadings(
     tb: *mut Table,
@@ -275,6 +304,7 @@ pub unsafe extern "C" fn scols_table_enable_noheadings(
     0
 }
 
+/// Enable or disable color output.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_enable_colors(
     tb: *mut Table,
@@ -284,6 +314,7 @@ pub unsafe extern "C" fn scols_table_enable_colors(
     0
 }
 
+/// Pad all columns to fill the terminal width.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_enable_maxout(
     tb: *mut Table,
@@ -293,6 +324,7 @@ pub unsafe extern "C" fn scols_table_enable_maxout(
     0
 }
 
+/// Minimize output by not padding after the last data.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_enable_minout(
     tb: *mut Table,
@@ -302,6 +334,7 @@ pub unsafe extern "C" fn scols_table_enable_minout(
     0
 }
 
+/// Disable line wrapping.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_enable_nowrap(
     tb: *mut Table,
@@ -311,6 +344,7 @@ pub unsafe extern "C" fn scols_table_enable_nowrap(
     0
 }
 
+/// Disable line separators between rows.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_enable_nolinesep(
     tb: *mut Table,
@@ -320,6 +354,7 @@ pub unsafe extern "C" fn scols_table_enable_nolinesep(
     0
 }
 
+/// Disable encoding of non-printable characters.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_enable_noencoding(
     tb: *mut Table,
@@ -329,6 +364,7 @@ pub unsafe extern "C" fn scols_table_enable_noencoding(
     0
 }
 
+/// Repeat headers at regular intervals.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_enable_header_repeat(
     tb: *mut Table,
@@ -338,65 +374,73 @@ pub unsafe extern "C" fn scols_table_enable_header_repeat(
     0
 }
 
-// Table — queries
-
+/// Return 1 if raw output mode is enabled.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_is_raw(tb: *const Table) -> c_int {
     unsafe { &*tb }.is_raw() as c_int
 }
 
+/// Return 1 if export output mode is enabled.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_is_export(tb: *const Table) -> c_int {
     unsafe { &*tb }.is_export() as c_int
 }
 
+/// Return 1 if JSON output mode is enabled.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_is_json(tb: *const Table) -> c_int {
     unsafe { &*tb }.is_json() as c_int
 }
 
+/// Return 1 if headers are suppressed.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_is_noheadings(tb: *const Table) -> c_int {
     unsafe { &*tb }.is_no_headings() as c_int
 }
 
+/// Return 1 if the table has no lines.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_is_empty(tb: *const Table) -> c_int {
     unsafe { &*tb }.is_empty() as c_int
 }
 
+/// Return 1 if ASCII mode is enabled.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_is_ascii(tb: *const Table) -> c_int {
     unsafe { &*tb }.is_ascii() as c_int
 }
 
+/// Return 1 if maxout mode is enabled.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_is_maxout(tb: *const Table) -> c_int {
     unsafe { &*tb }.is_maxout() as c_int
 }
 
+/// Return 1 if minout mode is enabled.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_is_minout(tb: *const Table) -> c_int {
     unsafe { &*tb }.is_minout() as c_int
 }
 
+/// Return 1 if wrapping is disabled.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_is_nowrap(tb: *const Table) -> c_int {
     unsafe { &*tb }.is_no_wrap() as c_int
 }
 
+/// Return 1 if any column has the TREE flag.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_is_tree(tb: *const Table) -> c_int {
     unsafe { &*tb }.is_tree() as c_int
 }
 
+/// Return 1 if color output is enabled.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_colors_wanted(tb: *const Table) -> c_int {
     unsafe { &*tb }.colors_enabled() as c_int
 }
 
-// Table — name
-
+/// Set the table name (used as JSON top-level key).
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_set_name(
     tb: *mut Table,
@@ -412,6 +456,7 @@ pub unsafe extern "C" fn scols_table_set_name(
     }
 }
 
+/// Get the table name. Currently returns null.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_get_name(
     tb: *const Table,
@@ -423,8 +468,7 @@ pub unsafe extern "C" fn scols_table_get_name(
     ptr::null()
 }
 
-// Table — terminal
-
+/// Override the terminal width used for column layout.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_set_termwidth(
     tb: *mut Table,
@@ -434,11 +478,13 @@ pub unsafe extern "C" fn scols_table_set_termwidth(
     0
 }
 
+/// Return the terminal width.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_get_termwidth(tb: *const Table) -> usize {
     unsafe { &*tb }.termwidth()
 }
 
+/// Override the terminal height.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_set_termheight(
     tb: *mut Table,
@@ -448,11 +494,13 @@ pub unsafe extern "C" fn scols_table_set_termheight(
     0
 }
 
+/// Return the terminal height.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_get_termheight(tb: *const Table) -> usize {
     unsafe { &*tb }.termheight()
 }
 
+/// Control terminal-aware formatting (auto/never/always).
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_set_termforce(
     tb: *mut Table,
@@ -467,6 +515,7 @@ pub unsafe extern "C" fn scols_table_set_termforce(
     0
 }
 
+/// Return the current terminal force setting.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_get_termforce(tb: *const Table) -> c_int {
     match unsafe { &*tb }.termforce() {
@@ -476,6 +525,7 @@ pub unsafe extern "C" fn scols_table_get_termforce(tb: *const Table) -> c_int {
     }
 }
 
+/// Reduce the effective terminal width by the given amount.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_reduce_termwidth(
     tb: *mut Table,
@@ -485,8 +535,7 @@ pub unsafe extern "C" fn scols_table_reduce_termwidth(
     0
 }
 
-// Table — sorting
-
+/// Sort lines by the given column. Pass null to re-sort by the last column.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_sort_table(
     tb: *mut Table,
@@ -502,14 +551,14 @@ pub unsafe extern "C" fn scols_sort_table(
     0
 }
 
+/// Reorder lines depth-first by tree hierarchy.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_sort_table_by_tree(tb: *mut Table) -> c_int {
     unsafe { &mut *tb }.sort_by_tree();
     0
 }
 
-// Table — print
-
+/// Print the table to stdout using the configured output mode.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_print_table(tb: *mut Table) -> c_int {
     let tb = unsafe { &*tb };
@@ -524,6 +573,7 @@ pub unsafe extern "C" fn scols_print_table(tb: *mut Table) -> c_int {
     }
 }
 
+/// Print the table to a heap-allocated string.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_print_table_to_string(
     tb: *mut Table,
@@ -543,8 +593,7 @@ pub unsafe extern "C" fn scols_print_table_to_string(
     }
 }
 
-// Table — separators
-
+/// Set the string used between columns.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_set_column_separator(
     tb: *mut Table,
@@ -559,6 +608,7 @@ pub unsafe extern "C" fn scols_table_set_column_separator(
     }
 }
 
+/// Set the string used between rows.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_set_line_separator(
     tb: *mut Table,
@@ -573,8 +623,7 @@ pub unsafe extern "C" fn scols_table_set_line_separator(
     }
 }
 
-// Iterator
-
+/// Allocate a new iterator. Free with `scols_free_iter`.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_new_iter(direction: c_int) -> *mut ScolsIter {
     Box::into_raw(Box::new(ScolsIter {
@@ -584,6 +633,7 @@ pub unsafe extern "C" fn scols_new_iter(direction: c_int) -> *mut ScolsIter {
     }))
 }
 
+/// Free an iterator.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_free_iter(itr: *mut ScolsIter) {
     if !itr.is_null() {
@@ -591,6 +641,7 @@ pub unsafe extern "C" fn scols_free_iter(itr: *mut ScolsIter) {
     }
 }
 
+/// Reset an iterator. Pass -1 to keep the current direction.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_reset_iter(
     itr: *mut ScolsIter,
@@ -604,6 +655,7 @@ pub unsafe extern "C" fn scols_reset_iter(
     itr.started = false;
 }
 
+/// Return the iterator's direction.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_iter_get_direction(
     itr: *const ScolsIter,
@@ -611,8 +663,7 @@ pub unsafe extern "C" fn scols_iter_get_direction(
     unsafe { &*itr }.direction
 }
 
-// Column
-
+/// Set the column's behavioral flags (`SCOLS_FL_*`).
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_column_set_flags(
     cl: *mut FfiColumn,
@@ -628,6 +679,7 @@ pub unsafe extern "C" fn scols_column_set_flags(
     }
 }
 
+/// Get the column's flags.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_column_get_flags(cl: *const FfiColumn) -> c_int {
     let fc = unsafe { &*cl };
@@ -635,6 +687,7 @@ pub unsafe extern "C" fn scols_column_get_flags(cl: *const FfiColumn) -> c_int {
     tb.column(fc.idx).map_or(0, |c| c.flags().bits() as c_int)
 }
 
+/// Set the column's JSON type.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_column_set_json_type(
     cl: *mut FfiColumn,
@@ -650,6 +703,7 @@ pub unsafe extern "C" fn scols_column_set_json_type(
     }
 }
 
+/// Get the column's JSON type.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_column_get_json_type(
     cl: *const FfiColumn,
@@ -667,6 +721,7 @@ pub unsafe extern "C" fn scols_column_get_json_type(
     })
 }
 
+/// Set the column's data type for filter operations.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_column_set_data_type(
     cl: *mut FfiColumn,
@@ -682,6 +737,7 @@ pub unsafe extern "C" fn scols_column_set_data_type(
     }
 }
 
+/// Set the column's width hint.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_column_set_whint(
     cl: *mut FfiColumn,
@@ -697,6 +753,7 @@ pub unsafe extern "C" fn scols_column_set_whint(
     }
 }
 
+/// Return 1 if this column renders the tree hierarchy.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_column_is_tree(cl: *const FfiColumn) -> c_int {
     let fc = unsafe { &*cl };
@@ -704,6 +761,7 @@ pub unsafe extern "C" fn scols_column_is_tree(cl: *const FfiColumn) -> c_int {
     tb.column(fc.idx).map_or(0, |c| c.is_tree() as c_int)
 }
 
+/// Return 1 if this column is hidden.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_column_is_hidden(cl: *const FfiColumn) -> c_int {
     let fc = unsafe { &*cl };
@@ -711,8 +769,7 @@ pub unsafe extern "C" fn scols_column_is_hidden(cl: *const FfiColumn) -> c_int {
     tb.column(fc.idx).map_or(0, |c| c.is_hidden() as c_int)
 }
 
-// Column — cmpfunc (stub: accept but ignore, use default string compare)
-
+/// Set a custom comparison function for sorting. Currently stubbed.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_column_set_cmpfunc(
     _cl: *mut FfiColumn,
@@ -726,8 +783,7 @@ pub unsafe extern "C" fn scols_column_set_cmpfunc(
     0
 }
 
-// Column — wrapfunc (stub)
-
+/// Set custom wrap callbacks. Currently stubbed.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_column_set_wrapfunc(
     _cl: *mut FfiColumn,
@@ -738,6 +794,7 @@ pub unsafe extern "C" fn scols_column_set_wrapfunc(
     0
 }
 
+/// Return 1 if the column has a data function. Currently always 0.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_column_has_data_func(
     _cl: *const FfiColumn,
@@ -745,8 +802,7 @@ pub unsafe extern "C" fn scols_column_has_data_func(
     0 // no data func support yet
 }
 
-// Column — color
-
+/// Set the default color for all cells in this column.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_column_set_color(
     cl: *mut FfiColumn,
@@ -764,8 +820,7 @@ pub unsafe extern "C" fn scols_column_set_color(
     }
 }
 
-// Line
-
+/// Set cell data by column index.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_line_set_data(
     ln: *mut FfiLine,
@@ -780,6 +835,7 @@ pub unsafe extern "C" fn scols_line_set_data(
     0
 }
 
+/// Set cell data by column handle.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_line_set_column_data(
     ln: *mut FfiLine,
@@ -790,6 +846,7 @@ pub unsafe extern "C" fn scols_line_set_column_data(
     unsafe { scols_line_set_data(ln, col_idx, data) }
 }
 
+/// Set cell data by index (C zero-copy variant, we copy).
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_line_refer_data(
     ln: *mut FfiLine,
@@ -800,6 +857,7 @@ pub unsafe extern "C" fn scols_line_refer_data(
     unsafe { scols_line_set_data(ln, n, data) }
 }
 
+/// Set cell data by column handle (C zero-copy variant, we copy).
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_line_refer_column_data(
     ln: *mut FfiLine,
@@ -810,6 +868,7 @@ pub unsafe extern "C" fn scols_line_refer_column_data(
     unsafe { scols_line_set_data(ln, col_idx, data) }
 }
 
+/// Return 1 if the cell at index `n` has data.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_line_is_filled(
     ln: *const FfiLine,
@@ -820,6 +879,7 @@ pub unsafe extern "C" fn scols_line_is_filled(
     tb.line(fl.id).is_filled(n) as c_int
 }
 
+/// Get a cell handle by column index.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_line_get_cell(
     ln: *mut FfiLine,
@@ -838,6 +898,7 @@ pub unsafe extern "C" fn scols_line_get_cell(
     }
 }
 
+/// Get a cell handle by column handle.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_line_get_column_cell(
     ln: *mut FfiLine,
@@ -847,6 +908,7 @@ pub unsafe extern "C" fn scols_line_get_column_cell(
     unsafe { scols_line_get_cell(ln, col_idx) }
 }
 
+/// Set the line's color.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_line_set_color(
     ln: *mut FfiLine,
@@ -860,6 +922,7 @@ pub unsafe extern "C" fn scols_line_set_color(
     0
 }
 
+/// Associate user data with the line. Currently stubbed.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_line_set_userdata(
     _ln: *mut FfiLine,
@@ -868,6 +931,7 @@ pub unsafe extern "C" fn scols_line_set_userdata(
     0 // stub
 }
 
+/// Retrieve user data from the line. Currently returns null.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_line_get_userdata(
     _ln: *const FfiLine,
@@ -875,6 +939,7 @@ pub unsafe extern "C" fn scols_line_get_userdata(
     ptr::null_mut() // stub
 }
 
+/// Add a parent-child relationship between two lines.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_line_add_child(
     ln: *mut FfiLine,
@@ -887,8 +952,7 @@ pub unsafe extern "C" fn scols_line_add_child(
     0
 }
 
-// Cell
-
+/// Set the cell's data string.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_cell_set_data(
     ce: *mut FfiCell,
@@ -901,6 +965,7 @@ pub unsafe extern "C" fn scols_cell_set_data(
     0
 }
 
+/// Set the cell's data string (C zero-copy variant, we copy).
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_cell_refer_data(
     ce: *mut FfiCell,
@@ -909,6 +974,7 @@ pub unsafe extern "C" fn scols_cell_refer_data(
     unsafe { scols_cell_set_data(ce, data) }
 }
 
+/// Set the cell's data from a buffer (C zero-copy variant, we copy).
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_cell_refer_memory(
     ce: *mut FfiCell,
@@ -918,6 +984,7 @@ pub unsafe extern "C" fn scols_cell_refer_memory(
     unsafe { scols_cell_set_data(ce, data) }
 }
 
+/// Get the cell's data string. Currently returns null.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_cell_get_data(
     ce: *const FfiCell,
@@ -936,6 +1003,7 @@ pub unsafe extern "C" fn scols_cell_get_data(
     }
 }
 
+/// Set the cell's color.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_cell_set_color(
     ce: *mut FfiCell,
@@ -951,6 +1019,7 @@ pub unsafe extern "C" fn scols_cell_set_color(
     0
 }
 
+/// Associate user data with the cell. Currently stubbed.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_cell_set_userdata(
     _ce: *mut FfiCell,
@@ -959,6 +1028,7 @@ pub unsafe extern "C" fn scols_cell_set_userdata(
     0 // stub
 }
 
+/// Retrieve user data from the cell. Currently returns null.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_cell_get_userdata(
     _ce: *const FfiCell,
@@ -966,22 +1036,19 @@ pub unsafe extern "C" fn scols_cell_get_userdata(
     ptr::null_mut() // stub
 }
 
-// Filter (stub — lsblk creates but may not use filters in basic invocations)
-
+/// Release a filter. Currently stubbed.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_unref_filter(_fltr: *mut c_void) {
     // stub
 }
 
-// Debug (no-op)
-
+/// Initialize debug output. Currently a no-op.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_init_debug(_mask: c_int) {
     // no-op
 }
 
-// Version
-
+/// Get the library version string and numeric code.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_get_library_version(
     ver_string: *mut *const c_char,
@@ -994,8 +1061,7 @@ pub unsafe extern "C" fn scols_get_library_version(
     100
 }
 
-// Symbols — set_default (needed by lsblk sometimes)
-
+/// Reset table symbols to defaults (Unicode or ASCII based on settings).
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_set_default_symbols(
     tb: *mut Table,
