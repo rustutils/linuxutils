@@ -721,6 +721,7 @@ dependencies = [
  "rustutils-setsid",
  "rustutils-uuidgen",
  "rustutils-uuidparse",
+ "rustutils-waitpid",
 ]
 
 [[package]]
@@ -798,6 +799,7 @@ dependencies = [
  "rustutils-setsid",
  "rustutils-uuidgen",
  "rustutils-uuidparse",
+ "rustutils-waitpid",
 ]
 
 [[package]]
@@ -815,6 +817,14 @@ dependencies = [
  "clap",
  "libc",
  "uuid",
+]
+
+[[package]]
+name = "rustutils-waitpid"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "rustix",
 ]
 
 [[package]]

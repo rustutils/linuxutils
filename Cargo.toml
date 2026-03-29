@@ -14,6 +14,7 @@ members = [
     "tools/misc/mcookie",
     "tools/misc/uuidgen",
     "tools/misc/uuidparse",
+    "tools/misc/waitpid",
     "tools/system/lsirq",
     "tools/system/lsmem",
     "tools/system/mountpoint",
@@ -33,7 +34,7 @@ license = "MIT"
 repository = "https://github.com/rustutils/util-linux"
 
 [workspace.dependencies]
-rustix = { version = "1", features = ["fs", "process", "termios"] }
+rustix = { version = "1", features = ["event", "fs", "process", "termios"] }
 uuid = { version = "1", features = ["v1", "v3", "v4", "v5", "v6", "v7"] }
 
 # workspace crates
@@ -54,6 +55,7 @@ rustutils-uuidgen = { path = "tools/misc/uuidgen" }
 rustutils-lsirq = { path = "tools/system/lsirq" }
 rustutils-lsmem = { path = "tools/system/lsmem" }
 rustutils-uuidparse = { path = "tools/misc/uuidparse" }
+rustutils-waitpid = { path = "tools/misc/waitpid" }
 
 [workspace.metadata.crane]
 name = "rustutils-util-linux"

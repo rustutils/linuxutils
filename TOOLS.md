@@ -107,7 +107,7 @@
 | `uuidd` | UUID generation daemon | Not started |
 | `uuidgen` | Create a new UUID value | Done |
 | `uuidparse` | Parse unique identifiers | Done |
-| `waitpid` | Wait for arbitrary processes | Not started |
+| `waitpid` | Wait for arbitrary processes | Done |
 | `whereis` | Locate the binary, source, and manual page files for a command | Not started |
 | `wipefs` | Wipe a signature from a device | Not started |
 

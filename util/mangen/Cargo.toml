@@ -25,3 +25,4 @@ rustutils-setpgid.workspace = true
 rustutils-setsid.workspace = true
 rustutils-uuidgen.workspace = true
 rustutils-uuidparse.workspace = true
+rustutils-waitpid.workspace = true

@@ -28,6 +28,7 @@ fn main() -> ExitCode {
         rustutils_rev::Args::command(),
         rustutils_uuidgen::Args::command(),
         rustutils_uuidparse::Args::command(),
+        rustutils_waitpid::Args::command(),
     ];
 
     for cmd in tools {
