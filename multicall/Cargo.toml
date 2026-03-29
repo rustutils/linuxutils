@@ -8,6 +8,7 @@ repository.workspace = true
 
 [dependencies]
 clap = { version = "4", features = ["derive"] }
+rustutils-cal.workspace = true
 rustutils-colrm.workspace = true
 rustutils-line.workspace = true
 rustutils-look.workspace = true

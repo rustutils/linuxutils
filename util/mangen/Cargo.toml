@@ -10,6 +10,7 @@ publish = false
 [dependencies]
 clap = "4"
 clap_mangen = "0.2"
+rustutils-cal.workspace = true
 rustutils-colrm.workspace = true
 rustutils-line.workspace = true
 rustutils-look.workspace = true

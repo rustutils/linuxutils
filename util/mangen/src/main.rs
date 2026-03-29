@@ -13,6 +13,7 @@ fn main() -> ExitCode {
     }
 
     let tools: Vec<clap::Command> = vec![
+        rustutils_cal::Args::command(),
         rustutils_colrm::Args::command(),
         rustutils_line::Args::command(),
         rustutils_look::Args::command(),

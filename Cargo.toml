@@ -9,6 +9,7 @@ members = [
     "libs/uuid",
     "multicall",
     "tools/login/nologin",
+    "tools/misc/cal",
     "tools/misc/look",
     "tools/misc/mcookie",
     "tools/misc/uuidgen",
@@ -38,6 +39,7 @@ uuid = { version = "1", features = ["v1", "v3", "v4", "v5", "v6", "v7"] }
 # workspace crates
 rustutils-common-sysfs = { path = "common/sysfs" }
 rustutils-libsmartcols = { path = "libs/smartcols" }
+rustutils-cal = { path = "tools/misc/cal" }
 rustutils-colrm = { path = "tools/text/colrm" }
 rustutils-line = { path = "tools/text/line" }
 rustutils-look = { path = "tools/misc/look" }

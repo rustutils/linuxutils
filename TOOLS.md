@@ -82,7 +82,7 @@
 | Tool | Description | Status |
 |------|-------------|--------|
 | `blkid` | Locate and print block device attributes | Not started |
-| `cal` | Display a calendar | Not started |
+| `cal` | Display a calendar | Done |
 | `copyfilerange` | Copy range(s) from source to destination file | Not started |
 | `enosys` | Make syscalls fail with ENOSYS | Not started |
 | `exch` | Atomically exchange paths between two files | Not started |

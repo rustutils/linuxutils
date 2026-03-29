@@ -1,0 +1,18 @@
+[package]
+name = "rustutils-cal"
+description = "Display a calendar"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+name = "rustutils_cal"
+
+[[bin]]
+name = "cal"
+path = "src/main.rs"
+
+[dependencies]
+chrono = { version = "0.4", default-features = false, features = ["clock"] }
+clap = { version = "4", features = ["derive"] }
