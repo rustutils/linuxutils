@@ -21,6 +21,7 @@
         "look"
         "mcookie"
         "mesg"
+        "mountpoint"
         "nologin"
         "rev"
       ];

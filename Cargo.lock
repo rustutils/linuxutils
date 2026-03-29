@@ -346,6 +346,7 @@ dependencies = [
  "rustutils-look",
  "rustutils-mcookie",
  "rustutils-mesg",
+ "rustutils-mountpoint",
  "rustutils-nologin",
  "rustutils-rev",
 ]
@@ -359,6 +360,14 @@ dependencies = [
 
 [[package]]
 name = "rustutils-mesg"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "rustix",
+]
+
+[[package]]
+name = "rustutils-mountpoint"
 version = "0.1.0"
 dependencies = [
  "clap",
@@ -389,6 +398,7 @@ dependencies = [
  "rustutils-look",
  "rustutils-mcookie",
  "rustutils-mesg",
+ "rustutils-mountpoint",
  "rustutils-nologin",
  "rustutils-rev",
 ]

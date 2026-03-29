@@ -56,7 +56,7 @@
 | `lsmem` | List the ranges of available memory with their online status | Not started |
 | `lsns` | List namespaces | Not started |
 | `mount` | Mount a filesystem | Not started |
-| `mountpoint` | See if a directory or file is a mountpoint | Not started |
+| `mountpoint` | See if a directory or file is a mountpoint | Done |
 | `nsenter` | Run a program in different namespaces | Not started |
 | `pivot_root` | Change the root filesystem | Not started |
 | `prlimit` | Get and set process resource limits | Not started |
