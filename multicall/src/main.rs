@@ -11,6 +11,7 @@ fn main() -> ExitCode {
         .subcommand(rustutils_mesg::Args::command())
         .subcommand(rustutils_mountpoint::Args::command())
         .subcommand(rustutils_nologin::Args::command())
+        .subcommand(rustutils_setpgid::Args::command())
         .subcommand(rustutils_setsid::Args::command())
         .subcommand(rustutils_rev::Args::command());
 
@@ -37,6 +38,9 @@ fn main() -> ExitCode {
         ),
         Some(("nologin", m)) => rustutils_nologin::run(
             rustutils_nologin::Args::from_arg_matches(m).unwrap(),
+        ),
+        Some(("setpgid", m)) => rustutils_setpgid::run(
+            rustutils_setpgid::Args::from_arg_matches(m).unwrap(),
         ),
         Some(("setsid", m)) => rustutils_setsid::run(
             rustutils_setsid::Args::from_arg_matches(m).unwrap(),

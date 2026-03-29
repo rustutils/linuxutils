@@ -65,7 +65,7 @@
 | `rfkill` | Enable and disable wireless devices | Not started |
 | `rtcwake` | Enter a system sleep state until specified wakeup time | Not started |
 | `setarch` | Change reported architecture in new program environment and/or set personality flags | Not started |
-| `setpgid` | Run a program in a new process group | Not started |
+| `setpgid` | Run a program in a new process group | Done |
 | `setpriv` | Run a program with different Linux privilege settings | Not started |
 | `setsid` | Run a program in a new session | Done |
 | `swapoff` | Disable devices and files for paging and swapping | Not started |

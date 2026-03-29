@@ -9,6 +9,7 @@ members = [
     "tools/mesg",
     "tools/mountpoint",
     "tools/nologin",
+    "tools/setpgid",
     "tools/setsid",
     "tools/rev",
     "util/mangen",

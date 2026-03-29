@@ -23,6 +23,7 @@
         "mesg"
         "mountpoint"
         "nologin"
+        "setpgid"
         "setsid"
         "rev"
       ];

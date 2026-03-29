@@ -15,5 +15,6 @@ rustutils-mcookie = { path = "../tools/mcookie" }
 rustutils-mesg = { path = "../tools/mesg" }
 rustutils-mountpoint = { path = "../tools/mountpoint" }
 rustutils-nologin = { path = "../tools/nologin" }
+rustutils-setpgid = { path = "../tools/setpgid" }
 rustutils-setsid = { path = "../tools/setsid" }
 rustutils-rev = { path = "../tools/rev" }
