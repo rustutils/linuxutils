@@ -1,24 +1,8 @@
 //! Cell — the smallest unit in a table.
 //!
 //! Each cell holds an optional data string plus formatting metadata (color,
-//! URI, alignment flags). Cells are stored inside [`Line`](crate::Line)s,
+//! URI, alignment). Cells are stored inside [`Line`](crate::Line)s,
 //! one per column.
-
-use bitflags::bitflags;
-
-bitflags! {
-    /// Per-cell alignment flags.
-    ///
-    /// Evaluated in order: if `RIGHT` is set it wins, then `CENTER`, then
-    /// the default left alignment.
-    #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
-    pub struct CellFlags: u32 {
-        /// Center the cell content within the column width.
-        const CENTER = 1 << 0;
-        /// Right-align the cell content within the column width.
-        const RIGHT  = 1 << 1;
-    }
-}
 
 /// The smallest unit in a table — holds a data string plus optional
 /// color, URI, and alignment.
@@ -27,7 +11,7 @@ pub struct Cell {
     data: Option<String>,
     color: Option<String>,
     uri: Option<String>,
-    flags: CellFlags,
+    alignment: Alignment,
 }
 
 impl Cell {
@@ -67,24 +51,24 @@ impl Cell {
         self.uri.as_deref()
     }
 
-    pub fn set_flags(&mut self, flags: CellFlags) -> &mut Self {
-        self.flags = flags;
+    pub fn set_alignment(&mut self, alignment: Alignment) -> &mut Self {
+        self.alignment = alignment;
         self
     }
 
-    pub fn flags(&self) -> CellFlags {
-        self.flags
+    pub fn alignment(&self) -> Alignment {
+        self.alignment
     }
 
-    /// Returns the effective alignment: Right > Center > Left (default).
-    pub fn alignment(&self) -> Alignment {
-        if self.flags.contains(CellFlags::RIGHT) {
+    /// Set alignment from a C `SCOLS_CELL_FL_*` bitmask (for FFI).
+    pub(crate) fn set_flags_from_bits(&mut self, bits: u32) {
+        self.alignment = if bits & (1 << 1) != 0 {
             Alignment::Right
-        } else if self.flags.contains(CellFlags::CENTER) {
+        } else if bits & (1 << 0) != 0 {
             Alignment::Center
         } else {
             Alignment::Left
-        }
+        };
     }
 
     pub fn is_filled(&self) -> bool {

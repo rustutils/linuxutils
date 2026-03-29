@@ -1,6 +1,4 @@
-use smartcols::{
-    ColumnFlags, OutputMode, Table, TermForce, print_table_to_string,
-};
+use smartcols::{OutputMode, Table, TermForce, print_table_to_string};
 
 // ── Group rendering ──────────────────────────────────────────────────────────
 
@@ -10,8 +8,9 @@ fn group_members_only() {
     t.set_termwidth(40);
     t.set_termforce(TermForce::Always);
     t.enable_no_headings(true);
-    t.new_column("NAME", 0.0, ColumnFlags::empty());
-    t.new_column("SIZE", 0.0, ColumnFlags::RIGHT);
+    t.new_column("NAME", 0.0);
+    let size_idx = t.new_column("SIZE", 0.0);
+    t.column_mut(size_idx).unwrap().set_right(true);
 
     let g = t.new_group();
 
@@ -38,8 +37,9 @@ fn group_members_and_children() {
     t.set_termwidth(40);
     t.set_termforce(TermForce::Always);
     t.enable_no_headings(true);
-    t.new_column("PROCESS", 0.0, ColumnFlags::empty());
-    t.new_column("PID", 0.0, ColumnFlags::RIGHT);
+    t.new_column("PROCESS", 0.0);
+    let pid_idx = t.new_column("PID", 0.0);
+    t.column_mut(pid_idx).unwrap().set_right(true);
 
     let g = t.new_group();
 
@@ -68,7 +68,7 @@ fn group_with_nonmember_lines() {
     t.set_termwidth(40);
     t.set_termforce(TermForce::Always);
     t.enable_no_headings(true);
-    t.new_column("NAME", 0.0, ColumnFlags::empty());
+    t.new_column("NAME", 0.0);
 
     let before = t.new_line(None);
     t.line_mut(before).set_data(0, "unrelated-before");
@@ -104,7 +104,7 @@ fn group_ascii() {
     t.set_termforce(TermForce::Always);
     t.enable_no_headings(true);
     t.enable_ascii(true);
-    t.new_column("NAME", 0.0, ColumnFlags::empty());
+    t.new_column("NAME", 0.0);
 
     let g = t.new_group();
 
@@ -128,8 +128,9 @@ fn group_with_header() {
     let mut t = Table::new();
     t.set_termwidth(40);
     t.set_termforce(TermForce::Always);
-    t.new_column("NAME", 10.0, ColumnFlags::empty());
-    t.new_column("VALUE", 10.0, ColumnFlags::RIGHT);
+    t.new_column("NAME", 10.0);
+    let val_idx = t.new_column("VALUE", 10.0);
+    t.column_mut(val_idx).unwrap().set_right(true);
 
     let g = t.new_group();
 
@@ -150,13 +151,21 @@ fn lsblk_table() -> Table {
     t.set_name("blockdevices");
     t.set_termwidth(80);
     t.set_termforce(TermForce::Always);
-    t.new_column("NAME", 0.25, ColumnFlags::TREE | ColumnFlags::NO_EXTREMES);
-    t.new_column("MAJ:MIN", 6.0, ColumnFlags::empty());
-    t.new_column("RM", 1.0, ColumnFlags::RIGHT);
-    t.new_column("SIZE", 5.0, ColumnFlags::RIGHT);
-    t.new_column("RO", 1.0, ColumnFlags::RIGHT);
-    t.new_column("TYPE", 4.0, ColumnFlags::empty());
-    t.new_column("MOUNTPOINTS", 0.1, ColumnFlags::WRAP);
+    let name_idx = t.new_column("NAME", 0.25);
+    t.column_mut(name_idx)
+        .unwrap()
+        .set_tree(true)
+        .set_no_extremes(true);
+    t.new_column("MAJ:MIN", 6.0);
+    let rm_idx = t.new_column("RM", 1.0);
+    t.column_mut(rm_idx).unwrap().set_right(true);
+    let size_idx = t.new_column("SIZE", 5.0);
+    t.column_mut(size_idx).unwrap().set_right(true);
+    let ro_idx = t.new_column("RO", 1.0);
+    t.column_mut(ro_idx).unwrap().set_right(true);
+    t.new_column("TYPE", 4.0);
+    let mp_idx = t.new_column("MOUNTPOINTS", 0.1);
+    t.column_mut(mp_idx).unwrap().set_wrap(true);
 
     let sda = t.new_line(None);
     t.line_mut(sda)
@@ -261,8 +270,9 @@ fn simple_table() -> Table {
     let mut t = Table::new();
     t.set_termwidth(40);
     t.set_termforce(TermForce::Always);
-    t.new_column("NAME", 10.0, ColumnFlags::empty());
-    t.new_column("VALUE", 10.0, ColumnFlags::RIGHT);
+    t.new_column("NAME", 10.0);
+    let val_idx = t.new_column("VALUE", 10.0);
+    t.column_mut(val_idx).unwrap().set_right(true);
 
     let l1 = t.new_line(None);
     t.line_mut(l1).set_data(0, "alpha").set_data(1, "100");
@@ -304,9 +314,10 @@ fn simple_maxout() {
 fn hidden_column() {
     let mut t = Table::new();
     t.set_termwidth(40);
-    t.new_column("A", 5.0, ColumnFlags::empty());
-    t.new_column("B", 5.0, ColumnFlags::HIDDEN);
-    t.new_column("C", 5.0, ColumnFlags::empty());
+    t.new_column("A", 5.0);
+    let b_idx = t.new_column("B", 5.0);
+    t.column_mut(b_idx).unwrap().set_hidden(true);
+    t.new_column("C", 5.0);
 
     let l = t.new_line(None);
     t.line_mut(l)
@@ -323,8 +334,10 @@ fn tree_ascii() {
     let mut t = Table::new();
     t.set_termwidth(40);
     t.enable_ascii(true);
-    t.new_column("NAME", 0.0, ColumnFlags::TREE);
-    t.new_column("SIZE", 0.0, ColumnFlags::RIGHT);
+    let name_idx = t.new_column("NAME", 0.0);
+    t.column_mut(name_idx).unwrap().set_tree(true);
+    let size_idx = t.new_column("SIZE", 0.0);
+    t.column_mut(size_idx).unwrap().set_right(true);
 
     let root = t.new_line(None);
     t.line_mut(root).set_data(0, "root").set_data(1, "100");
@@ -346,7 +359,8 @@ fn tree_ascii() {
 fn tree_unicode() {
     let mut t = Table::new();
     t.set_termwidth(40);
-    t.new_column("NAME", 0.0, ColumnFlags::TREE);
+    let name_idx = t.new_column("NAME", 0.0);
+    t.column_mut(name_idx).unwrap().set_tree(true);
 
     let root = t.new_line(None);
     t.line_mut(root).set_data(0, "root");
@@ -364,8 +378,8 @@ fn tree_unicode() {
 #[test]
 fn empty_table() {
     let mut t = Table::new();
-    t.new_column("A", 5.0, ColumnFlags::empty());
-    t.new_column("B", 5.0, ColumnFlags::empty());
+    t.new_column("A", 5.0);
+    t.new_column("B", 5.0);
     let output = print_table_to_string(&t).unwrap();
     insta::assert_snapshot!(output);
 }
@@ -374,8 +388,8 @@ fn empty_table() {
 fn wide_data_truncation() {
     let mut t = Table::new();
     t.set_termwidth(30);
-    t.new_column("SHORT", 5.0, ColumnFlags::empty());
-    t.new_column("LONG", 0.0, ColumnFlags::empty());
+    t.new_column("SHORT", 5.0);
+    t.new_column("LONG", 0.0);
 
     let l = t.new_line(None);
     t.line_mut(l).set_data(0, "ok").set_data(
@@ -391,8 +405,9 @@ fn wide_data_truncation() {
 fn right_align_columns() {
     let mut t = Table::new();
     t.set_termwidth(40);
-    t.new_column("LEFT", 10.0, ColumnFlags::empty());
-    t.new_column("RIGHT", 10.0, ColumnFlags::RIGHT);
+    t.new_column("LEFT", 10.0);
+    let right_idx = t.new_column("RIGHT", 10.0);
+    t.column_mut(right_idx).unwrap().set_right(true);
 
     let l1 = t.new_line(None);
     t.line_mut(l1).set_data(0, "a").set_data(1, "1");
@@ -412,7 +427,7 @@ fn title_centered() {
     let mut t = Table::new();
     t.set_termwidth(40);
     t.title_mut().set_data("My Table");
-    t.new_column("X", 10.0, ColumnFlags::empty());
+    t.new_column("X", 10.0);
 
     let l = t.new_line(None);
     t.line_mut(l).set_data(0, "data");
@@ -425,7 +440,7 @@ fn title_centered() {
 fn nonprintable_encoding() {
     let mut t = Table::new();
     t.set_termwidth(40);
-    t.new_column("DATA", 0.0, ColumnFlags::empty());
+    t.new_column("DATA", 0.0);
 
     let l = t.new_line(None);
     t.line_mut(l).set_data(0, "hello\x01world\x1b[31m");
@@ -438,11 +453,14 @@ fn nonprintable_encoding() {
 fn lsmem_like() {
     let mut t = Table::new();
     t.set_termwidth(80);
-    t.new_column("RANGE", 0.0, ColumnFlags::empty());
-    t.new_column("SIZE", 5.0, ColumnFlags::RIGHT);
-    t.new_column("STATE", 6.0, ColumnFlags::empty());
-    t.new_column("REMOVABLE", 9.0, ColumnFlags::RIGHT);
-    t.new_column("BLOCK", 0.0, ColumnFlags::RIGHT);
+    t.new_column("RANGE", 0.0);
+    let size_idx = t.new_column("SIZE", 5.0);
+    t.column_mut(size_idx).unwrap().set_right(true);
+    t.new_column("STATE", 6.0);
+    let rem_idx = t.new_column("REMOVABLE", 9.0);
+    t.column_mut(rem_idx).unwrap().set_right(true);
+    let blk_idx = t.new_column("BLOCK", 0.0);
+    t.column_mut(blk_idx).unwrap().set_right(true);
 
     let l1 = t.new_line(None);
     t.line_mut(l1)

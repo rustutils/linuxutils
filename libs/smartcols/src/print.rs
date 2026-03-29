@@ -910,13 +910,14 @@ fn encode_data(s: &str, safechars: Option<&str>) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{ColumnFlags, Table};
+    use crate::Table;
 
     #[test]
     fn basic_normal_output() {
         let mut table = Table::new();
-        table.new_column("NAME", 0.0, ColumnFlags::empty());
-        table.new_column("SIZE", 0.0, ColumnFlags::RIGHT);
+        table.new_column("NAME", 0.0);
+        let size_col = table.new_column("SIZE", 0.0);
+        table.column_mut(size_col).unwrap().set_right(true);
 
         let l1 = table.new_line(None);
         table.line_mut(l1).set_data(0, "sda").set_data(1, "100G");
@@ -936,7 +937,7 @@ mod tests {
     fn no_headings() {
         let mut table = Table::new();
         table.enable_no_headings(true);
-        table.new_column("NAME", 0.0, ColumnFlags::empty());
+        table.new_column("NAME", 0.0);
 
         let l1 = table.new_line(None);
         table.line_mut(l1).set_data(0, "hello");
@@ -950,7 +951,7 @@ mod tests {
         let mut table = Table::new();
         table.set_name("devices");
         table.set_output_mode(OutputMode::Json);
-        table.new_column("NAME", 0.0, ColumnFlags::empty());
+        table.new_column("NAME", 0.0);
 
         let l1 = table.new_line(None);
         table.line_mut(l1).set_data(0, "sda");
@@ -964,8 +965,8 @@ mod tests {
     fn export_output() {
         let mut table = Table::new();
         table.set_output_mode(OutputMode::Export);
-        table.new_column("NAME", 0.0, ColumnFlags::empty());
-        table.new_column("SIZE", 0.0, ColumnFlags::empty());
+        table.new_column("NAME", 0.0);
+        table.new_column("SIZE", 0.0);
 
         let l1 = table.new_line(None);
         table.line_mut(l1).set_data(0, "sda").set_data(1, "100G");
@@ -979,8 +980,8 @@ mod tests {
     fn raw_output() {
         let mut table = Table::new();
         table.set_output_mode(OutputMode::Raw);
-        table.new_column("A", 0.0, ColumnFlags::empty());
-        table.new_column("B", 0.0, ColumnFlags::empty());
+        table.new_column("A", 0.0);
+        table.new_column("B", 0.0);
 
         let l1 = table.new_line(None);
         table.line_mut(l1).set_data(0, "x").set_data(1, "y");
@@ -996,7 +997,8 @@ mod tests {
         let mut table = Table::new();
         table.enable_no_headings(true);
         table.enable_ascii(true);
-        table.new_column("NAME", 0.0, ColumnFlags::TREE);
+        let name_col = table.new_column("NAME", 0.0);
+        table.column_mut(name_col).unwrap().set_tree(true);
 
         let root = table.new_line(None);
         table.line_mut(root).set_data(0, "root");
@@ -1018,8 +1020,9 @@ mod tests {
     fn hidden_column() {
         let mut table = Table::new();
         table.enable_no_headings(true);
-        table.new_column("VISIBLE", 0.0, ColumnFlags::empty());
-        table.new_column("HIDDEN", 0.0, ColumnFlags::HIDDEN);
+        table.new_column("VISIBLE", 0.0);
+        let hidden_col = table.new_column("HIDDEN", 0.0);
+        table.column_mut(hidden_col).unwrap().set_hidden(true);
 
         let l1 = table.new_line(None);
         table.line_mut(l1).set_data(0, "yes").set_data(1, "no");

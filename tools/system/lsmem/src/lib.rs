@@ -1,6 +1,6 @@
 use clap::Parser;
 use rustutils_common_sysfs::SysfsDevice;
-use smartcols::{ColumnFlags, OutputMode, Table, print_table};
+use smartcols::{OutputMode, Table, print_table};
 use std::{
     path::{Path, PathBuf},
     process::ExitCode,
@@ -111,11 +111,8 @@ impl Col {
         }
     }
 
-    fn flags(self) -> ColumnFlags {
-        match self {
-            Col::Size | Col::Removable | Col::Block => ColumnFlags::RIGHT,
-            _ => ColumnFlags::empty(),
-        }
+    fn is_right(self) -> bool {
+        matches!(self, Col::Size | Col::Removable | Col::Block)
     }
 
     fn from_name(name: &str) -> Option<Self> {
@@ -394,7 +391,10 @@ pub fn run(args: Args) -> ExitCode {
         }
 
         for col in &columns {
-            table.new_column(col.name(), col.whint(), col.flags());
+            let idx = table.new_column(col.name(), col.whint());
+            if col.is_right() {
+                table.column_mut(idx).unwrap().set_right(true);
+            }
         }
 
         for range in &ranges {

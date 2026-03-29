@@ -1,5 +1,5 @@
 use clap::{Parser, Subcommand};
-use smartcols::{ColumnFlags, OutputMode, Table, print_table};
+use smartcols::{OutputMode, Table, print_table};
 use std::{
     fs::{self, File, OpenOptions},
     io::{self, Read, Write},
@@ -265,11 +265,8 @@ impl Col {
         }
     }
 
-    fn flags(self) -> ColumnFlags {
-        match self {
-            Col::Id => ColumnFlags::RIGHT,
-            _ => ColumnFlags::empty(),
-        }
+    fn is_right(self) -> bool {
+        matches!(self, Col::Id)
     }
 
     fn from_name(s: &str) -> Option<Self> {
@@ -345,7 +342,10 @@ fn print_table_output(args: &Args, devices: &[Device]) -> ExitCode {
     }
 
     for col in &columns {
-        table.new_column(col.name(), col.whint(), col.flags());
+        let idx = table.new_column(col.name(), col.whint());
+        if col.is_right() {
+            table.column_mut(idx).unwrap().set_right(true);
+        }
     }
 
     for dev in devices {

@@ -140,7 +140,7 @@ pub unsafe extern "C" fn scols_table_new_column(
 ) -> *mut FfiColumn {
     let tb = unsafe { &mut *tb };
     let name = unsafe { cstr_to_str(name) }.unwrap_or("");
-    let idx = tb.new_column(name, whint, c_to_flags(flags));
+    let idx = tb.new_column_with_flags(name, whint, c_to_flags(flags));
     Box::into_raw(Box::new(FfiColumn { table: tb, idx }))
 }
 
@@ -1190,7 +1190,11 @@ pub unsafe extern "C" fn scols_cell_get_flags(ce: *const FfiCell) -> c_int {
     let tb = unsafe { &*fc.table };
     tb.line(fc.line_id)
         .cell(fc.col_idx)
-        .map_or(0, |c| c.flags().bits() as c_int)
+        .map_or(0, |c| match c.alignment() {
+            crate::cell::Alignment::Left => 0,
+            crate::cell::Alignment::Center => 1 << 0,
+            crate::cell::Alignment::Right => 1 << 1,
+        })
 }
 
 /// Set the cell's flags. Returns 0.
@@ -1202,9 +1206,7 @@ pub unsafe extern "C" fn scols_cell_set_flags(
     let fc = unsafe { &*ce };
     let tb = unsafe { &mut *fc.table };
     if let Some(cell) = tb.line_mut(fc.line_id).cell_mut(fc.col_idx) {
-        cell.set_flags(crate::cell::CellFlags::from_bits_truncate(
-            flags as u32,
-        ));
+        cell.set_flags_from_bits(flags as u32);
     }
     0
 }

@@ -8,11 +8,13 @@
 //! # Quick start
 //!
 //! ```
-//! use smartcols::{ColumnFlags, Table, print_table_to_string};
+//! use smartcols::{Table, Column, print_table_to_string};
 //!
 //! let mut table = Table::new();
-//! table.new_column("NAME", 10.0, ColumnFlags::empty());
-//! table.new_column("SIZE", 6.0, ColumnFlags::RIGHT);
+//! table.new_column("NAME", 10.0);
+//! let mut size_col = Column::with_name("SIZE", 6.0);
+//! size_col.set_right(true);
+//! table.add_column(size_col);
 //!
 //! let l1 = table.new_line(None);
 //! table.line_mut(l1).set_data(0, "sda").set_data(1, "100G");
@@ -30,12 +32,12 @@
 //! Set via [`Table::set_output_mode`]:
 //!
 //! ```
-//! use smartcols::{ColumnFlags, OutputMode, Table, print_table_to_string};
+//! use smartcols::{OutputMode, Table, print_table_to_string};
 //!
 //! let mut table = Table::new();
 //! table.set_name("devices");
-//! table.new_column("NAME", 0.0, ColumnFlags::empty());
-//! table.new_column("SIZE", 0.0, ColumnFlags::empty());
+//! table.new_column("NAME", 0.0);
+//! table.new_column("SIZE", 0.0);
 //!
 //! let row = table.new_line(None);
 //! table.line_mut(row).set_data(0, "sda").set_data(1, "100G");
@@ -72,31 +74,32 @@
 //!
 //! # Column flags
 //!
-//! [`ColumnFlags`] control per-column rendering behavior:
+//! Per-column rendering behavior is controlled via setter methods on [`Column`]:
 //!
-//! | Flag | Effect |
-//! |------|--------|
-//! | [`ColumnFlags::TREE`] | Draws tree connectors (use with [`Table::new_line`] parent) |
-//! | [`ColumnFlags::RIGHT`] | Right-aligns cell data |
-//! | [`ColumnFlags::TRUNC`] | Truncates data that exceeds the column width |
-//! | [`ColumnFlags::WRAP`] | Wraps long data across multiple output lines |
-//! | [`ColumnFlags::HIDDEN`] | Stores data in memory but omits it from output |
-//! | [`ColumnFlags::STRICT_WIDTH`] | Never shrink the column below its hint width |
-//! | [`ColumnFlags::NO_EXTREMES`] | Ignore outlier values when calculating widths |
+//! | Method | Effect |
+//! |--------|--------|
+//! | [`Column::set_tree`] | Draws tree connectors (use with [`Table::new_line`] parent) |
+//! | [`Column::set_right`] | Right-aligns cell data |
+//! | [`Column::set_trunc`] | Truncates data that exceeds the column width |
+//! | [`Column::set_wrap`] | Wraps long data across multiple output lines |
+//! | [`Column::set_hidden`] | Stores data in memory but omits it from output |
+//! | [`Column::set_strict_width`] | Never shrink the column below its hint width |
+//! | [`Column::set_no_extremes`] | Ignore outlier values when calculating widths |
 //!
 //! # Tree rendering
 //!
-//! Mark a column with [`ColumnFlags::TREE`] and pass a parent [`LineId`] when
-//! creating child lines. The print engine draws Unicode (or ASCII) tree
-//! connectors automatically.
+//! Mark a column as a tree column with [`Column::set_tree`] and pass a parent
+//! [`LineId`] when creating child lines. The print engine draws Unicode (or
+//! ASCII) tree connectors automatically.
 //!
 //! ```
-//! use smartcols::{ColumnFlags, Table, print_table_to_string};
+//! use smartcols::{Table, print_table_to_string};
 //!
 //! let mut table = Table::new();
 //! table.enable_no_headings(true);
 //! table.enable_ascii(true);
-//! table.new_column("NAME", 0.0, ColumnFlags::TREE);
+//! let idx = table.new_column("NAME", 0.0);
+//! table.column_mut(idx).unwrap().set_tree(true);
 //!
 //! let root = table.new_line(None);
 //! table.line_mut(root).set_data(0, "parent");
@@ -120,12 +123,13 @@
 //! a single root line.
 //!
 //! ```
-//! use smartcols::{ColumnFlags, Table, print_table_to_string};
+//! use smartcols::{Table, print_table_to_string};
 //!
 //! let mut table = Table::new();
 //! table.enable_ascii(true);
 //! table.enable_no_headings(true);
-//! table.new_column("NAME", 0.0, ColumnFlags::TREE);
+//! let idx = table.new_column("NAME", 0.0);
+//! table.column_mut(idx).unwrap().set_tree(true);
 //!
 //! let root = table.new_line(None);
 //! table.line_mut(root).set_data(0, "root");
@@ -152,14 +156,14 @@
 //! The print engine draws bracket connectors on the left margin.
 //!
 //! ```
-//! use smartcols::{ColumnFlags, Table, TermForce, print_table_to_string};
+//! use smartcols::{Table, TermForce, print_table_to_string};
 //!
 //! let mut table = Table::new();
 //! table.enable_no_headings(true);
 //! table.enable_ascii(true);
 //! table.set_termwidth(40);
 //! table.set_termforce(TermForce::Always);
-//! table.new_column("NAME", 0.0, ColumnFlags::empty());
+//! table.new_column("NAME", 0.0);
 //!
 //! let group = table.new_group();
 //!
@@ -189,10 +193,10 @@
 //! the same comparator function (via [`Arc`](std::sync::Arc)).
 //!
 //! ```
-//! use smartcols::{ColumnFlags, Table};
+//! use smartcols::Table;
 //!
 //! let mut table = Table::new();
-//! table.new_column("X", 0.0, ColumnFlags::empty());
+//! table.new_column("X", 0.0);
 //! let row = table.new_line(None);
 //! table.line_mut(row).set_data(0, "hello");
 //!
@@ -227,8 +231,8 @@ pub mod print;
 pub mod symbols;
 pub mod table;
 
-pub use cell::{Alignment, Cell, CellFlags};
-pub use column::{Column, ColumnFlags, DataType, JsonType};
+pub use cell::{Alignment, Cell};
+pub use column::{Column, DataType, JsonType};
 pub use filter::Filter;
 pub use line::{GroupId, Line, LineId};
 pub use print::{print_table, print_table_to_string};

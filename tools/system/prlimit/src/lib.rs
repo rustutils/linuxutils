@@ -1,6 +1,6 @@
 use clap::Parser;
 use rustix::process::{Pid, Resource, Rlimit, getrlimit, prlimit, setrlimit};
-use smartcols::{ColumnFlags, OutputMode, Table, print_table};
+use smartcols::{OutputMode, Table, print_table};
 use std::{fs, os::unix::process::CommandExt, process, process::ExitCode};
 
 #[derive(Parser)]
@@ -317,11 +317,8 @@ impl Col {
         }
     }
 
-    fn flags(self) -> ColumnFlags {
-        match self {
-            Col::Soft | Col::Hard => ColumnFlags::RIGHT,
-            _ => ColumnFlags::empty(),
-        }
+    fn is_right(self) -> bool {
+        matches!(self, Col::Soft | Col::Hard)
     }
 
     fn from_name(s: &str) -> Option<Self> {
@@ -492,7 +489,10 @@ pub fn run(args: Args) -> ExitCode {
         table.enable_no_headings(true);
     }
     for col in &columns {
-        table.new_column(col.name(), col.whint(), col.flags());
+        let idx = table.new_column(col.name(), col.whint());
+        if col.is_right() {
+            table.column_mut(idx).unwrap().set_right(true);
+        }
     }
 
     for ri in &display {

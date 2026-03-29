@@ -1,5 +1,5 @@
 use clap::Parser;
-use smartcols::{ColumnFlags, OutputMode, Table, print_table};
+use smartcols::{OutputMode, Table, print_table};
 use std::{
     io::{self, BufRead},
     path::PathBuf,
@@ -66,12 +66,8 @@ impl Col {
         }
     }
 
-    fn flags(self) -> ColumnFlags {
-        match self {
-            Col::Irq => ColumnFlags::RIGHT,
-            Col::Total => ColumnFlags::RIGHT,
-            Col::Name => ColumnFlags::empty(),
-        }
+    fn is_right(self) -> bool {
+        matches!(self, Col::Irq | Col::Total)
     }
 
     fn from_name(name: &str) -> Option<Self> {
@@ -272,7 +268,10 @@ pub fn run(args: Args) -> ExitCode {
     }
 
     for col in &columns {
-        table.new_column(col.name(), col.whint(), col.flags());
+        let idx = table.new_column(col.name(), col.whint());
+        if col.is_right() {
+            table.column_mut(idx).unwrap().set_right(true);
+        }
     }
 
     for entry in &entries {

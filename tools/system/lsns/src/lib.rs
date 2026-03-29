@@ -1,5 +1,5 @@
 use clap::Parser;
-use smartcols::{ColumnFlags, OutputMode, Table, print_table};
+use smartcols::{OutputMode, Table, print_table};
 use std::{collections::HashMap, fs, process::ExitCode};
 
 const NS_TYPES: &[&str] =
@@ -84,13 +84,11 @@ impl Col {
         }
     }
 
-    fn flags(self) -> ColumnFlags {
-        match self {
-            Col::Ns | Col::Nprocs | Col::Pid | Col::Ppid | Col::Uid => {
-                ColumnFlags::RIGHT
-            }
-            _ => ColumnFlags::empty(),
-        }
+    fn is_right(self) -> bool {
+        matches!(
+            self,
+            Col::Ns | Col::Nprocs | Col::Pid | Col::Ppid | Col::Uid
+        )
     }
 
     fn from_name(name: &str) -> Option<Self> {
@@ -321,7 +319,10 @@ pub fn run(args: Args) -> ExitCode {
     }
 
     for col in &columns {
-        table.new_column(col.name(), col.whint(), col.flags());
+        let idx = table.new_column(col.name(), col.whint());
+        if col.is_right() {
+            table.column_mut(idx).unwrap().set_right(true);
+        }
     }
 
     for ns in &namespaces {

@@ -1,7 +1,6 @@
 use smartcols::{
-    Alignment, Cell, CellFlags, Column, ColumnFlags, DataType, Filter,
-    JsonType, Line, OutputMode, Symbols, Table, TermForce,
-    print_table_to_string,
+    Alignment, Cell, Column, DataType, Filter, JsonType, Line, OutputMode,
+    Symbols, Table, TermForce, print_table_to_string,
 };
 
 // ── Cell ─────────────────────────────────────────────────────────────────────
@@ -27,13 +26,12 @@ fn cell_set_and_clear() {
 fn cell_alignment() {
     let mut c = Cell::new();
     assert_eq!(c.alignment(), Alignment::Left);
-    c.set_flags(CellFlags::RIGHT);
+    c.set_alignment(Alignment::Right);
     assert_eq!(c.alignment(), Alignment::Right);
-    c.set_flags(CellFlags::CENTER);
+    c.set_alignment(Alignment::Center);
     assert_eq!(c.alignment(), Alignment::Center);
-    // RIGHT wins over CENTER
-    c.set_flags(CellFlags::RIGHT | CellFlags::CENTER);
-    assert_eq!(c.alignment(), Alignment::Right);
+    c.set_alignment(Alignment::Left);
+    assert_eq!(c.alignment(), Alignment::Left);
 }
 
 #[test]
@@ -73,14 +71,16 @@ fn column_defaults() {
     let c = Column::new();
     assert!(c.name().is_none());
     assert_eq!(c.whint(), 0.0);
-    assert_eq!(c.flags(), ColumnFlags::empty());
+    assert!(!c.is_tree());
+    assert!(!c.is_right());
     assert_eq!(c.json_type(), JsonType::String);
     assert_eq!(c.data_type(), DataType::None);
 }
 
 #[test]
 fn column_with_name() {
-    let c = Column::with_name("SIZE", 6.0, ColumnFlags::RIGHT);
+    let mut c = Column::with_name("SIZE", 6.0);
+    c.set_right(true);
     assert_eq!(c.name(), Some("SIZE"));
     assert_eq!(c.whint(), 6.0);
     assert!(c.is_right());
@@ -89,7 +89,8 @@ fn column_with_name() {
 
 #[test]
 fn column_flags() {
-    let c = Column::with_name("x", 0.0, ColumnFlags::TREE | ColumnFlags::TRUNC);
+    let mut c = Column::with_name("x", 0.0);
+    c.set_tree(true).set_trunc(true);
     assert!(c.is_tree());
     assert!(c.is_trunc());
     assert!(!c.is_right());
@@ -169,8 +170,8 @@ fn line_clone() {
 #[test]
 fn table_new_column_returns_index() {
     let mut t = Table::new();
-    let i0 = t.new_column("A", 0.0, ColumnFlags::empty());
-    let i1 = t.new_column("B", 0.0, ColumnFlags::empty());
+    let i0 = t.new_column("A", 0.0);
+    let i1 = t.new_column("B", 0.0);
     assert_eq!(i0, 0);
     assert_eq!(i1, 1);
     assert_eq!(t.ncols(), 2);
@@ -179,8 +180,8 @@ fn table_new_column_returns_index() {
 #[test]
 fn table_add_and_remove_column() {
     let mut t = Table::new();
-    t.new_column("A", 0.0, ColumnFlags::empty());
-    t.new_column("B", 0.0, ColumnFlags::empty());
+    t.new_column("A", 0.0);
+    t.new_column("B", 0.0);
     let removed = t.remove_column(0);
     assert_eq!(removed.name(), Some("A"));
     assert_eq!(t.ncols(), 1);
@@ -190,8 +191,8 @@ fn table_add_and_remove_column() {
 #[test]
 fn table_column_by_name() {
     let mut t = Table::new();
-    t.new_column("ALPHA", 0.0, ColumnFlags::empty());
-    t.new_column("BETA", 0.0, ColumnFlags::empty());
+    t.new_column("ALPHA", 0.0);
+    t.new_column("BETA", 0.0);
     let (idx, col) = t.column_by_name("BETA").unwrap();
     assert_eq!(idx, 1);
     assert_eq!(col.name(), Some("BETA"));
@@ -201,8 +202,8 @@ fn table_column_by_name() {
 #[test]
 fn table_new_line_allocs_cells() {
     let mut t = Table::new();
-    t.new_column("A", 0.0, ColumnFlags::empty());
-    t.new_column("B", 0.0, ColumnFlags::empty());
+    t.new_column("A", 0.0);
+    t.new_column("B", 0.0);
     let id = t.new_line(None);
     assert_eq!(t.line(id).ncells(), 2);
 }
@@ -210,8 +211,8 @@ fn table_new_line_allocs_cells() {
 #[test]
 fn table_remove_all_columns() {
     let mut t = Table::new();
-    t.new_column("A", 0.0, ColumnFlags::empty());
-    t.new_column("B", 0.0, ColumnFlags::empty());
+    t.new_column("A", 0.0);
+    t.new_column("B", 0.0);
     t.remove_all_columns();
     assert_eq!(t.ncols(), 0);
 }
@@ -220,7 +221,7 @@ fn table_remove_all_columns() {
 fn table_is_empty() {
     let mut t = Table::new();
     assert!(t.is_empty());
-    t.new_column("A", 0.0, ColumnFlags::empty());
+    t.new_column("A", 0.0);
     t.new_line(None);
     assert!(!t.is_empty());
 }
@@ -230,7 +231,10 @@ fn table_is_empty() {
 #[test]
 fn table_tree_parent_child() {
     let mut t = Table::new();
-    t.new_column("N", 0.0, ColumnFlags::TREE);
+    {
+        let i = t.new_column("N", 0.0);
+        t.column_mut(i).unwrap().set_tree(true);
+    }
 
     let root = t.new_line(None);
     let child = t.new_line(Some(root));
@@ -246,7 +250,10 @@ fn table_tree_parent_child() {
 #[test]
 fn table_is_ancestor() {
     let mut t = Table::new();
-    t.new_column("N", 0.0, ColumnFlags::TREE);
+    {
+        let i = t.new_column("N", 0.0);
+        t.column_mut(i).unwrap().set_tree(true);
+    }
 
     let root = t.new_line(None);
     let child = t.new_line(Some(root));
@@ -262,7 +269,10 @@ fn table_is_ancestor() {
 #[test]
 fn table_add_child_reparents() {
     let mut t = Table::new();
-    t.new_column("N", 0.0, ColumnFlags::TREE);
+    {
+        let i = t.new_column("N", 0.0);
+        t.column_mut(i).unwrap().set_tree(true);
+    }
 
     let root1 = t.new_line(None);
     let root2 = t.new_line(None);
@@ -278,7 +288,10 @@ fn table_add_child_reparents() {
 #[test]
 fn table_remove_child() {
     let mut t = Table::new();
-    t.new_column("N", 0.0, ColumnFlags::TREE);
+    {
+        let i = t.new_column("N", 0.0);
+        t.column_mut(i).unwrap().set_tree(true);
+    }
 
     let root = t.new_line(None);
     let child = t.new_line(Some(root));
@@ -295,7 +308,10 @@ fn sort_children_alphabetically() {
     let mut t = Table::new();
     t.enable_no_headings(true);
     t.enable_ascii(true);
-    t.new_column("NAME", 0.0, ColumnFlags::TREE);
+    {
+        let i = t.new_column("NAME", 0.0);
+        t.column_mut(i).unwrap().set_tree(true);
+    }
 
     let root = t.new_line(None);
     t.line_mut(root).set_data(0, "root");
@@ -318,7 +334,10 @@ fn sort_with_custom_cmp_func() {
     let mut t = Table::new();
     t.enable_no_headings(true);
     t.enable_ascii(true);
-    t.new_column("VAL", 0.0, ColumnFlags::TREE);
+    {
+        let i = t.new_column("VAL", 0.0);
+        t.column_mut(i).unwrap().set_tree(true);
+    }
     // Numeric comparator
     t.column_mut(0).unwrap().set_cmp_func(|a, b| {
         let av: i64 = a.data().unwrap_or("0").parse().unwrap_or(0);
@@ -347,7 +366,7 @@ fn sort_with_custom_cmp_func() {
 #[test]
 fn table_clone_is_independent() {
     let mut t = Table::new();
-    t.new_column("X", 0.0, ColumnFlags::empty());
+    t.new_column("X", 0.0);
     let row = t.new_line(None);
     t.line_mut(row).set_data(0, "original");
 
@@ -361,8 +380,11 @@ fn table_clone_is_independent() {
 #[test]
 fn table_clone_preserves_columns_and_lines() {
     let mut t = Table::new();
-    t.new_column("A", 5.0, ColumnFlags::RIGHT);
-    t.new_column("B", 0.0, ColumnFlags::empty());
+    {
+        let i = t.new_column("A", 5.0);
+        t.column_mut(i).unwrap().set_right(true);
+    }
+    t.new_column("B", 0.0);
     let r1 = t.new_line(None);
     t.line_mut(r1).set_data(0, "x").set_data(1, "y");
 
@@ -402,7 +424,7 @@ fn table_output_mode_predicates() {
 fn table_no_headings() {
     let mut t = Table::new();
     t.enable_no_headings(true);
-    t.new_column("X", 0.0, ColumnFlags::empty());
+    t.new_column("X", 0.0);
     let row = t.new_line(None);
     t.line_mut(row).set_data(0, "data");
     let out = print_table_to_string(&t).unwrap();
@@ -415,8 +437,8 @@ fn table_column_separator() {
     let mut t = Table::new();
     t.set_column_separator("|");
     t.enable_no_headings(true);
-    t.new_column("A", 0.0, ColumnFlags::empty());
-    t.new_column("B", 0.0, ColumnFlags::empty());
+    t.new_column("A", 0.0);
+    t.new_column("B", 0.0);
     let row = t.new_line(None);
     t.line_mut(row).set_data(0, "x").set_data(1, "y");
     let out = print_table_to_string(&t).unwrap();
@@ -452,8 +474,8 @@ fn table_minout_skips_empty_trailing() {
     let mut t = Table::new();
     t.enable_minout(true);
     t.enable_no_headings(true);
-    t.new_column("A", 0.0, ColumnFlags::empty());
-    t.new_column("EMPTY", 0.0, ColumnFlags::empty());
+    t.new_column("A", 0.0);
+    t.new_column("EMPTY", 0.0);
     let row = t.new_line(None);
     t.line_mut(row).set_data(0, "hello"); // EMPTY column has no data
     let out = print_table_to_string(&t).unwrap();
@@ -466,7 +488,10 @@ fn table_minout_skips_empty_trailing() {
 fn normal_right_align() {
     let mut t = Table::new();
     t.enable_no_headings(true);
-    t.new_column("NUM", 5.0, ColumnFlags::RIGHT);
+    {
+        let i = t.new_column("NUM", 5.0);
+        t.column_mut(i).unwrap().set_right(true);
+    }
     for v in ["1", "99", "1000"] {
         let row = t.new_line(None);
         t.line_mut(row).set_data(0, v);
@@ -485,8 +510,8 @@ fn normal_right_align() {
 fn raw_mode_no_padding() {
     let mut t = Table::new();
     t.set_output_mode(OutputMode::Raw);
-    t.new_column("A", 20.0, ColumnFlags::empty());
-    t.new_column("B", 20.0, ColumnFlags::empty());
+    t.new_column("A", 20.0);
+    t.new_column("B", 20.0);
     let row = t.new_line(None);
     t.line_mut(row).set_data(0, "x").set_data(1, "y");
     let out = print_table_to_string(&t).unwrap();
@@ -498,7 +523,7 @@ fn raw_mode_no_padding() {
 fn export_mode_escaping() {
     let mut t = Table::new();
     t.set_output_mode(OutputMode::Export);
-    t.new_column("PATH", 0.0, ColumnFlags::empty());
+    t.new_column("PATH", 0.0);
     let row = t.new_line(None);
     t.line_mut(row).set_data(0, r#"say "hello""#);
     let out = print_table_to_string(&t).unwrap();
@@ -510,7 +535,7 @@ fn json_number_type() {
     let mut t = Table::new();
     t.set_name("items");
     t.set_output_mode(OutputMode::Json);
-    let mut col = Column::with_name("COUNT", 0.0, ColumnFlags::empty());
+    let mut col = Column::with_name("COUNT", 0.0);
     col.set_json_type(JsonType::Number);
     t.add_column(col);
     let row = t.new_line(None);
@@ -524,7 +549,7 @@ fn json_boolean_type() {
     let mut t = Table::new();
     t.set_name("items");
     t.set_output_mode(OutputMode::Json);
-    let mut col = Column::with_name("ENABLED", 0.0, ColumnFlags::empty());
+    let mut col = Column::with_name("ENABLED", 0.0);
     col.set_json_type(JsonType::Boolean);
     t.add_column(col);
     let row = t.new_line(None);
@@ -537,8 +562,11 @@ fn json_boolean_type() {
 fn hidden_column_excluded_from_output() {
     let mut t = Table::new();
     t.enable_no_headings(true);
-    t.new_column("VISIBLE", 0.0, ColumnFlags::empty());
-    t.new_column("SECRET", 0.0, ColumnFlags::HIDDEN);
+    t.new_column("VISIBLE", 0.0);
+    {
+        let i = t.new_column("SECRET", 0.0);
+        t.column_mut(i).unwrap().set_hidden(true);
+    }
     let row = t.new_line(None);
     t.line_mut(row).set_data(0, "shown").set_data(1, "hidden");
     let out = print_table_to_string(&t).unwrap();
@@ -554,8 +582,11 @@ fn wrap_flag_splits_long_data() {
     // so TEXT gets squeezed to 7. Data "hello world" (11 chars) > 7 → wraps.
     t.set_termwidth(13);
     t.enable_no_headings(true);
-    t.new_column("ID", 4.0, ColumnFlags::empty());
-    t.new_column("TEXT", 8.0, ColumnFlags::WRAP);
+    t.new_column("ID", 4.0);
+    {
+        let i = t.new_column("TEXT", 8.0);
+        t.column_mut(i).unwrap().set_wrap(true);
+    }
     let row = t.new_line(None);
     t.line_mut(row).set_data(0, "1").set_data(1, "hello world");
     let out = print_table_to_string(&t).unwrap();
@@ -661,7 +692,7 @@ fn filter_clone() {
 #[test]
 fn group_member_and_child() {
     let mut t = Table::new();
-    t.new_column("N", 0.0, ColumnFlags::empty());
+    t.new_column("N", 0.0);
 
     let g = t.new_group();
     let m1 = t.new_line(None);

@@ -10,22 +10,18 @@ use bitflags::bitflags;
 use std::{cmp::Ordering, fmt, sync::Arc};
 
 bitflags! {
-    /// Behavioral flags for a column.
+    /// Internal bitfield matching the C `SCOLS_FL_*` constants.
+    ///
+    /// Not part of the public API — use the individual setter methods on
+    /// [`Column`] instead (e.g. [`Column::set_tree`], [`Column::set_right`]).
     #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
-    pub struct ColumnFlags: u32 {
-        /// Truncate cell data if it exceeds the column width.
+    pub(crate) struct ColumnFlags: u32 {
         const TRUNC        = 1 << 0;
-        /// This column renders the tree hierarchy.
         const TREE         = 1 << 1;
-        /// Right-align cell data.
         const RIGHT        = 1 << 2;
-        /// Don't reduce width even if the column is empty.
         const STRICT_WIDTH = 1 << 3;
-        /// Ignore extreme outlier values when calculating width.
         const NO_EXTREMES  = 1 << 4;
-        /// Keep data in memory but don't print the column.
         const HIDDEN       = 1 << 5;
-        /// Wrap long cell data across multiple lines.
         const WRAP         = 1 << 6;
     }
 }
@@ -97,16 +93,33 @@ impl Column {
         }
     }
 
-    /// Create a column with a name, width hint, and flags.
+    /// Create a column with a name and width hint.
     ///
     /// The `whint` value guides the print engine's layout:
     /// - `>= 1.0` — absolute character width (e.g., `6.0` = 6 chars)
     /// - `0.0 < whint < 1.0` — fraction of terminal width (e.g., `0.25` = 25%)
     /// - `0.0` — no hint, size to content
-    pub fn with_name(name: &str, whint: f64, flags: ColumnFlags) -> Self {
+    ///
+    /// Use the individual setter methods to configure flags:
+    /// ```
+    /// use smartcols::Column;
+    /// let mut col = Column::with_name("NAME", 10.0);
+    /// col.set_tree(true).set_no_extremes(true);
+    /// ```
+    pub fn with_name(name: &str, whint: f64) -> Self {
         let mut col = Self::new();
         col.set_name(name);
         col.whint = whint;
+        col
+    }
+
+    /// Create a column with a name, width hint, and flags bitmask (for FFI).
+    pub(crate) fn with_name_and_flags(
+        name: &str,
+        whint: f64,
+        flags: ColumnFlags,
+    ) -> Self {
+        let mut col = Self::with_name(name, whint);
         col.flags = flags;
         col
     }
@@ -155,37 +168,79 @@ impl Column {
         self.width = Some(w);
     }
 
-    pub fn set_flags(&mut self, flags: ColumnFlags) -> &mut Self {
+    pub(crate) fn set_flags(&mut self, flags: ColumnFlags) -> &mut Self {
         self.flags = flags;
         self
     }
 
-    pub fn flags(&self) -> ColumnFlags {
+    pub(crate) fn flags(&self) -> ColumnFlags {
         self.flags
+    }
+
+    /// Mark this column as the tree hierarchy column.
+    pub fn set_tree(&mut self, enable: bool) -> &mut Self {
+        self.flags.set(ColumnFlags::TREE, enable);
+        self
     }
 
     pub fn is_tree(&self) -> bool {
         self.flags.contains(ColumnFlags::TREE)
     }
 
+    /// Truncate cell data that exceeds the column width.
+    pub fn set_trunc(&mut self, enable: bool) -> &mut Self {
+        self.flags.set(ColumnFlags::TRUNC, enable);
+        self
+    }
+
     pub fn is_trunc(&self) -> bool {
         self.flags.contains(ColumnFlags::TRUNC)
+    }
+
+    /// Right-align cell data in this column.
+    pub fn set_right(&mut self, enable: bool) -> &mut Self {
+        self.flags.set(ColumnFlags::RIGHT, enable);
+        self
     }
 
     pub fn is_right(&self) -> bool {
         self.flags.contains(ColumnFlags::RIGHT)
     }
 
+    /// Never shrink this column below its hint width.
+    pub fn set_strict_width(&mut self, enable: bool) -> &mut Self {
+        self.flags.set(ColumnFlags::STRICT_WIDTH, enable);
+        self
+    }
+
     pub fn is_strict_width(&self) -> bool {
         self.flags.contains(ColumnFlags::STRICT_WIDTH)
+    }
+
+    /// Ignore outlier cell values when calculating column width.
+    pub fn set_no_extremes(&mut self, enable: bool) -> &mut Self {
+        self.flags.set(ColumnFlags::NO_EXTREMES, enable);
+        self
     }
 
     pub fn is_no_extremes(&self) -> bool {
         self.flags.contains(ColumnFlags::NO_EXTREMES)
     }
 
+    /// Store data in memory but omit from printed output.
+    pub fn set_hidden(&mut self, enable: bool) -> &mut Self {
+        self.flags.set(ColumnFlags::HIDDEN, enable);
+        self
+    }
+
     pub fn is_hidden(&self) -> bool {
         self.flags.contains(ColumnFlags::HIDDEN)
+    }
+
+    /// Wrap long cell data across multiple output lines.
+    pub fn set_wrap(&mut self, enable: bool) -> &mut Self {
+        self.flags.set(ColumnFlags::WRAP, enable);
+        self
     }
 
     pub fn is_wrap(&self) -> bool {

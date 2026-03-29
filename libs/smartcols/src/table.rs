@@ -140,15 +140,28 @@ impl Table {
         idx
     }
 
-    /// Create a new column with the given name, width hint, and flags.
+    /// Create a new column with the given name and width hint.
     /// Returns the column index.
-    pub fn new_column(
+    ///
+    /// Configure the column further via [`Table::column_mut`]:
+    /// ```
+    /// use smartcols::Table;
+    /// let mut table = Table::new();
+    /// let idx = table.new_column("NAME", 10.0);
+    /// table.column_mut(idx).unwrap().set_tree(true);
+    /// ```
+    pub fn new_column(&mut self, name: &str, whint: f64) -> usize {
+        self.add_column(Column::with_name(name, whint))
+    }
+
+    /// Create a new column with flags from a C bitmask (for FFI).
+    pub(crate) fn new_column_with_flags(
         &mut self,
         name: &str,
         whint: f64,
         flags: ColumnFlags,
     ) -> usize {
-        self.add_column(Column::with_name(name, whint, flags))
+        self.add_column(Column::with_name_and_flags(name, whint, flags))
     }
 
     pub fn column(&self, idx: usize) -> Option<&Column> {
