@@ -145,6 +145,42 @@
 //! assert!(lines[3].contains("zebra"));
 //! ```
 //!
+//! # Groups
+//!
+//! Groups express M:N relationships between lines — multiple lines can be
+//! "members" of a group, and other lines can be "children" of that group.
+//! The print engine draws bracket connectors on the left margin.
+//!
+//! ```
+//! use smartcols::{ColumnFlags, Table, TermForce, print_table_to_string};
+//!
+//! let mut table = Table::new();
+//! table.enable_no_headings(true);
+//! table.enable_ascii(true);
+//! table.set_termwidth(40);
+//! table.set_termforce(TermForce::Always);
+//! table.new_column("NAME", 0.0, ColumnFlags::empty());
+//!
+//! let group = table.new_group();
+//!
+//! let m1 = table.new_line(None);
+//! table.line_mut(m1).set_data(0, "server");
+//! let m2 = table.new_line(None);
+//! table.line_mut(m2).set_data(0, "worker");
+//!
+//! let child = table.new_line(None);
+//! table.line_mut(child).set_data(0, "logger");
+//!
+//! table.group_add_member(group, m1);
+//! table.group_add_member(group, m2);
+//! table.group_add_child(group, child);
+//!
+//! let output = print_table_to_string(&table).unwrap();
+//! assert!(output.contains(",-server"));
+//! assert!(output.contains("|-worker"));
+//! assert!(output.contains("`-logger"));
+//! ```
+//!
 //! # Cloning
 //!
 //! Both [`Table`] and [`Column`] implement [`Clone`]. Cloning a table produces

@@ -10,10 +10,11 @@
 
 use crate::{
     column::JsonType,
-    line::LineId,
+    line::{GroupId, LineId},
     table::{OutputMode, Table, TermForce},
 };
 use std::{
+    collections::HashMap,
     fmt::Write as _,
     io::{self, Write},
 };
@@ -44,16 +45,33 @@ fn print_normal(table: &Table, out: &mut dyn Write) -> io::Result<()> {
         return Ok(());
     }
 
-    let termwidth = effective_termwidth(table);
+    // Build display order and group margins.
+    let display_order = build_display_order(table);
+    let group_margins = compute_group_margins(table, &display_order);
+    let margin_width = group_margins.first().map_or(0, |m| display_width(m));
+
+    let termwidth = effective_termwidth(table).saturating_sub(margin_width);
     let widths = calculate_widths(table, &visible, termwidth);
+
+    // Build margin lookup: LineId -> margin string.
+    let margin_map: HashMap<LineId, &str> = display_order
+        .iter()
+        .zip(group_margins.iter())
+        .map(|(&id, m)| (id, m.as_str()))
+        .collect();
 
     // Title
     if table.title().data().is_some() {
         print_title(table, out, termwidth)?;
     }
 
-    // Header
+    // Header — prepend margin padding if groups are present.
     if !table.is_no_headings() {
+        if margin_width > 0 {
+            for _ in 0..margin_width {
+                write!(out, " ")?;
+            }
+        }
         print_normal_header(table, out, &visible, &widths)?;
     }
 
@@ -69,15 +87,142 @@ fn print_normal(table: &Table, out: &mut dyn Write) -> io::Result<()> {
                 &widths,
                 &[],
                 0,
+                &margin_map,
             )?;
         }
     } else {
         for id in table.line_ids() {
-            print_normal_line(table, out, id, &visible, &widths, "")?;
+            let margin = margin_map.get(&id).copied().unwrap_or("");
+            print_normal_line(table, out, id, &visible, &widths, "", margin)?;
         }
     }
 
     Ok(())
+}
+
+/// Collect lines in display order (tree-walk or flat).
+fn build_display_order(table: &Table) -> Vec<LineId> {
+    if table.is_tree() {
+        let mut order = Vec::with_capacity(table.nlines());
+        for root in table.root_line_ids() {
+            collect_tree_order(table, root, &mut order);
+        }
+        order
+    } else {
+        table.line_ids().collect()
+    }
+}
+
+fn collect_tree_order(table: &Table, id: LineId, out: &mut Vec<LineId>) {
+    out.push(id);
+    for &child in table.line(id).children() {
+        collect_tree_order(table, child, out);
+    }
+}
+
+/// Compute a group-margin string for each line in display order.
+///
+/// Returns a `Vec<String>` parallel to `display_order`. Each entry is either
+/// a group symbol (member/child connector) or padding of the same width. If
+/// the table has no groups, all entries are empty strings.
+fn compute_group_margins(
+    table: &Table,
+    display_order: &[LineId],
+) -> Vec<String> {
+    if !table.has_groups() {
+        return vec![String::new(); display_order.len()];
+    }
+
+    let symbols = table.symbols();
+    let margin_width = display_width(&symbols.group_first_member);
+    let padding: String = " ".repeat(margin_width);
+
+    let mut margins: Vec<String> = vec![padding.clone(); display_order.len()];
+
+    // Map LineId -> position in display order.
+    let pos_map: HashMap<LineId, usize> = display_order
+        .iter()
+        .enumerate()
+        .map(|(i, &id)| (id, i))
+        .collect();
+
+    for (gi, group) in table.groups().iter().enumerate() {
+        if group.members.is_empty() {
+            continue;
+        }
+        let gid = GroupId(gi);
+
+        // Collect sorted positions of members and children.
+        let mut member_positions: Vec<usize> = group
+            .members
+            .iter()
+            .filter_map(|id| pos_map.get(id).copied())
+            .collect();
+        member_positions.sort_unstable();
+
+        let mut child_positions: Vec<usize> = group
+            .children
+            .iter()
+            .filter_map(|id| pos_map.get(id).copied())
+            .collect();
+        child_positions.sort_unstable();
+
+        if member_positions.is_empty() {
+            continue;
+        }
+
+        let has_children = !child_positions.is_empty();
+
+        // Assign member symbols.
+        for (mi, &pos) in member_positions.iter().enumerate() {
+            let is_first = mi == 0;
+            let is_last_member = mi == member_positions.len() - 1;
+
+            margins[pos] = if is_first && is_last_member && !has_children {
+                // Single member, no children — standalone marker.
+                symbols.group_first_member.clone()
+            } else if is_first {
+                symbols.group_first_member.clone()
+            } else if is_last_member && !has_children {
+                symbols.group_last_member.clone()
+            } else {
+                // Middle member, or last member with children (bracket
+                // continues to children).
+                symbols.group_middle_member.clone()
+            };
+        }
+
+        // Assign child symbols.
+        for (ci, &pos) in child_positions.iter().enumerate() {
+            margins[pos] = if ci == child_positions.len() - 1 {
+                symbols.group_last_child.clone()
+            } else {
+                symbols.group_middle_child.clone()
+            };
+        }
+
+        // Fill vertical connectors between first member and last item.
+        let first_pos = member_positions[0];
+        let last_pos = child_positions
+            .last()
+            .copied()
+            .or_else(|| member_positions.last().copied())
+            .unwrap();
+
+        for pos in (first_pos + 1)..last_pos {
+            // Only draw vertical if this line isn't already a member/child
+            // of this group.
+            let line_id = display_order[pos];
+            let line = table.line(line_id);
+            let is_member = line.group_member == Some(gid);
+            let is_child = line.group_child == Some(gid);
+            if !is_member && !is_child {
+                margins[pos] = symbols.group_vertical.clone();
+            }
+        }
+    }
+
+    margins
 }
 
 fn print_title(
@@ -143,6 +288,7 @@ fn print_normal_line(
     visible: &[usize],
     widths: &[usize],
     tree_prefix: &str,
+    group_margin: &str,
 ) -> io::Result<()> {
     let line = table.line(id);
 
@@ -184,6 +330,18 @@ fn print_normal_line(
     let max_rows = wrapped.iter().map(|w| w.len()).max().unwrap_or(1);
 
     for row in 0..max_rows {
+        // Group margin — only on the first row of a wrapped line.
+        if !group_margin.is_empty() {
+            if row == 0 {
+                write!(out, "{group_margin}")?;
+            } else {
+                let mw = display_width(group_margin);
+                for _ in 0..mw {
+                    write!(out, " ")?;
+                }
+            }
+        }
+
         for (vi, &col_idx) in visible.iter().enumerate() {
             let col = &table.columns()[col_idx];
             let is_last = vi == visible.len() - 1;
@@ -231,6 +389,7 @@ fn print_normal_line(
     Ok(())
 }
 
+#[allow(clippy::too_many_arguments)]
 fn print_normal_tree_line(
     table: &Table,
     out: &mut dyn Write,
@@ -239,6 +398,7 @@ fn print_normal_tree_line(
     widths: &[usize],
     ancestors_last: &[bool],
     depth: usize,
+    margin_map: &HashMap<LineId, &str>,
 ) -> io::Result<()> {
     let line = table.line(id);
     let children = line.children().to_vec();
@@ -268,7 +428,8 @@ fn print_normal_tree_line(
         pfx
     };
 
-    print_normal_line(table, out, id, visible, widths, &prefix)?;
+    let margin = margin_map.get(&id).copied().unwrap_or("");
+    print_normal_line(table, out, id, visible, widths, &prefix, margin)?;
 
     // Recurse into children.
     for (i, &child) in children.iter().enumerate() {
@@ -282,6 +443,7 @@ fn print_normal_tree_line(
             widths,
             &new_ancestors,
             depth + 1,
+            margin_map,
         )?;
     }
 
@@ -536,11 +698,12 @@ fn calculate_widths(
             // For NO_EXTREMES columns, cap phase-2 growth at the second-largest
             // value so one outlier cell doesn't hog terminal width from other
             // columns. Natural (no-terminal) sizing still uses the true max.
-            let layout_max_w = if col.is_no_extremes() && sorted_widths.len() > 1 {
-                sorted_widths[sorted_widths.len() - 2]
-            } else {
-                max_data_w
-            };
+            let layout_max_w =
+                if col.is_no_extremes() && sorted_widths.len() > 1 {
+                    sorted_widths[sorted_widths.len() - 2]
+                } else {
+                    max_data_w
+                };
             ColInfo {
                 header_w,
                 max_data_w,

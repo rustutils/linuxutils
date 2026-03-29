@@ -1,0 +1,7 @@
+---
+source: libs/smartcols/tests/snapshots.rs
+expression: output
+---
+  NAME            VALUE
+┌─alpha              10
+└─beta               20

@@ -2,6 +2,149 @@ use smartcols::{
     ColumnFlags, OutputMode, Table, TermForce, print_table_to_string,
 };
 
+// ── Group rendering ──────────────────────────────────────────────────────────
+
+#[test]
+fn group_members_only() {
+    let mut t = Table::new();
+    t.set_termwidth(40);
+    t.set_termforce(TermForce::Always);
+    t.enable_no_headings(true);
+    t.new_column("NAME", 0.0, ColumnFlags::empty());
+    t.new_column("SIZE", 0.0, ColumnFlags::RIGHT);
+
+    let g = t.new_group();
+
+    let l1 = t.new_line(None);
+    t.line_mut(l1).set_data(0, "alpha").set_data(1, "10");
+
+    let l2 = t.new_line(None);
+    t.line_mut(l2).set_data(0, "beta").set_data(1, "20");
+
+    let l3 = t.new_line(None);
+    t.line_mut(l3).set_data(0, "gamma").set_data(1, "30");
+
+    t.group_add_member(g, l1);
+    t.group_add_member(g, l2);
+    t.group_add_member(g, l3);
+
+    let output = print_table_to_string(&t).unwrap();
+    insta::assert_snapshot!(output);
+}
+
+#[test]
+fn group_members_and_children() {
+    let mut t = Table::new();
+    t.set_termwidth(40);
+    t.set_termforce(TermForce::Always);
+    t.enable_no_headings(true);
+    t.new_column("PROCESS", 0.0, ColumnFlags::empty());
+    t.new_column("PID", 0.0, ColumnFlags::RIGHT);
+
+    let g = t.new_group();
+
+    let m1 = t.new_line(None);
+    t.line_mut(m1).set_data(0, "server").set_data(1, "100");
+    let m2 = t.new_line(None);
+    t.line_mut(m2).set_data(0, "worker").set_data(1, "101");
+
+    let c1 = t.new_line(None);
+    t.line_mut(c1).set_data(0, "logger").set_data(1, "200");
+    let c2 = t.new_line(None);
+    t.line_mut(c2).set_data(0, "monitor").set_data(1, "201");
+
+    t.group_add_member(g, m1);
+    t.group_add_member(g, m2);
+    t.group_add_child(g, c1);
+    t.group_add_child(g, c2);
+
+    let output = print_table_to_string(&t).unwrap();
+    insta::assert_snapshot!(output);
+}
+
+#[test]
+fn group_with_nonmember_lines() {
+    let mut t = Table::new();
+    t.set_termwidth(40);
+    t.set_termforce(TermForce::Always);
+    t.enable_no_headings(true);
+    t.new_column("NAME", 0.0, ColumnFlags::empty());
+
+    let before = t.new_line(None);
+    t.line_mut(before).set_data(0, "unrelated-before");
+
+    let m1 = t.new_line(None);
+    t.line_mut(m1).set_data(0, "member-1");
+
+    let between = t.new_line(None);
+    t.line_mut(between).set_data(0, "non-member");
+
+    let m2 = t.new_line(None);
+    t.line_mut(m2).set_data(0, "member-2");
+
+    let c = t.new_line(None);
+    t.line_mut(c).set_data(0, "child");
+
+    let after = t.new_line(None);
+    t.line_mut(after).set_data(0, "unrelated-after");
+
+    let g = t.new_group();
+    t.group_add_member(g, m1);
+    t.group_add_member(g, m2);
+    t.group_add_child(g, c);
+
+    let output = print_table_to_string(&t).unwrap();
+    insta::assert_snapshot!(output);
+}
+
+#[test]
+fn group_ascii() {
+    let mut t = Table::new();
+    t.set_termwidth(40);
+    t.set_termforce(TermForce::Always);
+    t.enable_no_headings(true);
+    t.enable_ascii(true);
+    t.new_column("NAME", 0.0, ColumnFlags::empty());
+
+    let g = t.new_group();
+
+    let m1 = t.new_line(None);
+    t.line_mut(m1).set_data(0, "first");
+    let m2 = t.new_line(None);
+    t.line_mut(m2).set_data(0, "second");
+    let c = t.new_line(None);
+    t.line_mut(c).set_data(0, "child");
+
+    t.group_add_member(g, m1);
+    t.group_add_member(g, m2);
+    t.group_add_child(g, c);
+
+    let output = print_table_to_string(&t).unwrap();
+    insta::assert_snapshot!(output);
+}
+
+#[test]
+fn group_with_header() {
+    let mut t = Table::new();
+    t.set_termwidth(40);
+    t.set_termforce(TermForce::Always);
+    t.new_column("NAME", 10.0, ColumnFlags::empty());
+    t.new_column("VALUE", 10.0, ColumnFlags::RIGHT);
+
+    let g = t.new_group();
+
+    let m1 = t.new_line(None);
+    t.line_mut(m1).set_data(0, "alpha").set_data(1, "10");
+    let m2 = t.new_line(None);
+    t.line_mut(m2).set_data(0, "beta").set_data(1, "20");
+
+    t.group_add_member(g, m1);
+    t.group_add_member(g, m2);
+
+    let output = print_table_to_string(&t).unwrap();
+    insta::assert_snapshot!(output);
+}
+
 fn lsblk_table() -> Table {
     let mut t = Table::new();
     t.set_name("blockdevices");

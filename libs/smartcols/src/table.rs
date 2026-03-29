@@ -281,9 +281,18 @@ impl Table {
         self.groups[group.0].children.push(line);
     }
 
-    #[expect(dead_code, reason = "will be used by print engine")]
+    #[expect(dead_code, reason = "public API for group access")]
     pub(crate) fn group(&self, id: GroupId) -> &Group {
         &self.groups[id.0]
+    }
+
+    pub(crate) fn groups(&self) -> &[Group] {
+        &self.groups
+    }
+
+    /// Returns true if any group has members.
+    pub(crate) fn has_groups(&self) -> bool {
+        self.groups.iter().any(|g| !g.members.is_empty())
     }
 
     pub fn set_symbols(&mut self, symbols: Symbols) -> &mut Self {
