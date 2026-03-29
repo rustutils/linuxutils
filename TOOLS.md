@@ -120,7 +120,7 @@
 | `colcrt` | Filter nroff output for CRT previewing | Not started |
 | `colrm` | Remove columns from a file | Done |
 | `column` | Columnate lists | Not started |
-| `hexdump` | Display file contents in hexadecimal, decimal, octal, or ascii | Not started |
+| `hexdump` | Display file contents in hexadecimal, decimal, octal, or ascii | Done |
 | `line` | Read one line | Done |
 | `more` | Display the contents of a file in a terminal | Not started |
 | `pg` | Browse pagewise through text files | Not started |

@@ -22,6 +22,7 @@
       tools = [
         "cal"
         "colrm"
+        "hexdump"
         "line"
         "look"
         "lsirq"

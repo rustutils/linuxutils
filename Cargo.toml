@@ -23,6 +23,7 @@ members = [
     "tools/system/setsid",
     "tools/term/mesg",
     "tools/text/colrm",
+    "tools/text/hexdump",
     "tools/text/line",
     "tools/text/rev",
     "util/mangen",
@@ -43,6 +44,7 @@ rustutils-common-sysfs = { path = "common/sysfs" }
 rustutils-libsmartcols = { path = "libs/smartcols" }
 rustutils-cal = { path = "tools/misc/cal" }
 rustutils-colrm = { path = "tools/text/colrm" }
+rustutils-hexdump = { path = "tools/text/hexdump" }
 rustutils-line = { path = "tools/text/line" }
 rustutils-look = { path = "tools/misc/look" }
 rustutils-mcookie = { path = "tools/misc/mcookie" }

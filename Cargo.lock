@@ -625,6 +625,13 @@ name = "rustutils-common-sysfs"
 version = "0.1.0"
 
 [[package]]
+name = "rustutils-hexdump"
+version = "0.1.0"
+dependencies = [
+ "clap",
+]
+
+[[package]]
 name = "rustutils-libblkid"
 version = "0.1.0"
 dependencies = [
@@ -716,6 +723,7 @@ dependencies = [
  "clap_mangen",
  "rustutils-cal",
  "rustutils-colrm",
+ "rustutils-hexdump",
  "rustutils-line",
  "rustutils-look",
  "rustutils-lsirq",
@@ -795,6 +803,7 @@ dependencies = [
  "clap",
  "rustutils-cal",
  "rustutils-colrm",
+ "rustutils-hexdump",
  "rustutils-line",
  "rustutils-look",
  "rustutils-lsirq",
