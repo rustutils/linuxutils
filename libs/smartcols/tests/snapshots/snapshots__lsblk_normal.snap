@@ -2,10 +2,10 @@
 source: libs/smartcols/tests/snapshots.rs
 expression: output
 ---
-NAME                                        MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
-sda                                         8:0      1    0B  0 disk 
-nvme0n1                                     259:0    0 931.5G  0 disk 
-├─nvme0n1p1                                 259:1    0  600M  0 part /boot/efi
-├─nvme0n1p2                                 259:2    0    2G  0 part /boot
-└─nvme0n1p3                                 259:3    0 928.9G  0 part 
+NAME               MAJ:MIN RM   SIZE RO TYPE  MOUNTPOINTS
+sda                8:0      1     0B  0 disk  
+nvme0n1            259:0    0 931.5G  0 disk  
+├─nvme0n1p1        259:1    0   600M  0 part  /boot/efi
+├─nvme0n1p2        259:2    0     2G  0 part  /boot
+└─nvme0n1p3        259:3    0 928.9G  0 part  
   └─luks-62d09206-d2b0-48d8-9164-a8487c42e31b 252:0    0 928.9G  0 crypt /home

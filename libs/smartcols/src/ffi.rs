@@ -553,9 +553,10 @@ pub unsafe extern "C" fn scols_sort_table(
 }
 
 /// Reorder lines depth-first by tree hierarchy.
+///
+/// The print engine walks tree order natively, so this is a no-op.
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn scols_sort_table_by_tree(tb: *mut Table) -> c_int {
-    unsafe { &mut *tb }.sort_by_tree();
+pub unsafe extern "C" fn scols_sort_table_by_tree(_tb: *mut Table) -> c_int {
     0
 }
 

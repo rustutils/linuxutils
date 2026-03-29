@@ -522,36 +522,12 @@ impl Table {
         });
     }
 
-    /// Re-order lines so that children follow their parents (depth-first).
-    pub fn sort_by_tree(&mut self) {
-        // Collect in tree order.
-        let roots = self.root_line_ids();
-        let mut ordered = Vec::with_capacity(self.lines.len());
-        for root in roots {
-            self.collect_tree_order(root, &mut ordered);
-        }
-        // `ordered` now contains LineIds in display order.
-        // We don't physically reorder the Vec (that would invalidate IDs);
-        // instead we track the display order separately for the print engine.
-        // For now this is a no-op on storage — the print engine will use
-        // tree-walk order directly.
-        let _ = ordered;
-    }
-
-    fn collect_tree_order(&self, id: LineId, out: &mut Vec<LineId>) {
-        out.push(id);
-        for &child in &self.lines[id.0].children {
-            self.collect_tree_order(child, out);
-        }
-    }
-
     /// Returns true if any column has the TREE flag.
     pub fn is_tree(&self) -> bool {
         self.columns.iter().any(|c| c.is_tree())
     }
 
     /// Effective terminal width after reduction.
-    #[expect(dead_code, reason = "will be used by print engine")]
     pub(crate) fn effective_termwidth(&self) -> usize {
         self.termwidth().saturating_sub(self.termwidth_reduce)
     }

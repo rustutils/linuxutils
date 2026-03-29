@@ -481,11 +481,15 @@ fn calculate_widths(
     #[allow(dead_code)]
     struct ColInfo {
         header_w: usize,
+        /// True maximum data width — used when no terminal constraint applies.
         max_data_w: usize,
+        /// Maximum data width used during phase-2 space distribution. For
+        /// NO_EXTREMES columns this excludes the single largest value so that
+        /// one outlier cell cannot hog available terminal width.
+        layout_max_w: usize,
         hint: f64,
         is_trunc: bool,
         is_strict: bool,
-        is_noextremes: bool,
     }
 
     // Pre-compute tree depth for each line (needed for tree column width).
@@ -526,14 +530,24 @@ fn calculate_widths(
                 })
                 .collect();
 
-            let max_data_w = data_widths.into_iter().max().unwrap_or(0);
+            let mut sorted_widths = data_widths;
+            sorted_widths.sort_unstable();
+            let max_data_w = *sorted_widths.last().unwrap_or(&0);
+            // For NO_EXTREMES columns, cap phase-2 growth at the second-largest
+            // value so one outlier cell doesn't hog terminal width from other
+            // columns. Natural (no-terminal) sizing still uses the true max.
+            let layout_max_w = if col.is_no_extremes() && sorted_widths.len() > 1 {
+                sorted_widths[sorted_widths.len() - 2]
+            } else {
+                max_data_w
+            };
             ColInfo {
                 header_w,
                 max_data_w,
+                layout_max_w,
                 hint: col.whint(),
                 is_trunc: col.is_trunc(),
                 is_strict: col.is_strict_width(),
-                is_noextremes: col.is_no_extremes(),
             }
         })
         .collect();
@@ -583,7 +597,7 @@ fn calculate_widths(
             .iter()
             .enumerate()
             .filter_map(|(i, info)| {
-                let wanted = info.max_data_w;
+                let wanted = info.layout_max_w;
                 if wanted > widths[i] {
                     Some((i, wanted - widths[i]))
                 } else {
@@ -599,7 +613,7 @@ fn calculate_widths(
                 break;
             }
             let can_give = available - total;
-            let want = infos[*i].max_data_w.saturating_sub(widths[*i]);
+            let want = infos[*i].layout_max_w.saturating_sub(widths[*i]);
             let give = want.min(can_give);
             if give > 0 {
                 widths[*i] += give;
@@ -666,8 +680,7 @@ fn use_terminal_width(table: &Table) -> bool {
 }
 
 fn effective_termwidth(table: &Table) -> usize {
-    let w = table.termwidth();
-    w.saturating_sub(0) // placeholder for reduce; table already has reduce_termwidth
+    table.effective_termwidth()
 }
 
 /// Split `s` into lines no wider than `max_width` display columns.
