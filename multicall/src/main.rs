@@ -6,6 +6,7 @@ fn main() -> ExitCode {
         .multicall(true)
         .subcommand(rustutils_cal::Args::command())
         .subcommand(rustutils_colrm::Args::command())
+        .subcommand(rustutils_flock::Args::command())
         .subcommand(rustutils_hexdump::Args::command())
         .subcommand(rustutils_line::Args::command())
         .subcommand(rustutils_look::Args::command())
@@ -32,6 +33,9 @@ fn main() -> ExitCode {
         ),
         Some(("colrm", m)) => rustutils_colrm::run(
             rustutils_colrm::Args::from_arg_matches(m).unwrap(),
+        ),
+        Some(("flock", m)) => rustutils_flock::run(
+            rustutils_flock::Args::from_arg_matches(m).unwrap(),
         ),
         Some(("hexdump", m)) => rustutils_hexdump::run(
             rustutils_hexdump::Args::from_arg_matches(m).unwrap(),

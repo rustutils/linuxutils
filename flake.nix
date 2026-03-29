@@ -22,6 +22,7 @@
       tools = [
         "cal"
         "colrm"
+        "flock"
         "hexdump"
         "line"
         "look"

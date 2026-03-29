@@ -40,7 +40,7 @@
 | `dmesg` | Print or control the kernel ring buffer | Not started |
 | `eject` | Eject removable media | Not started |
 | `fallocate` | Preallocate or deallocate space to a file | Not started |
-| `flock` | Manage locks from shell scripts | Not started |
+| `flock` | Manage locks from shell scripts | Done |
 | `fsfreeze` | Suspend access to a filesystem | Not started |
 | `fstrim` | Discard unused blocks on a mounted filesystem | Not started |
 | `hwclock` | Time clocks utility | Not started |

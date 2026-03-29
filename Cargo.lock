@@ -654,6 +654,14 @@ name = "rustutils-common-sysfs"
 version = "0.1.0"
 
 [[package]]
+name = "rustutils-flock"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "rustix",
+]
+
+[[package]]
 name = "rustutils-hexdump"
 version = "0.1.0"
 dependencies = [
@@ -754,6 +762,7 @@ dependencies = [
  "clap_mangen",
  "rustutils-cal",
  "rustutils-colrm",
+ "rustutils-flock",
  "rustutils-hexdump",
  "rustutils-line",
  "rustutils-look",
@@ -843,6 +852,7 @@ dependencies = [
  "clap",
  "rustutils-cal",
  "rustutils-colrm",
+ "rustutils-flock",
  "rustutils-hexdump",
  "rustutils-line",
  "rustutils-look",
