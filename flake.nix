@@ -40,7 +40,7 @@
       srcFor = system:
         let
           craneLib = craneLibFor system;
-          headerFilter = path: _type: builtins.match ".*\\.h$" path != null;
+          headerFilter = path: _type: builtins.match ".*\\.h(\\.in)?$" path != null;
           combinedFilter = path: type:
             (headerFilter path type) || (craneLib.filterCargoSources path type);
         in nixpkgs.lib.cleanSourceWith {
@@ -49,10 +49,14 @@
         };
 
       # Common args shared between deps and full builds.
-      commonArgsFor = system: {
-        src = srcFor system;
-        strictDeps = true;
-      };
+      commonArgsFor = system:
+        let pkgs = pkgsFor system;
+        in {
+          src = srcFor system;
+          strictDeps = true;
+          nativeBuildInputs = [ pkgs.pkg-config pkgs.clang ];
+          LIBCLANG_PATH = "${pkgs.libclang.lib}/lib";
+        };
 
       # Build only workspace dependencies (cached separately from source).
       cargoArtifactsFor = system:
