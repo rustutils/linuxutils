@@ -19,6 +19,7 @@
 //! - `scols_unref_table` is called exactly once per `scols_new_table`.
 
 #![allow(clippy::missing_safety_doc, private_interfaces)]
+#![cfg_attr(feature = "nightly", feature(c_variadic))]
 
 use crate::{
     Table,
@@ -857,10 +858,70 @@ pub unsafe extern "C" fn scols_line_refer_data(
     unsafe { scols_line_set_data(ln, n, data) }
 }
 
-// scols_line_sprintf and scols_line_vprintf are implemented in C
-// (libs/smartcols/csrc/variadic.c) because Rust stable doesn't support
-// C-variadic function definitions. They call scols_line_set_data after
-// formatting with vsnprintf.
+// scols_line_sprintf / scols_line_vprintf: available only with the
+// "nightly" feature because Rust stable doesn't support C-variadic
+// function definitions.
+
+#[cfg(feature = "nightly")]
+/// Format and set cell data using printf-style arguments (nightly only).
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_line_sprintf(
+    ln: *mut FfiLine,
+    n: usize,
+    fmt: *const c_char,
+    mut args: ...
+) -> c_int {
+    let mut buf = [0u8; 4096];
+    let len = unsafe {
+        libc::vsnprintf(
+            buf.as_mut_ptr() as *mut c_char,
+            buf.len(),
+            fmt,
+            args.as_va_list(),
+        )
+    };
+    if len < 0 {
+        return -1;
+    }
+    let s = unsafe { CStr::from_ptr(buf.as_ptr() as *const c_char) };
+    let fl = unsafe { &*ln };
+    let tb = unsafe { &mut *fl.table };
+    if let Ok(s) = s.to_str() {
+        tb.line_mut(fl.id).set_data(n, s);
+    }
+    0
+}
+
+#[cfg(feature = "nightly")]
+/// Format and set cell data by column using printf-style arguments (nightly only).
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_line_sprintf_column(
+    ln: *mut FfiLine,
+    cl: *mut FfiColumn,
+    fmt: *const c_char,
+    mut args: ...
+) -> c_int {
+    let col_idx = unsafe { &*cl }.idx;
+    let mut buf = [0u8; 4096];
+    let len = unsafe {
+        libc::vsnprintf(
+            buf.as_mut_ptr() as *mut c_char,
+            buf.len(),
+            fmt,
+            args.as_va_list(),
+        )
+    };
+    if len < 0 {
+        return -1;
+    }
+    let s = unsafe { CStr::from_ptr(buf.as_ptr() as *const c_char) };
+    let fl = unsafe { &*ln };
+    let tb = unsafe { &mut *fl.table };
+    if let Ok(s) = s.to_str() {
+        tb.line_mut(fl.id).set_data(col_idx, s);
+    }
+    0
+}
 
 /// Set cell data by column handle (C zero-copy variant, we copy).
 #[unsafe(no_mangle)]
@@ -1073,4 +1134,844 @@ pub unsafe extern "C" fn scols_table_set_default_symbols(
 ) -> c_int {
     unsafe { &mut *tb }.set_default_symbols();
     0
+}
+
+// ---------------------------------------------------------------------------
+// Ref-counting stubs (no-op — Rust manages lifetimes)
+// ---------------------------------------------------------------------------
+
+/// No-op reference count increment for column.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_ref_column(_cl: *mut FfiColumn) {}
+
+/// No-op reference count increment for line.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_ref_line(_ln: *mut FfiLine) {}
+
+/// No-op reference count increment for symbols.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_ref_symbols(_sy: *mut c_void) {}
+
+/// No-op reference count increment for filter.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_ref_filter(_fltr: *mut c_void) {}
+
+/// No-op unref for column (caller manages lifetime).
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_unref_column(_cl: *mut FfiColumn) {}
+
+/// No-op unref for line (caller manages lifetime).
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_unref_line(_ln: *mut FfiLine) {}
+
+/// No-op unref for symbols.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_unref_symbols(_sy: *mut c_void) {}
+
+// ---------------------------------------------------------------------------
+// Cell getters / setters
+// ---------------------------------------------------------------------------
+
+/// Return the length of the cell's data string, or 0.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_cell_get_datasiz(ce: *const FfiCell) -> usize {
+    let fc = unsafe { &*ce };
+    let tb = unsafe { &*fc.table };
+    tb.line(fc.line_id)
+        .get_data(fc.col_idx)
+        .map_or(0, |s| s.len())
+}
+
+/// Return the cell's flags as a bitmask.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_cell_get_flags(ce: *const FfiCell) -> c_int {
+    let fc = unsafe { &*ce };
+    let tb = unsafe { &*fc.table };
+    tb.line(fc.line_id)
+        .cell(fc.col_idx)
+        .map_or(0, |c| c.flags().bits() as c_int)
+}
+
+/// Set the cell's flags. Returns 0.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_cell_set_flags(
+    ce: *mut FfiCell,
+    flags: c_int,
+) -> c_int {
+    let fc = unsafe { &*ce };
+    let tb = unsafe { &mut *fc.table };
+    if let Some(cell) = tb.line_mut(fc.line_id).cell_mut(fc.col_idx) {
+        cell.set_flags(crate::cell::CellFlags::from_bits_truncate(
+            flags as u32,
+        ));
+    }
+    0
+}
+
+/// Return null (cannot safely return pointer to Rust-owned string).
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_cell_get_color(
+    _ce: *const FfiCell,
+) -> *const c_char {
+    ptr::null()
+}
+
+/// Return null (cannot safely return pointer to Rust-owned string).
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_cell_get_uri(
+    _ce: *const FfiCell,
+) -> *const c_char {
+    ptr::null()
+}
+
+/// Set the cell's URI. Returns 0.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_cell_set_uri(
+    ce: *mut FfiCell,
+    uri: *const c_char,
+) -> c_int {
+    let fc = unsafe { &*ce };
+    let tb = unsafe { &mut *fc.table };
+    if let Some(u) = unsafe { cstr_to_str(uri) }
+        && let Some(cell) = tb.line_mut(fc.line_id).cell_mut(fc.col_idx)
+    {
+        cell.set_uri(u);
+    }
+    0
+}
+
+/// Stub — URI disable is not implemented. Returns 0.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_cell_disable_uri(
+    _ce: *mut FfiCell,
+    _disable: c_int,
+) -> c_int {
+    0
+}
+
+/// Return cell alignment (0=left, 1=center, 2=right).
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_cell_get_alignment(ce: *const FfiCell) -> c_int {
+    let fc = unsafe { &*ce };
+    let tb = unsafe { &*fc.table };
+    tb.line(fc.line_id)
+        .cell(fc.col_idx)
+        .map_or(0, |c| match c.alignment() {
+            crate::cell::Alignment::Left => 0,
+            crate::cell::Alignment::Center => 1,
+            crate::cell::Alignment::Right => 2,
+        })
+}
+
+/// Copy data and color from src cell to dest cell. Returns 0.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_cell_copy_content(
+    dest: *mut FfiCell,
+    src: *const FfiCell,
+) -> c_int {
+    let src_fc = unsafe { &*src };
+    let src_tb = unsafe { &*src_fc.table };
+    let data = src_tb
+        .line(src_fc.line_id)
+        .get_data(src_fc.col_idx)
+        .map(|s| s.to_string());
+    let color = src_tb
+        .line(src_fc.line_id)
+        .cell(src_fc.col_idx)
+        .and_then(|c| c.color())
+        .map(|s| s.to_string());
+
+    let dest_fc = unsafe { &*dest };
+    let dest_tb = unsafe { &mut *dest_fc.table };
+    let dest_line = dest_tb.line_mut(dest_fc.line_id);
+    if let Some(d) = &data {
+        dest_line.set_data(dest_fc.col_idx, d);
+    }
+    if let Some(c) = &color
+        && let Some(cell) = dest_line.cell_mut(dest_fc.col_idx)
+    {
+        cell.set_color(c);
+    }
+    0
+}
+
+/// Compare two cells' data strings, returning -1, 0, or 1.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_cmpstr_cells(
+    a: *mut FfiCell,
+    b: *mut FfiCell,
+    _data: *mut c_void,
+) -> c_int {
+    let a_fc = unsafe { &*a };
+    let a_tb = unsafe { &*a_fc.table };
+    let a_data = a_tb.line(a_fc.line_id).get_data(a_fc.col_idx).unwrap_or("");
+
+    let b_fc = unsafe { &*b };
+    let b_tb = unsafe { &*b_fc.table };
+    let b_data = b_tb.line(b_fc.line_id).get_data(b_fc.col_idx).unwrap_or("");
+
+    match a_data.cmp(b_data) {
+        std::cmp::Ordering::Less => -1,
+        std::cmp::Ordering::Equal => 0,
+        std::cmp::Ordering::Greater => 1,
+    }
+}
+
+/// Reset the cell to empty. Returns 0.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_reset_cell(ce: *mut FfiCell) -> c_int {
+    let fc = unsafe { &*ce };
+    let tb = unsafe { &mut *fc.table };
+    if let Some(cell) = tb.line_mut(fc.line_id).cell_mut(fc.col_idx) {
+        cell.reset();
+    }
+    0
+}
+
+// ---------------------------------------------------------------------------
+// Column getters
+// ---------------------------------------------------------------------------
+
+/// Return null (cannot safely return pointer to Rust-owned string).
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_column_get_color(
+    _cl: *const FfiColumn,
+) -> *const c_char {
+    ptr::null()
+}
+
+/// Return the column's data type as a SCOLS_DATA_* constant.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_column_get_data_type(
+    cl: *const FfiColumn,
+) -> c_int {
+    let fc = unsafe { &*cl };
+    let tb = unsafe { &*fc.table };
+    tb.column(fc.idx).map_or(0, |c| match c.data_type() {
+        DataType::None => sys::SCOLS_DATA_NONE as c_int,
+        DataType::U64 => sys::SCOLS_DATA_U64 as c_int,
+        DataType::Boolean => sys::SCOLS_DATA_BOOLEAN as c_int,
+        DataType::Float => sys::SCOLS_DATA_FLOAT as c_int,
+        DataType::String => sys::SCOLS_DATA_STRING as c_int,
+    })
+}
+
+/// Return null (header cell wrapping not yet implemented).
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_column_get_header(
+    _cl: *mut FfiColumn,
+) -> *mut FfiCell {
+    ptr::null_mut()
+}
+
+/// Return null (cannot safely return pointer to Rust-owned string).
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_column_get_name(
+    _cl: *const FfiColumn,
+) -> *const c_char {
+    ptr::null()
+}
+
+/// Return null (cannot safely return pointer to Rust-owned string).
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_column_get_name_as_shellvar(
+    _cl: *const FfiColumn,
+) -> *const c_char {
+    ptr::null()
+}
+
+/// Return null (cannot safely return pointer to Rust-owned string).
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_column_get_safechars(
+    _cl: *const FfiColumn,
+) -> *const c_char {
+    ptr::null()
+}
+
+/// Return null (cannot safely return pointer to Rust-owned string).
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_column_get_uri(
+    _cl: *const FfiColumn,
+) -> *const c_char {
+    ptr::null()
+}
+
+/// Return the column's width hint.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_column_get_whint(cl: *const FfiColumn) -> f64 {
+    let fc = unsafe { &*cl };
+    let tb = unsafe { &*fc.table };
+    tb.column(fc.idx).map_or(0.0, |c| c.whint())
+}
+
+/// Return the column's calculated width, or 0 if not yet calculated.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_column_get_width(cl: *const FfiColumn) -> usize {
+    let fc = unsafe { &*cl };
+    let tb = unsafe { &*fc.table };
+    tb.column(fc.idx).map_or(0, |c| c.width().unwrap_or(0))
+}
+
+/// Return null (cannot safely return pointer to Rust-owned string).
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_column_get_headercolor(
+    _cl: *const FfiColumn,
+) -> *const c_char {
+    ptr::null()
+}
+
+/// Return null (cannot safely return pointer to Rust-owned string).
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_column_get_annotation(
+    _cl: *const FfiColumn,
+) -> *const c_char {
+    ptr::null()
+}
+
+/// Return 0 (custom wrap not supported).
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_column_is_customwrap(
+    _cl: *const FfiColumn,
+) -> c_int {
+    0
+}
+
+/// Return 1 if the column has the NO_EXTREMES flag.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_column_is_noextremes(
+    cl: *const FfiColumn,
+) -> c_int {
+    let fc = unsafe { &*cl };
+    let tb = unsafe { &*fc.table };
+    tb.column(fc.idx).map_or(0, |c| c.is_no_extremes() as c_int)
+}
+
+/// Return 1 if the column has the RIGHT flag.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_column_is_right(cl: *const FfiColumn) -> c_int {
+    let fc = unsafe { &*cl };
+    let tb = unsafe { &*fc.table };
+    tb.column(fc.idx).map_or(0, |c| c.is_right() as c_int)
+}
+
+/// Return 1 if the column has the STRICT_WIDTH flag.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_column_is_strict_width(
+    cl: *const FfiColumn,
+) -> c_int {
+    let fc = unsafe { &*cl };
+    let tb = unsafe { &*fc.table };
+    tb.column(fc.idx)
+        .map_or(0, |c| c.is_strict_width() as c_int)
+}
+
+/// Return 1 if the column has the TRUNC flag.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_column_is_trunc(cl: *const FfiColumn) -> c_int {
+    let fc = unsafe { &*cl };
+    let tb = unsafe { &*fc.table };
+    tb.column(fc.idx).map_or(0, |c| c.is_trunc() as c_int)
+}
+
+/// Return 1 if the column has the WRAP flag.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_column_is_wrap(cl: *const FfiColumn) -> c_int {
+    let fc = unsafe { &*cl };
+    let tb = unsafe { &*fc.table };
+    tb.column(fc.idx).map_or(0, |c| c.is_wrap() as c_int)
+}
+
+// ---------------------------------------------------------------------------
+// Column setters
+// ---------------------------------------------------------------------------
+
+/// Set the column's header color.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_column_set_headercolor(
+    cl: *mut FfiColumn,
+    color: *const c_char,
+) -> c_int {
+    let fc = unsafe { &*cl };
+    let tb = unsafe { &mut *fc.table };
+    if let Some(col) = tb.column_mut(fc.idx) {
+        if let Some(c) = unsafe { cstr_to_str(color) } {
+            col.set_header_color(c);
+        }
+        0
+    } else {
+        -1
+    }
+}
+
+/// Set the column's name.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_column_set_name(
+    cl: *mut FfiColumn,
+    name: *const c_char,
+) -> c_int {
+    let fc = unsafe { &*cl };
+    let tb = unsafe { &mut *fc.table };
+    if let Some(col) = tb.column_mut(fc.idx) {
+        if let Some(n) = unsafe { cstr_to_str(name) } {
+            col.set_name(n);
+        }
+        0
+    } else {
+        -1
+    }
+}
+
+/// Set the column's safe characters.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_column_set_safechars(
+    cl: *mut FfiColumn,
+    chars: *const c_char,
+) -> c_int {
+    let fc = unsafe { &*cl };
+    let tb = unsafe { &mut *fc.table };
+    if let Some(col) = tb.column_mut(fc.idx) {
+        if let Some(s) = unsafe { cstr_to_str(chars) } {
+            col.set_safechars(s);
+        }
+        0
+    } else {
+        -1
+    }
+}
+
+/// Set the column's URI.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_column_set_uri(
+    cl: *mut FfiColumn,
+    uri: *const c_char,
+) -> c_int {
+    let fc = unsafe { &*cl };
+    let tb = unsafe { &mut *fc.table };
+    if let Some(col) = tb.column_mut(fc.idx) {
+        if let Some(u) = unsafe { cstr_to_str(uri) } {
+            col.set_uri(u);
+        }
+        0
+    } else {
+        -1
+    }
+}
+
+/// Set the column's annotation.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_column_refer_annotation(
+    cl: *mut FfiColumn,
+    ann: *const c_char,
+) -> c_int {
+    let fc = unsafe { &*cl };
+    let tb = unsafe { &mut *fc.table };
+    if let Some(col) = tb.column_mut(fc.idx) {
+        if let Some(a) = unsafe { cstr_to_str(ann) } {
+            col.set_annotation(a);
+        }
+        0
+    } else {
+        -1
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Line getters
+// ---------------------------------------------------------------------------
+
+/// Return null (cannot safely return pointer to Rust-owned string).
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_line_get_color(
+    _ln: *const FfiLine,
+) -> *const c_char {
+    ptr::null()
+}
+
+/// Return the number of cells in the line.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_line_get_ncells(ln: *const FfiLine) -> usize {
+    let fl = unsafe { &*ln };
+    let tb = unsafe { &*fl.table };
+    tb.line(fl.id).ncells()
+}
+
+/// Return a handle to the parent line, or null if none. Caller must free with scols_unref_line.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_line_get_parent(
+    ln: *const FfiLine,
+) -> *mut FfiLine {
+    let fl = unsafe { &*ln };
+    let tb = unsafe { &*fl.table };
+    match tb.line(fl.id).parent() {
+        Some(pid) => Box::into_raw(Box::new(FfiLine {
+            table: fl.table,
+            id: pid,
+        })),
+        None => ptr::null_mut(),
+    }
+}
+
+/// Return 1 if the line has children.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_line_has_children(ln: *const FfiLine) -> c_int {
+    let fl = unsafe { &*ln };
+    let tb = unsafe { &*fl.table };
+    tb.line(fl.id).has_children() as c_int
+}
+
+/// Ensure the line has at least `n` cells. Returns 0.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_line_alloc_cells(
+    ln: *mut FfiLine,
+    n: usize,
+) -> c_int {
+    let fl = unsafe { &*ln };
+    let tb = unsafe { &mut *fl.table };
+    tb.line_mut(fl.id).alloc_cells(n);
+    0
+}
+
+/// Stub — Rust manages cell memory. Returns 0.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_line_free_cells(_ln: *mut FfiLine) -> c_int {
+    0
+}
+
+/// Return null (cannot safely return pointer to Rust-owned string).
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_line_get_column_data(
+    _ln: *const FfiLine,
+    _cl: *const FfiColumn,
+) -> *const c_char {
+    ptr::null()
+}
+
+// ---------------------------------------------------------------------------
+// Line tree operations
+// ---------------------------------------------------------------------------
+
+/// Return 1 if `parent` is an ancestor of `ln`.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_line_is_ancestor(
+    ln: *const FfiLine,
+    parent: *const FfiLine,
+) -> c_int {
+    let ln_fl = unsafe { &*ln };
+    let parent_fl = unsafe { &*parent };
+    let tb = unsafe { &*ln_fl.table };
+    tb.is_ancestor(parent_fl.id, ln_fl.id) as c_int
+}
+
+/// Iterate over children of a line. Returns 0 on success, 1 when done.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_line_next_child(
+    ln: *mut FfiLine,
+    itr: *mut ScolsIter,
+    chld: *mut *mut FfiLine,
+) -> c_int {
+    let fl = unsafe { &*ln };
+    let tb = unsafe { &*fl.table };
+    let itr = unsafe { &mut *itr };
+    let children = tb.line(fl.id).children();
+    let nchildren = children.len();
+
+    if !itr.started {
+        itr.started = true;
+        itr.pos = if itr.direction == sys::SCOLS_ITER_BACKWARD as c_int {
+            nchildren.wrapping_sub(1)
+        } else {
+            0
+        };
+    } else if itr.direction == sys::SCOLS_ITER_BACKWARD as c_int {
+        if itr.pos == 0 {
+            return 1;
+        }
+        itr.pos -= 1;
+    } else {
+        itr.pos += 1;
+    }
+
+    if itr.pos >= nchildren {
+        return 1;
+    }
+
+    let child_id = children[itr.pos];
+    unsafe {
+        *chld = Box::into_raw(Box::new(FfiLine {
+            table: fl.table,
+            id: child_id,
+        }));
+    }
+    0
+}
+
+/// Remove a child from a parent line. Returns 0.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_line_remove_child(
+    ln: *mut FfiLine,
+    child: *mut FfiLine,
+) -> c_int {
+    let parent_fl = unsafe { &*ln };
+    let child_fl = unsafe { &*child };
+    let tb = unsafe { &mut *parent_fl.table };
+    tb.remove_child(parent_fl.id, child_fl.id);
+    0
+}
+
+// ---------------------------------------------------------------------------
+// Table getters
+// ---------------------------------------------------------------------------
+
+/// Return null (cannot safely return pointer to Rust-owned string).
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_table_get_column_separator(
+    _tb: *const Table,
+) -> *const c_char {
+    ptr::null()
+}
+
+/// Return null (cannot safely return pointer to Rust-owned string).
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_table_get_line_separator(
+    _tb: *const Table,
+) -> *const c_char {
+    ptr::null()
+}
+
+/// Return null (title cell wrapping not yet implemented).
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_table_get_title(
+    _tb: *mut Table,
+) -> *mut FfiCell {
+    ptr::null_mut()
+}
+
+/// Get a line by index. Returns an FfiLine handle or null if out of bounds.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_table_get_line(
+    tb: *mut Table,
+    n: usize,
+) -> *mut FfiLine {
+    let tb_ref = unsafe { &*tb };
+    if n >= tb_ref.nlines() {
+        return ptr::null_mut();
+    }
+    Box::into_raw(Box::new(FfiLine {
+        table: tb,
+        id: LineId(n),
+    }))
+}
+
+/// Return null (symbols object not exposed).
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_table_get_symbols(
+    _tb: *const Table,
+) -> *mut c_void {
+    ptr::null_mut()
+}
+
+/// Return 1 if header repeat is enabled.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_table_is_header_repeat(
+    tb: *const Table,
+) -> c_int {
+    unsafe { &*tb }.is_header_repeat() as c_int
+}
+
+/// Return 1 if encoding is disabled.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_table_is_noencoding(tb: *const Table) -> c_int {
+    unsafe { &*tb }.is_no_encoding() as c_int
+}
+
+/// Return 1 if line separators are disabled.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_table_is_nolinesep(tb: *const Table) -> c_int {
+    unsafe { &*tb }.is_no_linesep() as c_int
+}
+
+/// Return 1 if shell variable output mode is enabled.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_table_is_shellvar(tb: *const Table) -> c_int {
+    unsafe { &*tb }.is_shellvar() as c_int
+}
+
+// ---------------------------------------------------------------------------
+// Table mutations (stubs)
+// ---------------------------------------------------------------------------
+
+/// Stub — columns are added via scols_table_new_column in our impl. Returns 0.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_table_add_column(
+    _tb: *mut Table,
+    _cl: *mut FfiColumn,
+) -> c_int {
+    0
+}
+
+/// Stub — lines are added via scols_table_new_line in our impl. Returns 0.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_table_add_line(
+    _tb: *mut Table,
+    _ln: *mut FfiLine,
+) -> c_int {
+    0
+}
+
+/// Stub — column removal not yet implemented. Returns 0.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_table_remove_column(
+    _tb: *mut Table,
+    _cl: *mut FfiColumn,
+) -> c_int {
+    0
+}
+
+/// Stub — column removal not yet implemented. Returns 0.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_table_remove_columns(_tb: *mut Table) -> c_int {
+    0
+}
+
+/// Stub — line removal not yet implemented. Returns 0.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_table_remove_line(
+    _tb: *mut Table,
+    _ln: *mut FfiLine,
+) -> c_int {
+    0
+}
+
+/// Stub — line removal not yet implemented. Returns 0.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_table_remove_lines(_tb: *mut Table) -> c_int {
+    0
+}
+
+/// Stub — symbols object not exposed. Returns 0.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_table_set_symbols(
+    _tb: *mut Table,
+    _sy: *mut c_void,
+) -> c_int {
+    0
+}
+
+/// Stub — cursor not implemented. Returns -1.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_table_get_cursor(
+    _tb: *mut Table,
+    _ln: *mut *mut FfiLine,
+    _cl: *mut *mut FfiColumn,
+    _ce: *mut *mut FfiCell,
+) -> c_int {
+    -1
+}
+
+// ---------------------------------------------------------------------------
+// Table iterators
+// ---------------------------------------------------------------------------
+
+/// Iterate over columns. Returns 0 on success, 1 when done.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_table_next_column(
+    tb: *mut Table,
+    itr: *mut ScolsIter,
+    cl: *mut *mut FfiColumn,
+) -> c_int {
+    let tb_ref = unsafe { &*tb };
+    let itr = unsafe { &mut *itr };
+    let ncols = tb_ref.ncols();
+
+    if !itr.started {
+        itr.started = true;
+        itr.pos = if itr.direction == sys::SCOLS_ITER_BACKWARD as c_int {
+            ncols.wrapping_sub(1)
+        } else {
+            0
+        };
+    } else if itr.direction == sys::SCOLS_ITER_BACKWARD as c_int {
+        if itr.pos == 0 {
+            return 1;
+        }
+        itr.pos -= 1;
+    } else {
+        itr.pos += 1;
+    }
+
+    if itr.pos >= ncols {
+        return 1;
+    }
+
+    unsafe {
+        *cl = Box::into_raw(Box::new(FfiColumn {
+            table: tb,
+            idx: itr.pos,
+        }));
+    }
+    0
+}
+
+// ---------------------------------------------------------------------------
+// Standalone creation
+// ---------------------------------------------------------------------------
+
+/// Create a standalone column (table=null, idx=0). Use scols_table_add_column to attach.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_new_column() -> *mut FfiColumn {
+    Box::into_raw(Box::new(FfiColumn {
+        table: ptr::null_mut(),
+        idx: 0,
+    }))
+}
+
+/// Create a standalone line (table=null, id=0). Use scols_table_add_line to attach.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_new_line() -> *mut FfiLine {
+    Box::into_raw(Box::new(FfiLine {
+        table: ptr::null_mut(),
+        id: LineId(0),
+    }))
+}
+
+/// Return null (symbols object not implemented as standalone).
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_new_symbols() -> *mut c_void {
+    ptr::null_mut()
+}
+
+// ---------------------------------------------------------------------------
+// Misc
+// ---------------------------------------------------------------------------
+
+/// Parse a "X.Y.Z" version string and return X*10000 + Y*100 + Z.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_parse_version_string(
+    ver_string: *const c_char,
+) -> c_int {
+    let s = match unsafe { cstr_to_str(ver_string) } {
+        Some(s) => s,
+        None => return -1,
+    };
+    let parts: Vec<&str> = s.split('.').collect();
+    if parts.len() != 3 {
+        return -1;
+    }
+    let major: c_int = parts[0].parse().unwrap_or(-1);
+    let minor: c_int = parts[1].parse().unwrap_or(-1);
+    let patch: c_int = parts[2].parse().unwrap_or(-1);
+    if major < 0 || minor < 0 || patch < 0 {
+        return -1;
+    }
+    major * 10000 + minor * 100 + patch
+}
+
+/// Stub — shell variable name conversion not implemented. Returns -1.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn scols_shellvar_name(
+    _name: *const c_char,
+    _buf: *mut *mut c_char,
+    _bufsz: *mut usize,
+) -> c_int {
+    -1
 }
