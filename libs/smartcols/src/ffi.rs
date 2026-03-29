@@ -857,6 +857,11 @@ pub unsafe extern "C" fn scols_line_refer_data(
     unsafe { scols_line_set_data(ln, n, data) }
 }
 
+// scols_line_sprintf and scols_line_vprintf are implemented in C
+// (libs/smartcols/csrc/variadic.c) because Rust stable doesn't support
+// C-variadic function definitions. They call scols_line_set_data after
+// formatting with vsnprintf.
+
 /// Set cell data by column handle (C zero-copy variant, we copy).
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_line_refer_column_data(
