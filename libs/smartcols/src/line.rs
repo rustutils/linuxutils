@@ -1,6 +1,6 @@
 //! Line — a row in the table.
 //!
-//! Each line holds one [`Cell`](crate::Cell) per column and can participate
+//! Each line holds one [`Cell`] per column and can participate
 //! in tree hierarchies (parent/child) and group relationships.
 //! Lines are created via [`Table::new_line`](crate::Table::new_line) and
 //! accessed via [`LineId`] handles.

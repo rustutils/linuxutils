@@ -13,6 +13,7 @@ clap_mangen = "0.2"
 rustutils-colrm.workspace = true
 rustutils-line.workspace = true
 rustutils-look.workspace = true
+rustutils-lsmem.workspace = true
 rustutils-mcookie.workspace = true
 rustutils-mesg.workspace = true
 rustutils-mountpoint.workspace = true

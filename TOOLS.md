@@ -53,7 +53,7 @@
 | `lscpu` | Display information about the CPU architecture | Not started |
 | `lsipc` | Show information on IPC facilities currently employed in the system | Not started |
 | `lsirq` | Display kernel interrupt information | Not started |
-| `lsmem` | List the ranges of available memory with their online status | Not started |
+| `lsmem` | List the ranges of available memory with their online status | Done |
 | `lsns` | List namespaces | Not started |
 | `mount` | Mount a filesystem | Not started |
 | `mountpoint` | See if a directory or file is a mountpoint | Done |

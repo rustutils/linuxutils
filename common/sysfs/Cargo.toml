@@ -1,0 +1,9 @@
+[package]
+name = "rustutils-common-sysfs"
+description = "Helpers for reading Linux sysfs attributes"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]

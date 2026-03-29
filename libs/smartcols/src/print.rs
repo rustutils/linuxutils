@@ -1,4 +1,4 @@
-//! Print engine — formats a [`Table`](crate::Table) to a writer.
+//! Print engine — formats a [`Table`] to a writer.
 //!
 //! Supports five output modes:
 //! - **Normal** — human-readable with automatic column width calculation,

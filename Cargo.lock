@@ -548,6 +548,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "rustutils-common-sysfs"
+version = "0.1.0"
+
+[[package]]
 name = "rustutils-libblkid"
 version = "0.1.0"
 dependencies = [
@@ -607,6 +611,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "rustutils-lsmem"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "rustutils-common-sysfs",
+ "rustutils-libsmartcols",
+]
+
+[[package]]
 name = "rustutils-mangen"
 version = "0.1.0"
 dependencies = [
@@ -615,6 +628,7 @@ dependencies = [
  "rustutils-colrm",
  "rustutils-line",
  "rustutils-look",
+ "rustutils-lsmem",
  "rustutils-mcookie",
  "rustutils-mesg",
  "rustutils-mountpoint",
@@ -689,6 +703,7 @@ dependencies = [
  "rustutils-colrm",
  "rustutils-line",
  "rustutils-look",
+ "rustutils-lsmem",
  "rustutils-mcookie",
  "rustutils-mesg",
  "rustutils-mountpoint",

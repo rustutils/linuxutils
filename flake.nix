@@ -23,6 +23,7 @@
         "colrm"
         "line"
         "look"
+        "lsmem"
         "mcookie"
         "mesg"
         "mountpoint"
