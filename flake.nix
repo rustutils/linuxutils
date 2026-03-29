@@ -35,6 +35,7 @@
         "setpgid"
         "setsid"
         "rev"
+        "rfkill"
         "uuidgen"
         "uuidparse"
         "waitpid"

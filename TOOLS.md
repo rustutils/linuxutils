@@ -62,7 +62,7 @@
 | `prlimit` | Get and set process resource limits | Not started |
 | `readprofile` | Read kernel profiling information | Not started |
 | `renice` | Alter priority of running processes | Not started |
-| `rfkill` | Enable and disable wireless devices | Not started |
+| `rfkill` | Enable and disable wireless devices | Done |
 | `rtcwake` | Enter a system sleep state until specified wakeup time | Not started |
 | `setarch` | Change reported architecture in new program environment and/or set personality flags | Not started |
 | `setpgid` | Run a program in a new process group | Done |

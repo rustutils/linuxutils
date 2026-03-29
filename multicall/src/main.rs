@@ -19,6 +19,7 @@ fn main() -> ExitCode {
         .subcommand(rustutils_setpgid::Args::command())
         .subcommand(rustutils_setsid::Args::command())
         .subcommand(rustutils_rev::Args::command())
+        .subcommand(rustutils_rfkill::Args::command())
         .subcommand(rustutils_uuidgen::Args::command())
         .subcommand(rustutils_uuidparse::Args::command())
         .subcommand(rustutils_waitpid::Args::command());
@@ -70,6 +71,9 @@ fn main() -> ExitCode {
         ),
         Some(("rev", m)) => rustutils_rev::run(
             rustutils_rev::Args::from_arg_matches(m).unwrap(),
+        ),
+        Some(("rfkill", m)) => rustutils_rfkill::run(
+            rustutils_rfkill::Args::from_arg_matches(m).unwrap(),
         ),
         Some(("uuidgen", m)) => rustutils_uuidgen::run(
             rustutils_uuidgen::Args::from_arg_matches(m).unwrap(),

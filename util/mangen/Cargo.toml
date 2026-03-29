@@ -23,6 +23,7 @@ rustutils-mesg.workspace = true
 rustutils-mountpoint.workspace = true
 rustutils-nologin.workspace = true
 rustutils-rev.workspace = true
+rustutils-rfkill.workspace = true
 rustutils-setpgid.workspace = true
 rustutils-setsid.workspace = true
 rustutils-uuidgen.workspace = true

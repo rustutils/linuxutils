@@ -19,6 +19,7 @@ members = [
     "tools/system/lsmem",
     "tools/system/lsns",
     "tools/system/mountpoint",
+    "tools/system/rfkill",
     "tools/system/setpgid",
     "tools/system/setsid",
     "tools/term/mesg",
@@ -58,6 +59,7 @@ rustutils-uuidgen = { path = "tools/misc/uuidgen" }
 rustutils-lsirq = { path = "tools/system/lsirq" }
 rustutils-lsmem = { path = "tools/system/lsmem" }
 rustutils-lsns = { path = "tools/system/lsns" }
+rustutils-rfkill = { path = "tools/system/rfkill" }
 rustutils-uuidparse = { path = "tools/misc/uuidparse" }
 rustutils-waitpid = { path = "tools/misc/waitpid" }
 

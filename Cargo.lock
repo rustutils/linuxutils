@@ -765,6 +765,7 @@ dependencies = [
  "rustutils-mountpoint",
  "rustutils-nologin",
  "rustutils-rev",
+ "rustutils-rfkill",
  "rustutils-setpgid",
  "rustutils-setsid",
  "rustutils-uuidgen",
@@ -810,6 +811,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "rustutils-rfkill"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "rustutils-libsmartcols",
+]
+
+[[package]]
 name = "rustutils-setpgid"
 version = "0.1.0"
 dependencies = [
@@ -845,6 +854,7 @@ dependencies = [
  "rustutils-mountpoint",
  "rustutils-nologin",
  "rustutils-rev",
+ "rustutils-rfkill",
  "rustutils-setpgid",
  "rustutils-setsid",
  "rustutils-uuidgen",

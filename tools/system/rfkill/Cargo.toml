@@ -1,0 +1,18 @@
+[package]
+name = "rustutils-rfkill"
+description = "Enable and disable wireless devices"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+name = "rustutils_rfkill"
+
+[[bin]]
+name = "rfkill"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+rustutils-libsmartcols.workspace = true

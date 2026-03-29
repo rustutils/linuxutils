@@ -52,7 +52,6 @@ fn compare_lsblk() {
     compare_output("lsblk", &[]);
 }
 
-
 #[test]
 fn compare_lsipc() {
     compare_output("lsipc", &[]);
@@ -66,4 +65,9 @@ fn compare_lsmem() {
 #[test]
 fn compare_lslogins() {
     compare_output("lslogins", &[]);
+}
+
+#[test]
+fn compare_rfkill() {
+    compare_output("rfkill", &[]);
 }
