@@ -13,6 +13,7 @@ members = [
     "tools/misc/mcookie",
     "tools/misc/uuidgen",
     "tools/misc/uuidparse",
+    "tools/system/lsirq",
     "tools/system/lsmem",
     "tools/system/mountpoint",
     "tools/system/setpgid",
@@ -48,6 +49,7 @@ rustutils-rev = { path = "tools/text/rev" }
 rustutils-setpgid = { path = "tools/system/setpgid" }
 rustutils-setsid = { path = "tools/system/setsid" }
 rustutils-uuidgen = { path = "tools/misc/uuidgen" }
+rustutils-lsirq = { path = "tools/system/lsirq" }
 rustutils-lsmem = { path = "tools/system/lsmem" }
 rustutils-uuidparse = { path = "tools/misc/uuidparse" }
 

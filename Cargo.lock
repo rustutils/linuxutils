@@ -611,6 +611,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "rustutils-lsirq"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "rustutils-libsmartcols",
+]
+
+[[package]]
 name = "rustutils-lsmem"
 version = "0.1.0"
 dependencies = [
@@ -628,6 +636,7 @@ dependencies = [
  "rustutils-colrm",
  "rustutils-line",
  "rustutils-look",
+ "rustutils-lsirq",
  "rustutils-lsmem",
  "rustutils-mcookie",
  "rustutils-mesg",
@@ -703,6 +712,7 @@ dependencies = [
  "rustutils-colrm",
  "rustutils-line",
  "rustutils-look",
+ "rustutils-lsirq",
  "rustutils-lsmem",
  "rustutils-mcookie",
  "rustutils-mesg",

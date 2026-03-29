@@ -23,6 +23,7 @@
         "colrm"
         "line"
         "look"
+        "lsirq"
         "lsmem"
         "mcookie"
         "mesg"
