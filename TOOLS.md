@@ -59,7 +59,7 @@
 | `mountpoint` | See if a directory or file is a mountpoint | Done |
 | `nsenter` | Run a program in different namespaces | Not started |
 | `pivot_root` | Change the root filesystem | Not started |
-| `prlimit` | Get and set process resource limits | Not started |
+| `prlimit` | Get and set process resource limits | Done |
 | `readprofile` | Read kernel profiling information | Not started |
 | `renice` | Alter priority of running processes | Not started |
 | `rfkill` | Enable and disable wireless devices | Done |

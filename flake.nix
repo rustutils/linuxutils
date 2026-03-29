@@ -33,6 +33,7 @@
         "mesg"
         "mountpoint"
         "nologin"
+        "prlimit"
         "setpgid"
         "setsid"
         "rev"

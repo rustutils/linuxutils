@@ -23,6 +23,7 @@ rustutils-mcookie.workspace = true
 rustutils-mesg.workspace = true
 rustutils-mountpoint.workspace = true
 rustutils-nologin.workspace = true
+rustutils-prlimit.workspace = true
 rustutils-rev.workspace = true
 rustutils-rfkill.workspace = true
 rustutils-setpgid.workspace = true

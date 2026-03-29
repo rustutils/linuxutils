@@ -26,6 +26,7 @@ fn main() -> ExitCode {
         rustutils_mesg::Args::command(),
         rustutils_mountpoint::Args::command(),
         rustutils_nologin::Args::command(),
+        rustutils_prlimit::Args::command(),
         rustutils_setpgid::Args::command(),
         rustutils_setsid::Args::command(),
         rustutils_rev::Args::command(),

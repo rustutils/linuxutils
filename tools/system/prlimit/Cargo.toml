@@ -1,0 +1,19 @@
+[package]
+name = "rustutils-prlimit"
+description = "Get and set process resource limits"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+name = "rustutils_prlimit"
+
+[[bin]]
+name = "prlimit"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+rustix = { workspace = true, features = ["process"] }
+rustutils-libsmartcols.workspace = true
