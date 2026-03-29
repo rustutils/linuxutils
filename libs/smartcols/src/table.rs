@@ -92,7 +92,7 @@ impl Table {
             no_linesep: false,
             no_encoding: false,
             ascii: false,
-            column_separator: "  ".to_string(),
+            column_separator: " ".to_string(),
             line_separator: "\n".to_string(),
 
             termforce: TermForce::default(),

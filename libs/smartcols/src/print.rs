@@ -438,82 +438,163 @@ fn calculate_widths(
         return vec![];
     }
 
-    // Start with the natural width of each column (max of header and data).
-    let mut widths: Vec<usize> = visible
+    let sep_width = display_width(table.column_separator());
+    let total_sep = sep_width * ncols.saturating_sub(1);
+    let available = termwidth.saturating_sub(total_sep);
+
+    // Collect per-column metrics.
+    #[allow(dead_code)]
+    struct ColInfo {
+        header_w: usize,
+        max_data_w: usize,
+        hint: f64,
+        is_trunc: bool,
+        is_strict: bool,
+        is_noextremes: bool,
+    }
+
+    // Pre-compute tree depth for each line (needed for tree column width).
+    let tree_symbol_width = display_width(&table.symbols().branch);
+    let tree_depths: Vec<usize> = table
+        .line_ids()
+        .map(|id| {
+            let mut depth = 0;
+            let mut cur = table.line(id).parent();
+            while let Some(pid) = cur {
+                depth += 1;
+                cur = table.line(pid).parent();
+            }
+            depth
+        })
+        .collect();
+
+    let infos: Vec<ColInfo> = visible
         .iter()
         .map(|&col_idx| {
             let col = &table.columns()[col_idx];
             let header_w = col.header().data().map_or(0, display_width);
-
             let max_data_w = table
                 .line_ids()
-                .map(|id| {
-                    table.line(id).get_data(col_idx).map_or(0, display_width)
+                .enumerate()
+                .map(|(li, id)| {
+                    let data_w = table
+                        .line(id)
+                        .get_data(col_idx)
+                        .map_or(0, display_width);
+                    if col.is_tree() && tree_depths[li] > 0 {
+                        data_w + tree_depths[li] * tree_symbol_width
+                    } else {
+                        data_w
+                    }
                 })
                 .max()
                 .unwrap_or(0);
-
-            // Apply width hint.
-            let hint = col.whint();
-            if hint > 1.0 {
-                // Absolute width hint.
-                (hint as usize).max(header_w)
-            } else if hint > 0.0 {
-                // Relative width hint (fraction of terminal).
-                let relative = (termwidth as f64 * hint) as usize;
-                relative.max(header_w)
-            } else {
-                header_w.max(max_data_w)
+            ColInfo {
+                header_w,
+                max_data_w,
+                hint: col.whint(),
+                is_trunc: col.is_trunc(),
+                is_strict: col.is_strict_width(),
+                is_noextremes: col.is_no_extremes(),
             }
         })
         .collect();
 
-    // Account for separators between columns.
-    let sep_width = display_width(table.column_separator());
-    let total_sep = sep_width * ncols.saturating_sub(1);
+    // Phase 1: compute each column's desired width from its hint.
+    // Hints are starting points, not final widths.
+    let mut widths: Vec<usize> = infos
+        .iter()
+        .map(|info| {
+            let hint_w = if info.hint >= 1.0 {
+                info.hint as usize
+            } else if info.hint > 0.0 {
+                (available as f64 * info.hint) as usize
+            } else {
+                0
+            };
+            // At minimum, fit the header.
+            info.header_w.max(hint_w)
+        })
+        .collect();
 
-    let total_content: usize = widths.iter().sum();
-    let total = total_content + total_sep;
-
-    if total > termwidth && !use_terminal_width(table) {
-        // Don't shrink if we're not doing terminal-aware output.
+    if !use_terminal_width(table) {
+        // No terminal constraint: use natural content widths.
+        for (i, info) in infos.iter().enumerate() {
+            widths[i] = widths[i].max(info.max_data_w);
+        }
         return widths;
     }
 
-    if total > termwidth {
-        // Shrink columns proportionally, but don't go below header width.
-        let excess = total - termwidth;
-        let mut remaining = excess;
-        // Shrink the widest columns first.
-        for _ in 0..excess {
-            if remaining == 0 {
+    // Phase 2: distribute remaining space to columns that need more.
+    // Give each column up to its max_data_w, distributing fairly.
+    loop {
+        let total: usize = widths.iter().sum();
+        let remaining = available.saturating_sub(total);
+        if remaining == 0 {
+            break;
+        }
+
+        // Find columns that want more space (data wider than current width).
+        let mut grew = false;
+        // Give space to columns with the biggest deficit first.
+        let mut deficits: Vec<(usize, usize)> = infos
+            .iter()
+            .enumerate()
+            .filter_map(|(i, info)| {
+                let wanted = info.max_data_w;
+                if wanted > widths[i] {
+                    Some((i, wanted - widths[i]))
+                } else {
+                    None
+                }
+            })
+            .collect();
+        deficits.sort_by(|a, b| b.1.cmp(&a.1));
+
+        for (i, _) in &deficits {
+            let total: usize = widths.iter().sum();
+            if total >= available {
                 break;
             }
-            // Find the widest non-strict column.
-            if let Some(widest) = widths
+            let can_give = available - total;
+            let want = infos[*i].max_data_w.saturating_sub(widths[*i]);
+            let give = want.min(can_give);
+            if give > 0 {
+                widths[*i] += give;
+                grew = true;
+            }
+        }
+
+        if !grew {
+            break;
+        }
+    }
+
+    // Phase 3: if still too wide, shrink.
+    let total: usize = widths.iter().sum();
+    if total > available {
+        // Iteratively shrink the widest non-strict column.
+        let mut remaining =
+            widths.iter().sum::<usize>().saturating_sub(available);
+        while remaining > 0 {
+            let candidate = widths
                 .iter()
                 .enumerate()
-                .filter(|(vi, _)| {
-                    let col = &table.columns()[visible[*vi]];
-                    !col.is_strict_width()
+                .filter(|(vi, w)| {
+                    !infos[*vi].is_strict && **w > infos[*vi].header_w.max(1)
                 })
                 .max_by_key(|(_, w)| **w)
-                .map(|(i, _)| i)
-            {
-                let col = &table.columns()[visible[widest]];
-                let min =
-                    col.header().data().map_or(1, |h| display_width(h).max(1));
-                if widths[widest] > min {
-                    widths[widest] -= 1;
-                    remaining -= 1;
-                }
+                .map(|(i, _)| i);
+
+            if let Some(i) = candidate {
+                widths[i] -= 1;
+                remaining -= 1;
             } else {
                 break;
             }
         }
-    } else if table.is_maxout() && total < termwidth {
-        // Distribute extra space equally.
-        let extra = termwidth - total;
+    } else if table.is_maxout() && total < available {
+        let extra = available - total;
         let per_col = extra / ncols;
         let leftover = extra % ncols;
         for (i, w) in widths.iter_mut().enumerate() {
@@ -656,8 +737,8 @@ mod tests {
 
         let output = print_table_to_string(&table).unwrap();
         let lines: Vec<&str> = output.lines().collect();
-        assert_eq!(lines[0], "A  B"); // header with default separator
-        assert_eq!(lines[1], "x  y");
+        assert_eq!(lines[0], "A B");
+        assert_eq!(lines[1], "x y");
     }
 
     #[test]
