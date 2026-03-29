@@ -1,6 +1,7 @@
 [workspace]
 resolver = "2"
 members = [
+    "libs/uuid",
     "multicall",
     "tools/login/nologin",
     "tools/misc/look",
@@ -23,6 +24,7 @@ repository = "https://github.com/rustutils/util-linux"
 
 [workspace.dependencies]
 rustix = { version = "1", features = ["fs", "process", "termios"] }
+uuid = { version = "1", features = ["v1", "v3", "v4", "v5", "v6", "v7"] }
 
 # workspace crates
 rustutils-colrm = { path = "tools/text/colrm" }

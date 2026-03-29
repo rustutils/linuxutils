@@ -182,4 +182,4 @@
 | `liblastlog2` | Y2038-safe library for managing user login records using a SQLite3 database backend | Not started |
 | `libmount` | Library for parsing /etc/fstab, /etc/mtab and /proc/self/mountinfo, managing the mtab file, and evaluating mount options | Not started |
 | `libsmartcols` | Library for smart adaptive formatting of tabular data with support for filtering and various display options | Not started |
-| `libuuid` | DCE-compatible Universally Unique Identifier library for generating unique identifiers compatible with RFC-4122 | Not started |
+| `libuuid` | DCE-compatible Universally Unique Identifier library for generating unique identifiers compatible with RFC-4122 | Done |

@@ -52,4 +52,6 @@ nix develop
 
 This project is licensed under the [MIT License](LICENSE.md).
 
+Some files included for ABI compatibility (such as header files in `libs/*/include/`) are copied from util-linux and retain their original license terms. See the individual file headers for details.
+
 No original util-linux source code was referenced during development. Only man pages and public header files were used as reference material.

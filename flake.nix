@@ -30,13 +30,23 @@
 
       craneLibFor = system: crane.mkLib (pkgsFor system);
 
-      # Common args shared between deps and full builds.
-      commonArgsFor = system:
-        let craneLib = craneLibFor system;
-        in {
-          src = craneLib.cleanCargoSource ./.;
-          strictDeps = true;
+      # Source filter: keep Cargo/Rust files plus C headers for ABI compat.
+      srcFor = system:
+        let
+          craneLib = craneLibFor system;
+          headerFilter = path: _type: builtins.match ".*\\.h$" path != null;
+          combinedFilter = path: type:
+            (headerFilter path type) || (craneLib.filterCargoSources path type);
+        in nixpkgs.lib.cleanSourceWith {
+          src = ./.;
+          filter = combinedFilter;
         };
+
+      # Common args shared between deps and full builds.
+      commonArgsFor = system: {
+        src = srcFor system;
+        strictDeps = true;
+      };
 
       # Build only workspace dependencies (cached separately from source).
       cargoArtifactsFor = system:
@@ -53,7 +63,7 @@
           cargoArtifacts = cargoArtifactsFor system;
 
           doCheck = true;
-          nativeCheckInputs = [ pkgs.cargo-nextest ];
+          nativeCheckInputs = [ pkgs.cargo-nextest pkgs.gcc ];
           checkPhase = ''
             cargo nextest run --release
           '';
@@ -73,18 +83,21 @@
           pkgs = pkgsFor system;
           base = buildBase system;
 
-          # Individual binaries + man pages.
+          # Individual binaries + libraries + headers + man pages.
           individual = base.overrideAttrs (old: {
             pname = "rustutils-util-linux";
 
             installPhase = ''
               runHook preInstall
 
-              mkdir -p $out/bin $out/share/man/man1
+              mkdir -p $out/bin $out/lib $out/include $out/share/man/man1
 
               ${nixpkgs.lib.concatMapStringsSep "\n" (tool:
                 "install -m755 target/release/${tool} $out/bin/"
               ) tools}
+
+              install -m755 target/release/libuuid.so $out/lib/
+              install -m644 libs/uuid/include/uuid.h $out/include/
 
               install -m644 target/man/*.1 $out/share/man/man1/
 
@@ -92,20 +105,23 @@
             '';
           });
 
-          # Multicall binary + symlinks + man pages.
+          # Multicall binary + libraries + headers + man pages.
           multicall = base.overrideAttrs (old: {
             pname = "rustutils-util-linux-multicall";
 
             installPhase = ''
                 runHook preInstall
 
-                mkdir -p $out/bin $out/share/man/man1
+                mkdir -p $out/bin $out/lib $out/include $out/share/man/man1
 
                 install -m755 target/release/rustutils-util-linux $out/bin/
 
                 ${nixpkgs.lib.concatMapStringsSep "\n" (tool:
                   "ln -s $out/bin/rustutils-util-linux $out/bin/${tool}"
                 ) tools}
+
+                install -m755 target/release/libuuid.so $out/lib/
+                install -m644 libs/uuid/include/uuid.h $out/include/
 
                 install -m644 target/man/*.1 $out/share/man/man1/
 
