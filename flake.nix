@@ -20,6 +20,7 @@
         "line"
         "look"
         "mcookie"
+        "mesg"
         "nologin"
         "rev"
       ];

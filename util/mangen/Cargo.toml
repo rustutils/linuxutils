@@ -14,5 +14,6 @@ rustutils-colrm = { path = "../../tools/colrm" }
 rustutils-line = { path = "../../tools/line" }
 rustutils-look = { path = "../../tools/look" }
 rustutils-mcookie = { path = "../../tools/mcookie" }
+rustutils-mesg = { path = "../../tools/mesg" }
 rustutils-nologin = { path = "../../tools/nologin" }
 rustutils-rev = { path = "../../tools/rev" }

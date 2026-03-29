@@ -8,6 +8,7 @@ fn main() -> ExitCode {
         .subcommand(rustutils_line::Args::command())
         .subcommand(rustutils_look::Args::command())
         .subcommand(rustutils_mcookie::Args::command())
+        .subcommand(rustutils_mesg::Args::command())
         .subcommand(rustutils_nologin::Args::command())
         .subcommand(rustutils_rev::Args::command());
 
@@ -25,6 +26,9 @@ fn main() -> ExitCode {
         ),
         Some(("mcookie", m)) => rustutils_mcookie::run(
             rustutils_mcookie::Args::from_arg_matches(m).unwrap(),
+        ),
+        Some(("mesg", m)) => rustutils_mesg::run(
+            rustutils_mesg::Args::from_arg_matches(m).unwrap(),
         ),
         Some(("nologin", m)) => rustutils_nologin::run(
             rustutils_nologin::Args::from_arg_matches(m).unwrap(),

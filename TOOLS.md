@@ -149,7 +149,7 @@
 | Tool | Description | Status |
 |------|-------------|--------|
 | `agetty` | Alternative Linux getty | Not started |
-| `mesg` | Display (or do not display) messages from other users | Not started |
+| `mesg` | Display (or do not display) messages from other users | Done |
 | `script` | Make a typescript of a terminal session | Not started |
 | `scriptlive` | Re-run session typescripts using timing information | Not started |
 | `scriptreplay` | Play back typescripts using timing information | Not started |

@@ -17,6 +17,7 @@ fn main() -> ExitCode {
         rustutils_line::Args::command(),
         rustutils_look::Args::command(),
         rustutils_mcookie::Args::command(),
+        rustutils_mesg::Args::command(),
         rustutils_nologin::Args::command(),
         rustutils_rev::Args::command(),
     ];

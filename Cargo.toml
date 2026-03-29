@@ -6,6 +6,7 @@ members = [
     "tools/line",
     "tools/look",
     "tools/mcookie",
+    "tools/mesg",
     "tools/nologin",
     "tools/rev",
     "util/mangen",
@@ -16,6 +17,9 @@ version = "0.1.0"
 edition = "2024"
 license = "MIT"
 repository = "https://github.com/rustutils/util-linux"
+
+[workspace.dependencies]
+rustix = { version = "1", features = ["fs", "termios"] }
 
 [workspace.metadata.crane]
 name = "rustutils-util-linux"
