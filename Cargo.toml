@@ -6,6 +6,8 @@ members = [
     "tools/login/nologin",
     "tools/misc/look",
     "tools/misc/mcookie",
+    "tools/misc/uuidgen",
+    "tools/misc/uuidparse",
     "tools/system/mountpoint",
     "tools/system/setpgid",
     "tools/system/setsid",
@@ -37,6 +39,8 @@ rustutils-nologin = { path = "tools/login/nologin" }
 rustutils-rev = { path = "tools/text/rev" }
 rustutils-setpgid = { path = "tools/system/setpgid" }
 rustutils-setsid = { path = "tools/system/setsid" }
+rustutils-uuidgen = { path = "tools/misc/uuidgen" }
+rustutils-uuidparse = { path = "tools/misc/uuidparse" }
 
 [workspace.metadata.crane]
 name = "rustutils-util-linux"

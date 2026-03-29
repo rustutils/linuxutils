@@ -23,6 +23,8 @@ fn main() -> ExitCode {
         rustutils_setpgid::Args::command(),
         rustutils_setsid::Args::command(),
         rustutils_rev::Args::command(),
+        rustutils_uuidgen::Args::command(),
+        rustutils_uuidparse::Args::command(),
     ];
 
     for cmd in tools {

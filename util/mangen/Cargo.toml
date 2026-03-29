@@ -20,3 +20,5 @@ rustutils-nologin.workspace = true
 rustutils-rev.workspace = true
 rustutils-setpgid.workspace = true
 rustutils-setsid.workspace = true
+rustutils-uuidgen.workspace = true
+rustutils-uuidparse.workspace = true

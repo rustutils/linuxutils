@@ -26,6 +26,8 @@
         "setpgid"
         "setsid"
         "rev"
+        "uuidgen"
+        "uuidparse"
       ];
 
       craneLibFor = system: crane.mkLib (pkgsFor system);

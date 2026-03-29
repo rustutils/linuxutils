@@ -13,7 +13,9 @@ fn main() -> ExitCode {
         .subcommand(rustutils_nologin::Args::command())
         .subcommand(rustutils_setpgid::Args::command())
         .subcommand(rustutils_setsid::Args::command())
-        .subcommand(rustutils_rev::Args::command());
+        .subcommand(rustutils_rev::Args::command())
+        .subcommand(rustutils_uuidgen::Args::command())
+        .subcommand(rustutils_uuidparse::Args::command());
 
     let matches = cmd.get_matches();
 
@@ -47,6 +49,12 @@ fn main() -> ExitCode {
         ),
         Some(("rev", m)) => rustutils_rev::run(
             rustutils_rev::Args::from_arg_matches(m).unwrap(),
+        ),
+        Some(("uuidgen", m)) => rustutils_uuidgen::run(
+            rustutils_uuidgen::Args::from_arg_matches(m).unwrap(),
+        ),
+        Some(("uuidparse", m)) => rustutils_uuidparse::run(
+            rustutils_uuidparse::Args::from_arg_matches(m).unwrap(),
         ),
         _ => unreachable!("clap ensures a valid subcommand"),
     }

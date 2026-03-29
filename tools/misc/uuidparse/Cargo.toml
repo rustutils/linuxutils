@@ -1,0 +1,16 @@
+[package]
+name = "rustutils-uuidparse"
+description = "Parse unique identifiers"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[[bin]]
+name = "uuidparse"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+libc = "0.2"
+uuid.workspace = true

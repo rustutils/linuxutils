@@ -457,6 +457,8 @@ dependencies = [
  "rustutils-rev",
  "rustutils-setpgid",
  "rustutils-setsid",
+ "rustutils-uuidgen",
+ "rustutils-uuidparse",
 ]
 
 [[package]]
@@ -529,6 +531,25 @@ dependencies = [
  "rustutils-rev",
  "rustutils-setpgid",
  "rustutils-setsid",
+ "rustutils-uuidgen",
+ "rustutils-uuidparse",
+]
+
+[[package]]
+name = "rustutils-uuidgen"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "uuid",
+]
+
+[[package]]
+name = "rustutils-uuidparse"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "libc",
+ "uuid",
 ]
 
 [[package]]

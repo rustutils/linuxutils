@@ -105,8 +105,8 @@
 | `pipesz` | Set or examine pipe and FIFO buffer sizes | Not started |
 | `rename` | Rename files | Not started |
 | `uuidd` | UUID generation daemon | Not started |
-| `uuidgen` | Create a new UUID value | Not started |
-| `uuidparse` | Parse unique identifiers | Not started |
+| `uuidgen` | Create a new UUID value | Done |
+| `uuidparse` | Parse unique identifiers | Done |
 | `waitpid` | Wait for arbitrary processes | Not started |
 | `whereis` | Locate the binary, source, and manual page files for a command | Not started |
 | `wipefs` | Wipe a signature from a device | Not started |
