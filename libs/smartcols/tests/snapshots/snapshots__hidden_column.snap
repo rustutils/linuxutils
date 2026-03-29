@@ -1,0 +1,6 @@
+---
+source: libs/smartcols/tests/snapshots.rs
+expression: output
+---
+A       C
+visible also visible

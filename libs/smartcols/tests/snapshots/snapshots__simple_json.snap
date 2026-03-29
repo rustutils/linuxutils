@@ -1,0 +1,20 @@
+---
+source: libs/smartcols/tests/snapshots.rs
+expression: output
+---
+{
+   "items": [
+      {
+         "NAME": "alpha",
+         "VALUE": "100"
+      },
+      {
+         "NAME": "beta",
+         "VALUE": "200"
+      },
+      {
+         "NAME": "gamma",
+         "VALUE": "300"
+      }
+   ]
+}

@@ -1,0 +1,6 @@
+---
+source: libs/smartcols/tests/snapshots.rs
+expression: output
+---
+SHORT LONG
+ok    this is a very long string that should cause width adjustment

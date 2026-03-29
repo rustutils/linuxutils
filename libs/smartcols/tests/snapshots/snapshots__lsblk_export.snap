@@ -1,0 +1,10 @@
+---
+source: libs/smartcols/tests/snapshots.rs
+expression: output
+---
+NAME="sda" MAJ_MIN="8:0" RM="1" SIZE="0B" RO="0" TYPE="disk" MOUNTPOINTS=""
+NAME="nvme0n1" MAJ_MIN="259:0" RM="0" SIZE="931.5G" RO="0" TYPE="disk" MOUNTPOINTS=""
+NAME="nvme0n1p1" MAJ_MIN="259:1" RM="0" SIZE="600M" RO="0" TYPE="part" MOUNTPOINTS="/boot/efi"
+NAME="nvme0n1p2" MAJ_MIN="259:2" RM="0" SIZE="2G" RO="0" TYPE="part" MOUNTPOINTS="/boot"
+NAME="nvme0n1p3" MAJ_MIN="259:3" RM="0" SIZE="928.9G" RO="0" TYPE="part" MOUNTPOINTS=""
+NAME="luks-62d09206-d2b0-48d8-9164-a8487c42e31b" MAJ_MIN="252:0" RM="0" SIZE="928.9G" RO="0" TYPE="crypt" MOUNTPOINTS="/home"

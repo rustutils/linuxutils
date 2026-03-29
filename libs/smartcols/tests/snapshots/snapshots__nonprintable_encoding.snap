@@ -1,0 +1,6 @@
+---
+source: libs/smartcols/tests/snapshots.rs
+expression: output
+---
+DATA
+hello\x01world\x1b[31m

@@ -1,0 +1,8 @@
+---
+source: libs/smartcols/tests/snapshots.rs
+expression: output
+---
+NAME
+root
+├─child1
+└─child2

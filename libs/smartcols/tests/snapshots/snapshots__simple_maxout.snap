@@ -1,0 +1,8 @@
+---
+source: libs/smartcols/tests/snapshots.rs
+expression: output
+---
+NAME                               VALUE
+alpha                                100
+beta                                 200
+gamma                                300
