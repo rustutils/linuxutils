@@ -95,8 +95,6 @@ impl Column {
         col
     }
 
-    // --- name ---
-
     pub fn set_name(&mut self, name: &str) -> &mut Self {
         self.name = Some(name.to_string());
         self.header.set_data(name);
@@ -113,8 +111,6 @@ impl Column {
         self.name.as_ref().map(|n| to_shellvar(n))
     }
 
-    // --- header ---
-
     pub fn header(&self) -> &Cell {
         &self.header
     }
@@ -122,8 +118,6 @@ impl Column {
     pub fn header_mut(&mut self) -> &mut Cell {
         &mut self.header
     }
-
-    // --- width hint ---
 
     pub fn set_whint(&mut self, whint: f64) -> &mut Self {
         self.whint = whint;
@@ -143,8 +137,6 @@ impl Column {
     pub(crate) fn set_width(&mut self, w: usize) {
         self.width = Some(w);
     }
-
-    // --- flags ---
 
     pub fn set_flags(&mut self, flags: ColumnFlags) -> &mut Self {
         self.flags = flags;
@@ -183,8 +175,6 @@ impl Column {
         self.flags.contains(ColumnFlags::WRAP)
     }
 
-    // --- types ---
-
     pub fn set_json_type(&mut self, jt: JsonType) -> &mut Self {
         self.json_type = jt;
         self
@@ -203,8 +193,6 @@ impl Column {
         self.data_type
     }
 
-    // --- colors ---
-
     pub fn set_color(&mut self, color: &str) -> &mut Self {
         self.color = Some(color.to_string());
         self
@@ -222,8 +210,6 @@ impl Column {
     pub fn header_color(&self) -> Option<&str> {
         self.header_color.as_deref()
     }
-
-    // --- misc ---
 
     pub fn set_safechars(&mut self, chars: &str) -> &mut Self {
         self.safechars = Some(chars.to_string());
@@ -251,8 +237,6 @@ impl Column {
     pub fn annotation(&self) -> Option<&str> {
         self.annotation.as_deref()
     }
-
-    // --- comparison ---
 
     pub fn set_cmp_func<F>(&mut self, f: F) -> &mut Self
     where

@@ -67,8 +67,6 @@ impl Line {
         self.cells.get(n).is_some_and(|c| c.is_filled())
     }
 
-    // --- color ---
-
     pub fn set_color(&mut self, color: &str) -> &mut Self {
         self.color = Some(color.to_string());
         self
@@ -77,8 +75,6 @@ impl Line {
     pub fn color(&self) -> Option<&str> {
         self.color.as_deref()
     }
-
-    // --- tree ---
 
     pub fn parent(&self) -> Option<LineId> {
         self.parent

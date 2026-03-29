@@ -104,10 +104,6 @@ impl Table {
         }
     }
 
-    // ---------------------------------------------------------------
-    // Name / title
-    // ---------------------------------------------------------------
-
     pub fn set_name(&mut self, name: &str) -> &mut Self {
         self.name = Some(name.to_string());
         self
@@ -124,10 +120,6 @@ impl Table {
     pub fn title_mut(&mut self) -> &mut Cell {
         &mut self.title
     }
-
-    // ---------------------------------------------------------------
-    // Columns
-    // ---------------------------------------------------------------
 
     /// Add a pre-built column and return its index.
     pub fn add_column(&mut self, col: Column) -> usize {
@@ -181,10 +173,6 @@ impl Table {
     pub fn remove_all_columns(&mut self) {
         self.columns.clear();
     }
-
-    // ---------------------------------------------------------------
-    // Lines
-    // ---------------------------------------------------------------
 
     /// Add a new line, optionally as a child of `parent`. Returns its `LineId`.
     pub fn new_line(&mut self, parent: Option<LineId>) -> LineId {
@@ -266,10 +254,6 @@ impl Table {
         false
     }
 
-    // ---------------------------------------------------------------
-    // Groups
-    // ---------------------------------------------------------------
-
     /// Create a new group and return its ID.
     pub fn new_group(&mut self) -> GroupId {
         let id = GroupId(self.groups.len());
@@ -294,10 +278,6 @@ impl Table {
         &self.groups[id.0]
     }
 
-    // ---------------------------------------------------------------
-    // Symbols
-    // ---------------------------------------------------------------
-
     pub fn set_symbols(&mut self, symbols: Symbols) -> &mut Self {
         self.symbols = symbols;
         self
@@ -315,10 +295,6 @@ impl Table {
         };
         self
     }
-
-    // ---------------------------------------------------------------
-    // Output mode
-    // ---------------------------------------------------------------
 
     pub fn set_output_mode(&mut self, mode: OutputMode) -> &mut Self {
         self.output_mode = mode;
@@ -344,10 +320,6 @@ impl Table {
     pub fn is_shellvar(&self) -> bool {
         self.output_mode == OutputMode::ShellVar
     }
-
-    // ---------------------------------------------------------------
-    // Boolean toggles
-    // ---------------------------------------------------------------
 
     pub fn enable_colors(&mut self, enable: bool) -> &mut Self {
         self.colors_enabled = enable;
@@ -437,10 +409,6 @@ impl Table {
         self.ascii
     }
 
-    // ---------------------------------------------------------------
-    // Separators
-    // ---------------------------------------------------------------
-
     pub fn set_column_separator(&mut self, sep: &str) -> &mut Self {
         self.column_separator = sep.to_string();
         self
@@ -458,10 +426,6 @@ impl Table {
     pub fn line_separator(&self) -> &str {
         &self.line_separator
     }
-
-    // ---------------------------------------------------------------
-    // Terminal
-    // ---------------------------------------------------------------
 
     pub fn set_termforce(&mut self, force: TermForce) -> &mut Self {
         self.termforce = force;
@@ -494,10 +458,6 @@ impl Table {
         self.termwidth_reduce = reduce;
         self
     }
-
-    // ---------------------------------------------------------------
-    // Sorting
-    // ---------------------------------------------------------------
 
     /// Sort lines by the given column index using the column's comparator.
     pub fn sort(&mut self, col_idx: usize) {
@@ -572,10 +532,6 @@ impl Table {
             self.collect_tree_order(child, out);
         }
     }
-
-    // ---------------------------------------------------------------
-    // Tree query helpers
-    // ---------------------------------------------------------------
 
     /// Returns true if any column has the TREE flag.
     pub fn is_tree(&self) -> bool {
