@@ -36,6 +36,38 @@ pub struct Args {
     #[arg(short = 'l', long = "table-columns-limit", value_name = "number")]
     table_columns_limit: Option<usize>,
 
+    /// Right align text in specified columns.
+    #[arg(short = 'R', long = "table-right", value_name = "columns")]
+    table_right: Option<String>,
+
+    /// Truncate text in specified columns when necessary.
+    #[arg(short = 'T', long = "table-truncate", value_name = "columns")]
+    table_truncate: Option<String>,
+
+    /// Ignore unusually long cells when calculating column width.
+    #[arg(short = 'E', long = "table-noextreme", value_name = "columns")]
+    table_noextreme: Option<String>,
+
+    /// Allow multi-line wrapping in specified columns.
+    #[arg(short = 'W', long = "table-wrap", value_name = "columns")]
+    table_wrap: Option<String>,
+
+    /// Don't print specified columns.
+    #[arg(short = 'H', long = "table-hide", value_name = "columns")]
+    table_hide: Option<String>,
+
+    /// Specify output column order.
+    #[arg(short = 'O', long = "table-order", value_name = "columns")]
+    table_order: Option<String>,
+
+    /// Print header line for each page.
+    #[arg(short = 'e', long = "table-header-repeat")]
+    table_header_repeat: bool,
+
+    /// Define a column with attributes (can be repeated).
+    #[arg(short = 'C', long = "table-column", value_name = "attributes")]
+    table_column: Vec<String>,
+
     /// Fill all available space on output.
     #[arg(short = 'm', long = "table-maxout")]
     table_maxout: bool,
@@ -229,9 +261,99 @@ fn table_mode(
         table.set_column_separator(sep);
     }
 
-    for name in &col_names {
-        table.new_column(name);
+    // If -C (per-column attributes) is given, use those for column definitions.
+    if !args.table_column.is_empty() {
+        for (i, attr_str) in args.table_column.iter().enumerate() {
+            let attrs = parse_column_attrs(attr_str);
+            let name = attrs
+                .iter()
+                .find_map(
+                    |(k, v)| {
+                        if k == "name" { v.as_deref() } else { None }
+                    },
+                )
+                .or_else(|| col_names.get(i).map(|s| s.as_str()))
+                .unwrap_or("?");
+            let idx = table.new_column(name);
+            let col = table.column_mut(idx).unwrap();
+            for (key, _val) in &attrs {
+                match key.as_str() {
+                    "right" => {
+                        col.set_right(true);
+                    }
+                    "trunc" => {
+                        col.set_trunc(true);
+                    }
+                    "noextreme" => {
+                        col.set_no_extremes(true);
+                    }
+                    "wrap" => {
+                        col.set_wrap(true);
+                    }
+                    "hide" => {
+                        col.set_hidden(true);
+                    }
+                    "strictwidth" => {
+                        col.set_strict_width(true);
+                    }
+                    _ => {}
+                }
+            }
+        }
+        // Add remaining columns if input has more than -C definitions.
+        for name in &col_names[args.table_column.len()..] {
+            table.new_column(name);
+        }
+    } else {
+        for name in &col_names {
+            table.new_column(name);
+        }
     }
+
+    // Apply column flags from -R, -T, -E, -W, -H options.
+    if let Some(ref spec) = args.table_right {
+        for idx in resolve_columns(spec, &col_names) {
+            if let Some(col) = table.column_mut(idx) {
+                col.set_right(true);
+            }
+        }
+    }
+    if let Some(ref spec) = args.table_truncate {
+        for idx in resolve_columns(spec, &col_names) {
+            if let Some(col) = table.column_mut(idx) {
+                col.set_trunc(true);
+            }
+        }
+    }
+    if let Some(ref spec) = args.table_noextreme {
+        for idx in resolve_columns(spec, &col_names) {
+            if let Some(col) = table.column_mut(idx) {
+                col.set_no_extremes(true);
+            }
+        }
+    }
+    if let Some(ref spec) = args.table_wrap {
+        for idx in resolve_columns(spec, &col_names) {
+            if let Some(col) = table.column_mut(idx) {
+                col.set_wrap(true);
+            }
+        }
+    }
+    if let Some(ref spec) = args.table_hide {
+        for idx in resolve_columns(spec, &col_names) {
+            if let Some(col) = table.column_mut(idx) {
+                col.set_hidden(true);
+            }
+        }
+    }
+
+    if args.table_header_repeat {
+        table.enable_header_repeat(true);
+    }
+
+    // Handle -O (column order) by reordering columns.
+    // For now we don't reorder — cols doesn't support column reordering
+    // after creation. This would need to remap column indices.
 
     // Populate rows.
     for row in &rows {
@@ -243,6 +365,80 @@ fn table_mode(
     }
 
     print_table(&table, writer)
+}
+
+/// Resolve a column specification string to 0-based column indices.
+///
+/// The spec is a comma-separated list of:
+/// - `0` — all columns
+/// - `-1` — last column
+/// - `N` — 1-based index
+/// - `N-M` — range of 1-based indices
+/// - `name` — column name (matched against `col_names`)
+fn resolve_columns(spec: &str, col_names: &[String]) -> Vec<usize> {
+    let ncols = col_names.len();
+    let mut result = Vec::new();
+
+    for part in spec.split(',') {
+        let part = part.trim();
+        if part == "0" {
+            result.extend(0..ncols);
+        } else if part == "-" {
+            // Special: all unnamed columns (auto-generated COLn names).
+            for (i, name) in col_names.iter().enumerate() {
+                if name.starts_with("COL") && name[3..].parse::<usize>().is_ok()
+                {
+                    result.push(i);
+                }
+            }
+        } else if part == "-1" {
+            if ncols > 0 {
+                result.push(ncols - 1);
+            }
+        } else if let Some(dash_pos) = part.find('-') {
+            // Could be a range "N-M" or a negative index "-1" (handled above).
+            if dash_pos == 0 {
+                // Negative number — already handled "-1" above.
+                continue;
+            }
+            if let (Ok(start), Ok(end)) = (
+                part[..dash_pos].parse::<usize>(),
+                part[dash_pos + 1..].parse::<usize>(),
+            ) && start >= 1
+                && end >= start
+            {
+                for i in start..=end.min(ncols) {
+                    result.push(i - 1);
+                }
+            }
+        } else if let Ok(n) = part.parse::<usize>() {
+            if n >= 1 && n <= ncols {
+                result.push(n - 1);
+            }
+        } else {
+            // Match by name.
+            for (i, name) in col_names.iter().enumerate() {
+                if name == part {
+                    result.push(i);
+                }
+            }
+        }
+    }
+
+    result
+}
+
+/// Parse `-C` column attribute string like "name=FOO,right,trunc".
+fn parse_column_attrs(s: &str) -> Vec<(String, Option<String>)> {
+    s.split(',')
+        .map(|attr| {
+            if let Some((k, v)) = attr.split_once('=') {
+                (k.trim().to_string(), Some(v.trim().to_string()))
+            } else {
+                (attr.trim().to_string(), None)
+            }
+        })
+        .collect()
 }
 
 /// Parse input text into rows of fields based on separator.

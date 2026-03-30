@@ -304,6 +304,126 @@ fn table_empty_input() {
         .stdout(predicate::str::is_empty());
 }
 
+// ── Table column attributes (Part 3) ────────────────────────────────────────
+
+#[test]
+fn table_right_align_by_name() {
+    let output = cmd()
+        .args(["-t", "-N", "LABEL,NUM", "-R", "NUM"])
+        .write_stdin("foo 1\nbar 22\nbaz 333\n")
+        .output()
+        .unwrap();
+    let stdout = std::str::from_utf8(&output.stdout).unwrap();
+    let lines: Vec<&str> = stdout.lines().collect();
+    // NUM column should be right-aligned: "333" should end at same position as header "NUM".
+    assert!(lines[0].contains("NUM"));
+    let num_end = lines[0].find("NUM").unwrap() + 3;
+    let val_end = lines[3].rfind("333").unwrap() + 3;
+    assert_eq!(num_end, val_end, "NUM column should be right-aligned");
+}
+
+#[test]
+fn table_right_align_by_index() {
+    let output = cmd()
+        .args(["-t", "-R", "2"])
+        .write_stdin("a 1\nb 22\nc 333\n")
+        .output()
+        .unwrap();
+    let stdout = std::str::from_utf8(&output.stdout).unwrap();
+    let lines: Vec<&str> = stdout.lines().collect();
+    // Second column (index 2, 1-based) right-aligned.
+    let pos1 = lines[0].rfind('1').unwrap();
+    let pos3 = lines[2].rfind("333").unwrap() + 2;
+    assert_eq!(pos1, pos3, "column 2 should be right-aligned");
+}
+
+#[test]
+fn table_right_align_all() {
+    // 0 means all columns.
+    cmd()
+        .args(["-t", "-R", "0"])
+        .write_stdin("a bb\ncc d\n")
+        .assert()
+        .success();
+}
+
+#[test]
+fn table_hide_column() {
+    cmd()
+        .args(["-t", "-N", "A,B,C", "-H", "B"])
+        .write_stdin("1:2:3\n4:5:6\n")
+        .args(["-s", ":"])
+        .assert()
+        .success()
+        .stdout(
+            predicate::str::contains("A")
+                .and(predicate::str::contains("C"))
+                .and(predicate::str::contains("B").not()),
+        );
+}
+
+#[test]
+fn table_hide_unnamed() {
+    // -H '-' hides all unnamed columns (those not in -N).
+    cmd()
+        .args(["-t", "-N", "X", "-H", "-"])
+        .write_stdin("a b c\n1 2 3\n")
+        .assert()
+        .success()
+        .stdout(
+            predicate::str::contains("X")
+                .and(predicate::str::contains("b").not()),
+        );
+}
+
+#[test]
+fn table_column_attr_right() {
+    let output = cmd()
+        .args(["-t", "-C", "name=A", "-C", "name=B,right"])
+        .write_stdin("x 1\ny 22\nz 333\n")
+        .output()
+        .unwrap();
+    let stdout = std::str::from_utf8(&output.stdout).unwrap();
+    let lines: Vec<&str> = stdout.lines().collect();
+    // B column should be right-aligned.
+    let pos1 = lines[0].rfind('1').unwrap();
+    let pos3 = lines[2].rfind("333").unwrap() + 2;
+    assert_eq!(pos1, pos3, "-C right should right-align");
+}
+
+#[test]
+fn table_column_attr_hide() {
+    cmd()
+        .args(["-t", "-C", "name=SHOW", "-C", "name=HIDE,hide"])
+        .write_stdin("a b\nc d\n")
+        .assert()
+        .success()
+        .stdout(
+            predicate::str::contains("a")
+                .and(predicate::str::contains("b").not()),
+        );
+}
+
+#[test]
+fn table_noextreme_flag() {
+    // -E should be accepted and not crash.
+    cmd()
+        .args(["-t", "-N", "A,B", "-E", "B"])
+        .write_stdin("short longvaluelongvalue\na b\n")
+        .assert()
+        .success();
+}
+
+#[test]
+fn table_header_repeat_flag() {
+    // -e should be accepted.
+    cmd()
+        .args(["-t", "-N", "A,B", "-e"])
+        .write_stdin("1 2\n3 4\n")
+        .assert()
+        .success();
+}
+
 // ── Simple mode (continued) ─────────────────────────────────────────────────
 
 #[test]
