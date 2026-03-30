@@ -656,6 +656,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "rustutils-isosize"
+version = "0.1.0"
+dependencies = [
+ "clap",
+]
+
+[[package]]
 name = "rustutils-libblkid"
 version = "0.1.0"
 dependencies = [
@@ -766,8 +773,10 @@ dependencies = [
  "rustutils-mcookie",
  "rustutils-mesg",
  "rustutils-mountpoint",
+ "rustutils-namei",
  "rustutils-nologin",
  "rustutils-prlimit",
+ "rustutils-renice",
  "rustutils-rev",
  "rustutils-rfkill",
  "rustutils-setpgid",
@@ -801,6 +810,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "rustutils-namei"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "rustix",
+]
+
+[[package]]
 name = "rustutils-nologin"
 version = "0.1.0"
 dependencies = [
@@ -813,6 +830,15 @@ version = "0.1.0"
 dependencies = [
  "clap",
  "cols",
+ "rustix",
+]
+
+[[package]]
+name = "rustutils-renice"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "libc",
  "rustix",
 ]
 
@@ -859,6 +885,7 @@ dependencies = [
  "rustutils-colrm",
  "rustutils-flock",
  "rustutils-hexdump",
+ "rustutils-isosize",
  "rustutils-line",
  "rustutils-look",
  "rustutils-lsirq",
@@ -868,8 +895,10 @@ dependencies = [
  "rustutils-mcookie",
  "rustutils-mesg",
  "rustutils-mountpoint",
+ "rustutils-namei",
  "rustutils-nologin",
  "rustutils-prlimit",
+ "rustutils-renice",
  "rustutils-rev",
  "rustutils-rfkill",
  "rustutils-setpgid",

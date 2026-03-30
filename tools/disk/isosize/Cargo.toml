@@ -1,0 +1,17 @@
+[package]
+name = "rustutils-isosize"
+description = "Output the length of an iso9660 filesystem"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+name = "rustutils_isosize"
+
+[[bin]]
+name = "isosize"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }

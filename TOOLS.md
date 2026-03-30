@@ -13,7 +13,7 @@
 | `fsck` | Check and repair a Linux filesystem | Not started |
 | `fsck.cramfs` | Check consistency of a compressed ROM filesystem | Not started |
 | `fsck.minix` | Check consistency of a Minix filesystem | Not started |
-| `isosize` | Output the length of an iso9660 filesystem | Not started |
+| `isosize` | Output the length of an iso9660 filesystem | Done |
 | `mkfs` | Build a Linux filesystem | Not started |
 | `mkfs.bfs` | Make an SCO bfs filesystem | Not started |
 | `mkfs.cramfs` | Make a compressed ROM filesystem | Not started |
@@ -61,7 +61,7 @@
 | `pivot_root` | Change the root filesystem | Not started |
 | `prlimit` | Get and set process resource limits | Done |
 | `readprofile` | Read kernel profiling information | Not started |
-| `renice` | Alter priority of running processes | Not started |
+| `renice` | Alter priority of running processes | Done |
 | `rfkill` | Enable and disable wireless devices | Done |
 | `rtcwake` | Enter a system sleep state until specified wakeup time | Not started |
 | `setarch` | Change reported architecture in new program environment and/or set personality flags | Not started |
@@ -101,7 +101,7 @@
 | `lsclocks` | Display system clocks | Not started |
 | `lslocks` | List local system locks | Done |
 | `mcookie` | Generate magic cookies for xauth | Done |
-| `namei` | Follow a pathname until a terminal point is found | Not started |
+| `namei` | Follow a pathname until a terminal point is found | Done |
 | `pipesz` | Set or examine pipe and FIFO buffer sizes | Not started |
 | `rename` | Rename files | Not started |
 | `uuidd` | UUID generation daemon | Not started |

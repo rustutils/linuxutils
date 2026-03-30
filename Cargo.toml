@@ -8,11 +8,13 @@ members = [
     "libs/smartcols",
     "libs/uuid",
     "multicall",
+    "tools/disk/isosize",
     "tools/login/nologin",
     "tools/misc/cal",
     "tools/misc/look",
     "tools/misc/lslocks",
     "tools/misc/mcookie",
+    "tools/misc/namei",
     "tools/misc/uuidgen",
     "tools/misc/uuidparse",
     "tools/misc/waitpid",
@@ -23,6 +25,7 @@ members = [
     "tools/system/lsns",
     "tools/system/mountpoint",
     "tools/system/prlimit",
+    "tools/system/renice",
     "tools/system/rfkill",
     "tools/system/setpgid",
     "tools/system/setsid",
@@ -53,14 +56,17 @@ rustutils-choom = { path = "tools/system/choom" }
 rustutils-flock = { path = "tools/system/flock" }
 rustutils-colrm = { path = "tools/text/colrm" }
 rustutils-hexdump = { path = "tools/text/hexdump" }
+rustutils-isosize = { path = "tools/disk/isosize" }
 rustutils-line = { path = "tools/text/line" }
 rustutils-look = { path = "tools/misc/look" }
 rustutils-lslocks = { path = "tools/misc/lslocks" }
 rustutils-mcookie = { path = "tools/misc/mcookie" }
 rustutils-mesg = { path = "tools/term/mesg" }
+rustutils-namei = { path = "tools/misc/namei" }
 rustutils-mountpoint = { path = "tools/system/mountpoint" }
 rustutils-nologin = { path = "tools/login/nologin" }
 rustutils-prlimit = { path = "tools/system/prlimit" }
+rustutils-renice = { path = "tools/system/renice" }
 rustutils-rev = { path = "tools/text/rev" }
 rustutils-setpgid = { path = "tools/system/setpgid" }
 rustutils-setsid = { path = "tools/system/setsid" }

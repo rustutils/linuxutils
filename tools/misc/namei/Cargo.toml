@@ -1,0 +1,18 @@
+[package]
+name = "rustutils-namei"
+description = "Follow a pathname until a terminal point is found"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+name = "rustutils_namei"
+
+[[bin]]
+name = "namei"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+rustix.workspace = true

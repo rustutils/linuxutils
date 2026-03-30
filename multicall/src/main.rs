@@ -9,6 +9,7 @@ fn main() -> ExitCode {
         .subcommand(rustutils_colrm::Args::command())
         .subcommand(rustutils_flock::Args::command())
         .subcommand(rustutils_hexdump::Args::command())
+        .subcommand(rustutils_isosize::Args::command())
         .subcommand(rustutils_line::Args::command())
         .subcommand(rustutils_look::Args::command())
         .subcommand(rustutils_lsirq::Args::command())
@@ -17,9 +18,11 @@ fn main() -> ExitCode {
         .subcommand(rustutils_lsns::Args::command())
         .subcommand(rustutils_mcookie::Args::command())
         .subcommand(rustutils_mesg::Args::command())
+        .subcommand(rustutils_namei::Args::command())
         .subcommand(rustutils_mountpoint::Args::command())
         .subcommand(rustutils_nologin::Args::command())
         .subcommand(rustutils_prlimit::Args::command())
+        .subcommand(rustutils_renice::Args::command())
         .subcommand(rustutils_setpgid::Args::command())
         .subcommand(rustutils_setsid::Args::command())
         .subcommand(rustutils_rev::Args::command())
@@ -46,6 +49,9 @@ fn main() -> ExitCode {
         Some(("hexdump", m)) => rustutils_hexdump::run(
             rustutils_hexdump::Args::from_arg_matches(m).unwrap(),
         ),
+        Some(("isosize", m)) => rustutils_isosize::run(
+            rustutils_isosize::Args::from_arg_matches(m).unwrap(),
+        ),
         Some(("line", m)) => rustutils_line::run(
             rustutils_line::Args::from_arg_matches(m).unwrap(),
         ),
@@ -70,6 +76,9 @@ fn main() -> ExitCode {
         Some(("mesg", m)) => rustutils_mesg::run(
             rustutils_mesg::Args::from_arg_matches(m).unwrap(),
         ),
+        Some(("namei", m)) => rustutils_namei::run(
+            rustutils_namei::Args::from_arg_matches(m).unwrap(),
+        ),
         Some(("mountpoint", m)) => rustutils_mountpoint::run(
             rustutils_mountpoint::Args::from_arg_matches(m).unwrap(),
         ),
@@ -78,6 +87,9 @@ fn main() -> ExitCode {
         ),
         Some(("prlimit", m)) => rustutils_prlimit::run(
             rustutils_prlimit::Args::from_arg_matches(m).unwrap(),
+        ),
+        Some(("renice", m)) => rustutils_renice::run(
+            rustutils_renice::Args::from_arg_matches(m).unwrap(),
         ),
         Some(("setpgid", m)) => rustutils_setpgid::run(
             rustutils_setpgid::Args::from_arg_matches(m).unwrap(),
