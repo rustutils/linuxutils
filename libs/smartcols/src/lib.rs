@@ -47,19 +47,19 @@ mod sys {
 
 /// Apply a C `SCOLS_FL_*` bitmask to a column via individual setters.
 fn apply_column_flags(col: &mut Column, bits: u32) {
-    col.set_trunc(bits & (1 << 0) != 0);
-    col.set_tree(bits & (1 << 1) != 0);
-    col.set_right(bits & (1 << 2) != 0);
-    col.set_strict_width(bits & (1 << 3) != 0);
-    col.set_no_extremes(bits & (1 << 4) != 0);
-    col.set_hidden(bits & (1 << 5) != 0);
-    col.set_wrap(bits & (1 << 6) != 0);
+    col.truncate_set(bits & (1 << 0) != 0);
+    col.tree_set(bits & (1 << 1) != 0);
+    col.right_set(bits & (1 << 2) != 0);
+    col.strict_width_set(bits & (1 << 3) != 0);
+    col.no_extremes_set(bits & (1 << 4) != 0);
+    col.hidden_set(bits & (1 << 5) != 0);
+    col.wrap_set(bits & (1 << 6) != 0);
 }
 
 /// Read a column's flags back as a C `SCOLS_FL_*` bitmask.
 fn column_flags_to_bits(col: &Column) -> u32 {
     let mut bits = 0u32;
-    if col.is_trunc() {
+    if col.is_truncate() {
         bits |= 1 << 0;
     }
     if col.is_tree() {
@@ -195,7 +195,7 @@ pub unsafe extern "C" fn scols_table_new_column(
     let name = unsafe { cstr_to_str(name) }.unwrap_or("");
     let idx = tb.new_column(name);
     if let Some(col) = tb.column_mut(idx) {
-        col.set_width_hint(f64_to_width_hint(whint));
+        col.width_hint_set(f64_to_width_hint(whint));
         apply_column_flags(col, flags as u32);
     }
     Box::into_raw(Box::new(FfiColumn { table: tb, idx }))
@@ -290,9 +290,9 @@ pub unsafe extern "C" fn scols_table_enable_raw(
 ) -> c_int {
     let tb = unsafe { &mut *tb };
     if enable != 0 {
-        tb.set_output_mode(OutputMode::Raw);
+        tb.output_mode_set(OutputMode::Raw);
     } else if tb.is_raw() {
-        tb.set_output_mode(OutputMode::Normal);
+        tb.output_mode_set(OutputMode::Normal);
     }
     0
 }
@@ -305,9 +305,9 @@ pub unsafe extern "C" fn scols_table_enable_export(
 ) -> c_int {
     let tb = unsafe { &mut *tb };
     if enable != 0 {
-        tb.set_output_mode(OutputMode::Export);
+        tb.output_mode_set(OutputMode::Export);
     } else if tb.is_export() {
-        tb.set_output_mode(OutputMode::Normal);
+        tb.output_mode_set(OutputMode::Normal);
     }
     0
 }
@@ -318,7 +318,7 @@ pub unsafe extern "C" fn scols_table_enable_ascii(
     tb: *mut Table,
     enable: c_int,
 ) -> c_int {
-    unsafe { &mut *tb }.enable_ascii(enable != 0);
+    unsafe { &mut *tb }.ascii_set(enable != 0);
     0
 }
 
@@ -330,9 +330,9 @@ pub unsafe extern "C" fn scols_table_enable_json(
 ) -> c_int {
     let tb = unsafe { &mut *tb };
     if enable != 0 {
-        tb.set_output_mode(OutputMode::Json);
+        tb.output_mode_set(OutputMode::Json);
     } else if tb.is_json() {
-        tb.set_output_mode(OutputMode::Normal);
+        tb.output_mode_set(OutputMode::Normal);
     }
     0
 }
@@ -345,9 +345,9 @@ pub unsafe extern "C" fn scols_table_enable_shellvar(
 ) -> c_int {
     let tb = unsafe { &mut *tb };
     if enable != 0 {
-        tb.set_output_mode(OutputMode::ShellVar);
+        tb.output_mode_set(OutputMode::ShellVar);
     } else if tb.is_shellvar() {
-        tb.set_output_mode(OutputMode::Normal);
+        tb.output_mode_set(OutputMode::Normal);
     }
     0
 }
@@ -358,7 +358,7 @@ pub unsafe extern "C" fn scols_table_enable_noheadings(
     tb: *mut Table,
     enable: c_int,
 ) -> c_int {
-    unsafe { &mut *tb }.enable_no_headings(enable != 0);
+    unsafe { &mut *tb }.headings_set(!enable != 0);
     0
 }
 
@@ -368,7 +368,7 @@ pub unsafe extern "C" fn scols_table_enable_colors(
     tb: *mut Table,
     enable: c_int,
 ) -> c_int {
-    unsafe { &mut *tb }.enable_colors(enable != 0);
+    unsafe { &mut *tb }.colors_set(enable != 0);
     0
 }
 
@@ -378,7 +378,7 @@ pub unsafe extern "C" fn scols_table_enable_maxout(
     tb: *mut Table,
     enable: c_int,
 ) -> c_int {
-    unsafe { &mut *tb }.enable_maxout(enable != 0);
+    unsafe { &mut *tb }.maxout_set(enable != 0);
     0
 }
 
@@ -388,7 +388,7 @@ pub unsafe extern "C" fn scols_table_enable_minout(
     tb: *mut Table,
     enable: c_int,
 ) -> c_int {
-    unsafe { &mut *tb }.enable_minout(enable != 0);
+    unsafe { &mut *tb }.minout_set(enable != 0);
     0
 }
 
@@ -398,7 +398,7 @@ pub unsafe extern "C" fn scols_table_enable_nowrap(
     tb: *mut Table,
     enable: c_int,
 ) -> c_int {
-    unsafe { &mut *tb }.enable_no_wrap(enable != 0);
+    unsafe { &mut *tb }.wrap_set(!enable != 0);
     0
 }
 
@@ -408,7 +408,7 @@ pub unsafe extern "C" fn scols_table_enable_nolinesep(
     tb: *mut Table,
     enable: c_int,
 ) -> c_int {
-    unsafe { &mut *tb }.enable_no_linesep(enable != 0);
+    unsafe { &mut *tb }.line_separator_enabled_set(!enable != 0);
     0
 }
 
@@ -418,7 +418,7 @@ pub unsafe extern "C" fn scols_table_enable_noencoding(
     tb: *mut Table,
     enable: c_int,
 ) -> c_int {
-    unsafe { &mut *tb }.enable_no_encoding(enable != 0);
+    unsafe { &mut *tb }.encoding_set(!enable != 0);
     0
 }
 
@@ -428,7 +428,7 @@ pub unsafe extern "C" fn scols_table_enable_header_repeat(
     tb: *mut Table,
     enable: c_int,
 ) -> c_int {
-    unsafe { &mut *tb }.enable_header_repeat(enable != 0);
+    unsafe { &mut *tb }.header_repeat_set(enable != 0);
     0
 }
 
@@ -453,7 +453,7 @@ pub unsafe extern "C" fn scols_table_is_json(tb: *const Table) -> c_int {
 /// Return 1 if headers are suppressed.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_is_noheadings(tb: *const Table) -> c_int {
-    unsafe { &*tb }.is_no_headings() as c_int
+    unsafe { &*tb }.headings() as c_int
 }
 
 /// Return 1 if the table has no lines.
@@ -465,25 +465,25 @@ pub unsafe extern "C" fn scols_table_is_empty(tb: *const Table) -> c_int {
 /// Return 1 if ASCII mode is enabled.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_is_ascii(tb: *const Table) -> c_int {
-    unsafe { &*tb }.is_ascii() as c_int
+    unsafe { &*tb }.ascii() as c_int
 }
 
 /// Return 1 if maxout mode is enabled.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_is_maxout(tb: *const Table) -> c_int {
-    unsafe { &*tb }.is_maxout() as c_int
+    unsafe { &*tb }.maxout() as c_int
 }
 
 /// Return 1 if minout mode is enabled.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_is_minout(tb: *const Table) -> c_int {
-    unsafe { &*tb }.is_minout() as c_int
+    unsafe { &*tb }.minout() as c_int
 }
 
 /// Return 1 if wrapping is disabled.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_is_nowrap(tb: *const Table) -> c_int {
-    unsafe { &*tb }.is_no_wrap() as c_int
+    unsafe { &*tb }.wrap() as c_int
 }
 
 /// Return 1 if any column has the TREE flag.
@@ -495,7 +495,7 @@ pub unsafe extern "C" fn scols_table_is_tree(tb: *const Table) -> c_int {
 /// Return 1 if color output is enabled.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_colors_wanted(tb: *const Table) -> c_int {
-    unsafe { &*tb }.colors_enabled() as c_int
+    unsafe { &*tb }.colors() as c_int
 }
 
 /// Set the table name (used as JSON top-level key).
@@ -507,7 +507,7 @@ pub unsafe extern "C" fn scols_table_set_name(
     let tb = unsafe { &mut *tb };
     match unsafe { cstr_to_str(name) } {
         Some(n) => {
-            tb.set_name(n);
+            tb.name_set(n);
             0
         }
         None => -1,
@@ -532,7 +532,7 @@ pub unsafe extern "C" fn scols_table_set_termwidth(
     tb: *mut Table,
     width: usize,
 ) -> c_int {
-    unsafe { &mut *tb }.set_termwidth(width);
+    unsafe { &mut *tb }.termwidth_set(width);
     0
 }
 
@@ -548,7 +548,7 @@ pub unsafe extern "C" fn scols_table_set_termheight(
     tb: *mut Table,
     height: usize,
 ) -> c_int {
-    unsafe { &mut *tb }.set_termheight(height);
+    unsafe { &mut *tb }.termheight_set(height);
     0
 }
 
@@ -569,7 +569,7 @@ pub unsafe extern "C" fn scols_table_set_termforce(
         sys::SCOLS_TERMFORCE_ALWAYS => TermForce::Always,
         _ => TermForce::Auto,
     };
-    unsafe { &mut *tb }.set_termforce(tf);
+    unsafe { &mut *tb }.termforce_set(tf);
     0
 }
 
@@ -589,7 +589,7 @@ pub unsafe extern "C" fn scols_table_reduce_termwidth(
     tb: *mut Table,
     reduce: usize,
 ) -> c_int {
-    unsafe { &mut *tb }.reduce_termwidth(reduce);
+    unsafe { &mut *tb }.termwidth_reduce(reduce);
     0
 }
 
@@ -660,7 +660,7 @@ pub unsafe extern "C" fn scols_table_set_column_separator(
 ) -> c_int {
     match unsafe { cstr_to_str(sep) } {
         Some(s) => {
-            unsafe { &mut *tb }.set_column_separator(s);
+            unsafe { &mut *tb }.column_separator_set(s);
             0
         }
         None => -1,
@@ -675,7 +675,7 @@ pub unsafe extern "C" fn scols_table_set_line_separator(
 ) -> c_int {
     match unsafe { cstr_to_str(sep) } {
         Some(s) => {
-            unsafe { &mut *tb }.set_line_separator(s);
+            unsafe { &mut *tb }.line_separator_set(s);
             0
         }
         None => -1,
@@ -756,7 +756,7 @@ pub unsafe extern "C" fn scols_column_set_json_type(
     let fc = unsafe { &*cl };
     let tb = unsafe { &mut *fc.table };
     if let Some(col) = tb.column_mut(fc.idx) {
-        col.set_json_type(c_to_json_type(jt));
+        col.json_type_set(c_to_json_type(jt));
         0
     } else {
         -1
@@ -770,7 +770,7 @@ pub unsafe extern "C" fn scols_column_get_json_type(
 ) -> c_int {
     let fc = unsafe { &*cl };
     let tb = unsafe { &*fc.table };
-    tb.column(fc.idx).map_or(0, |c| match c.get_json_type() {
+    tb.column(fc.idx).map_or(0, |c| match c.json_type_get() {
         JsonType::String => sys::SCOLS_JSON_STRING as c_int,
         JsonType::Number => sys::SCOLS_JSON_NUMBER as c_int,
         JsonType::Boolean => sys::SCOLS_JSON_BOOLEAN as c_int,
@@ -790,7 +790,7 @@ pub unsafe extern "C" fn scols_column_set_data_type(
     let fc = unsafe { &*cl };
     let tb = unsafe { &mut *fc.table };
     if let Some(col) = tb.column_mut(fc.idx) {
-        col.set_data_type(c_to_data_type(dt));
+        col.data_type_set(c_to_data_type(dt));
         0
     } else {
         -1
@@ -806,7 +806,7 @@ pub unsafe extern "C" fn scols_column_set_whint(
     let fc = unsafe { &*cl };
     let tb = unsafe { &mut *fc.table };
     if let Some(col) = tb.column_mut(fc.idx) {
-        col.set_width_hint(f64_to_width_hint(whint));
+        col.width_hint_set(f64_to_width_hint(whint));
         0
     } else {
         -1
@@ -872,7 +872,7 @@ pub unsafe extern "C" fn scols_column_set_color(
     let tb = unsafe { &mut *fc.table };
     if let Some(col) = tb.column_mut(fc.idx) {
         if let Some(c) = unsafe { cstr_to_str(color) } {
-            col.set_color(c);
+            col.color_set(c);
         }
         0
     } else {
@@ -891,7 +891,7 @@ pub unsafe extern "C" fn scols_line_set_data(
     let tb = unsafe { &mut *fl.table };
     let line = tb.line_mut(fl.id);
     let data = unsafe { cstr_to_str(data) }.unwrap_or("");
-    line.set_data(n, data);
+    line.data_set(n, data);
     0
 }
 
@@ -946,7 +946,7 @@ pub unsafe extern "C" fn scols_line_sprintf(
     let fl = unsafe { &*ln };
     let tb = unsafe { &mut *fl.table };
     if let Ok(s) = s.to_str() {
-        tb.line_mut(fl.id).set_data(n, s);
+        tb.line_mut(fl.id).data_set(n, s);
     }
     0
 }
@@ -977,7 +977,7 @@ pub unsafe extern "C" fn scols_line_sprintf_column(
     let fl = unsafe { &*ln };
     let tb = unsafe { &mut *fl.table };
     if let Ok(s) = s.to_str() {
-        tb.line_mut(fl.id).set_data(col_idx, s);
+        tb.line_mut(fl.id).data_set(col_idx, s);
     }
     0
 }
@@ -1042,7 +1042,7 @@ pub unsafe extern "C" fn scols_line_set_color(
     let fl = unsafe { &*ln };
     let tb = unsafe { &mut *fl.table };
     if let Some(c) = unsafe { cstr_to_str(color) } {
-        tb.line_mut(fl.id).set_color(c);
+        tb.line_mut(fl.id).color_set(c);
     }
     0
 }
@@ -1086,7 +1086,7 @@ pub unsafe extern "C" fn scols_cell_set_data(
     let fc = unsafe { &*ce };
     let tb = unsafe { &mut *fc.table };
     let data_str = unsafe { cstr_to_str(data) }.unwrap_or("");
-    tb.line_mut(fc.line_id).set_data(fc.col_idx, data_str);
+    tb.line_mut(fc.line_id).data_set(fc.col_idx, data_str);
     0
 }
 
@@ -1117,7 +1117,7 @@ pub unsafe extern "C" fn scols_cell_get_data(
     let fc = unsafe { &*ce };
     let tb = unsafe { &*fc.table };
     let line = tb.line(fc.line_id);
-    match line.get_data(fc.col_idx) {
+    match line.data_get(fc.col_idx) {
         Some(_) => {
             // We can't return a pointer to a Rust String safely without
             // a stable address. Return null for now — lsblk doesn't read
@@ -1139,7 +1139,7 @@ pub unsafe extern "C" fn scols_cell_set_color(
     if let Some(c) = unsafe { cstr_to_str(color) }
         && let Some(cell) = tb.line_mut(fc.line_id).cell_mut(fc.col_idx)
     {
-        cell.set_color(c);
+        cell.color_set(c);
     }
     0
 }
@@ -1191,7 +1191,7 @@ pub unsafe extern "C" fn scols_get_library_version(
 pub unsafe extern "C" fn scols_table_set_default_symbols(
     tb: *mut Table,
 ) -> c_int {
-    unsafe { &mut *tb }.set_default_symbols();
+    unsafe { &mut *tb }.symbols_set_default();
     0
 }
 
@@ -1237,7 +1237,7 @@ pub unsafe extern "C" fn scols_cell_get_datasiz(ce: *const FfiCell) -> usize {
     let fc = unsafe { &*ce };
     let tb = unsafe { &*fc.table };
     tb.line(fc.line_id)
-        .get_data(fc.col_idx)
+        .data_get(fc.col_idx)
         .map_or(0, |s| s.len())
 }
 
@@ -1271,7 +1271,7 @@ pub unsafe extern "C" fn scols_cell_set_flags(
         } else {
             Alignment::Left
         };
-        cell.set_alignment(alignment);
+        cell.alignment_set(alignment);
     }
     0
 }
@@ -1303,7 +1303,7 @@ pub unsafe extern "C" fn scols_cell_set_uri(
     if let Some(u) = unsafe { cstr_to_str(uri) }
         && let Some(cell) = tb.line_mut(fc.line_id).cell_mut(fc.col_idx)
     {
-        cell.set_uri(u);
+        cell.uri_set(u);
     }
     0
 }
@@ -1341,7 +1341,7 @@ pub unsafe extern "C" fn scols_cell_copy_content(
     let src_tb = unsafe { &*src_fc.table };
     let data = src_tb
         .line(src_fc.line_id)
-        .get_data(src_fc.col_idx)
+        .data_get(src_fc.col_idx)
         .map(|s| s.to_string());
     let color = src_tb
         .line(src_fc.line_id)
@@ -1353,12 +1353,12 @@ pub unsafe extern "C" fn scols_cell_copy_content(
     let dest_tb = unsafe { &mut *dest_fc.table };
     let dest_line = dest_tb.line_mut(dest_fc.line_id);
     if let Some(d) = &data {
-        dest_line.set_data(dest_fc.col_idx, d);
+        dest_line.data_set(dest_fc.col_idx, d);
     }
     if let Some(c) = &color
         && let Some(cell) = dest_line.cell_mut(dest_fc.col_idx)
     {
-        cell.set_color(c);
+        cell.color_set(c);
     }
     0
 }
@@ -1372,11 +1372,11 @@ pub unsafe extern "C" fn scols_cmpstr_cells(
 ) -> c_int {
     let a_fc = unsafe { &*a };
     let a_tb = unsafe { &*a_fc.table };
-    let a_data = a_tb.line(a_fc.line_id).get_data(a_fc.col_idx).unwrap_or("");
+    let a_data = a_tb.line(a_fc.line_id).data_get(a_fc.col_idx).unwrap_or("");
 
     let b_fc = unsafe { &*b };
     let b_tb = unsafe { &*b_fc.table };
-    let b_data = b_tb.line(b_fc.line_id).get_data(b_fc.col_idx).unwrap_or("");
+    let b_data = b_tb.line(b_fc.line_id).data_get(b_fc.col_idx).unwrap_or("");
 
     match a_data.cmp(b_data) {
         std::cmp::Ordering::Less => -1,
@@ -1415,7 +1415,7 @@ pub unsafe extern "C" fn scols_column_get_data_type(
 ) -> c_int {
     let fc = unsafe { &*cl };
     let tb = unsafe { &*fc.table };
-    tb.column(fc.idx).map_or(0, |c| match c.get_data_type() {
+    tb.column(fc.idx).map_or(0, |c| match c.data_type_get() {
         DataType::None => sys::SCOLS_DATA_NONE as c_int,
         DataType::U64 => sys::SCOLS_DATA_U64 as c_int,
         DataType::Boolean => sys::SCOLS_DATA_BOOLEAN as c_int,
@@ -1540,7 +1540,7 @@ pub unsafe extern "C" fn scols_column_is_strict_width(
 pub unsafe extern "C" fn scols_column_is_trunc(cl: *const FfiColumn) -> c_int {
     let fc = unsafe { &*cl };
     let tb = unsafe { &*fc.table };
-    tb.column(fc.idx).map_or(0, |c| c.is_trunc() as c_int)
+    tb.column(fc.idx).map_or(0, |c| c.is_truncate() as c_int)
 }
 
 /// Return 1 if the column has the WRAP flag.
@@ -1565,7 +1565,7 @@ pub unsafe extern "C" fn scols_column_set_headercolor(
     let tb = unsafe { &mut *fc.table };
     if let Some(col) = tb.column_mut(fc.idx) {
         if let Some(c) = unsafe { cstr_to_str(color) } {
-            col.set_header_color(c);
+            col.header_color_set(c);
         }
         0
     } else {
@@ -1583,7 +1583,7 @@ pub unsafe extern "C" fn scols_column_set_name(
     let tb = unsafe { &mut *fc.table };
     if let Some(col) = tb.column_mut(fc.idx) {
         if let Some(n) = unsafe { cstr_to_str(name) } {
-            col.set_name(n);
+            col.name_set(n);
         }
         0
     } else {
@@ -1601,7 +1601,7 @@ pub unsafe extern "C" fn scols_column_set_safechars(
     let tb = unsafe { &mut *fc.table };
     if let Some(col) = tb.column_mut(fc.idx) {
         if let Some(s) = unsafe { cstr_to_str(chars) } {
-            col.set_safechars(s);
+            col.safechars_set(s);
         }
         0
     } else {
@@ -1619,7 +1619,7 @@ pub unsafe extern "C" fn scols_column_set_uri(
     let tb = unsafe { &mut *fc.table };
     if let Some(col) = tb.column_mut(fc.idx) {
         if let Some(u) = unsafe { cstr_to_str(uri) } {
-            col.set_uri(u);
+            col.uri_set(u);
         }
         0
     } else {
@@ -1637,7 +1637,7 @@ pub unsafe extern "C" fn scols_column_refer_annotation(
     let tb = unsafe { &mut *fc.table };
     if let Some(col) = tb.column_mut(fc.idx) {
         if let Some(a) = unsafe { cstr_to_str(ann) } {
-            col.set_annotation(a);
+            col.annotation_set(a);
         }
         0
     } else {
@@ -1845,19 +1845,19 @@ pub unsafe extern "C" fn scols_table_get_symbols(
 pub unsafe extern "C" fn scols_table_is_header_repeat(
     tb: *const Table,
 ) -> c_int {
-    unsafe { &*tb }.is_header_repeat() as c_int
+    unsafe { &*tb }.header_repeat() as c_int
 }
 
 /// Return 1 if encoding is disabled.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_is_noencoding(tb: *const Table) -> c_int {
-    unsafe { &*tb }.is_no_encoding() as c_int
+    unsafe { &*tb }.encoding() as c_int
 }
 
 /// Return 1 if line separators are disabled.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_is_nolinesep(tb: *const Table) -> c_int {
-    unsafe { &*tb }.is_no_linesep() as c_int
+    unsafe { &*tb }.line_separator_enabled() as c_int
 }
 
 /// Return 1 if shell variable output mode is enabled.

@@ -51,7 +51,7 @@ license = "MIT"
 repository = "https://github.com/rustutils/util-linux"
 
 [workspace.dependencies]
-cols = { version = "0.1.0", git = "https://gitlab.com/rustutils/cols" }
+cols = { version = "0.2.0", git = "https://gitlab.com/rustutils/cols" }
 rustix = { version = "1", features = ["event", "fs", "process", "termios", "thread"] }
 uuid = { version = "1", features = ["v1", "v3", "v4", "v5", "v6", "v7"] }
 

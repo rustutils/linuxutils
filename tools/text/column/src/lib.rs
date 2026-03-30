@@ -266,20 +266,20 @@ fn table_mode(
     let mut table = Table::new();
 
     if let Some(width) = width_limit {
-        table.set_termwidth(width);
-        table.set_termforce(TermForce::Always);
+        table.termwidth_set(width);
+        table.termforce_set(TermForce::Always);
     }
 
     if args.table_noheadings || args.table_columns.is_none() {
-        table.enable_no_headings(true);
+        table.headings_set(false);
     }
 
     if args.table_maxout {
-        table.enable_maxout(true);
+        table.maxout_set(true);
     }
 
     if let Some(ref sep) = args.output_separator {
-        table.set_column_separator(sep);
+        table.column_separator_set(sep);
     }
 
     // If -C (per-column attributes) is given, use those for column definitions.
@@ -300,22 +300,22 @@ fn table_mode(
             for (key, _val) in &attrs {
                 match key.as_str() {
                     "right" => {
-                        col.set_right(true);
+                        col.right_set(true);
                     }
                     "trunc" => {
-                        col.set_trunc(true);
+                        col.truncate_set(true);
                     }
                     "noextreme" => {
-                        col.set_no_extremes(true);
+                        col.no_extremes_set(true);
                     }
                     "wrap" => {
-                        col.set_wrap(true);
+                        col.wrap_set(true);
                     }
                     "hide" => {
-                        col.set_hidden(true);
+                        col.hidden_set(true);
                     }
                     "strictwidth" => {
-                        col.set_strict_width(true);
+                        col.strict_width_set(true);
                     }
                     _ => {}
                 }
@@ -335,41 +335,41 @@ fn table_mode(
     if let Some(ref spec) = args.table_right {
         for idx in resolve_columns(spec, &col_names) {
             if let Some(col) = table.column_mut(idx) {
-                col.set_right(true);
+                col.right_set(true);
             }
         }
     }
     if let Some(ref spec) = args.table_truncate {
         for idx in resolve_columns(spec, &col_names) {
             if let Some(col) = table.column_mut(idx) {
-                col.set_trunc(true);
+                col.truncate_set(true);
             }
         }
     }
     if let Some(ref spec) = args.table_noextreme {
         for idx in resolve_columns(spec, &col_names) {
             if let Some(col) = table.column_mut(idx) {
-                col.set_no_extremes(true);
+                col.no_extremes_set(true);
             }
         }
     }
     if let Some(ref spec) = args.table_wrap {
         for idx in resolve_columns(spec, &col_names) {
             if let Some(col) = table.column_mut(idx) {
-                col.set_wrap(true);
+                col.wrap_set(true);
             }
         }
     }
     if let Some(ref spec) = args.table_hide {
         for idx in resolve_columns(spec, &col_names) {
             if let Some(col) = table.column_mut(idx) {
-                col.set_hidden(true);
+                col.hidden_set(true);
             }
         }
     }
 
     if args.table_header_repeat {
-        table.enable_header_repeat(true);
+        table.header_repeat_set(true);
     }
 
     // Handle -O (column order) by reordering columns.
@@ -378,11 +378,11 @@ fn table_mode(
 
     // JSON mode.
     if args.json {
-        table.set_output_mode(OutputMode::Json);
+        table.output_mode_set(OutputMode::Json);
         if let Some(ref name) = args.table_name {
-            table.set_name(name);
+            table.name_set(name);
         } else {
-            table.set_name("table");
+            table.name_set("table");
         }
     }
 
@@ -404,7 +404,7 @@ fn table_mode(
     if let Some(tc) = tree_col
         && let Some(col) = table.column_mut(tc)
     {
-        col.set_tree(true);
+        col.tree_set(true);
     }
 
     // Populate rows.
@@ -417,7 +417,7 @@ fn table_mode(
             let line_id = table.new_line(None);
             let line = table.line_mut(line_id);
             for (ci, cell) in row.iter().enumerate() {
-                line.set_data(ci, cell);
+                line.data_set(ci, cell);
             }
             if let Some(id_val) = row.get(id_col) {
                 id_to_line.insert(id_val.clone(), line_id);
@@ -441,7 +441,7 @@ fn table_mode(
             let line_id = table.new_line(None);
             let line = table.line_mut(line_id);
             for (ci, cell) in row.iter().enumerate() {
-                line.set_data(ci, cell);
+                line.data_set(ci, cell);
             }
         }
     }

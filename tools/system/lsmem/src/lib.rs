@@ -376,25 +376,25 @@ pub fn run(args: Args) -> ExitCode {
 
     if show_table {
         let mut table = Table::new();
-        table.set_name("memory");
+        table.name_set("memory");
 
         if args.json {
-            table.set_output_mode(OutputMode::Json);
+            table.output_mode_set(OutputMode::Json);
         } else if args.pairs {
-            table.set_output_mode(OutputMode::Export);
+            table.output_mode_set(OutputMode::Export);
         } else if args.raw {
-            table.set_output_mode(OutputMode::Raw);
+            table.output_mode_set(OutputMode::Raw);
         }
 
         if args.noheadings {
-            table.enable_no_headings(true);
+            table.headings_set(false);
         }
 
         for col in &columns {
             let idx = table.new_column(col.name());
-            table.column_mut(idx).unwrap().set_width_hint(col.whint());
+            table.column_mut(idx).unwrap().width_hint_set(col.whint());
             if col.is_right() {
-                table.column_mut(idx).unwrap().set_right(true);
+                table.column_mut(idx).unwrap().right_set(true);
             }
         }
 
@@ -425,7 +425,7 @@ pub fn run(args: Args) -> ExitCode {
                     }
                     Col::Zones => range.zones.clone(),
                 };
-                line.set_data(ci, &val);
+                line.data_set(ci, &val);
             }
         }
 
