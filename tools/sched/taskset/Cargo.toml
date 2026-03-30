@@ -1,0 +1,22 @@
+[package]
+name = "rustutils-taskset"
+description = "Set or retrieve a process's CPU affinity"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+name = "rustutils_taskset"
+
+[[bin]]
+name = "taskset"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+rustix.workspace = true
+
+[dev-dependencies]
+assert_cmd = "2"
+predicates = "3"

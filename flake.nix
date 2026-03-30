@@ -43,6 +43,7 @@
         "renice"
         "setpgid"
         "setsid"
+        "taskset"
         "rev"
         "rfkill"
         "uuidgen"

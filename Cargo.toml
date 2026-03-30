@@ -20,6 +20,7 @@ members = [
     "tools/misc/waitpid",
     "tools/sched/chrt",
     "tools/sched/ionice",
+    "tools/sched/taskset",
     "tools/system/choom",
     "tools/system/flock",
     "tools/system/lsirq",
@@ -47,7 +48,7 @@ repository = "https://github.com/rustutils/util-linux"
 
 [workspace.dependencies]
 cols = { version = "0.1.0", git = "https://gitlab.com/rustutils/cols" }
-rustix = { version = "1", features = ["event", "fs", "process", "termios"] }
+rustix = { version = "1", features = ["event", "fs", "process", "termios", "thread"] }
 uuid = { version = "1", features = ["v1", "v3", "v4", "v5", "v6", "v7"] }
 
 # workspace crates
@@ -80,6 +81,7 @@ rustutils-lsmem = { path = "tools/system/lsmem" }
 rustutils-lsns = { path = "tools/system/lsns" }
 rustutils-rfkill = { path = "tools/system/rfkill" }
 rustutils-uuidparse = { path = "tools/misc/uuidparse" }
+rustutils-taskset = { path = "tools/sched/taskset" }
 rustutils-waitpid = { path = "tools/misc/waitpid" }
 
 [workspace.metadata.crane]

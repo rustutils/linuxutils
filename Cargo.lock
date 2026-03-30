@@ -987,6 +987,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "rustutils-taskset"
+version = "0.1.0"
+dependencies = [
+ "assert_cmd",
+ "clap",
+ "predicates",
+ "rustix",
+]
+
+[[package]]
 name = "rustutils-util-linux"
 version = "0.1.0"
 dependencies = [
@@ -1016,6 +1026,7 @@ dependencies = [
  "rustutils-rfkill",
  "rustutils-setpgid",
  "rustutils-setsid",
+ "rustutils-taskset",
  "rustutils-uuidgen",
  "rustutils-uuidparse",
  "rustutils-waitpid",

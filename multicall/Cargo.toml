@@ -33,6 +33,7 @@ rustutils-rev.workspace = true
 rustutils-rfkill.workspace = true
 rustutils-setpgid.workspace = true
 rustutils-setsid.workspace = true
+rustutils-taskset.workspace = true
 rustutils-uuidgen.workspace = true
 rustutils-uuidparse.workspace = true
 rustutils-waitpid.workspace = true

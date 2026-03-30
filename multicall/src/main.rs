@@ -27,6 +27,7 @@ fn main() -> ExitCode {
         .subcommand(rustutils_renice::Args::command())
         .subcommand(rustutils_setpgid::Args::command())
         .subcommand(rustutils_setsid::Args::command())
+        .subcommand(rustutils_taskset::Args::command())
         .subcommand(rustutils_rev::Args::command())
         .subcommand(rustutils_rfkill::Args::command())
         .subcommand(rustutils_uuidgen::Args::command())
@@ -104,6 +105,9 @@ fn main() -> ExitCode {
         ),
         Some(("setsid", m)) => rustutils_setsid::run(
             rustutils_setsid::Args::from_arg_matches(m).unwrap(),
+        ),
+        Some(("taskset", m)) => rustutils_taskset::run(
+            rustutils_taskset::Args::from_arg_matches(m).unwrap(),
         ),
         Some(("rev", m)) => rustutils_rev::run(
             rustutils_rev::Args::from_arg_matches(m).unwrap(),
