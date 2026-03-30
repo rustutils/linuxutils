@@ -37,3 +37,4 @@ rustutils-taskset.workspace = true
 rustutils-uuidgen.workspace = true
 rustutils-uuidparse.workspace = true
 rustutils-waitpid.workspace = true
+rustutils-whereis.workspace = true

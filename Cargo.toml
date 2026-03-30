@@ -18,6 +18,7 @@ members = [
     "tools/misc/uuidgen",
     "tools/misc/uuidparse",
     "tools/misc/waitpid",
+    "tools/misc/whereis",
     "tools/sched/chrt",
     "tools/sched/ionice",
     "tools/sched/taskset",
@@ -83,6 +84,7 @@ rustutils-rfkill = { path = "tools/system/rfkill" }
 rustutils-uuidparse = { path = "tools/misc/uuidparse" }
 rustutils-taskset = { path = "tools/sched/taskset" }
 rustutils-waitpid = { path = "tools/misc/waitpid" }
+rustutils-whereis = { path = "tools/misc/whereis" }
 
 [workspace.metadata.crane]
 name = "rustutils-util-linux"

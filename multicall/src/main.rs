@@ -32,7 +32,8 @@ fn main() -> ExitCode {
         .subcommand(rustutils_rfkill::Args::command())
         .subcommand(rustutils_uuidgen::Args::command())
         .subcommand(rustutils_uuidparse::Args::command())
-        .subcommand(rustutils_waitpid::Args::command());
+        .subcommand(rustutils_waitpid::Args::command())
+        .subcommand(rustutils_whereis::Args::command());
 
     let matches = cmd.get_matches();
 
@@ -123,6 +124,9 @@ fn main() -> ExitCode {
         ),
         Some(("waitpid", m)) => rustutils_waitpid::run(
             rustutils_waitpid::Args::from_arg_matches(m).unwrap(),
+        ),
+        Some(("whereis", m)) => rustutils_whereis::run(
+            rustutils_whereis::Args::from_arg_matches(m).unwrap(),
         ),
         _ => unreachable!("clap ensures a valid subcommand"),
     }

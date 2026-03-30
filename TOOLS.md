@@ -108,7 +108,7 @@
 | `uuidgen` | Create a new UUID value | Done |
 | `uuidparse` | Parse unique identifiers | Done |
 | `waitpid` | Wait for arbitrary processes | Done |
-| `whereis` | Locate the binary, source, and manual page files for a command | Not started |
+| `whereis` | Locate the binary, source, and manual page files for a command | Done |
 | `wipefs` | Wipe a signature from a device | Not started |
 
 ## Text Utilities

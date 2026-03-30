@@ -1,0 +1,21 @@
+[package]
+name = "rustutils-whereis"
+description = "Locate the binary, source, and manual page files for a command"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+name = "rustutils_whereis"
+
+[[bin]]
+name = "whereis"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+
+[dev-dependencies]
+assert_cmd = "2"
+predicates = "3"

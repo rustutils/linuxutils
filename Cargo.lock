@@ -1030,6 +1030,7 @@ dependencies = [
  "rustutils-uuidgen",
  "rustutils-uuidparse",
  "rustutils-waitpid",
+ "rustutils-whereis",
 ]
 
 [[package]]
@@ -1059,6 +1060,15 @@ version = "0.1.0"
 dependencies = [
  "clap",
  "rustix",
+]
+
+[[package]]
+name = "rustutils-whereis"
+version = "0.1.0"
+dependencies = [
+ "assert_cmd",
+ "clap",
+ "predicates",
 ]
 
 [[package]]
