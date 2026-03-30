@@ -942,6 +942,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "rustutils-rename"
+version = "0.1.0"
+dependencies = [
+ "assert_cmd",
+ "clap",
+ "predicates",
+ "tempfile",
+]
+
+[[package]]
 name = "rustutils-renice"
 version = "0.1.0"
 dependencies = [
@@ -1021,6 +1031,7 @@ dependencies = [
  "rustutils-namei",
  "rustutils-nologin",
  "rustutils-prlimit",
+ "rustutils-rename",
  "rustutils-renice",
  "rustutils-rev",
  "rustutils-rfkill",

@@ -103,7 +103,7 @@
 | `mcookie` | Generate magic cookies for xauth | Done |
 | `namei` | Follow a pathname until a terminal point is found | Done |
 | `pipesz` | Set or examine pipe and FIFO buffer sizes | Not started |
-| `rename` | Rename files | Not started |
+| `rename` | Rename files | Done |
 | `uuidd` | UUID generation daemon | Not started |
 | `uuidgen` | Create a new UUID value | Done |
 | `uuidparse` | Parse unique identifiers | Done |

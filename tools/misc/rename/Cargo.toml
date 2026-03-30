@@ -1,0 +1,22 @@
+[package]
+name = "rustutils-rename"
+description = "Rename files by replacing occurrences of a string in their filenames"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+name = "rustutils_rename"
+
+[[bin]]
+name = "rename"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+
+[dev-dependencies]
+assert_cmd = "2"
+predicates = "3"
+tempfile = "3"

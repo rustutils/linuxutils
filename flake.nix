@@ -40,6 +40,7 @@
         "mountpoint"
         "nologin"
         "prlimit"
+        "rename"
         "renice"
         "setpgid"
         "setsid"

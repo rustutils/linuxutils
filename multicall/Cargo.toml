@@ -28,6 +28,7 @@ rustutils-namei.workspace = true
 rustutils-mountpoint.workspace = true
 rustutils-nologin.workspace = true
 rustutils-prlimit.workspace = true
+rustutils-rename.workspace = true
 rustutils-renice.workspace = true
 rustutils-rev.workspace = true
 rustutils-rfkill.workspace = true

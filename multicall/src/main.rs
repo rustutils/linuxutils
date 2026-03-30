@@ -24,6 +24,7 @@ fn main() -> ExitCode {
         .subcommand(rustutils_mountpoint::Args::command())
         .subcommand(rustutils_nologin::Args::command())
         .subcommand(rustutils_prlimit::Args::command())
+        .subcommand(rustutils_rename::Args::command())
         .subcommand(rustutils_renice::Args::command())
         .subcommand(rustutils_setpgid::Args::command())
         .subcommand(rustutils_setsid::Args::command())
@@ -97,6 +98,9 @@ fn main() -> ExitCode {
         ),
         Some(("prlimit", m)) => rustutils_prlimit::run(
             rustutils_prlimit::Args::from_arg_matches(m).unwrap(),
+        ),
+        Some(("rename", m)) => rustutils_rename::run(
+            rustutils_rename::Args::from_arg_matches(m).unwrap(),
         ),
         Some(("renice", m)) => rustutils_renice::run(
             rustutils_renice::Args::from_arg_matches(m).unwrap(),

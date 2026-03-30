@@ -15,6 +15,7 @@ members = [
     "tools/misc/lslocks",
     "tools/misc/mcookie",
     "tools/misc/namei",
+    "tools/misc/rename",
     "tools/misc/uuidgen",
     "tools/misc/uuidparse",
     "tools/misc/waitpid",
@@ -72,6 +73,7 @@ rustutils-namei = { path = "tools/misc/namei" }
 rustutils-mountpoint = { path = "tools/system/mountpoint" }
 rustutils-nologin = { path = "tools/login/nologin" }
 rustutils-prlimit = { path = "tools/system/prlimit" }
+rustutils-rename = { path = "tools/misc/rename" }
 rustutils-renice = { path = "tools/system/renice" }
 rustutils-rev = { path = "tools/text/rev" }
 rustutils-setpgid = { path = "tools/system/setpgid" }
