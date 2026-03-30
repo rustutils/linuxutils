@@ -18,6 +18,7 @@ members = [
     "tools/misc/uuidgen",
     "tools/misc/uuidparse",
     "tools/misc/waitpid",
+    "tools/sched/ionice",
     "tools/system/choom",
     "tools/system/flock",
     "tools/system/lsirq",
@@ -56,6 +57,7 @@ rustutils-choom = { path = "tools/system/choom" }
 rustutils-flock = { path = "tools/system/flock" }
 rustutils-colrm = { path = "tools/text/colrm" }
 rustutils-hexdump = { path = "tools/text/hexdump" }
+rustutils-ionice = { path = "tools/sched/ionice" }
 rustutils-isosize = { path = "tools/disk/isosize" }
 rustutils-line = { path = "tools/text/line" }
 rustutils-look = { path = "tools/misc/look" }

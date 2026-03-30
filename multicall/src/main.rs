@@ -9,6 +9,7 @@ fn main() -> ExitCode {
         .subcommand(rustutils_colrm::Args::command())
         .subcommand(rustutils_flock::Args::command())
         .subcommand(rustutils_hexdump::Args::command())
+        .subcommand(rustutils_ionice::Args::command())
         .subcommand(rustutils_isosize::Args::command())
         .subcommand(rustutils_line::Args::command())
         .subcommand(rustutils_look::Args::command())
@@ -48,6 +49,9 @@ fn main() -> ExitCode {
         ),
         Some(("hexdump", m)) => rustutils_hexdump::run(
             rustutils_hexdump::Args::from_arg_matches(m).unwrap(),
+        ),
+        Some(("ionice", m)) => rustutils_ionice::run(
+            rustutils_ionice::Args::from_arg_matches(m).unwrap(),
         ),
         Some(("isosize", m)) => rustutils_isosize::run(
             rustutils_isosize::Args::from_arg_matches(m).unwrap(),

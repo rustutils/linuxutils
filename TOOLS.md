@@ -163,7 +163,7 @@
 |------|-------------|--------|
 | `chrt` | Manipulate the real-time attributes of a process | Not started |
 | `coresched` | Manage core scheduling cookies for tasks | Not started |
-| `ionice` | Set or get process I/O scheduling class and priority | Not started |
+| `ionice` | Set or get process I/O scheduling class and priority | Done |
 | `taskset` | Set or retrieve a process's CPU affinity | Not started |
 | `uclampset` | Manipulate the utilization clamping attributes of the system or a process | Not started |
 

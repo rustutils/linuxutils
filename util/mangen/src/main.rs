@@ -18,6 +18,7 @@ fn main() -> ExitCode {
         rustutils_colrm::Args::command(),
         rustutils_flock::Args::command(),
         rustutils_hexdump::Args::command(),
+        rustutils_ionice::Args::command(),
         rustutils_line::Args::command(),
         rustutils_look::Args::command(),
         rustutils_lsirq::Args::command(),

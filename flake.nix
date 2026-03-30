@@ -25,6 +25,7 @@
         "colrm"
         "flock"
         "hexdump"
+        "ionice"
         "isosize"
         "line"
         "look"

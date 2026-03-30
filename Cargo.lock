@@ -737,6 +737,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "rustutils-ionice"
+version = "0.1.0"
+dependencies = [
+ "assert_cmd",
+ "clap",
+ "libc",
+ "predicates",
+]
+
+[[package]]
 name = "rustutils-isosize"
 version = "0.1.0"
 dependencies = [
@@ -847,6 +857,7 @@ dependencies = [
  "rustutils-colrm",
  "rustutils-flock",
  "rustutils-hexdump",
+ "rustutils-ionice",
  "rustutils-line",
  "rustutils-look",
  "rustutils-lsirq",
@@ -975,6 +986,7 @@ dependencies = [
  "rustutils-colrm",
  "rustutils-flock",
  "rustutils-hexdump",
+ "rustutils-ionice",
  "rustutils-isosize",
  "rustutils-line",
  "rustutils-look",
