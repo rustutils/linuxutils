@@ -9,6 +9,7 @@ fn main() -> ExitCode {
         .subcommand(rustutils_chrt::Args::command())
         .subcommand(rustutils_colrm::Args::command())
         .subcommand(rustutils_column::Args::command())
+        .subcommand(rustutils_fallocate::Args::command())
         .subcommand(rustutils_flock::Args::command())
         .subcommand(rustutils_hexdump::Args::command())
         .subcommand(rustutils_ionice::Args::command())
@@ -54,6 +55,9 @@ fn main() -> ExitCode {
         ),
         Some(("column", m)) => rustutils_column::run(
             rustutils_column::Args::from_arg_matches(m).unwrap(),
+        ),
+        Some(("fallocate", m)) => rustutils_fallocate::run(
+            rustutils_fallocate::Args::from_arg_matches(m).unwrap(),
         ),
         Some(("flock", m)) => rustutils_flock::run(
             rustutils_flock::Args::from_arg_matches(m).unwrap(),

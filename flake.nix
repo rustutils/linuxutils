@@ -25,6 +25,7 @@
         "chrt"
         "colrm"
         "column"
+        "fallocate"
         "flock"
         "hexdump"
         "ionice"

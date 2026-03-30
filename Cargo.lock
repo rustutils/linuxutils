@@ -733,6 +733,7 @@ version = "0.1.0"
 dependencies = [
  "assert_cmd",
  "clap",
+ "cols",
  "predicates",
  "rustix",
  "tempfile",
@@ -741,6 +742,17 @@ dependencies = [
 [[package]]
 name = "rustutils-common-sysfs"
 version = "0.1.0"
+
+[[package]]
+name = "rustutils-fallocate"
+version = "0.1.0"
+dependencies = [
+ "assert_cmd",
+ "clap",
+ "predicates",
+ "rustix",
+ "tempfile",
+]
 
 [[package]]
 name = "rustutils-flock"
@@ -1027,6 +1039,7 @@ dependencies = [
  "rustutils-chrt",
  "rustutils-colrm",
  "rustutils-column",
+ "rustutils-fallocate",
  "rustutils-flock",
  "rustutils-hexdump",
  "rustutils-ionice",

@@ -24,6 +24,7 @@ members = [
     "tools/sched/ionice",
     "tools/sched/taskset",
     "tools/system/choom",
+    "tools/system/fallocate",
     "tools/system/flock",
     "tools/system/lsirq",
     "tools/system/lsmem",
@@ -60,6 +61,7 @@ rustutils-libsmartcols = { path = "libs/smartcols" }
 rustutils-cal = { path = "tools/misc/cal" }
 rustutils-choom = { path = "tools/system/choom" }
 rustutils-chrt = { path = "tools/sched/chrt" }
+rustutils-fallocate = { path = "tools/system/fallocate" }
 rustutils-flock = { path = "tools/system/flock" }
 rustutils-colrm = { path = "tools/text/colrm" }
 rustutils-column = { path = "tools/text/column" }

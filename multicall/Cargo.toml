@@ -13,6 +13,7 @@ rustutils-choom.workspace = true
 rustutils-chrt.workspace = true
 rustutils-colrm.workspace = true
 rustutils-column.workspace = true
+rustutils-fallocate.workspace = true
 rustutils-flock.workspace = true
 rustutils-hexdump.workspace = true
 rustutils-ionice.workspace = true
