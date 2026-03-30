@@ -18,6 +18,7 @@ members = [
     "tools/misc/uuidgen",
     "tools/misc/uuidparse",
     "tools/misc/waitpid",
+    "tools/sched/chrt",
     "tools/sched/ionice",
     "tools/system/choom",
     "tools/system/flock",
@@ -54,6 +55,7 @@ rustutils-common-sysfs = { path = "common/sysfs" }
 rustutils-libsmartcols = { path = "libs/smartcols" }
 rustutils-cal = { path = "tools/misc/cal" }
 rustutils-choom = { path = "tools/system/choom" }
+rustutils-chrt = { path = "tools/sched/chrt" }
 rustutils-flock = { path = "tools/system/flock" }
 rustutils-colrm = { path = "tools/text/colrm" }
 rustutils-hexdump = { path = "tools/text/hexdump" }

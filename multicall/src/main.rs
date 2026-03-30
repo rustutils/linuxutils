@@ -6,6 +6,7 @@ fn main() -> ExitCode {
         .multicall(true)
         .subcommand(rustutils_cal::Args::command())
         .subcommand(rustutils_choom::Args::command())
+        .subcommand(rustutils_chrt::Args::command())
         .subcommand(rustutils_colrm::Args::command())
         .subcommand(rustutils_flock::Args::command())
         .subcommand(rustutils_hexdump::Args::command())
@@ -40,6 +41,9 @@ fn main() -> ExitCode {
         ),
         Some(("choom", m)) => rustutils_choom::run(
             rustutils_choom::Args::from_arg_matches(m).unwrap(),
+        ),
+        Some(("chrt", m)) => rustutils_chrt::run(
+            rustutils_chrt::Args::from_arg_matches(m).unwrap(),
         ),
         Some(("colrm", m)) => rustutils_colrm::run(
             rustutils_colrm::Args::from_arg_matches(m).unwrap(),

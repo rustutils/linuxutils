@@ -161,7 +161,7 @@
 
 | Tool | Description | Status |
 |------|-------------|--------|
-| `chrt` | Manipulate the real-time attributes of a process | Not started |
+| `chrt` | Manipulate the real-time attributes of a process | Done |
 | `coresched` | Manage core scheduling cookies for tasks | Not started |
 | `ionice` | Set or get process I/O scheduling class and priority | Done |
 | `taskset` | Set or retrieve a process's CPU affinity | Not started |

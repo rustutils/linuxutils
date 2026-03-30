@@ -709,6 +709,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "rustutils-chrt"
+version = "0.1.0"
+dependencies = [
+ "assert_cmd",
+ "clap",
+ "libc",
+ "predicates",
+]
+
+[[package]]
 name = "rustutils-colrm"
 version = "0.1.0"
 dependencies = [
@@ -983,6 +993,7 @@ dependencies = [
  "clap",
  "rustutils-cal",
  "rustutils-choom",
+ "rustutils-chrt",
  "rustutils-colrm",
  "rustutils-flock",
  "rustutils-hexdump",

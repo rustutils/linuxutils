@@ -22,6 +22,7 @@
       tools = [
         "cal"
         "choom"
+        "chrt"
         "colrm"
         "flock"
         "hexdump"
