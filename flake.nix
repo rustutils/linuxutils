@@ -24,6 +24,7 @@
         "choom"
         "chrt"
         "colrm"
+        "column"
         "flock"
         "hexdump"
         "ionice"

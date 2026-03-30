@@ -119,7 +119,7 @@
 | `col` | Filter reverse line feeds from input | Not started |
 | `colcrt` | Filter nroff output for CRT previewing | Not started |
 | `colrm` | Remove columns from a file | Done |
-| `column` | Columnate lists | Not started |
+| `column` | Columnate lists | In progress |
 | `hexdump` | Display file contents in hexadecimal, decimal, octal, or ascii | Done |
 | `line` | Read one line | Done |
 | `more` | Display the contents of a file in a terminal | Not started |

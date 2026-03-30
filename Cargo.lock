@@ -728,6 +728,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "rustutils-column"
+version = "0.1.0"
+dependencies = [
+ "assert_cmd",
+ "clap",
+ "predicates",
+ "rustix",
+ "tempfile",
+]
+
+[[package]]
 name = "rustutils-common-sysfs"
 version = "0.1.0"
 
@@ -1015,6 +1026,7 @@ dependencies = [
  "rustutils-choom",
  "rustutils-chrt",
  "rustutils-colrm",
+ "rustutils-column",
  "rustutils-flock",
  "rustutils-hexdump",
  "rustutils-ionice",

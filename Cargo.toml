@@ -36,6 +36,7 @@ members = [
     "tools/system/setsid",
     "tools/term/mesg",
     "tools/text/colrm",
+    "tools/text/column",
     "tools/text/hexdump",
     "tools/text/line",
     "tools/text/rev",
@@ -61,6 +62,7 @@ rustutils-choom = { path = "tools/system/choom" }
 rustutils-chrt = { path = "tools/sched/chrt" }
 rustutils-flock = { path = "tools/system/flock" }
 rustutils-colrm = { path = "tools/text/colrm" }
+rustutils-column = { path = "tools/text/column" }
 rustutils-hexdump = { path = "tools/text/hexdump" }
 rustutils-ionice = { path = "tools/sched/ionice" }
 rustutils-isosize = { path = "tools/disk/isosize" }
