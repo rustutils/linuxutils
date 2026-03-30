@@ -12,6 +12,7 @@ path = "src/main.rs"
 
 [dependencies]
 clap = { version = "4", features = ["derive"] }
+cols.workspace = true
 rustix.workspace = true
 
 [dev-dependencies]

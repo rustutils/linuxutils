@@ -12,6 +12,34 @@ const TAB_WIDTH: usize = 8;
 #[derive(Parser)]
 #[command(name = "column", version, about)]
 pub struct Args {
+    /// Create a table from delimited input.
+    #[arg(short = 't', long = "table")]
+    table: bool,
+
+    /// Possible input item delimiters (default is whitespace).
+    #[arg(short = 's', long = "separator", value_name = "separators")]
+    separator: Option<String>,
+
+    /// Column delimiter for table output (default is two spaces).
+    #[arg(short = 'o', long = "output-separator", value_name = "string")]
+    output_separator: Option<String>,
+
+    /// Specify column names (comma-separated).
+    #[arg(short = 'N', long = "table-columns", value_name = "names")]
+    table_columns: Option<String>,
+
+    /// Omit printing the table header.
+    #[arg(short = 'd', long = "table-noheadings")]
+    table_noheadings: bool,
+
+    /// Maximum number of input columns.
+    #[arg(short = 'l', long = "table-columns-limit", value_name = "number")]
+    table_columns_limit: Option<usize>,
+
+    /// Fill all available space on output.
+    #[arg(short = 'm', long = "table-maxout")]
+    table_maxout: bool,
+
     /// Fill rows before columns.
     #[arg(short = 'x', long = "fillrows")]
     fill_rows: bool,
@@ -95,14 +123,20 @@ pub fn run(args: Args) -> ExitCode {
     let stdout = io::stdout();
     let mut writer = stdout.lock();
 
-    if let Err(e) = columnate(
-        &input,
-        width_limit,
-        args.fill_rows,
-        args.use_spaces,
-        args.keep_empty_lines,
-        &mut writer,
-    ) {
+    let result = if args.table {
+        table_mode(&input, &args, width_limit, &mut writer)
+    } else {
+        columnate(
+            &input,
+            width_limit,
+            args.fill_rows,
+            args.use_spaces,
+            args.keep_empty_lines,
+            &mut writer,
+        )
+    };
+
+    if let Err(e) = result {
         eprintln!("column: {e}");
         return ExitCode::FAILURE;
     }
@@ -132,6 +166,168 @@ fn read_input(files: &[PathBuf]) -> io::Result<String> {
         }
     }
     Ok(buf)
+}
+
+fn table_mode(
+    input: &str,
+    args: &Args,
+    width_limit: Option<usize>,
+    writer: &mut impl Write,
+) -> io::Result<()> {
+    use cols::{Table, TermForce, print_table};
+
+    // Parse input into rows of fields.
+    let rows = parse_table_input(
+        input,
+        args.separator.as_deref(),
+        args.table_columns_limit,
+    );
+
+    if rows.is_empty() {
+        return Ok(());
+    }
+
+    // Determine column count from the widest row.
+    let ncols = rows.iter().map(|r| r.len()).max().unwrap_or(0);
+    if ncols == 0 {
+        return Ok(());
+    }
+
+    // Build column names.
+    let col_names: Vec<String> = if let Some(ref names_str) = args.table_columns
+    {
+        let user_names: Vec<&str> = names_str.split(',').collect();
+        (0..ncols)
+            .map(|i| {
+                user_names
+                    .get(i)
+                    .map(|s| s.to_string())
+                    .unwrap_or_else(|| format!("COL{}", i + 1))
+            })
+            .collect()
+    } else {
+        (0..ncols).map(|i| format!("COL{}", i + 1)).collect()
+    };
+
+    // Build the table.
+    let mut table = Table::new();
+
+    if let Some(width) = width_limit {
+        table.set_termwidth(width);
+        table.set_termforce(TermForce::Always);
+    }
+
+    if args.table_noheadings || args.table_columns.is_none() {
+        table.enable_no_headings(true);
+    }
+
+    if args.table_maxout {
+        table.enable_maxout(true);
+    }
+
+    if let Some(ref sep) = args.output_separator {
+        table.set_column_separator(sep);
+    }
+
+    for name in &col_names {
+        table.new_column(name);
+    }
+
+    // Populate rows.
+    for row in &rows {
+        let line_id = table.new_line(None);
+        let line = table.line_mut(line_id);
+        for (ci, cell) in row.iter().enumerate() {
+            line.set_data(ci, cell);
+        }
+    }
+
+    print_table(&table, writer)
+}
+
+/// Parse input text into rows of fields based on separator.
+fn parse_table_input(
+    input: &str,
+    separator: Option<&str>,
+    columns_limit: Option<usize>,
+) -> Vec<Vec<String>> {
+    let mut rows = Vec::new();
+
+    for line in input.lines() {
+        if line.is_empty() {
+            continue;
+        }
+
+        let fields: Vec<String> = if let Some(sep) = separator {
+            // Split by any character in the separator string (non-greedy).
+            let sep_chars: Vec<char> = sep.chars().collect();
+            split_by_chars(line, &sep_chars, columns_limit)
+        } else {
+            // Default: split by whitespace runs.
+            split_by_whitespace(line, columns_limit)
+        };
+
+        rows.push(fields);
+    }
+
+    rows
+}
+
+/// Split a line by any character in `sep_chars`, keeping empty fields
+/// (non-greedy splitting like util-linux >= 2.23).
+fn split_by_chars(
+    line: &str,
+    sep_chars: &[char],
+    limit: Option<usize>,
+) -> Vec<String> {
+    let mut fields = Vec::new();
+    let mut current = String::new();
+
+    for ch in line.chars() {
+        if sep_chars.contains(&ch) {
+            if let Some(max) = limit
+                && fields.len() + 1 >= max
+            {
+                // Last field gets the rest.
+                current.push(ch);
+                continue;
+            }
+            fields.push(std::mem::take(&mut current));
+        } else {
+            current.push(ch);
+        }
+    }
+    fields.push(current);
+    fields
+}
+
+/// Split by whitespace runs (greedy), with optional column limit.
+fn split_by_whitespace(line: &str, limit: Option<usize>) -> Vec<String> {
+    match limit {
+        Some(max) => {
+            let mut fields: Vec<String> = Vec::new();
+            let mut rest = line;
+            while fields.len() + 1 < max {
+                rest = rest.trim_start();
+                if rest.is_empty() {
+                    break;
+                }
+                if let Some(pos) = rest.find(char::is_whitespace) {
+                    fields.push(rest[..pos].to_string());
+                    rest = &rest[pos..];
+                } else {
+                    fields.push(rest.to_string());
+                    rest = "";
+                    break;
+                }
+            }
+            if !rest.is_empty() {
+                fields.push(rest.trim_start().to_string());
+            }
+            fields
+        }
+        None => line.split_whitespace().map(String::from).collect(),
+    }
 }
 
 pub fn columnate(
