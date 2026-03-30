@@ -15,15 +15,11 @@ fn query_current_process() {
 
 #[test]
 fn set_and_query_roundtrip() {
-    let pid = std::process::id().to_string();
-
+    // Use exec mode: set priority then exec ionice to query it in the same process.
+    let ionice_bin = assert_cmd::cargo::cargo_bin("ionice");
     cmd()
-        .args(["-c", "2", "-n", "5", "-p", &pid])
-        .assert()
-        .success();
-
-    cmd()
-        .args(["-p", &pid])
+        .args(["-c", "2", "-n", "5"])
+        .arg(&ionice_bin)
         .assert()
         .success()
         .stdout(predicate::str::contains("best-effort: prio 5"));
