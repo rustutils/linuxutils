@@ -16,6 +16,26 @@ pub struct Args {
     #[arg(short = 't', long = "table")]
     table: bool,
 
+    /// Use JSON output format (requires -N).
+    #[arg(short = 'J', long = "json")]
+    json: bool,
+
+    /// Specify the table name for JSON output.
+    #[arg(short = 'n', long = "table-name", value_name = "name")]
+    table_name: Option<String>,
+
+    /// Specify column to use for tree-like output.
+    #[arg(short = 'r', long = "tree", value_name = "column")]
+    tree: Option<String>,
+
+    /// Specify column containing line IDs for tree parent-child relations.
+    #[arg(short = 'i', long = "tree-id", value_name = "column")]
+    tree_id: Option<String>,
+
+    /// Specify column containing parent IDs for tree parent-child relations.
+    #[arg(short = 'p', long = "tree-parent", value_name = "column")]
+    tree_parent: Option<String>,
+
     /// Possible input item delimiters (default is whitespace).
     #[arg(short = 's', long = "separator", value_name = "separators")]
     separator: Option<String>,
@@ -155,7 +175,7 @@ pub fn run(args: Args) -> ExitCode {
     let stdout = io::stdout();
     let mut writer = stdout.lock();
 
-    let result = if args.table {
+    let result = if args.table || args.json || args.tree.is_some() {
         table_mode(&input, &args, width_limit, &mut writer)
     } else {
         columnate(
@@ -206,7 +226,8 @@ fn table_mode(
     width_limit: Option<usize>,
     writer: &mut impl Write,
 ) -> io::Result<()> {
-    use cols::{Table, TermForce, print_table};
+    use cols::{OutputMode, Table, TermForce, print_table};
+    use std::collections::HashMap;
 
     // Parse input into rows of fields.
     let rows = parse_table_input(
@@ -355,12 +376,73 @@ fn table_mode(
     // For now we don't reorder — cols doesn't support column reordering
     // after creation. This would need to remap column indices.
 
+    // JSON mode.
+    if args.json {
+        table.set_output_mode(OutputMode::Json);
+        if let Some(ref name) = args.table_name {
+            table.set_name(name);
+        } else {
+            table.set_name("table");
+        }
+    }
+
+    // Resolve tree column indices.
+    let tree_col = args
+        .tree
+        .as_ref()
+        .and_then(|s| resolve_single_column(s, &col_names));
+    let tree_id_col = args
+        .tree_id
+        .as_ref()
+        .and_then(|s| resolve_single_column(s, &col_names));
+    let tree_parent_col = args
+        .tree_parent
+        .as_ref()
+        .and_then(|s| resolve_single_column(s, &col_names));
+
+    // Mark the tree column.
+    if let Some(tc) = tree_col
+        && let Some(col) = table.column_mut(tc)
+    {
+        col.set_tree(true);
+    }
+
     // Populate rows.
-    for row in &rows {
-        let line_id = table.new_line(None);
-        let line = table.line_mut(line_id);
-        for (ci, cell) in row.iter().enumerate() {
-            line.set_data(ci, cell);
+    if let (Some(id_col), Some(parent_col)) = (tree_id_col, tree_parent_col) {
+        // Tree mode: build parent-child relationships from data.
+        let mut id_to_line: HashMap<String, cols::LineId> = HashMap::new();
+        let mut deferred_parents: Vec<(cols::LineId, String)> = Vec::new();
+
+        for row in &rows {
+            let line_id = table.new_line(None);
+            let line = table.line_mut(line_id);
+            for (ci, cell) in row.iter().enumerate() {
+                line.set_data(ci, cell);
+            }
+            if let Some(id_val) = row.get(id_col) {
+                id_to_line.insert(id_val.clone(), line_id);
+            }
+            if let Some(parent_val) = row.get(parent_col)
+                && !parent_val.is_empty()
+                && parent_val != "0"
+            {
+                deferred_parents.push((line_id, parent_val.clone()));
+            }
+        }
+
+        // Wire up parent-child relationships.
+        for (child_line, parent_id) in &deferred_parents {
+            if let Some(&parent_line) = id_to_line.get(parent_id) {
+                table.add_child(parent_line, *child_line);
+            }
+        }
+    } else {
+        for row in &rows {
+            let line_id = table.new_line(None);
+            let line = table.line_mut(line_id);
+            for (ci, cell) in row.iter().enumerate() {
+                line.set_data(ci, cell);
+            }
         }
     }
 
@@ -439,6 +521,11 @@ fn parse_column_attrs(s: &str) -> Vec<(String, Option<String>)> {
             }
         })
         .collect()
+}
+
+/// Resolve a single column reference to a 0-based index.
+fn resolve_single_column(spec: &str, col_names: &[String]) -> Option<usize> {
+    resolve_columns(spec, col_names).into_iter().next()
 }
 
 /// Parse input text into rows of fields based on separator.

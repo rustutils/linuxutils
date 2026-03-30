@@ -424,6 +424,72 @@ fn table_header_repeat_flag() {
         .success();
 }
 
+// ── JSON and tree mode (Part 4) ─────────────────────────────────────────────
+
+#[test]
+fn json_output() {
+    cmd()
+        .args(["-J", "-N", "NAME,VALUE"])
+        .write_stdin("foo 1\nbar 2\n")
+        .assert()
+        .success()
+        .stdout(
+            predicate::str::contains("\"table\"")
+                .and(predicate::str::contains("\"NAME\": \"foo\""))
+                .and(predicate::str::contains("\"VALUE\": \"1\"")),
+        );
+}
+
+#[test]
+fn json_custom_table_name() {
+    cmd()
+        .args(["-J", "-N", "X", "-n", "mydata"])
+        .write_stdin("a\nb\n")
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("\"mydata\""));
+}
+
+#[test]
+fn json_implies_table_mode() {
+    // -J should work without explicit -t.
+    cmd()
+        .args(["-J", "-N", "A,B"])
+        .write_stdin("x y\n")
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("{"));
+}
+
+#[test]
+fn tree_reorders_children() {
+    // Tree mode should place children under their parents.
+    let output = cmd()
+        .args(["--tree-id", "1", "--tree-parent", "2", "--tree", "3"])
+        .write_stdin("1 0 A\n2 1 AA\n3 1 AB\n4 2 AAA\n5 2 AAB\n")
+        .output()
+        .unwrap();
+    let stdout = std::str::from_utf8(&output.stdout).unwrap();
+    let lines: Vec<&str> = stdout.lines().collect();
+    assert_eq!(lines.len(), 5);
+    // A should be first (root), then AA and its children, then AB.
+    assert!(lines[0].contains('A'));
+    assert!(lines[1].contains("AA"));
+    // AAA and AAB should come before AB.
+    let aaa_pos = stdout.find("AAA").unwrap();
+    let ab_pos = stdout.find("AB\n").or_else(|| stdout.find("AB")).unwrap();
+    assert!(aaa_pos < ab_pos, "AAA should appear before AB");
+}
+
+#[test]
+fn tree_implies_table_mode() {
+    cmd()
+        .args(["--tree-id", "1", "--tree-parent", "2", "--tree", "3"])
+        .write_stdin("1 0 root\n2 1 child\n")
+        .assert()
+        .success();
+}
+
 // ── Simple mode (continued) ─────────────────────────────────────────────────
 
 #[test]
