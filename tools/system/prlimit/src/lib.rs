@@ -1,6 +1,6 @@
 use clap::Parser;
+use cols::{OutputMode, Table, WidthHint, print_table};
 use rustix::process::{Pid, Resource, Rlimit, getrlimit, prlimit, setrlimit};
-use smartcols::{OutputMode, Table, print_table};
 use std::{fs, os::unix::process::CommandExt, process, process::ExitCode};
 
 #[derive(Parser)]
@@ -307,13 +307,13 @@ impl Col {
         }
     }
 
-    fn whint(self) -> f64 {
+    fn whint(self) -> WidthHint {
         match self {
-            Col::Resource => 10.0,
-            Col::Description => 36.0,
-            Col::Soft => 9.0,
-            Col::Hard => 9.0,
-            Col::Units => 9.0,
+            Col::Resource => WidthHint::Fixed(10),
+            Col::Description => WidthHint::Fixed(36),
+            Col::Soft => WidthHint::Fixed(9),
+            Col::Hard => WidthHint::Fixed(9),
+            Col::Units => WidthHint::Fixed(9),
         }
     }
 
@@ -489,7 +489,8 @@ pub fn run(args: Args) -> ExitCode {
         table.enable_no_headings(true);
     }
     for col in &columns {
-        let idx = table.new_column(col.name(), col.whint());
+        let idx = table.new_column(col.name());
+        table.column_mut(idx).unwrap().set_width_hint(col.whint());
         if col.is_right() {
             table.column_mut(idx).unwrap().set_right(true);
         }

@@ -16,4 +16,4 @@ path = "src/main.rs"
 [dependencies]
 clap = { version = "4", features = ["derive"] }
 rustix = { workspace = true, features = ["process"] }
-rustutils-libsmartcols.workspace = true
+cols.workspace = true

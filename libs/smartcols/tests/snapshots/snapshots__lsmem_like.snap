@@ -1,7 +1,0 @@
----
-source: libs/smartcols/tests/snapshots.rs
-expression: output
----
-RANGE                                  SIZE STATE  REMOVABLE  BLOCK
-0x0000000000000000-0x00000000cfffffff  3.3G online       yes   0-25
-0x0000000100000000-0x000000040fffffff 12.3G online       yes 32-129

@@ -1,5 +1,0 @@
----
-source: libs/smartcols/tests/snapshots.rs
-expression: output
----
-A     B

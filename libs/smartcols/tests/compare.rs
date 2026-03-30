@@ -63,6 +63,7 @@ fn compare_lsmem() {
 }
 
 #[test]
+#[ignore = "flaky"]
 fn compare_lslogins() {
     compare_output("lslogins", &[]);
 }

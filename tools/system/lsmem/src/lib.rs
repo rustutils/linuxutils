@@ -1,6 +1,6 @@
 use clap::Parser;
+use cols::{OutputMode, Table, WidthHint, print_table};
 use rustutils_common_sysfs::SysfsDevice;
-use smartcols::{OutputMode, Table, print_table};
 use std::{
     path::{Path, PathBuf},
     process::ExitCode,
@@ -99,15 +99,15 @@ impl Col {
         }
     }
 
-    fn whint(self) -> f64 {
+    fn whint(self) -> WidthHint {
         match self {
-            Col::Range => 0.0,
-            Col::Size => 5.0,
-            Col::State => 6.0,
-            Col::Removable => 9.0,
-            Col::Block => 0.0,
-            Col::Node => 4.0,
-            Col::Zones => 0.0,
+            Col::Range => WidthHint::Auto,
+            Col::Size => WidthHint::Fixed(5),
+            Col::State => WidthHint::Fixed(6),
+            Col::Removable => WidthHint::Fixed(9),
+            Col::Block => WidthHint::Auto,
+            Col::Node => WidthHint::Fixed(4),
+            Col::Zones => WidthHint::Auto,
         }
     }
 
@@ -391,7 +391,8 @@ pub fn run(args: Args) -> ExitCode {
         }
 
         for col in &columns {
-            let idx = table.new_column(col.name(), col.whint());
+            let idx = table.new_column(col.name());
+            table.column_mut(idx).unwrap().set_width_hint(col.whint());
             if col.is_right() {
                 table.column_mut(idx).unwrap().set_right(true);
             }

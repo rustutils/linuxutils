@@ -1,5 +1,5 @@
 use clap::Parser;
-use smartcols::{OutputMode, Table, print_table};
+use cols::{OutputMode, Table, WidthHint, print_table};
 use std::{
     io::{self, BufRead},
     path::PathBuf,
@@ -58,11 +58,11 @@ impl Col {
         }
     }
 
-    fn whint(self) -> f64 {
+    fn whint(self) -> WidthHint {
         match self {
-            Col::Irq => 0.0,
-            Col::Total => 0.0,
-            Col::Name => 0.0,
+            Col::Irq => WidthHint::Auto,
+            Col::Total => WidthHint::Auto,
+            Col::Name => WidthHint::Auto,
         }
     }
 
@@ -268,7 +268,8 @@ pub fn run(args: Args) -> ExitCode {
     }
 
     for col in &columns {
-        let idx = table.new_column(col.name(), col.whint());
+        let idx = table.new_column(col.name());
+        table.column_mut(idx).unwrap().set_width_hint(col.whint());
         if col.is_right() {
             table.column_mut(idx).unwrap().set_right(true);
         }

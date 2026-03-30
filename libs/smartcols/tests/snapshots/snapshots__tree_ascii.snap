@@ -1,9 +1,0 @@
----
-source: libs/smartcols/tests/snapshots.rs
-expression: output
----
-NAME           SIZE
-root            100
-|-child1         50
-| `-grandchild   20
-`-child2         30

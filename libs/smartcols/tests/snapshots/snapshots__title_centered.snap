@@ -1,7 +1,0 @@
----
-source: libs/smartcols/tests/snapshots.rs
-expression: output
----
-                My Table                
-X
-data

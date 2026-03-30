@@ -242,14 +242,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1d07550c9036bf2ae0c684c4297d503f838287c83c53686d05370d0e139ae570"
 
 [[package]]
-name = "console"
-version = "0.16.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d64e8af5551369d19cf50138de61f1c42074ab970f74e99be916646777f8fc87"
+name = "cols"
+version = "0.1.0"
+source = "git+https://gitlab.com/rustutils/cols#a0ad3c778dc1e262b781301b87116a6ec79cdce4"
 dependencies = [
- "encode_unicode",
- "libc",
- "windows-sys",
+ "regex",
+ "unicode-width",
 ]
 
 [[package]]
@@ -283,12 +281,6 @@ name = "either"
 version = "1.15.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "48c757948c5ede0e46177b7add2e67155f70e33c07fea8284df6576da70b3719"
-
-[[package]]
-name = "encode_unicode"
-version = "1.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "34aa73646ffb006b8f5147f3dc182bd4bcb190227ce861fc4a4844bf8e3cb2c0"
 
 [[package]]
 name = "equivalent"
@@ -414,18 +406,6 @@ dependencies = [
  "hashbrown 0.16.1",
  "serde",
  "serde_core",
-]
-
-[[package]]
-name = "insta"
-version = "1.47.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "99322078b2c076829a1db959d49da554fabc4342257fc0ba5a070a1eb3a01cd8"
-dependencies = [
- "console",
- "once_cell",
- "similar",
- "tempfile",
 ]
 
 [[package]]
@@ -701,14 +681,11 @@ name = "rustutils-libsmartcols"
 version = "0.1.0"
 dependencies = [
  "bindgen",
- "bitflags",
  "cc",
- "insta",
+ "cols",
  "libc",
- "regex",
  "similar",
  "tempfile",
- "unicode-width",
 ]
 
 [[package]]
@@ -741,7 +718,7 @@ name = "rustutils-lsirq"
 version = "0.1.0"
 dependencies = [
  "clap",
- "rustutils-libsmartcols",
+ "cols",
 ]
 
 [[package]]
@@ -749,7 +726,7 @@ name = "rustutils-lslocks"
 version = "0.1.0"
 dependencies = [
  "clap",
- "rustutils-libsmartcols",
+ "cols",
 ]
 
 [[package]]
@@ -757,8 +734,8 @@ name = "rustutils-lsmem"
 version = "0.1.0"
 dependencies = [
  "clap",
+ "cols",
  "rustutils-common-sysfs",
- "rustutils-libsmartcols",
 ]
 
 [[package]]
@@ -766,7 +743,7 @@ name = "rustutils-lsns"
 version = "0.1.0"
 dependencies = [
  "clap",
- "rustutils-libsmartcols",
+ "cols",
 ]
 
 [[package]]
@@ -835,8 +812,8 @@ name = "rustutils-prlimit"
 version = "0.1.0"
 dependencies = [
  "clap",
+ "cols",
  "rustix",
- "rustutils-libsmartcols",
 ]
 
 [[package]]
@@ -851,7 +828,7 @@ name = "rustutils-rfkill"
 version = "0.1.0"
 dependencies = [
  "clap",
- "rustutils-libsmartcols",
+ "cols",
 ]
 
 [[package]]

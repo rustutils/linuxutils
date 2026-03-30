@@ -16,4 +16,4 @@ path = "src/main.rs"
 [dependencies]
 clap = { version = "4", features = ["derive"] }
 rustutils-common-sysfs.workspace = true
-rustutils-libsmartcols.workspace = true
+cols.workspace = true

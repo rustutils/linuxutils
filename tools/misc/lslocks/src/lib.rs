@@ -1,5 +1,5 @@
 use clap::Parser;
-use smartcols::{OutputMode, Table, print_table};
+use cols::{OutputMode, Table, WidthHint, print_table};
 use std::{
     collections::HashMap, fs, os::unix::fs::MetadataExt, process::ExitCode,
 };
@@ -248,21 +248,21 @@ impl Col {
         }
     }
 
-    fn whint(self) -> f64 {
+    fn whint(self) -> WidthHint {
         match self {
-            Col::Command => 14.0,
-            Col::Pid => 5.0,
-            Col::Type => 5.0,
-            Col::Size => 5.0,
-            Col::Mode => 5.0,
-            Col::Mandatory => 1.0,
-            Col::Start => 10.0,
-            Col::End => 10.0,
-            Col::Path => 0.0,
-            Col::Inode => 8.0,
-            Col::MajMin => 6.0,
-            Col::Blocker => 7.0,
-            Col::Holders => 0.0,
+            Col::Command => WidthHint::Fixed(14),
+            Col::Pid => WidthHint::Fixed(5),
+            Col::Type => WidthHint::Fixed(5),
+            Col::Size => WidthHint::Fixed(5),
+            Col::Mode => WidthHint::Fixed(5),
+            Col::Mandatory => WidthHint::Fixed(1),
+            Col::Start => WidthHint::Fixed(10),
+            Col::End => WidthHint::Fixed(10),
+            Col::Path => WidthHint::Auto,
+            Col::Inode => WidthHint::Fixed(8),
+            Col::MajMin => WidthHint::Fixed(6),
+            Col::Blocker => WidthHint::Fixed(7),
+            Col::Holders => WidthHint::Auto,
         }
     }
 
@@ -384,7 +384,8 @@ pub fn run(args: Args) -> ExitCode {
     }
 
     for col in &columns {
-        let idx = table.new_column(col.name(), col.whint());
+        let idx = table.new_column(col.name());
+        table.column_mut(idx).unwrap().set_width_hint(col.whint());
         if col.is_right() {
             table.column_mut(idx).unwrap().set_right(true);
         }

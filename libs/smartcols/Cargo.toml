@@ -1,6 +1,6 @@
 [package]
 name = "rustutils-libsmartcols"
-description = "ABI-compatible libsmartcols implementation for tabular data formatting"
+description = "ABI-compatible libsmartcols FFI wrapper around the cols crate"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -11,19 +11,16 @@ nightly = []
 
 [lib]
 name = "smartcols"
-crate-type = ["cdylib", "rlib"]
+crate-type = ["cdylib"]
 
 [dependencies]
-bitflags = "2"
+cols.workspace = true
 libc = "0.2"
-regex = "1"
-unicode-width = "0.2"
 
 [build-dependencies]
 bindgen = "0.71"
 
 [dev-dependencies]
 cc = "1"
-insta = "1.47.1"
 similar = "2.7.0"
 tempfile = "3"

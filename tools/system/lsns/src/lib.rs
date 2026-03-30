@@ -1,5 +1,5 @@
 use clap::Parser;
-use smartcols::{OutputMode, Table, print_table};
+use cols::{OutputMode, Table, WidthHint, print_table};
 use std::{collections::HashMap, fs, process::ExitCode};
 
 const NS_TYPES: &[&str] =
@@ -71,16 +71,16 @@ impl Col {
         }
     }
 
-    fn whint(self) -> f64 {
+    fn whint(self) -> WidthHint {
         match self {
-            Col::Ns => 10.0,
-            Col::Type => 6.0,
-            Col::Nprocs => 6.0,
-            Col::Pid => 6.0,
-            Col::Ppid => 6.0,
-            Col::Command => 0.0,
-            Col::Uid => 6.0,
-            Col::User => 8.0,
+            Col::Ns => WidthHint::Fixed(10),
+            Col::Type => WidthHint::Fixed(6),
+            Col::Nprocs => WidthHint::Fixed(6),
+            Col::Pid => WidthHint::Fixed(6),
+            Col::Ppid => WidthHint::Fixed(6),
+            Col::Command => WidthHint::Auto,
+            Col::Uid => WidthHint::Fixed(6),
+            Col::User => WidthHint::Fixed(8),
         }
     }
 
@@ -319,7 +319,8 @@ pub fn run(args: Args) -> ExitCode {
     }
 
     for col in &columns {
-        let idx = table.new_column(col.name(), col.whint());
+        let idx = table.new_column(col.name());
+        table.column_mut(idx).unwrap().set_width_hint(col.whint());
         if col.is_right() {
             table.column_mut(idx).unwrap().set_right(true);
         }

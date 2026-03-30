@@ -1,7 +1,0 @@
----
-source: libs/smartcols/tests/snapshots.rs
-expression: output
----
-┌─alpha   10
-├─beta    20
-└─gamma   30

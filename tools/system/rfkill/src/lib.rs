@@ -1,5 +1,5 @@
 use clap::{Parser, Subcommand};
-use smartcols::{OutputMode, Table, print_table};
+use cols::{OutputMode, Table, WidthHint, print_table};
 use std::{
     fs::{self, File, OpenOptions},
     io::{self, Read, Write},
@@ -254,14 +254,14 @@ impl Col {
         }
     }
 
-    fn whint(self) -> f64 {
+    fn whint(self) -> WidthHint {
         match self {
-            Col::Id => 2.0,
-            Col::Type => 9.0,
-            Col::Device => 10.0,
-            Col::TypeDesc => 12.0,
-            Col::Soft => 9.0,
-            Col::Hard => 9.0,
+            Col::Id => WidthHint::Fixed(2),
+            Col::Type => WidthHint::Fixed(9),
+            Col::Device => WidthHint::Fixed(10),
+            Col::TypeDesc => WidthHint::Fixed(12),
+            Col::Soft => WidthHint::Fixed(9),
+            Col::Hard => WidthHint::Fixed(9),
         }
     }
 
@@ -342,7 +342,8 @@ fn print_table_output(args: &Args, devices: &[Device]) -> ExitCode {
     }
 
     for col in &columns {
-        let idx = table.new_column(col.name(), col.whint());
+        let idx = table.new_column(col.name());
+        table.column_mut(idx).unwrap().set_width_hint(col.whint());
         if col.is_right() {
             table.column_mut(idx).unwrap().set_right(true);
         }
