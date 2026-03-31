@@ -6,7 +6,7 @@ use rustix::{
 use std::{process::ExitCode, time::Instant};
 
 #[derive(Parser)]
-#[command(about = "Wait for arbitrary processes to exit")]
+#[command(name = "waitpid", about = "Wait for arbitrary processes to exit")]
 pub struct Args {
     /// Be more verbose
     #[arg(short, long)]

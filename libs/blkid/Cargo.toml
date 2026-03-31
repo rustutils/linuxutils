@@ -1,5 +1,5 @@
 [package]
-name = "rustutils-libblkid"
+name = "linuxutils-libblkid"
 description = "ABI-compatible libblkid implementation for block device identification"
 version.workspace = true
 edition.workspace = true

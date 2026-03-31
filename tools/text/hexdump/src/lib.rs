@@ -6,6 +6,7 @@ use std::{
 
 #[derive(Parser)]
 #[command(
+    name = "hexdump",
     about = "Display file contents in hexadecimal, decimal, octal, or ascii"
 )]
 pub struct Args {

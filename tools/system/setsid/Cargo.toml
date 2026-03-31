@@ -1,5 +1,5 @@
 [package]
-name = "rustutils-setsid"
+name = "linuxutils-setsid"
 description = "Run a program in a new session"
 version.workspace = true
 edition.workspace = true

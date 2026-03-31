@@ -6,7 +6,7 @@ const NS_TYPES: &[&str] =
     &["mnt", "net", "ipc", "user", "pid", "uts", "cgroup", "time"];
 
 #[derive(Parser)]
-#[command(about = "List system namespaces")]
+#[command(name = "lsns", about = "List system namespaces")]
 pub struct Args {
     /// Use JSON output format
     #[arg(short = 'J', long)]

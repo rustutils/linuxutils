@@ -1,5 +1,5 @@
 [package]
-name = "rustutils-libuuid"
+name = "linuxutils-libuuid"
 description = "ABI-compatible libuuid implementation backed by the uuid crate"
 version.workspace = true
 edition.workspace = true

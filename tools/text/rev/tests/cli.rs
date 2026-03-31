@@ -123,7 +123,7 @@ fn file_argument() {
 #[test]
 fn nonexistent_file_fails() {
     cmd()
-        .arg("/tmp/rustutils-rev-nonexistent-file")
+        .arg("/tmp/linuxutils-rev-nonexistent-file")
         .assert()
         .failure()
         .stderr(predicate::str::contains("No such file"));

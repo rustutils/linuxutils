@@ -65,7 +65,7 @@ fn find_lib_dir() -> PathBuf {
         }
     }
     panic!(
-        "libuuid.so not found — run `cargo build -p rustutils-libuuid` first"
+        "libuuid.so not found — run `cargo build -p linuxutils-libuuid` first"
     );
 }
 

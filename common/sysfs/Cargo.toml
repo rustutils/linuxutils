@@ -1,5 +1,5 @@
 [package]
-name = "rustutils-common-sysfs"
+name = "linuxutils-common-sysfs"
 description = "Helpers for reading Linux sysfs attributes"
 version.workspace = true
 edition.workspace = true

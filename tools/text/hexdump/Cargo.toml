@@ -1,5 +1,5 @@
 [package]
-name = "rustutils-hexdump"
+name = "linuxutils-hexdump"
 description = "Display file contents in hexadecimal, decimal, octal, or ascii"
 version.workspace = true
 edition.workspace = true
@@ -7,7 +7,7 @@ license.workspace = true
 repository.workspace = true
 
 [lib]
-name = "rustutils_hexdump"
+name = "linuxutils_hexdump"
 
 [[bin]]
 name = "hexdump"

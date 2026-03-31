@@ -1,5 +1,5 @@
 [package]
-name = "rustutils-whereis"
+name = "linuxutils-whereis"
 description = "Locate the binary, source, and manual page files for a command"
 version.workspace = true
 edition.workspace = true
@@ -7,7 +7,7 @@ license.workspace = true
 repository.workspace = true
 
 [lib]
-name = "rustutils_whereis"
+name = "linuxutils_whereis"
 
 [[bin]]
 name = "whereis"

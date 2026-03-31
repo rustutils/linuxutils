@@ -2,5 +2,5 @@ use clap::Parser;
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
-    rustutils_setsid::run(rustutils_setsid::Args::parse())
+    linuxutils_setsid::run(linuxutils_setsid::Args::parse())
 }

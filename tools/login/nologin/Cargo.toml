@@ -1,5 +1,5 @@
 [package]
-name = "rustutils-nologin"
+name = "linuxutils-nologin"
 description = "Politely refuse a login"
 version.workspace = true
 edition.workspace = true

@@ -1,5 +1,5 @@
 [package]
-name = "rustutils-libsmartcols"
+name = "linuxutils-libsmartcols"
 description = "ABI-compatible libsmartcols FFI wrapper around the cols crate"
 version.workspace = true
 edition.workspace = true

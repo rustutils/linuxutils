@@ -1,5 +1,5 @@
 [package]
-name = "rustutils-colrm"
+name = "linuxutils-colrm"
 description = "Remove columns from a file"
 version.workspace = true
 edition.workspace = true

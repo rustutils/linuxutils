@@ -1,5 +1,5 @@
 [package]
-name = "rustutils-look"
+name = "linuxutils-look"
 description = "Display lines beginning with a given string"
 version.workspace = true
 edition.workspace = true

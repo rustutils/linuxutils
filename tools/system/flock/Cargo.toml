@@ -1,5 +1,5 @@
 [package]
-name = "rustutils-flock"
+name = "linuxutils-flock"
 description = "Manage locks from shell scripts"
 version.workspace = true
 edition.workspace = true
@@ -7,7 +7,7 @@ license.workspace = true
 repository.workspace = true
 
 [lib]
-name = "rustutils_flock"
+name = "linuxutils_flock"
 
 [[bin]]
 name = "flock"

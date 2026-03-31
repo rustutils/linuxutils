@@ -1,5 +1,5 @@
 [package]
-name = "rustutils-mcookie"
+name = "linuxutils-mcookie"
 description = "Generate magic cookies for xauth"
 version.workspace = true
 edition.workspace = true

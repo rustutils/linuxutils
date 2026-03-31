@@ -1,5 +1,5 @@
 [package]
-name = "rustutils-setpgid"
+name = "linuxutils-setpgid"
 description = "Run a program in a new process group"
 version.workspace = true
 edition.workspace = true

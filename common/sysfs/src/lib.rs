@@ -4,7 +4,7 @@
 //! files. This crate provides a thin typed API for reading them.
 //!
 //! ```no_run
-//! use rustutils_common_sysfs::SysfsDevice;
+//! use linuxutils_common_sysfs::SysfsDevice;
 //!
 //! let dev = SysfsDevice::new("/sys/devices/system/memory/memory0");
 //! let state: String = dev.read_attr("state").unwrap();

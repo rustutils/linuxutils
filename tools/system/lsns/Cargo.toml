@@ -1,5 +1,5 @@
 [package]
-name = "rustutils-lsns"
+name = "linuxutils-lsns"
 description = "List system namespaces"
 version.workspace = true
 edition.workspace = true
@@ -7,7 +7,7 @@ license.workspace = true
 repository.workspace = true
 
 [lib]
-name = "rustutils_lsns"
+name = "linuxutils_lsns"
 
 [[bin]]
 name = "lsns"

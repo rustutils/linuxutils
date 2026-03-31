@@ -40,8 +40,8 @@ verifying ABI compatibility end-to-end.
 Run with `cargo test`. The library must be built as a `cdylib` first:
 
 ```
-cargo build -p rustutils-libuuid
-cargo test -p rustutils-libuuid
+cargo build -p linuxutils-libuuid
+cargo test -p linuxutils-libuuid
 ```
 
 ## License

@@ -56,41 +56,41 @@ rustix = { version = "1", features = ["event", "fs", "process", "termios", "thre
 uuid = { version = "1", features = ["v1", "v3", "v4", "v5", "v6", "v7"] }
 
 # workspace crates
-rustutils-common-sysfs = { path = "common/sysfs" }
-rustutils-libsmartcols = { path = "libs/smartcols" }
-rustutils-cal = { path = "tools/misc/cal" }
-rustutils-choom = { path = "tools/system/choom" }
-rustutils-chrt = { path = "tools/sched/chrt" }
-rustutils-fallocate = { path = "tools/system/fallocate" }
-rustutils-flock = { path = "tools/system/flock" }
-rustutils-colrm = { path = "tools/text/colrm" }
-rustutils-column = { path = "tools/text/column" }
-rustutils-hexdump = { path = "tools/text/hexdump" }
-rustutils-ionice = { path = "tools/sched/ionice" }
-rustutils-isosize = { path = "tools/disk/isosize" }
-rustutils-line = { path = "tools/text/line" }
-rustutils-look = { path = "tools/misc/look" }
-rustutils-lslocks = { path = "tools/misc/lslocks" }
-rustutils-mcookie = { path = "tools/misc/mcookie" }
-rustutils-mesg = { path = "tools/term/mesg" }
-rustutils-namei = { path = "tools/misc/namei" }
-rustutils-mountpoint = { path = "tools/system/mountpoint" }
-rustutils-nologin = { path = "tools/login/nologin" }
-rustutils-prlimit = { path = "tools/system/prlimit" }
-rustutils-rename = { path = "tools/misc/rename" }
-rustutils-renice = { path = "tools/system/renice" }
-rustutils-rev = { path = "tools/text/rev" }
-rustutils-setpgid = { path = "tools/system/setpgid" }
-rustutils-setsid = { path = "tools/system/setsid" }
-rustutils-uuidgen = { path = "tools/misc/uuidgen" }
-rustutils-lsirq = { path = "tools/system/lsirq" }
-rustutils-lsmem = { path = "tools/system/lsmem" }
-rustutils-lsns = { path = "tools/system/lsns" }
-rustutils-rfkill = { path = "tools/system/rfkill" }
-rustutils-uuidparse = { path = "tools/misc/uuidparse" }
-rustutils-taskset = { path = "tools/sched/taskset" }
-rustutils-waitpid = { path = "tools/misc/waitpid" }
-rustutils-whereis = { path = "tools/misc/whereis" }
+linuxutils-common-sysfs = { path = "common/sysfs" }
+linuxutils-libsmartcols = { path = "libs/smartcols" }
+linuxutils-cal = { path = "tools/misc/cal" }
+linuxutils-choom = { path = "tools/system/choom" }
+linuxutils-chrt = { path = "tools/sched/chrt" }
+linuxutils-fallocate = { path = "tools/system/fallocate" }
+linuxutils-flock = { path = "tools/system/flock" }
+linuxutils-colrm = { path = "tools/text/colrm" }
+linuxutils-column = { path = "tools/text/column" }
+linuxutils-hexdump = { path = "tools/text/hexdump" }
+linuxutils-ionice = { path = "tools/sched/ionice" }
+linuxutils-isosize = { path = "tools/disk/isosize" }
+linuxutils-line = { path = "tools/text/line" }
+linuxutils-look = { path = "tools/misc/look" }
+linuxutils-lslocks = { path = "tools/misc/lslocks" }
+linuxutils-mcookie = { path = "tools/misc/mcookie" }
+linuxutils-mesg = { path = "tools/term/mesg" }
+linuxutils-namei = { path = "tools/misc/namei" }
+linuxutils-mountpoint = { path = "tools/system/mountpoint" }
+linuxutils-nologin = { path = "tools/login/nologin" }
+linuxutils-prlimit = { path = "tools/system/prlimit" }
+linuxutils-rename = { path = "tools/misc/rename" }
+linuxutils-renice = { path = "tools/system/renice" }
+linuxutils-rev = { path = "tools/text/rev" }
+linuxutils-setpgid = { path = "tools/system/setpgid" }
+linuxutils-setsid = { path = "tools/system/setsid" }
+linuxutils-uuidgen = { path = "tools/misc/uuidgen" }
+linuxutils-lsirq = { path = "tools/system/lsirq" }
+linuxutils-lsmem = { path = "tools/system/lsmem" }
+linuxutils-lsns = { path = "tools/system/lsns" }
+linuxutils-rfkill = { path = "tools/system/rfkill" }
+linuxutils-uuidparse = { path = "tools/misc/uuidparse" }
+linuxutils-taskset = { path = "tools/sched/taskset" }
+linuxutils-waitpid = { path = "tools/misc/waitpid" }
+linuxutils-whereis = { path = "tools/misc/whereis" }
 
 [workspace.metadata.crane]
-name = "rustutils-linuxutils"
+name = "linuxutils-multicall"

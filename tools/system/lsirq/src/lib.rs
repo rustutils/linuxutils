@@ -7,7 +7,10 @@ use std::{
 };
 
 #[derive(Parser)]
-#[command(about = "Utility to display kernel interrupt information")]
+#[command(
+    name = "lsirq",
+    about = "Utility to display kernel interrupt information"
+)]
 pub struct Args {
     /// Use JSON output format
     #[arg(short = 'J', long)]

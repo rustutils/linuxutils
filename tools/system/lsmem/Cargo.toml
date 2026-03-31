@@ -1,5 +1,5 @@
 [package]
-name = "rustutils-lsmem"
+name = "linuxutils-lsmem"
 description = "List the ranges of available memory with their online status"
 version.workspace = true
 edition.workspace = true
@@ -7,7 +7,7 @@ license.workspace = true
 repository.workspace = true
 
 [lib]
-name = "rustutils_lsmem"
+name = "linuxutils_lsmem"
 
 [[bin]]
 name = "lsmem"
@@ -15,5 +15,5 @@ path = "src/main.rs"
 
 [dependencies]
 clap = { version = "4", features = ["derive"] }
-rustutils-common-sysfs.workspace = true
+linuxutils-common-sysfs.workspace = true
 cols.workspace = true

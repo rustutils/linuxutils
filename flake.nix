@@ -101,7 +101,7 @@
 
           # Generate man pages during build.
           postBuild = ''
-            cargo run --release --bin rustutils-mangen -- target/man
+            cargo run --release --bin linuxutils-mangen -- target/man
           '';
 
           # Don't install anything yet — the specific packages below handle that.
@@ -116,7 +116,7 @@
 
           # Individual binaries + libraries + headers + man pages.
           individual = base.overrideAttrs (old: {
-            pname = "rustutils-linuxutils";
+            pname = "linuxutils-multicall";
 
             installPhase = ''
               runHook preInstall
@@ -143,7 +143,7 @@
 
           # Multicall binary + libraries + headers + man pages.
           multicall = base.overrideAttrs (old: {
-            pname = "rustutils-linuxutils-multicall";
+            pname = "linuxutils-multicall";
 
             installPhase = ''
                 runHook preInstall
@@ -171,8 +171,8 @@
           });
         in {
           default = individual;
-          rustutils-linuxutils = individual;
-          rustutils-linuxutils-multicall = multicall;
+          linuxutils-multicall = individual;
+          linuxutils-multicall = multicall;
         }
       );
 

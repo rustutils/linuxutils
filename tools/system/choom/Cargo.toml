@@ -1,5 +1,5 @@
 [package]
-name = "rustutils-choom"
+name = "linuxutils-choom"
 description = "Display and adjust OOM-killer score"
 version.workspace = true
 edition.workspace = true
@@ -7,7 +7,7 @@ license.workspace = true
 repository.workspace = true
 
 [lib]
-name = "rustutils_choom"
+name = "linuxutils_choom"
 
 [[bin]]
 name = "choom"

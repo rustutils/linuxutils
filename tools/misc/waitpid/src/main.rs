@@ -1,5 +1,5 @@
 use clap::Parser;
 
 fn main() -> std::process::ExitCode {
-    rustutils_waitpid::run(rustutils_waitpid::Args::parse())
+    linuxutils_waitpid::run(linuxutils_waitpid::Args::parse())
 }

@@ -1,5 +1,5 @@
 [package]
-name = "rustutils-rev"
+name = "linuxutils-rev"
 description = "Reverse lines characterwise"
 version.workspace = true
 edition.workspace = true

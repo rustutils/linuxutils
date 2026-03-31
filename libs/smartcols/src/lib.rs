@@ -450,7 +450,7 @@ pub unsafe extern "C" fn scols_table_enable_noheadings(
     tb: *mut Table,
     enable: c_int,
 ) -> c_int {
-    unsafe { &mut *tb }.headings_set(!enable != 0);
+    unsafe { &mut *tb }.headings_set(enable == 0);
     0
 }
 
@@ -500,7 +500,7 @@ pub unsafe extern "C" fn scols_table_enable_nolinesep(
     tb: *mut Table,
     enable: c_int,
 ) -> c_int {
-    unsafe { &mut *tb }.line_separator_enabled_set(!enable != 0);
+    unsafe { &mut *tb }.line_separator_enabled_set(enable == 0);
     0
 }
 
@@ -510,7 +510,7 @@ pub unsafe extern "C" fn scols_table_enable_noencoding(
     tb: *mut Table,
     enable: c_int,
 ) -> c_int {
-    unsafe { &mut *tb }.encoding_set(!enable != 0);
+    unsafe { &mut *tb }.encoding_set(enable == 0);
     0
 }
 
@@ -545,7 +545,7 @@ pub unsafe extern "C" fn scols_table_is_json(tb: *const Table) -> c_int {
 /// Return 1 if headers are suppressed.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_is_noheadings(tb: *const Table) -> c_int {
-    unsafe { &*tb }.headings() as c_int
+    !unsafe { &*tb }.headings() as c_int
 }
 
 /// Return 1 if the table has no lines.
@@ -2019,13 +2019,13 @@ pub unsafe extern "C" fn scols_table_is_header_repeat(
 /// Return 1 if encoding is disabled.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_is_noencoding(tb: *const Table) -> c_int {
-    unsafe { &*tb }.encoding() as c_int
+    !unsafe { &*tb }.encoding() as c_int
 }
 
 /// Return 1 if line separators are disabled.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_is_nolinesep(tb: *const Table) -> c_int {
-    unsafe { &*tb }.line_separator_enabled() as c_int
+    !unsafe { &*tb }.line_separator_enabled() as c_int
 }
 
 /// Return 1 if shell variable output mode is enabled.

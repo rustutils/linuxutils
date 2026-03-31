@@ -2,5 +2,5 @@ use clap::Parser;
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
-    rustutils_mesg::run(rustutils_mesg::Args::parse())
+    linuxutils_mesg::run(linuxutils_mesg::Args::parse())
 }

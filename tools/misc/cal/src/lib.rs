@@ -30,7 +30,7 @@ const MONTH_WIDTH: usize = 20;
 const MONTH_GAP: &str = "  ";
 
 #[derive(Parser)]
-#[command(about = "Display a calendar")]
+#[command(name = "cal", about = "Display a calendar")]
 pub struct Args {
     /// Display single month output (default)
     #[arg(short = '1', long)]

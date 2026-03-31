@@ -1,5 +1,5 @@
 [package]
-name = "rustutils-ionice"
+name = "linuxutils-ionice"
 description = "Set or get process I/O scheduling class and priority"
 version.workspace = true
 edition.workspace = true
@@ -7,7 +7,7 @@ license.workspace = true
 repository.workspace = true
 
 [lib]
-name = "rustutils_ionice"
+name = "linuxutils_ionice"
 
 [[bin]]
 name = "ionice"

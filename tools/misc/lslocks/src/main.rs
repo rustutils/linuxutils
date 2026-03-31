@@ -2,5 +2,5 @@ use clap::Parser;
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
-    rustutils_lslocks::run(rustutils_lslocks::Args::parse())
+    linuxutils_lslocks::run(linuxutils_lslocks::Args::parse())
 }

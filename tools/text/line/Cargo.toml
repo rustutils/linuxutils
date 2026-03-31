@@ -1,5 +1,5 @@
 [package]
-name = "rustutils-line"
+name = "linuxutils-line"
 description = "Read one line"
 version.workspace = true
 edition.workspace = true

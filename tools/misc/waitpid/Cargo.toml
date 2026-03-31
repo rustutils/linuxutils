@@ -1,5 +1,5 @@
 [package]
-name = "rustutils-waitpid"
+name = "linuxutils-waitpid"
 description = "Wait for arbitrary processes to exit"
 version.workspace = true
 edition.workspace = true
@@ -7,7 +7,7 @@ license.workspace = true
 repository.workspace = true
 
 [lib]
-name = "rustutils_waitpid"
+name = "linuxutils_waitpid"
 
 [[bin]]
 name = "waitpid"

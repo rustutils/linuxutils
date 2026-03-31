@@ -1,5 +1,5 @@
 [package]
-name = "rustutils-cal"
+name = "linuxutils-cal"
 description = "Display a calendar"
 version.workspace = true
 edition.workspace = true
@@ -7,7 +7,7 @@ license.workspace = true
 repository.workspace = true
 
 [lib]
-name = "rustutils_cal"
+name = "linuxutils_cal"
 
 [[bin]]
 name = "cal"

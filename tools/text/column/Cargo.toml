@@ -1,5 +1,5 @@
 [package]
-name = "rustutils-column"
+name = "linuxutils-column"
 description = "Columnate lists"
 version.workspace = true
 edition.workspace = true

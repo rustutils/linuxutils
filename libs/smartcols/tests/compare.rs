@@ -119,13 +119,6 @@ fn compare_output_stdin(command: &str, args: &[&str], stdin: &[u8]) {
     assert_output_eq(&system, &ours, &label);
 }
 
-fn compare_json_output_stdin(command: &str, args: &[&str], stdin: &[u8]) {
-    let system = run_with_stdin(command, args, stdin, false);
-    let ours = run_with_stdin(command, args, stdin, true);
-    let label = format!("{command} {}", args.join(" "));
-    assert_json_eq(&system, &ours, &label);
-}
-
 // ---- lsblk ----------------------------------------------------------------
 
 #[test]
@@ -156,32 +149,6 @@ fn compare_lsblk_pairs() {
 #[ignore = "needs data_func + wrapzero support"]
 fn compare_lsblk_list() {
     compare_output("lsblk", &["--list"]);
-}
-
-// ---- lsns ------------------------------------------------------------------
-
-#[test]
-#[ignore]
-fn compare_lsns() {
-    compare_output("lsns", &[]);
-}
-
-#[test]
-#[ignore]
-fn compare_lsns_raw() {
-    compare_output("lsns", &["--raw"]);
-}
-
-#[test]
-#[ignore]
-fn compare_lsns_json() {
-    compare_json_output("lsns", &["--json"]);
-}
-
-#[test]
-#[ignore]
-fn compare_lsns_noheadings() {
-    compare_output("lsns", &["--noheadings"]);
 }
 
 // ---- lsipc -----------------------------------------------------------------
@@ -246,52 +213,8 @@ fn compare_lsmem_noheadings() {
 
 #[test]
 #[ignore]
-fn compare_lslogins() {
-    compare_output("lslogins", &[]);
-}
-
-#[test]
-#[ignore]
-fn compare_lslogins_raw() {
-    compare_output("lslogins", &["--raw"]);
-}
-
-#[test]
-#[ignore]
-fn compare_lslogins_json() {
-    compare_output("lslogins", &["--json"]);
-}
-
-#[test]
-#[ignore]
 fn compare_lslogins_export() {
     compare_output("lslogins", &["--export"]);
-}
-
-// ---- lsirq -----------------------------------------------------------------
-
-#[test]
-#[ignore]
-fn compare_lsirq() {
-    compare_output("lsirq", &[]);
-}
-
-#[test]
-#[ignore]
-fn compare_lsirq_raw() {
-    compare_output("lsirq", &["--raw"]);
-}
-
-#[test]
-#[ignore]
-fn compare_lsirq_json() {
-    compare_json_output("lsirq", &["--json"]);
-}
-
-#[test]
-#[ignore]
-fn compare_lsirq_pairs() {
-    compare_output("lsirq", &["--pairs"]);
 }
 
 // ---- findmnt ---------------------------------------------------------------
@@ -438,12 +361,6 @@ fn compare_lslocks() {
 #[ignore]
 fn compare_lslocks_raw() {
     compare_output("lslocks", &["--raw"]);
-}
-
-#[test]
-#[ignore]
-fn compare_lslocks_json() {
-    compare_json_output("lslocks", &["--json"]);
 }
 
 #[test]

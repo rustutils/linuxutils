@@ -1,5 +1,5 @@
 [package]
-name = "rustutils-libmount"
+name = "linuxutils-libmount"
 description = "ABI-compatible libmount implementation for filesystem mounting"
 version.workspace = true
 edition.workspace = true

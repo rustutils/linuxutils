@@ -519,6 +519,424 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "32a66949e030da00e8c7d4434b251670a91556f4144941d37452769c25d58a53"
 
 [[package]]
+name = "linuxutils-cal"
+version = "0.1.0"
+dependencies = [
+ "assert_cmd",
+ "chrono",
+ "clap",
+ "predicates",
+]
+
+[[package]]
+name = "linuxutils-choom"
+version = "0.1.0"
+dependencies = [
+ "clap",
+]
+
+[[package]]
+name = "linuxutils-chrt"
+version = "0.1.0"
+dependencies = [
+ "assert_cmd",
+ "clap",
+ "libc",
+ "predicates",
+]
+
+[[package]]
+name = "linuxutils-colrm"
+version = "0.1.0"
+dependencies = [
+ "assert_cmd",
+ "clap",
+ "predicates",
+]
+
+[[package]]
+name = "linuxutils-column"
+version = "0.1.0"
+dependencies = [
+ "assert_cmd",
+ "clap",
+ "cols",
+ "predicates",
+ "rustix",
+ "tempfile",
+]
+
+[[package]]
+name = "linuxutils-common-sysfs"
+version = "0.1.0"
+
+[[package]]
+name = "linuxutils-fallocate"
+version = "0.1.0"
+dependencies = [
+ "assert_cmd",
+ "clap",
+ "predicates",
+ "rustix",
+ "tempfile",
+]
+
+[[package]]
+name = "linuxutils-flock"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "rustix",
+]
+
+[[package]]
+name = "linuxutils-hexdump"
+version = "0.1.0"
+dependencies = [
+ "clap",
+]
+
+[[package]]
+name = "linuxutils-ionice"
+version = "0.1.0"
+dependencies = [
+ "assert_cmd",
+ "clap",
+ "libc",
+ "predicates",
+]
+
+[[package]]
+name = "linuxutils-isosize"
+version = "0.1.0"
+dependencies = [
+ "clap",
+]
+
+[[package]]
+name = "linuxutils-libblkid"
+version = "0.1.0"
+dependencies = [
+ "libc",
+]
+
+[[package]]
+name = "linuxutils-libfdisk"
+version = "0.1.0"
+dependencies = [
+ "libc",
+]
+
+[[package]]
+name = "linuxutils-libmount"
+version = "0.1.0"
+dependencies = [
+ "libc",
+]
+
+[[package]]
+name = "linuxutils-libsmartcols"
+version = "0.1.0"
+dependencies = [
+ "bindgen",
+ "bitflags",
+ "cc",
+ "cols",
+ "libc",
+ "serde_json",
+ "similar",
+ "tempfile",
+]
+
+[[package]]
+name = "linuxutils-libuuid"
+version = "0.1.0"
+dependencies = [
+ "cc",
+ "libc",
+ "tempfile",
+ "uuid",
+]
+
+[[package]]
+name = "linuxutils-line"
+version = "0.1.0"
+dependencies = [
+ "assert_cmd",
+ "clap",
+ "predicates",
+]
+
+[[package]]
+name = "linuxutils-look"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "tempfile",
+]
+
+[[package]]
+name = "linuxutils-lsirq"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "cols",
+]
+
+[[package]]
+name = "linuxutils-lslocks"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "cols",
+]
+
+[[package]]
+name = "linuxutils-lsmem"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "cols",
+ "linuxutils-common-sysfs",
+]
+
+[[package]]
+name = "linuxutils-lsns"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "cols",
+]
+
+[[package]]
+name = "linuxutils-mangen"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "clap_mangen",
+ "linuxutils-cal",
+ "linuxutils-choom",
+ "linuxutils-colrm",
+ "linuxutils-flock",
+ "linuxutils-hexdump",
+ "linuxutils-ionice",
+ "linuxutils-line",
+ "linuxutils-look",
+ "linuxutils-lsirq",
+ "linuxutils-lslocks",
+ "linuxutils-lsmem",
+ "linuxutils-lsns",
+ "linuxutils-mcookie",
+ "linuxutils-mesg",
+ "linuxutils-mountpoint",
+ "linuxutils-namei",
+ "linuxutils-nologin",
+ "linuxutils-prlimit",
+ "linuxutils-renice",
+ "linuxutils-rev",
+ "linuxutils-rfkill",
+ "linuxutils-setpgid",
+ "linuxutils-setsid",
+ "linuxutils-uuidgen",
+ "linuxutils-uuidparse",
+ "linuxutils-waitpid",
+]
+
+[[package]]
+name = "linuxutils-mcookie"
+version = "0.1.0"
+dependencies = [
+ "assert_cmd",
+ "clap",
+ "predicates",
+]
+
+[[package]]
+name = "linuxutils-mesg"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "rustix",
+]
+
+[[package]]
+name = "linuxutils-mountpoint"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "rustix",
+]
+
+[[package]]
+name = "linuxutils-multicall"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "linuxutils-cal",
+ "linuxutils-choom",
+ "linuxutils-chrt",
+ "linuxutils-colrm",
+ "linuxutils-column",
+ "linuxutils-fallocate",
+ "linuxutils-flock",
+ "linuxutils-hexdump",
+ "linuxutils-ionice",
+ "linuxutils-isosize",
+ "linuxutils-line",
+ "linuxutils-look",
+ "linuxutils-lsirq",
+ "linuxutils-lslocks",
+ "linuxutils-lsmem",
+ "linuxutils-lsns",
+ "linuxutils-mcookie",
+ "linuxutils-mesg",
+ "linuxutils-mountpoint",
+ "linuxutils-namei",
+ "linuxutils-nologin",
+ "linuxutils-prlimit",
+ "linuxutils-rename",
+ "linuxutils-renice",
+ "linuxutils-rev",
+ "linuxutils-rfkill",
+ "linuxutils-setpgid",
+ "linuxutils-setsid",
+ "linuxutils-taskset",
+ "linuxutils-uuidgen",
+ "linuxutils-uuidparse",
+ "linuxutils-waitpid",
+ "linuxutils-whereis",
+]
+
+[[package]]
+name = "linuxutils-namei"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "rustix",
+]
+
+[[package]]
+name = "linuxutils-nologin"
+version = "0.1.0"
+dependencies = [
+ "assert_cmd",
+ "clap",
+ "predicates",
+]
+
+[[package]]
+name = "linuxutils-prlimit"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "cols",
+ "rustix",
+]
+
+[[package]]
+name = "linuxutils-rename"
+version = "0.1.0"
+dependencies = [
+ "assert_cmd",
+ "clap",
+ "predicates",
+ "tempfile",
+]
+
+[[package]]
+name = "linuxutils-renice"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "libc",
+ "rustix",
+]
+
+[[package]]
+name = "linuxutils-rev"
+version = "0.1.0"
+dependencies = [
+ "assert_cmd",
+ "clap",
+ "predicates",
+ "tempfile",
+]
+
+[[package]]
+name = "linuxutils-rfkill"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "cols",
+]
+
+[[package]]
+name = "linuxutils-setpgid"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "libc",
+ "rustix",
+]
+
+[[package]]
+name = "linuxutils-setsid"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "libc",
+ "rustix",
+]
+
+[[package]]
+name = "linuxutils-taskset"
+version = "0.1.0"
+dependencies = [
+ "assert_cmd",
+ "clap",
+ "predicates",
+ "rustix",
+]
+
+[[package]]
+name = "linuxutils-uuidgen"
+version = "0.1.0"
+dependencies = [
+ "assert_cmd",
+ "clap",
+ "predicates",
+ "uuid",
+]
+
+[[package]]
+name = "linuxutils-uuidparse"
+version = "0.1.0"
+dependencies = [
+ "assert_cmd",
+ "clap",
+ "libc",
+ "predicates",
+ "uuid",
+]
+
+[[package]]
+name = "linuxutils-waitpid"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "rustix",
+]
+
+[[package]]
+name = "linuxutils-whereis"
+version = "0.1.0"
+dependencies = [
+ "assert_cmd",
+ "clap",
+ "predicates",
+]
+
+[[package]]
 name = "log"
 version = "0.4.29"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -699,424 +1117,6 @@ dependencies = [
  "libc",
  "linux-raw-sys",
  "windows-sys",
-]
-
-[[package]]
-name = "rustutils-cal"
-version = "0.1.0"
-dependencies = [
- "assert_cmd",
- "chrono",
- "clap",
- "predicates",
-]
-
-[[package]]
-name = "rustutils-choom"
-version = "0.1.0"
-dependencies = [
- "clap",
-]
-
-[[package]]
-name = "rustutils-chrt"
-version = "0.1.0"
-dependencies = [
- "assert_cmd",
- "clap",
- "libc",
- "predicates",
-]
-
-[[package]]
-name = "rustutils-colrm"
-version = "0.1.0"
-dependencies = [
- "assert_cmd",
- "clap",
- "predicates",
-]
-
-[[package]]
-name = "rustutils-column"
-version = "0.1.0"
-dependencies = [
- "assert_cmd",
- "clap",
- "cols",
- "predicates",
- "rustix",
- "tempfile",
-]
-
-[[package]]
-name = "rustutils-common-sysfs"
-version = "0.1.0"
-
-[[package]]
-name = "rustutils-fallocate"
-version = "0.1.0"
-dependencies = [
- "assert_cmd",
- "clap",
- "predicates",
- "rustix",
- "tempfile",
-]
-
-[[package]]
-name = "rustutils-flock"
-version = "0.1.0"
-dependencies = [
- "clap",
- "rustix",
-]
-
-[[package]]
-name = "rustutils-hexdump"
-version = "0.1.0"
-dependencies = [
- "clap",
-]
-
-[[package]]
-name = "rustutils-ionice"
-version = "0.1.0"
-dependencies = [
- "assert_cmd",
- "clap",
- "libc",
- "predicates",
-]
-
-[[package]]
-name = "rustutils-isosize"
-version = "0.1.0"
-dependencies = [
- "clap",
-]
-
-[[package]]
-name = "rustutils-libblkid"
-version = "0.1.0"
-dependencies = [
- "libc",
-]
-
-[[package]]
-name = "rustutils-libfdisk"
-version = "0.1.0"
-dependencies = [
- "libc",
-]
-
-[[package]]
-name = "rustutils-libmount"
-version = "0.1.0"
-dependencies = [
- "libc",
-]
-
-[[package]]
-name = "rustutils-libsmartcols"
-version = "0.1.0"
-dependencies = [
- "bindgen",
- "bitflags",
- "cc",
- "cols",
- "libc",
- "serde_json",
- "similar",
- "tempfile",
-]
-
-[[package]]
-name = "rustutils-libuuid"
-version = "0.1.0"
-dependencies = [
- "cc",
- "libc",
- "tempfile",
- "uuid",
-]
-
-[[package]]
-name = "rustutils-line"
-version = "0.1.0"
-dependencies = [
- "assert_cmd",
- "clap",
- "predicates",
-]
-
-[[package]]
-name = "rustutils-linuxutils"
-version = "0.1.0"
-dependencies = [
- "clap",
- "rustutils-cal",
- "rustutils-choom",
- "rustutils-chrt",
- "rustutils-colrm",
- "rustutils-column",
- "rustutils-fallocate",
- "rustutils-flock",
- "rustutils-hexdump",
- "rustutils-ionice",
- "rustutils-isosize",
- "rustutils-line",
- "rustutils-look",
- "rustutils-lsirq",
- "rustutils-lslocks",
- "rustutils-lsmem",
- "rustutils-lsns",
- "rustutils-mcookie",
- "rustutils-mesg",
- "rustutils-mountpoint",
- "rustutils-namei",
- "rustutils-nologin",
- "rustutils-prlimit",
- "rustutils-rename",
- "rustutils-renice",
- "rustutils-rev",
- "rustutils-rfkill",
- "rustutils-setpgid",
- "rustutils-setsid",
- "rustutils-taskset",
- "rustutils-uuidgen",
- "rustutils-uuidparse",
- "rustutils-waitpid",
- "rustutils-whereis",
-]
-
-[[package]]
-name = "rustutils-look"
-version = "0.1.0"
-dependencies = [
- "clap",
- "tempfile",
-]
-
-[[package]]
-name = "rustutils-lsirq"
-version = "0.1.0"
-dependencies = [
- "clap",
- "cols",
-]
-
-[[package]]
-name = "rustutils-lslocks"
-version = "0.1.0"
-dependencies = [
- "clap",
- "cols",
-]
-
-[[package]]
-name = "rustutils-lsmem"
-version = "0.1.0"
-dependencies = [
- "clap",
- "cols",
- "rustutils-common-sysfs",
-]
-
-[[package]]
-name = "rustutils-lsns"
-version = "0.1.0"
-dependencies = [
- "clap",
- "cols",
-]
-
-[[package]]
-name = "rustutils-mangen"
-version = "0.1.0"
-dependencies = [
- "clap",
- "clap_mangen",
- "rustutils-cal",
- "rustutils-choom",
- "rustutils-colrm",
- "rustutils-flock",
- "rustutils-hexdump",
- "rustutils-ionice",
- "rustutils-line",
- "rustutils-look",
- "rustutils-lsirq",
- "rustutils-lslocks",
- "rustutils-lsmem",
- "rustutils-lsns",
- "rustutils-mcookie",
- "rustutils-mesg",
- "rustutils-mountpoint",
- "rustutils-namei",
- "rustutils-nologin",
- "rustutils-prlimit",
- "rustutils-renice",
- "rustutils-rev",
- "rustutils-rfkill",
- "rustutils-setpgid",
- "rustutils-setsid",
- "rustutils-uuidgen",
- "rustutils-uuidparse",
- "rustutils-waitpid",
-]
-
-[[package]]
-name = "rustutils-mcookie"
-version = "0.1.0"
-dependencies = [
- "assert_cmd",
- "clap",
- "predicates",
-]
-
-[[package]]
-name = "rustutils-mesg"
-version = "0.1.0"
-dependencies = [
- "clap",
- "rustix",
-]
-
-[[package]]
-name = "rustutils-mountpoint"
-version = "0.1.0"
-dependencies = [
- "clap",
- "rustix",
-]
-
-[[package]]
-name = "rustutils-namei"
-version = "0.1.0"
-dependencies = [
- "clap",
- "rustix",
-]
-
-[[package]]
-name = "rustutils-nologin"
-version = "0.1.0"
-dependencies = [
- "assert_cmd",
- "clap",
- "predicates",
-]
-
-[[package]]
-name = "rustutils-prlimit"
-version = "0.1.0"
-dependencies = [
- "clap",
- "cols",
- "rustix",
-]
-
-[[package]]
-name = "rustutils-rename"
-version = "0.1.0"
-dependencies = [
- "assert_cmd",
- "clap",
- "predicates",
- "tempfile",
-]
-
-[[package]]
-name = "rustutils-renice"
-version = "0.1.0"
-dependencies = [
- "clap",
- "libc",
- "rustix",
-]
-
-[[package]]
-name = "rustutils-rev"
-version = "0.1.0"
-dependencies = [
- "assert_cmd",
- "clap",
- "predicates",
- "tempfile",
-]
-
-[[package]]
-name = "rustutils-rfkill"
-version = "0.1.0"
-dependencies = [
- "clap",
- "cols",
-]
-
-[[package]]
-name = "rustutils-setpgid"
-version = "0.1.0"
-dependencies = [
- "clap",
- "libc",
- "rustix",
-]
-
-[[package]]
-name = "rustutils-setsid"
-version = "0.1.0"
-dependencies = [
- "clap",
- "libc",
- "rustix",
-]
-
-[[package]]
-name = "rustutils-taskset"
-version = "0.1.0"
-dependencies = [
- "assert_cmd",
- "clap",
- "predicates",
- "rustix",
-]
-
-[[package]]
-name = "rustutils-uuidgen"
-version = "0.1.0"
-dependencies = [
- "assert_cmd",
- "clap",
- "predicates",
- "uuid",
-]
-
-[[package]]
-name = "rustutils-uuidparse"
-version = "0.1.0"
-dependencies = [
- "assert_cmd",
- "clap",
- "libc",
- "predicates",
- "uuid",
-]
-
-[[package]]
-name = "rustutils-waitpid"
-version = "0.1.0"
-dependencies = [
- "clap",
- "rustix",
-]
-
-[[package]]
-name = "rustutils-whereis"
-version = "0.1.0"
-dependencies = [
- "assert_cmd",
- "clap",
- "predicates",
 ]
 
 [[package]]

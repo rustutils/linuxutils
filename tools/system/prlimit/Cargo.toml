@@ -1,5 +1,5 @@
 [package]
-name = "rustutils-prlimit"
+name = "linuxutils-prlimit"
 description = "Get and set process resource limits"
 version.workspace = true
 edition.workspace = true
@@ -7,7 +7,7 @@ license.workspace = true
 repository.workspace = true
 
 [lib]
-name = "rustutils_prlimit"
+name = "linuxutils_prlimit"
 
 [[bin]]
 name = "prlimit"

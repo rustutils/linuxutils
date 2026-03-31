@@ -1,5 +1,5 @@
 [package]
-name = "rustutils-libfdisk"
+name = "linuxutils-libfdisk"
 description = "ABI-compatible libfdisk implementation for partition table manipulation"
 version.workspace = true
 edition.workspace = true

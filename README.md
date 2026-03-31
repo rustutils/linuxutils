@@ -14,7 +14,7 @@ Each tool is its own crate, and ABI-compatible versions of the original C librar
 | `multicall/` | Multicall binary that dispatches to tools by `argv[0]` |
 | `util/` | Internal build utilities (man page generator, etc.) |
 
-All crates are prefixed with `rustutils-` to avoid naming collisions (e.g., `rustutils-rev`, `rustutils-libmount`).
+All crates are prefixed with `linuxutils-` to avoid naming collisions (e.g., `linuxutils-rev`, `linuxutils-libmount`).
 
 ## Status
 
@@ -33,13 +33,13 @@ cargo build --workspace
 Individual tool binaries:
 
 ```sh
-nix build .#rustutils-linuxutils
+nix build .#linuxutils-multicall
 ```
 
 Multicall binary (single binary with symlinks for each tool):
 
 ```sh
-nix build .#rustutils-linuxutils-multicall
+nix build .#linuxutils-multicall
 ```
 
 Development shell with cargo, rustc, clippy, rustfmt, and cargo-nextest:

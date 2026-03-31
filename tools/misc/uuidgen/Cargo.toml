@@ -1,5 +1,5 @@
 [package]
-name = "rustutils-uuidgen"
+name = "linuxutils-uuidgen"
 description = "Create a new UUID value"
 version.workspace = true
 edition.workspace = true

@@ -1,6 +1,6 @@
 use clap::Parser;
 use cols::{OutputMode, Table, WidthHint, print_table};
-use rustutils_common_sysfs::SysfsDevice;
+use linuxutils_common_sysfs::SysfsDevice;
 use std::{
     path::{Path, PathBuf},
     process::ExitCode,
@@ -8,6 +8,7 @@ use std::{
 
 #[derive(Parser)]
 #[command(
+    name = "lsmem",
     about = "List the ranges of available memory with their online status"
 )]
 pub struct Args {

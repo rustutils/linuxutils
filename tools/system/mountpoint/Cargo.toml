@@ -1,5 +1,5 @@
 [package]
-name = "rustutils-mountpoint"
+name = "linuxutils-mountpoint"
 description = "See if a directory or file is a mountpoint"
 version.workspace = true
 edition.workspace = true
