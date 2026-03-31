@@ -19,6 +19,7 @@ fn main() -> ExitCode {
         linuxutils_flock::Args::command(),
         linuxutils_hexdump::Args::command(),
         linuxutils_ionice::Args::command(),
+        linuxutils_kill::Args::command(),
         linuxutils_line::Args::command(),
         linuxutils_look::Args::command(),
         linuxutils_lsirq::Args::command(),

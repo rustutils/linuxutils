@@ -11,6 +11,7 @@ members = [
     "tools/disk/isosize",
     "tools/login/nologin",
     "tools/misc/cal",
+    "tools/misc/kill",
     "tools/misc/look",
     "tools/misc/lslocks",
     "tools/misc/mcookie",
@@ -68,6 +69,7 @@ linuxutils-column = { path = "tools/text/column" }
 linuxutils-hexdump = { path = "tools/text/hexdump" }
 linuxutils-ionice = { path = "tools/sched/ionice" }
 linuxutils-isosize = { path = "tools/disk/isosize" }
+linuxutils-kill = { path = "tools/misc/kill" }
 linuxutils-line = { path = "tools/text/line" }
 linuxutils-look = { path = "tools/misc/look" }
 linuxutils-lslocks = { path = "tools/misc/lslocks" }

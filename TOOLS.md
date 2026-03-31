@@ -93,7 +93,7 @@
 | `getino` | Print the unique inode number associated to a process file descriptor or namespace for a given PID | Not started |
 | `getopt` | Parse command options (enhanced) | Not started |
 | `hardlink` | Link multiple copies of a file | Not started |
-| `kill` | Terminate a process | Not started |
+| `kill` | Terminate a process | Done |
 | `lastlog2` | Display date of last login for all users or a specific one | Not started |
 | `logger` | Enter messages into the system log | Not started |
 | `look` | Display lines beginning with a given string | Done |

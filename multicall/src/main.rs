@@ -12,6 +12,7 @@ fn tool_subcommands(cmd: Command) -> Command {
         .subcommand(linuxutils_hexdump::Args::command())
         .subcommand(linuxutils_ionice::Args::command())
         .subcommand(linuxutils_isosize::Args::command())
+        .subcommand(linuxutils_kill::Args::command())
         .subcommand(linuxutils_line::Args::command())
         .subcommand(linuxutils_look::Args::command())
         .subcommand(linuxutils_lsirq::Args::command())
@@ -68,6 +69,9 @@ fn dispatch(name: &str, m: &ArgMatches) -> ExitCode {
         ),
         "isosize" => linuxutils_isosize::run(
             linuxutils_isosize::Args::from_arg_matches(m).unwrap(),
+        ),
+        "kill" => linuxutils_kill::run(
+            linuxutils_kill::Args::from_arg_matches(m).unwrap(),
         ),
         "line" => linuxutils_line::run(
             linuxutils_line::Args::from_arg_matches(m).unwrap(),

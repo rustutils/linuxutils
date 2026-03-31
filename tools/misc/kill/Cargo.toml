@@ -1,0 +1,18 @@
+[package]
+name = "linuxutils-kill"
+description = "Terminate a process"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+name = "linuxutils_kill"
+
+[[bin]]
+name = "kill"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+rustix = { workspace = true }

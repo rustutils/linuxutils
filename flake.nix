@@ -30,6 +30,7 @@
         "hexdump"
         "ionice"
         "isosize"
+        "kill"
         "line"
         "look"
         "lsirq"
