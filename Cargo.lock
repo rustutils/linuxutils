@@ -279,7 +279,7 @@ dependencies = [
 [[package]]
 name = "cols"
 version = "0.2.0"
-source = "git+https://gitlab.com/rustutils/cols#d5dcd6994cb43099141148425218bdb1c23095dc"
+source = "git+https://gitlab.com/rustutils/cols#409738f76cf499edda86bc2b41f602c17728642d"
 dependencies = [
  "colored",
  "regex",
@@ -826,6 +826,7 @@ dependencies = [
  "cc",
  "cols",
  "libc",
+ "serde_json",
  "similar",
  "tempfile",
 ]
