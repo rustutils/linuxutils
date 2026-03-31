@@ -25,9 +25,11 @@ license = "MIT"
 repository = "https://github.com/rustutils/linuxutils"
 
 [workspace.dependencies]
+assert_cmd = "2"
 chrono = { version = "0.4", default-features = false, features = ["clock"] }
 clap = { version = "4", features = ["derive"] }
 colored = "3"
+predicates = "3"
 cols = { version = "0.3.0", git = "https://gitlab.com/rustutils/cols", features = ["color", "regex"] }
 rustix = { version = "1", features = ["event", "fs", "process", "termios", "thread", "time"] }
 uuid = { version = "1", features = ["v1", "v3", "v4", "v5", "v6", "v7"] }
