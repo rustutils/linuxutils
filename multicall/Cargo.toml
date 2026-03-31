@@ -1,10 +1,14 @@
 [package]
-name = "rustutils-util-linux"
-description = "Multicall binary for rustutils util-linux tools"
+name = "rustutils-linuxutils"
+description = "Multicall binary for linuxutils tools"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
 repository.workspace = true
+
+[[bin]]
+name = "linuxutils"
+path = "src/main.rs"
 
 [dependencies]
 clap = { version = "4", features = ["derive"] }

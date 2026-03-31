@@ -2,7 +2,7 @@ use clap::{Command, CommandFactory as _, FromArgMatches as _};
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
-    let cmd = Command::new("rustutils-util-linux")
+    let cmd = Command::new("linuxutils")
         .multicall(true)
         .subcommand(rustutils_cal::Args::command())
         .subcommand(rustutils_choom::Args::command())

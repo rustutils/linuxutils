@@ -1,6 +1,6 @@
 [package]
 name = "rustutils-mangen"
-description = "Man page generator for rustutils util-linux tools"
+description = "Man page generator for linuxutils tools"
 version.workspace = true
 edition.workspace = true
 license.workspace = true

@@ -1,4 +1,4 @@
-# rustutils util-linux
+# linuxutils
 
 A collection of Linux utilities written in Rust, aspiring to be drop-in compatible with [util-linux](https://github.com/util-linux/util-linux).
 
@@ -33,13 +33,13 @@ cargo build --workspace
 Individual tool binaries:
 
 ```sh
-nix build .#rustutils-util-linux
+nix build .#rustutils-linuxutils
 ```
 
 Multicall binary (single binary with symlinks for each tool):
 
 ```sh
-nix build .#rustutils-util-linux-multicall
+nix build .#rustutils-linuxutils-multicall
 ```
 
 Development shell with cargo, rustc, clippy, rustfmt, and cargo-nextest:

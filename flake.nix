@@ -116,7 +116,7 @@
 
           # Individual binaries + libraries + headers + man pages.
           individual = base.overrideAttrs (old: {
-            pname = "rustutils-util-linux";
+            pname = "rustutils-linuxutils";
 
             installPhase = ''
               runHook preInstall
@@ -143,17 +143,17 @@
 
           # Multicall binary + libraries + headers + man pages.
           multicall = base.overrideAttrs (old: {
-            pname = "rustutils-util-linux-multicall";
+            pname = "rustutils-linuxutils-multicall";
 
             installPhase = ''
                 runHook preInstall
 
                 mkdir -p $out/bin $out/lib $out/include $out/share/man/man1
 
-                install -m755 target/release/rustutils-util-linux $out/bin/
+                install -m755 target/release/linuxutils $out/bin/
 
                 ${nixpkgs.lib.concatMapStringsSep "\n" (tool:
-                  "ln -s $out/bin/rustutils-util-linux $out/bin/${tool}"
+                  "ln -s $out/bin/linuxutils $out/bin/${tool}"
                 ) tools}
 
                 ${nixpkgs.lib.concatMapStringsSep "\n" (lib:
@@ -171,8 +171,8 @@
           });
         in {
           default = individual;
-          rustutils-util-linux = individual;
-          rustutils-util-linux-multicall = multicall;
+          rustutils-linuxutils = individual;
+          rustutils-linuxutils-multicall = multicall;
         }
       );
 
