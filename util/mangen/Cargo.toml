@@ -18,6 +18,7 @@ linuxutils-flock.workspace = true
 linuxutils-hexdump.workspace = true
 linuxutils-ionice.workspace = true
 linuxutils-kill.workspace = true
+linuxutils-logger.workspace = true
 linuxutils-line.workspace = true
 linuxutils-look.workspace = true
 linuxutils-lsirq.workspace = true

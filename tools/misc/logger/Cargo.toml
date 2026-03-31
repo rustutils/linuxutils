@@ -1,0 +1,18 @@
+[package]
+name = "linuxutils-logger"
+description = "Enter messages into the system log"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+name = "linuxutils_logger"
+
+[[bin]]
+name = "logger"
+path = "src/main.rs"
+
+[dependencies]
+clap = { workspace = true }
+rustix = { workspace = true }

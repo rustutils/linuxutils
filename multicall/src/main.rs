@@ -15,6 +15,7 @@ fn tool_subcommands(cmd: Command) -> Command {
         .subcommand(linuxutils_isosize::Args::command())
         .subcommand(linuxutils_kill::Args::command())
         .subcommand(linuxutils_line::Args::command())
+        .subcommand(linuxutils_logger::Args::command())
         .subcommand(linuxutils_look::Args::command())
         .subcommand(linuxutils_lsirq::Args::command())
         .subcommand(linuxutils_lslocks::Args::command())
@@ -79,6 +80,9 @@ fn dispatch(name: &str, m: &ArgMatches) -> ExitCode {
         ),
         "line" => linuxutils_line::run(
             linuxutils_line::Args::from_arg_matches(m).unwrap(),
+        ),
+        "logger" => linuxutils_logger::run(
+            linuxutils_logger::Args::from_arg_matches(m).unwrap(),
         ),
         "look" => linuxutils_look::run(
             linuxutils_look::Args::from_arg_matches(m).unwrap(),

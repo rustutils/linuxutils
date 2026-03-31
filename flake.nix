@@ -33,6 +33,7 @@
         "isosize"
         "kill"
         "line"
+        "logger"
         "look"
         "lsirq"
         "lslocks"

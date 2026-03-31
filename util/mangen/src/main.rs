@@ -21,6 +21,7 @@ fn main() -> ExitCode {
         linuxutils_hexdump::Args::command(),
         linuxutils_ionice::Args::command(),
         linuxutils_kill::Args::command(),
+        linuxutils_logger::Args::command(),
         linuxutils_line::Args::command(),
         linuxutils_look::Args::command(),
         linuxutils_lsirq::Args::command(),

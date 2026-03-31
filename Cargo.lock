@@ -686,6 +686,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "linuxutils-logger"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "rustix",
+]
+
+[[package]]
 name = "linuxutils-look"
 version = "0.1.0"
 dependencies = [
@@ -741,6 +749,7 @@ dependencies = [
  "linuxutils-ionice",
  "linuxutils-kill",
  "linuxutils-line",
+ "linuxutils-logger",
  "linuxutils-look",
  "linuxutils-lsirq",
  "linuxutils-lslocks",
@@ -805,6 +814,7 @@ dependencies = [
  "linuxutils-isosize",
  "linuxutils-kill",
  "linuxutils-line",
+ "linuxutils-logger",
  "linuxutils-look",
  "linuxutils-lsirq",
  "linuxutils-lslocks",
