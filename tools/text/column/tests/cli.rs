@@ -435,8 +435,8 @@ fn json_output() {
         .success()
         .stdout(
             predicate::str::contains("\"table\"")
-                .and(predicate::str::contains("\"NAME\": \"foo\""))
-                .and(predicate::str::contains("\"VALUE\": \"1\"")),
+                .and(predicate::str::contains("\"name\": \"foo\""))
+                .and(predicate::str::contains("\"value\": \"1\"")),
         );
 }
 

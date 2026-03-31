@@ -278,8 +278,8 @@ dependencies = [
 
 [[package]]
 name = "cols"
-version = "0.2.0"
-source = "git+https://gitlab.com/rustutils/cols#409738f76cf499edda86bc2b41f602c17728642d"
+version = "0.3.0"
+source = "git+https://gitlab.com/rustutils/cols#26976309799d7fcf6b71d765a659093b2fc3b8c8"
 dependencies = [
  "colored",
  "regex",
