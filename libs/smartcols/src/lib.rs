@@ -300,7 +300,7 @@ pub unsafe extern "C" fn scols_table_get_column(
     n: usize,
 ) -> *mut FfiColumn {
     let tb_ref = unsafe { &*tb };
-    if n >= tb_ref.ncols() {
+    if n >= tb_ref.column_count() {
         return ptr::null_mut();
     }
     Box::into_raw(Box::new(FfiColumn { table: tb, idx: n }))
@@ -309,13 +309,13 @@ pub unsafe extern "C" fn scols_table_get_column(
 /// Return the number of columns in the table.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_get_ncols(tb: *const Table) -> usize {
-    unsafe { &*tb }.ncols()
+    unsafe { &*tb }.column_count()
 }
 
 /// Return the number of lines in the table.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_get_nlines(tb: *const Table) -> usize {
-    unsafe { &*tb }.nlines()
+    unsafe { &*tb }.line_count()
 }
 
 /// Create a new line, optionally as a child of `parent`. Returns a line handle.
@@ -343,7 +343,7 @@ pub unsafe extern "C" fn scols_table_next_line(
 ) -> c_int {
     let tb_ref = unsafe { &*tb };
     let itr = unsafe { &mut *itr };
-    let nlines = tb_ref.nlines();
+    let nlines = tb_ref.line_count();
 
     if !itr.started {
         itr.started = true;
@@ -490,7 +490,7 @@ pub unsafe extern "C" fn scols_table_enable_nowrap(
     tb: *mut Table,
     enable: c_int,
 ) -> c_int {
-    unsafe { &mut *tb }.wrap_set(!enable != 0);
+    unsafe { &mut *tb }.wrap_set(enable == 0);
     0
 }
 
@@ -575,7 +575,7 @@ pub unsafe extern "C" fn scols_table_is_minout(tb: *const Table) -> c_int {
 /// Return 1 if wrapping is disabled.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_is_nowrap(tb: *const Table) -> c_int {
-    unsafe { &*tb }.wrap() as c_int
+    !unsafe { &*tb }.wrap() as c_int
 }
 
 /// Return 1 if any column has the TREE flag.
@@ -935,14 +935,76 @@ pub unsafe extern "C" fn scols_column_set_cmpfunc(
     0
 }
 
-/// Set custom wrap callbacks. Currently stubbed.
+/// Type for the `chunksize` callback in `scols_column_set_wrapfunc`.
+type WrapChunksizeFn = unsafe extern "C" fn(
+    cl: *const FfiColumn,
+    data: *const c_char,
+    userdata: *mut c_void,
+) -> usize;
+
+/// Type for the `nextchunk` callback in `scols_column_set_wrapfunc`.
+type WrapNextchunkFn = unsafe extern "C" fn(
+    cl: *const FfiColumn,
+    data: *mut c_char,
+    userdata: *mut c_void,
+) -> *mut c_char;
+
+/// Set custom wrap callbacks on a column.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_column_set_wrapfunc(
-    _cl: *mut FfiColumn,
-    _chunksize: Option<unsafe extern "C" fn() -> usize>,
-    _nextchunk: Option<unsafe extern "C" fn() -> *mut c_char>,
-    _userdata: *mut c_void,
+    cl: *mut FfiColumn,
+    _chunksize: Option<WrapChunksizeFn>,
+    nextchunk: Option<WrapNextchunkFn>,
+    userdata: *mut c_void,
 ) -> c_int {
+    let fc = unsafe { &*cl };
+    let tb = unsafe { &mut *fc.table };
+    let Some(col) = tb.column_mut(fc.idx) else {
+        return -1;
+    };
+
+    let Some(nextchunk_fn) = nextchunk else {
+        return 0;
+    };
+
+    // Capture the C callback and userdata into a closure for the cols crate.
+    // Safety: the caller guarantees the function pointers and userdata remain
+    // valid for the lifetime of the column (i.e. the table).
+    let cl_raw = cl as usize;
+    let ud = userdata as usize;
+    col.wrap_function_set(move |data: &str| {
+        let cl_ptr = cl_raw as *const FfiColumn;
+        let mut chunks = Vec::new();
+        let Ok(cdata) = CString::new(data) else {
+            return vec![data.to_string()];
+        };
+        let buf = cdata.into_raw();
+        let mut cur = buf;
+        loop {
+            let chunk_start = cur;
+            let next = unsafe { nextchunk_fn(cl_ptr, cur, ud as *mut c_void) };
+            let chunk_str = unsafe { CStr::from_ptr(chunk_start) };
+            // The chunk runs from chunk_start to either `next` or the end.
+            let chunk = if !next.is_null() && next > chunk_start {
+                let len = unsafe { next.offset_from(chunk_start) } as usize;
+                String::from_utf8_lossy(&chunk_str.to_bytes()[..len])
+                    .trim_end_matches('\n')
+                    .to_string()
+            } else {
+                chunk_str.to_string_lossy().to_string()
+            };
+            if !chunk.is_empty() {
+                chunks.push(chunk);
+            }
+            if next.is_null() {
+                break;
+            }
+            cur = next;
+        }
+        // Retake ownership of the buffer so it gets freed.
+        drop(unsafe { CString::from_raw(buf) });
+        chunks
+    });
     0
 }
 
@@ -1601,12 +1663,15 @@ pub unsafe extern "C" fn scols_column_get_annotation(
     ptr::null()
 }
 
-/// Return 0 (custom wrap not supported).
+/// Return 1 if the column has a custom wrap function.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_column_is_customwrap(
-    _cl: *const FfiColumn,
+    cl: *const FfiColumn,
 ) -> c_int {
-    0
+    let fc = unsafe { &*cl };
+    let tb = unsafe { &*fc.table };
+    tb.column(fc.idx)
+        .map_or(0, |c| c.has_wrap_function() as c_int)
 }
 
 /// Return 1 if the column has the NO_EXTREMES flag.
@@ -1765,7 +1830,7 @@ pub unsafe extern "C" fn scols_line_get_color(
 pub unsafe extern "C" fn scols_line_get_ncells(ln: *const FfiLine) -> usize {
     let fl = unsafe { &*ln };
     let tb = unsafe { &*fl.table };
-    tb.line(fl.id).ncells()
+    tb.line(fl.id).cell_count()
 }
 
 /// Return a handle to the parent line, or null if none. Caller must free with scols_unref_line.
@@ -1926,7 +1991,7 @@ pub unsafe extern "C" fn scols_table_get_line(
     n: usize,
 ) -> *mut FfiLine {
     let tb_ref = unsafe { &*tb };
-    if n >= tb_ref.nlines() {
+    if n >= tb_ref.line_count() {
         return ptr::null_mut();
     }
     Box::into_raw(Box::new(FfiLine {
@@ -2054,7 +2119,7 @@ pub unsafe extern "C" fn scols_table_next_column(
 ) -> c_int {
     let tb_ref = unsafe { &*tb };
     let itr = unsafe { &mut *itr };
-    let ncols = tb_ref.ncols();
+    let ncols = tb_ref.column_count();
 
     if !itr.started {
         itr.started = true;
