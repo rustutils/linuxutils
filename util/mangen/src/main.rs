@@ -18,6 +18,7 @@ fn main() -> ExitCode {
         linuxutils_colrm::Args::command(),
         linuxutils_dmesg::Args::command(),
         linuxutils_flock::Args::command(),
+        linuxutils_getopt::Args::command(),
         linuxutils_hexdump::Args::command(),
         linuxutils_ionice::Args::command(),
         linuxutils_kill::Args::command(),

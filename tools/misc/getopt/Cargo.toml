@@ -1,0 +1,17 @@
+[package]
+name = "linuxutils-getopt"
+description = "Parse command options (enhanced)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+name = "linuxutils_getopt"
+
+[[bin]]
+name = "getopt"
+path = "src/main.rs"
+
+[dependencies]
+clap = { workspace = true }

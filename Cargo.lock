@@ -600,6 +600,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "linuxutils-getopt"
+version = "0.1.0"
+dependencies = [
+ "clap",
+]
+
+[[package]]
 name = "linuxutils-hexdump"
 version = "0.1.0"
 dependencies = [
@@ -745,6 +752,7 @@ dependencies = [
  "linuxutils-colrm",
  "linuxutils-dmesg",
  "linuxutils-flock",
+ "linuxutils-getopt",
  "linuxutils-hexdump",
  "linuxutils-ionice",
  "linuxutils-kill",
@@ -809,6 +817,7 @@ dependencies = [
  "linuxutils-dmesg",
  "linuxutils-fallocate",
  "linuxutils-flock",
+ "linuxutils-getopt",
  "linuxutils-hexdump",
  "linuxutils-ionice",
  "linuxutils-isosize",

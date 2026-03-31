@@ -15,6 +15,7 @@ linuxutils-choom.workspace = true
 linuxutils-colrm.workspace = true
 linuxutils-dmesg.workspace = true
 linuxutils-flock.workspace = true
+linuxutils-getopt.workspace = true
 linuxutils-hexdump.workspace = true
 linuxutils-ionice.workspace = true
 linuxutils-kill.workspace = true

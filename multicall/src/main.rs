@@ -10,6 +10,7 @@ fn tool_subcommands(cmd: Command) -> Command {
         .subcommand(linuxutils_column::Args::command())
         .subcommand(linuxutils_fallocate::Args::command())
         .subcommand(linuxutils_flock::Args::command())
+        .subcommand(linuxutils_getopt::Args::command())
         .subcommand(linuxutils_hexdump::Args::command())
         .subcommand(linuxutils_ionice::Args::command())
         .subcommand(linuxutils_isosize::Args::command())
@@ -65,6 +66,9 @@ fn dispatch(name: &str, m: &ArgMatches) -> ExitCode {
         ),
         "flock" => linuxutils_flock::run(
             linuxutils_flock::Args::from_arg_matches(m).unwrap(),
+        ),
+        "getopt" => linuxutils_getopt::run(
+            linuxutils_getopt::Args::from_arg_matches(m).unwrap(),
         ),
         "hexdump" => linuxutils_hexdump::run(
             linuxutils_hexdump::Args::from_arg_matches(m).unwrap(),

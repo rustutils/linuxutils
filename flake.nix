@@ -28,6 +28,7 @@
         "column"
         "fallocate"
         "flock"
+        "getopt"
         "hexdump"
         "ionice"
         "isosize"

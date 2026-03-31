@@ -20,6 +20,7 @@ linuxutils-dmesg.workspace = true
 linuxutils-column.workspace = true
 linuxutils-fallocate.workspace = true
 linuxutils-flock.workspace = true
+linuxutils-getopt.workspace = true
 linuxutils-hexdump.workspace = true
 linuxutils-ionice.workspace = true
 linuxutils-isosize.workspace = true

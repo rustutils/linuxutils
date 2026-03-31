@@ -43,6 +43,7 @@ linuxutils-flock = { path = "tools/system/flock" }
 linuxutils-colrm = { path = "tools/text/colrm" }
 linuxutils-dmesg = { path = "tools/system/dmesg" }
 linuxutils-column = { path = "tools/text/column" }
+linuxutils-getopt = { path = "tools/misc/getopt" }
 linuxutils-hexdump = { path = "tools/text/hexdump" }
 linuxutils-ionice = { path = "tools/sched/ionice" }
 linuxutils-isosize = { path = "tools/disk/isosize" }
