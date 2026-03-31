@@ -16,6 +16,7 @@ fn main() -> ExitCode {
         linuxutils_cal::Args::command(),
         linuxutils_choom::Args::command(),
         linuxutils_colrm::Args::command(),
+        linuxutils_dmesg::Args::command(),
         linuxutils_flock::Args::command(),
         linuxutils_hexdump::Args::command(),
         linuxutils_ionice::Args::command(),

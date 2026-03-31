@@ -11,7 +11,7 @@ name = "mcookie"
 path = "src/main.rs"
 
 [dependencies]
-clap = { version = "4", features = ["derive"] }
+clap = { workspace = true }
 
 [dev-dependencies]
 assert_cmd = "2"

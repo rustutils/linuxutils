@@ -8,11 +8,12 @@ repository.workspace = true
 publish = false
 
 [dependencies]
-clap = "4"
+clap = { workspace = true }
 clap_mangen = "0.2"
 linuxutils-cal.workspace = true
 linuxutils-choom.workspace = true
 linuxutils-colrm.workspace = true
+linuxutils-dmesg.workspace = true
 linuxutils-flock.workspace = true
 linuxutils-hexdump.workspace = true
 linuxutils-ionice.workspace = true

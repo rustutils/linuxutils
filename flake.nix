@@ -24,6 +24,7 @@
         "choom"
         "chrt"
         "colrm"
+        "dmesg"
         "column"
         "fallocate"
         "flock"

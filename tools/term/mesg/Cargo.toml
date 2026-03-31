@@ -11,5 +11,5 @@ name = "mesg"
 path = "src/main.rs"
 
 [dependencies]
-clap = { version = "4", features = ["derive"] }
+clap = { workspace = true }
 rustix.workspace = true

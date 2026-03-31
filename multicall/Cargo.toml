@@ -11,11 +11,12 @@ name = "linuxutils"
 path = "src/main.rs"
 
 [dependencies]
-clap = { version = "4", features = ["derive"] }
+clap = { workspace = true }
 linuxutils-cal.workspace = true
 linuxutils-choom.workspace = true
 linuxutils-chrt.workspace = true
 linuxutils-colrm.workspace = true
+linuxutils-dmesg.workspace = true
 linuxutils-column.workspace = true
 linuxutils-fallocate.workspace = true
 linuxutils-flock.workspace = true

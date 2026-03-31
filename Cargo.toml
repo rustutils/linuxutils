@@ -8,40 +8,13 @@ members = [
     "libs/smartcols",
     "libs/uuid",
     "multicall",
-    "tools/disk/isosize",
-    "tools/login/nologin",
-    "tools/misc/cal",
-    "tools/misc/kill",
-    "tools/misc/look",
-    "tools/misc/lslocks",
-    "tools/misc/mcookie",
-    "tools/misc/namei",
-    "tools/misc/rename",
-    "tools/misc/uuidgen",
-    "tools/misc/uuidparse",
-    "tools/misc/waitpid",
-    "tools/misc/whereis",
-    "tools/sched/chrt",
-    "tools/sched/ionice",
-    "tools/sched/taskset",
-    "tools/system/choom",
-    "tools/system/fallocate",
-    "tools/system/flock",
-    "tools/system/lsirq",
-    "tools/system/lsmem",
-    "tools/system/lsns",
-    "tools/system/mountpoint",
-    "tools/system/prlimit",
-    "tools/system/renice",
-    "tools/system/rfkill",
-    "tools/system/setpgid",
-    "tools/system/setsid",
-    "tools/term/mesg",
-    "tools/text/colrm",
-    "tools/text/column",
-    "tools/text/hexdump",
-    "tools/text/line",
-    "tools/text/rev",
+    "tools/disk/*",
+    "tools/login/*",
+    "tools/misc/*",
+    "tools/sched/*",
+    "tools/system/*",
+    "tools/term/*",
+    "tools/text/*",
     "util/mangen",
 ]
 
@@ -52,8 +25,11 @@ license = "MIT"
 repository = "https://github.com/rustutils/linuxutils"
 
 [workspace.dependencies]
+chrono = { version = "0.4", default-features = false, features = ["clock"] }
+clap = { version = "4", features = ["derive"] }
+colored = "3"
 cols = { version = "0.3.0", git = "https://gitlab.com/rustutils/cols", features = ["color", "regex"] }
-rustix = { version = "1", features = ["event", "fs", "process", "termios", "thread"] }
+rustix = { version = "1", features = ["event", "fs", "process", "termios", "thread", "time"] }
 uuid = { version = "1", features = ["v1", "v3", "v4", "v5", "v6", "v7"] }
 
 # workspace crates
@@ -65,6 +41,7 @@ linuxutils-chrt = { path = "tools/sched/chrt" }
 linuxutils-fallocate = { path = "tools/system/fallocate" }
 linuxutils-flock = { path = "tools/system/flock" }
 linuxutils-colrm = { path = "tools/text/colrm" }
+linuxutils-dmesg = { path = "tools/system/dmesg" }
 linuxutils-column = { path = "tools/text/column" }
 linuxutils-hexdump = { path = "tools/text/hexdump" }
 linuxutils-ionice = { path = "tools/sched/ionice" }

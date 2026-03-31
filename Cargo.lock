@@ -571,6 +571,16 @@ name = "linuxutils-common-sysfs"
 version = "0.1.0"
 
 [[package]]
+name = "linuxutils-dmesg"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "clap",
+ "colored",
+ "rustix",
+]
+
+[[package]]
 name = "linuxutils-fallocate"
 version = "0.1.0"
 dependencies = [
@@ -725,6 +735,7 @@ dependencies = [
  "linuxutils-cal",
  "linuxutils-choom",
  "linuxutils-colrm",
+ "linuxutils-dmesg",
  "linuxutils-flock",
  "linuxutils-hexdump",
  "linuxutils-ionice",
@@ -786,6 +797,7 @@ dependencies = [
  "linuxutils-chrt",
  "linuxutils-colrm",
  "linuxutils-column",
+ "linuxutils-dmesg",
  "linuxutils-fallocate",
  "linuxutils-flock",
  "linuxutils-hexdump",

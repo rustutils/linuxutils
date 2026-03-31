@@ -14,7 +14,7 @@ name = "ionice"
 path = "src/main.rs"
 
 [dependencies]
-clap = { version = "4", features = ["derive"] }
+clap = { workspace = true }
 libc = "0.2"
 
 [dev-dependencies]
