@@ -45,42 +45,42 @@ mod sys {
     include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 }
 
-/// Apply a C `SCOLS_FL_*` bitmask to a column via individual setters.
-fn apply_column_flags(col: &mut Column, bits: u32) {
-    col.truncate_set(bits & (1 << 0) != 0);
-    col.tree_set(bits & (1 << 1) != 0);
-    col.right_set(bits & (1 << 2) != 0);
-    col.strict_width_set(bits & (1 << 3) != 0);
-    col.no_extremes_set(bits & (1 << 4) != 0);
-    col.hidden_set(bits & (1 << 5) != 0);
-    col.wrap_set(bits & (1 << 6) != 0);
+bitflags::bitflags! {
+    /// Column behavioral flags matching `SCOLS_FL_*` constants.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+    struct ColumnFlags: u32 {
+        const TRUNC       = 1 << 0;
+        const TREE        = 1 << 1;
+        const RIGHT       = 1 << 2;
+        const STRICT_WIDTH = 1 << 3;
+        const NO_EXTREMES = 1 << 4;
+        const HIDDEN      = 1 << 5;
+        const WRAP        = 1 << 6;
+    }
 }
 
-/// Read a column's flags back as a C `SCOLS_FL_*` bitmask.
-fn column_flags_to_bits(col: &Column) -> u32 {
-    let mut bits = 0u32;
-    if col.is_truncate() {
-        bits |= 1 << 0;
-    }
-    if col.is_tree() {
-        bits |= 1 << 1;
-    }
-    if col.is_right() {
-        bits |= 1 << 2;
-    }
-    if col.is_strict_width() {
-        bits |= 1 << 3;
-    }
-    if col.is_no_extremes() {
-        bits |= 1 << 4;
-    }
-    if col.is_hidden() {
-        bits |= 1 << 5;
-    }
-    if col.is_wrap() {
-        bits |= 1 << 6;
-    }
-    bits
+/// Apply a [`ColumnFlags`] bitmask to a column via individual setters.
+fn apply_column_flags(col: &mut Column, flags: ColumnFlags) {
+    col.truncate_set(flags.contains(ColumnFlags::TRUNC));
+    col.tree_set(flags.contains(ColumnFlags::TREE));
+    col.right_set(flags.contains(ColumnFlags::RIGHT));
+    col.strict_width_set(flags.contains(ColumnFlags::STRICT_WIDTH));
+    col.no_extremes_set(flags.contains(ColumnFlags::NO_EXTREMES));
+    col.hidden_set(flags.contains(ColumnFlags::HIDDEN));
+    col.wrap_set(flags.contains(ColumnFlags::WRAP));
+}
+
+/// Read a column's flags back as a [`ColumnFlags`] bitmask.
+fn column_flags_from(col: &Column) -> ColumnFlags {
+    let mut flags = ColumnFlags::empty();
+    flags.set(ColumnFlags::TRUNC, col.is_truncate());
+    flags.set(ColumnFlags::TREE, col.is_tree());
+    flags.set(ColumnFlags::RIGHT, col.is_right());
+    flags.set(ColumnFlags::STRICT_WIDTH, col.is_strict_width());
+    flags.set(ColumnFlags::NO_EXTREMES, col.is_no_extremes());
+    flags.set(ColumnFlags::HIDDEN, col.is_hidden());
+    flags.set(ColumnFlags::WRAP, col.is_wrap());
+    flags
 }
 
 /// Convert an f64 width hint (C API convention) to a [`WidthHint`].
@@ -288,7 +288,7 @@ pub unsafe extern "C" fn scols_table_new_column(
     let idx = tb.new_column(name);
     if let Some(col) = tb.column_mut(idx) {
         col.width_hint_set(f64_to_width_hint(whint));
-        apply_column_flags(col, flags as u32);
+        apply_column_flags(col, ColumnFlags::from_bits_truncate(flags as u32));
     }
     Box::into_raw(Box::new(FfiColumn { table: tb, idx }))
 }
@@ -823,7 +823,7 @@ pub unsafe extern "C" fn scols_column_set_flags(
     let fc = unsafe { &*cl };
     let tb = unsafe { &mut *fc.table };
     if let Some(col) = tb.column_mut(fc.idx) {
-        apply_column_flags(col, flags as u32);
+        apply_column_flags(col, ColumnFlags::from_bits_truncate(flags as u32));
         0
     } else {
         -1
@@ -836,7 +836,7 @@ pub unsafe extern "C" fn scols_column_get_flags(cl: *const FfiColumn) -> c_int {
     let fc = unsafe { &*cl };
     let tb = unsafe { &*fc.table };
     tb.column(fc.idx)
-        .map_or(0, |c| column_flags_to_bits(c) as c_int)
+        .map_or(0, |c| column_flags_from(c).bits() as c_int)
 }
 
 /// Set the column's JSON type.
@@ -1333,18 +1333,28 @@ pub unsafe extern "C" fn scols_cell_get_datasiz(ce: *const FfiCell) -> usize {
         .map_or(0, |s| s.len())
 }
 
+bitflags::bitflags! {
+    /// Cell flags matching `SCOLS_CELL_FL_*` constants.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+    struct CellFlags: u32 {
+        const CENTER = 1 << 0;
+        const RIGHT  = 1 << 1;
+    }
+}
+
 /// Return the cell's flags as a bitmask.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_cell_get_flags(ce: *const FfiCell) -> c_int {
     let fc = unsafe { &*ce };
     let tb = unsafe { &*fc.table };
-    tb.line(fc.line_id)
-        .cell(fc.col_idx)
-        .map_or(0, |c| match c.alignment() {
-            cols::cell::Alignment::Left => 0,
-            cols::cell::Alignment::Center => 1 << 0,
-            cols::cell::Alignment::Right => 1 << 1,
-        })
+    tb.line(fc.line_id).cell(fc.col_idx).map_or(0, |c| {
+        let flags = match c.alignment() {
+            Alignment::Left => CellFlags::empty(),
+            Alignment::Center => CellFlags::CENTER,
+            Alignment::Right => CellFlags::RIGHT,
+        };
+        flags.bits() as c_int
+    })
 }
 
 /// Set the cell's flags. Returns 0.
@@ -1356,9 +1366,10 @@ pub unsafe extern "C" fn scols_cell_set_flags(
     let fc = unsafe { &*ce };
     let tb = unsafe { &mut *fc.table };
     if let Some(cell) = tb.line_mut(fc.line_id).cell_mut(fc.col_idx) {
-        let alignment = if flags & (1 << 1) != 0 {
+        let flags = CellFlags::from_bits_truncate(flags as u32);
+        let alignment = if flags.contains(CellFlags::RIGHT) {
             Alignment::Right
-        } else if flags & (1 << 0) != 0 {
+        } else if flags.contains(CellFlags::CENTER) {
             Alignment::Center
         } else {
             Alignment::Left

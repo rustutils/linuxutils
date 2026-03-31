@@ -822,6 +822,7 @@ name = "rustutils-libsmartcols"
 version = "0.1.0"
 dependencies = [
  "bindgen",
+ "bitflags",
  "cc",
  "cols",
  "libc",
