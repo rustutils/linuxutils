@@ -48,10 +48,10 @@ members = [
 version = "0.1.0"
 edition = "2024"
 license = "MIT"
-repository = "https://github.com/rustutils/util-linux"
+repository = "https://github.com/rustutils/linuxutils"
 
 [workspace.dependencies]
-cols = { version = "0.2.0", git = "https://gitlab.com/rustutils/cols" }
+cols = { version = "0.2.0", git = "https://gitlab.com/rustutils/cols", features = ["color", "regex"] }
 rustix = { version = "1", features = ["event", "fs", "process", "termios", "thread"] }
 uuid = { version = "1", features = ["v1", "v3", "v4", "v5", "v6", "v7"] }
 
@@ -93,4 +93,4 @@ rustutils-waitpid = { path = "tools/misc/waitpid" }
 rustutils-whereis = { path = "tools/misc/whereis" }
 
 [workspace.metadata.crane]
-name = "rustutils-util-linux"
+name = "rustutils-linuxutils"

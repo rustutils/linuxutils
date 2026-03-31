@@ -268,10 +268,20 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1d07550c9036bf2ae0c684c4297d503f838287c83c53686d05370d0e139ae570"
 
 [[package]]
+name = "colored"
+version = "3.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "faf9468729b8cbcea668e36183cb69d317348c2e08e994829fb56ebfdfbaac34"
+dependencies = [
+ "windows-sys",
+]
+
+[[package]]
 name = "cols"
 version = "0.2.0"
-source = "git+https://gitlab.com/rustutils/cols#da3c02522f957d020ca95da00f8808d9bf01f976"
+source = "git+https://gitlab.com/rustutils/cols#d5dcd6994cb43099141148425218bdb1c23095dc"
 dependencies = [
+ "colored",
  "regex",
  "unicode-width",
 ]
@@ -472,9 +482,9 @@ checksum = "8f42a60cbdf9a97f5d2305f08a87dc4e09308d1276d28c869c684d7777685682"
 
 [[package]]
 name = "js-sys"
-version = "0.3.92"
+version = "0.3.93"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cc4c90f45aa2e6eacbe8645f77fdea542ac97a494bcd117a67df9ff4d611f995"
+checksum = "797146bb2677299a1eb6b7b50a890f4c361b29ef967addf5b2fa45dae1bb6d7d"
 dependencies = [
  "once_cell",
  "wasm-bindgen",
@@ -839,6 +849,46 @@ dependencies = [
 ]
 
 [[package]]
+name = "rustutils-linuxutils"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "rustutils-cal",
+ "rustutils-choom",
+ "rustutils-chrt",
+ "rustutils-colrm",
+ "rustutils-column",
+ "rustutils-fallocate",
+ "rustutils-flock",
+ "rustutils-hexdump",
+ "rustutils-ionice",
+ "rustutils-isosize",
+ "rustutils-line",
+ "rustutils-look",
+ "rustutils-lsirq",
+ "rustutils-lslocks",
+ "rustutils-lsmem",
+ "rustutils-lsns",
+ "rustutils-mcookie",
+ "rustutils-mesg",
+ "rustutils-mountpoint",
+ "rustutils-namei",
+ "rustutils-nologin",
+ "rustutils-prlimit",
+ "rustutils-rename",
+ "rustutils-renice",
+ "rustutils-rev",
+ "rustutils-rfkill",
+ "rustutils-setpgid",
+ "rustutils-setsid",
+ "rustutils-taskset",
+ "rustutils-uuidgen",
+ "rustutils-uuidparse",
+ "rustutils-waitpid",
+ "rustutils-whereis",
+]
+
+[[package]]
 name = "rustutils-look"
 version = "0.1.0"
 dependencies = [
@@ -1027,46 +1077,6 @@ dependencies = [
  "clap",
  "predicates",
  "rustix",
-]
-
-[[package]]
-name = "rustutils-util-linux"
-version = "0.1.0"
-dependencies = [
- "clap",
- "rustutils-cal",
- "rustutils-choom",
- "rustutils-chrt",
- "rustutils-colrm",
- "rustutils-column",
- "rustutils-fallocate",
- "rustutils-flock",
- "rustutils-hexdump",
- "rustutils-ionice",
- "rustutils-isosize",
- "rustutils-line",
- "rustutils-look",
- "rustutils-lsirq",
- "rustutils-lslocks",
- "rustutils-lsmem",
- "rustutils-lsns",
- "rustutils-mcookie",
- "rustutils-mesg",
- "rustutils-mountpoint",
- "rustutils-namei",
- "rustutils-nologin",
- "rustutils-prlimit",
- "rustutils-rename",
- "rustutils-renice",
- "rustutils-rev",
- "rustutils-rfkill",
- "rustutils-setpgid",
- "rustutils-setsid",
- "rustutils-taskset",
- "rustutils-uuidgen",
- "rustutils-uuidparse",
- "rustutils-waitpid",
- "rustutils-whereis",
 ]
 
 [[package]]
@@ -1294,9 +1304,9 @@ dependencies = [
 
 [[package]]
 name = "wasm-bindgen"
-version = "0.2.115"
+version = "0.2.116"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6523d69017b7633e396a89c5efab138161ed5aafcbc8d3e5c5a42ae38f50495a"
+checksum = "7dc0882f7b5bb01ae8c5215a1230832694481c1a4be062fd410e12ea3da5b631"
 dependencies = [
  "cfg-if",
  "once_cell",
@@ -1307,9 +1317,9 @@ dependencies = [
 
 [[package]]
 name = "wasm-bindgen-macro"
-version = "0.2.115"
+version = "0.2.116"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4e3a6c758eb2f701ed3d052ff5737f5bfe6614326ea7f3bbac7156192dc32e67"
+checksum = "75973d3066e01d035dbedaad2864c398df42f8dd7b1ea057c35b8407c015b537"
 dependencies = [
  "quote",
  "wasm-bindgen-macro-support",
@@ -1317,9 +1327,9 @@ dependencies = [
 
 [[package]]
 name = "wasm-bindgen-macro-support"
-version = "0.2.115"
+version = "0.2.116"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "921de2737904886b52bcbb237301552d05969a6f9c40d261eb0533c8b055fedf"
+checksum = "91af5e4be765819e0bcfee7322c14374dc821e35e72fa663a830bbc7dc199eac"
 dependencies = [
  "bumpalo",
  "proc-macro2",
@@ -1330,9 +1340,9 @@ dependencies = [
 
 [[package]]
 name = "wasm-bindgen-shared"
-version = "0.2.115"
+version = "0.2.116"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a93e946af942b58934c604527337bad9ae33ba1d5c6900bbb41c2c07c2364a93"
+checksum = "c9bf0406a78f02f336bf1e451799cca198e8acde4ffa278f0fb20487b150a633"
 dependencies = [
  "unicode-ident",
 ]

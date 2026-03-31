@@ -22,7 +22,7 @@
 #![cfg_attr(feature = "nightly", feature(c_variadic))]
 
 use cols::{
-    Alignment, Column, Table, WidthHint,
+    Alignment, CellStyle, Color, Column, Table, WidthHint,
     column::{DataType, JsonType},
     line::LineId,
     print,
@@ -101,6 +101,98 @@ fn width_hint_to_f64(hint: WidthHint) -> f64 {
         WidthHint::Fixed(n) => n as f64,
         WidthHint::Fraction(f) => f,
     }
+}
+
+/// Parse a semicolon-separated SGR parameter string (e.g. `"1;31"`, `"0;38;5;42"`)
+/// into a [`CellStyle`]. This is the format util-linux programs pass to the
+/// `scols_*_set_color` family of functions.
+///
+/// If the string starts with `\x1b[` (a full escape sequence), that prefix and
+/// any trailing `m` are stripped first.
+fn parse_sgr_to_style(s: &str) -> CellStyle {
+    let s = s.strip_prefix("\x1b[").unwrap_or(s);
+    let s = s.strip_suffix('m').unwrap_or(s);
+
+    let mut style = CellStyle::new();
+    let mut params = s
+        .split(';')
+        .filter_map(|p| p.parse::<u16>().ok())
+        .peekable();
+
+    while let Some(code) = params.next() {
+        match code {
+            0 => style = CellStyle::new(),
+            1 => style = style.bold(),
+            2 => style = style.dimmed(),
+            3 => style = style.italic(),
+            4 => style = style.underline(),
+            9 => style = style.strikethrough(),
+            30 => style = style.fg(Color::Black),
+            31 => style = style.fg(Color::Red),
+            32 => style = style.fg(Color::Green),
+            33 => style = style.fg(Color::Yellow),
+            34 => style = style.fg(Color::Blue),
+            35 => style = style.fg(Color::Magenta),
+            36 => style = style.fg(Color::Cyan),
+            37 => style = style.fg(Color::White),
+            38 => match params.next() {
+                Some(5) => {
+                    if let Some(n) = params.next() {
+                        style = style.fg(Color::AnsiColor(n as u8));
+                    }
+                }
+                Some(2) => {
+                    let r = params.next().unwrap_or(0) as u8;
+                    let g = params.next().unwrap_or(0) as u8;
+                    let b = params.next().unwrap_or(0) as u8;
+                    style = style.fg(Color::TrueColor { r, g, b });
+                }
+                _ => {}
+            },
+            39 => style.foreground = None,
+            40 => style = style.bg(Color::Black),
+            41 => style = style.bg(Color::Red),
+            42 => style = style.bg(Color::Green),
+            43 => style = style.bg(Color::Yellow),
+            44 => style = style.bg(Color::Blue),
+            45 => style = style.bg(Color::Magenta),
+            46 => style = style.bg(Color::Cyan),
+            47 => style = style.bg(Color::White),
+            48 => match params.next() {
+                Some(5) => {
+                    if let Some(n) = params.next() {
+                        style = style.bg(Color::AnsiColor(n as u8));
+                    }
+                }
+                Some(2) => {
+                    let r = params.next().unwrap_or(0) as u8;
+                    let g = params.next().unwrap_or(0) as u8;
+                    let b = params.next().unwrap_or(0) as u8;
+                    style = style.bg(Color::TrueColor { r, g, b });
+                }
+                _ => {}
+            },
+            49 => style.background = None,
+            90 => style = style.fg(Color::BrightBlack),
+            91 => style = style.fg(Color::BrightRed),
+            92 => style = style.fg(Color::BrightGreen),
+            93 => style = style.fg(Color::BrightYellow),
+            94 => style = style.fg(Color::BrightBlue),
+            95 => style = style.fg(Color::BrightMagenta),
+            96 => style = style.fg(Color::BrightCyan),
+            97 => style = style.fg(Color::BrightWhite),
+            100 => style = style.bg(Color::BrightBlack),
+            101 => style = style.bg(Color::BrightRed),
+            102 => style = style.bg(Color::BrightGreen),
+            103 => style = style.bg(Color::BrightYellow),
+            104 => style = style.bg(Color::BrightBlue),
+            105 => style = style.bg(Color::BrightMagenta),
+            106 => style = style.bg(Color::BrightCyan),
+            107 => style = style.bg(Color::BrightWhite),
+            _ => {}
+        }
+    }
+    style
 }
 
 /// Convert a C `SCOLS_JSON_*` constant to Rust [`JsonType`].
@@ -872,7 +964,7 @@ pub unsafe extern "C" fn scols_column_set_color(
     let tb = unsafe { &mut *fc.table };
     if let Some(col) = tb.column_mut(fc.idx) {
         if let Some(c) = unsafe { cstr_to_str(color) } {
-            col.color_set(c);
+            col.style_set(parse_sgr_to_style(c));
         }
         0
     } else {
@@ -1042,7 +1134,7 @@ pub unsafe extern "C" fn scols_line_set_color(
     let fl = unsafe { &*ln };
     let tb = unsafe { &mut *fl.table };
     if let Some(c) = unsafe { cstr_to_str(color) } {
-        tb.line_mut(fl.id).color_set(c);
+        tb.line_mut(fl.id).style_set(parse_sgr_to_style(c));
     }
     0
 }
@@ -1139,7 +1231,7 @@ pub unsafe extern "C" fn scols_cell_set_color(
     if let Some(c) = unsafe { cstr_to_str(color) }
         && let Some(cell) = tb.line_mut(fc.line_id).cell_mut(fc.col_idx)
     {
-        cell.color_set(c);
+        cell.style_set(parse_sgr_to_style(c));
     }
     0
 }
@@ -1343,11 +1435,11 @@ pub unsafe extern "C" fn scols_cell_copy_content(
         .line(src_fc.line_id)
         .data_get(src_fc.col_idx)
         .map(|s| s.to_string());
-    let color = src_tb
+    let style = src_tb
         .line(src_fc.line_id)
         .cell(src_fc.col_idx)
-        .and_then(|c| c.color())
-        .map(|s| s.to_string());
+        .and_then(|c| c.style())
+        .copied();
 
     let dest_fc = unsafe { &*dest };
     let dest_tb = unsafe { &mut *dest_fc.table };
@@ -1355,10 +1447,10 @@ pub unsafe extern "C" fn scols_cell_copy_content(
     if let Some(d) = &data {
         dest_line.data_set(dest_fc.col_idx, d);
     }
-    if let Some(c) = &color
+    if let Some(s) = style
         && let Some(cell) = dest_line.cell_mut(dest_fc.col_idx)
     {
-        cell.color_set(c);
+        cell.style_set(s);
     }
     0
 }
@@ -1565,7 +1657,7 @@ pub unsafe extern "C" fn scols_column_set_headercolor(
     let tb = unsafe { &mut *fc.table };
     if let Some(col) = tb.column_mut(fc.idx) {
         if let Some(c) = unsafe { cstr_to_str(color) } {
-            col.header_color_set(c);
+            col.header_style_set(parse_sgr_to_style(c));
         }
         0
     } else {
