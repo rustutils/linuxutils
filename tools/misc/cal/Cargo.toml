@@ -18,5 +18,5 @@ chrono = { workspace = true }
 clap = { workspace = true }
 
 [dev-dependencies]
-assert_cmd = "2"
-predicates = "3"
+assert_cmd = { workspace = true }
+predicates = { workspace = true }

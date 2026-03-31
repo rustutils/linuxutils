@@ -15,5 +15,5 @@ path = "src/main.rs"
 
 [dependencies]
 clap = { workspace = true }
-libc = "0.2"
+libc = { workspace = true }
 rustix.workspace = true
