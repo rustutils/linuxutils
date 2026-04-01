@@ -18,6 +18,7 @@ linuxutils-chrt.workspace = true
 linuxutils-colrm.workspace = true
 linuxutils-ctrlaltdel.workspace = true
 linuxutils-dmesg.workspace = true
+linuxutils-eject.workspace = true
 linuxutils-fsfreeze.workspace = true
 linuxutils-fstrim.workspace = true
 linuxutils-column.workspace = true

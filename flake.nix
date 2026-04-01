@@ -26,6 +26,7 @@
         "colrm"
         "ctrlaltdel"
         "dmesg"
+        "eject"
         "fsfreeze"
         "fstrim"
         "column"

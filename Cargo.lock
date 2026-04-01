@@ -599,6 +599,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "linuxutils-eject"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "libc",
+]
+
+[[package]]
 name = "linuxutils-fallocate"
 version = "0.1.0"
 dependencies = [
@@ -797,6 +805,7 @@ dependencies = [
  "linuxutils-colrm",
  "linuxutils-ctrlaltdel",
  "linuxutils-dmesg",
+ "linuxutils-eject",
  "linuxutils-flock",
  "linuxutils-fsfreeze",
  "linuxutils-fstrim",
@@ -869,6 +878,7 @@ dependencies = [
  "linuxutils-column",
  "linuxutils-ctrlaltdel",
  "linuxutils-dmesg",
+ "linuxutils-eject",
  "linuxutils-fallocate",
  "linuxutils-flock",
  "linuxutils-fsfreeze",

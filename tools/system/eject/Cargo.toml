@@ -1,0 +1,18 @@
+[package]
+name = "linuxutils-eject"
+description = "Eject removable media"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+name = "linuxutils_eject"
+
+[[bin]]
+name = "eject"
+path = "src/main.rs"
+
+[dependencies]
+clap = { workspace = true }
+libc = { workspace = true }

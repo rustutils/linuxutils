@@ -8,6 +8,7 @@ fn tool_subcommands(cmd: Command) -> Command {
         .subcommand(linuxutils_colrm::Args::command())
         .subcommand(linuxutils_ctrlaltdel::Args::command())
         .subcommand(linuxutils_dmesg::Args::command())
+        .subcommand(linuxutils_eject::Args::command())
         .subcommand(linuxutils_fsfreeze::Args::command())
         .subcommand(linuxutils_fstrim::Args::command())
         .subcommand(linuxutils_column::Args::command())
@@ -68,6 +69,9 @@ fn dispatch(name: &str, m: &ArgMatches) -> ExitCode {
         ),
         "dmesg" => linuxutils_dmesg::run(
             linuxutils_dmesg::Args::from_arg_matches(m).unwrap(),
+        ),
+        "eject" => linuxutils_eject::run(
+            linuxutils_eject::Args::from_arg_matches(m).unwrap(),
         ),
         "fsfreeze" => linuxutils_fsfreeze::run(
             linuxutils_fsfreeze::Args::from_arg_matches(m).unwrap(),
