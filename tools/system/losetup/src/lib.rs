@@ -1,4 +1,5 @@
 use clap::Parser;
+use cols::{Cols, print_table};
 use std::{
     fs::{self, File},
     io,
@@ -99,15 +100,31 @@ pub struct Args {
     positional: Vec<String>,
 }
 
+#[derive(Cols)]
 struct LoopDeviceInfo {
+    #[column(header = "NAME")]
     name: String,
-    backing_file: String,
-    offset: u64,
+
+    #[column(right, header = "SIZELIMIT")]
     sizelimit: u64,
-    autoclear: bool,
-    read_only: bool,
-    partscan: bool,
-    dio: bool,
+
+    #[column(right, header = "OFFSET")]
+    offset: u64,
+
+    #[column(right, header = "AUTOCLEAR")]
+    autoclear: u8,
+
+    #[column(right, header = "PARTSCAN")]
+    partscan: u8,
+
+    #[column(right, header = "RO")]
+    read_only: u8,
+
+    #[column(header = "BACK-FILE")]
+    backing_file: String,
+
+    #[column(right, header = "DIO")]
+    dio: u8,
 }
 
 fn sysfs_read(path: &str) -> Option<String> {
@@ -139,27 +156,25 @@ fn list_loop_devices() -> Vec<LoopDeviceInfo> {
             continue;
         };
 
+        let bool_val = |path: &str| -> u8 {
+            sysfs_read(path)
+                .map(|s| if s == "1" { 1 } else { 0 })
+                .unwrap_or(0)
+        };
+
         devices.push(LoopDeviceInfo {
             name: format!("/dev/{name_str}"),
-            backing_file,
-            offset: sysfs_read(&format!("{loop_dir}/offset"))
-                .and_then(|s| s.parse().ok())
-                .unwrap_or(0),
             sizelimit: sysfs_read(&format!("{loop_dir}/sizelimit"))
                 .and_then(|s| s.parse().ok())
                 .unwrap_or(0),
-            autoclear: sysfs_read(&format!("{loop_dir}/autoclear"))
-                .map(|s| s == "1")
-                .unwrap_or(false),
-            read_only: sysfs_read(&format!("/sys/block/{name_str}/ro"))
-                .map(|s| s == "1")
-                .unwrap_or(false),
-            partscan: sysfs_read(&format!("{loop_dir}/partscan"))
-                .map(|s| s == "1")
-                .unwrap_or(false),
-            dio: sysfs_read(&format!("{loop_dir}/dio"))
-                .map(|s| s == "1")
-                .unwrap_or(false),
+            offset: sysfs_read(&format!("{loop_dir}/offset"))
+                .and_then(|s| s.parse().ok())
+                .unwrap_or(0),
+            autoclear: bool_val(&format!("{loop_dir}/autoclear")),
+            partscan: bool_val(&format!("{loop_dir}/partscan")),
+            read_only: bool_val(&format!("/sys/block/{name_str}/ro")),
+            backing_file,
+            dio: bool_val(&format!("{loop_dir}/dio")),
         });
     }
 
@@ -167,33 +182,10 @@ fn list_loop_devices() -> Vec<LoopDeviceInfo> {
     devices
 }
 
-fn print_list(devices: &[LoopDeviceInfo], noheadings: bool) {
-    if !noheadings {
-        println!(
-            "{:<12} {:>9} {:>6} {:>9} {:>8} {:>2} {:<20} {:>3}",
-            "NAME",
-            "SIZELIMIT",
-            "OFFSET",
-            "AUTOCLEAR",
-            "PARTSCAN",
-            "RO",
-            "BACK-FILE",
-            "DIO"
-        );
-    }
-    for d in devices {
-        println!(
-            "{:<12} {:>9} {:>6} {:>9} {:>8} {:>2} {:<20} {:>3}",
-            d.name,
-            d.sizelimit,
-            d.offset,
-            u8::from(d.autoclear),
-            u8::from(d.partscan),
-            u8::from(d.read_only),
-            d.backing_file,
-            u8::from(d.dio),
-        );
-    }
+fn print_devices(devices: &[LoopDeviceInfo], noheadings: bool) {
+    let mut table = LoopDeviceInfo::to_table(devices);
+    table.headings_set(!noheadings);
+    let _ = print_table(&table, &mut io::stdout().lock());
 }
 
 fn print_old_style(devices: &[LoopDeviceInfo]) {
@@ -437,7 +429,7 @@ pub fn run(args: Args) -> ExitCode {
         if args.all && !args.list {
             print_old_style(&devices);
         } else {
-            print_list(&devices, args.noheadings);
+            print_devices(&devices, args.noheadings);
         }
         return ExitCode::SUCCESS;
     }

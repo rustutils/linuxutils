@@ -32,7 +32,7 @@ colored = "3"
 libc = "0.2"
 predicates = "3"
 tempfile = "3"
-cols = { version = "0.3.0", git = "https://gitlab.com/rustutils/cols", features = ["color", "regex"] }
+cols = { version = "0.3.0", git = "https://gitlab.com/rustutils/cols", features = ["color", "derive", "regex"] }
 rustix = { version = "1", features = ["event", "fs", "mount", "process", "termios", "thread", "time"] }
 uuid = { version = "1", features = ["v1", "v3", "v4", "v5", "v6", "v7"] }
 

@@ -15,4 +15,5 @@ path = "src/main.rs"
 
 [dependencies]
 clap = { workspace = true }
+cols = { workspace = true }
 libc = { workspace = true }

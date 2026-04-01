@@ -282,8 +282,19 @@ version = "0.3.0"
 source = "git+https://gitlab.com/rustutils/cols#26976309799d7fcf6b71d765a659093b2fc3b8c8"
 dependencies = [
  "colored",
+ "cols-derive",
  "regex",
  "unicode-width",
+]
+
+[[package]]
+name = "cols-derive"
+version = "0.1.0"
+source = "git+https://gitlab.com/rustutils/cols#26976309799d7fcf6b71d765a659093b2fc3b8c8"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
 ]
 
 [[package]]
@@ -738,6 +749,7 @@ name = "linuxutils-losetup"
 version = "0.1.0"
 dependencies = [
  "clap",
+ "cols",
  "libc",
 ]
 
