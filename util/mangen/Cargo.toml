@@ -10,6 +10,7 @@ publish = false
 [dependencies]
 clap = { workspace = true }
 clap_mangen = "0.2"
+linuxutils-blkdiscard.workspace = true
 linuxutils-blockdev.workspace = true
 linuxutils-cal.workspace = true
 linuxutils-choom.workspace = true

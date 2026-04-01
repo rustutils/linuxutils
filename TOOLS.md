@@ -30,7 +30,7 @@
 | Tool | Description | Status |
 |------|-------------|--------|
 | `adjtime_config` | Information about hardware clock setting and drift factor | Not started |
-| `blkdiscard` | Discard sectors on a device | Not started |
+| `blkdiscard` | Discard sectors on a device | Done |
 | `blkpr` | Run a persistent-reservations command on a device | Not started |
 | `blkzone` | Run zone command on a device | Not started |
 | `chcpu` | Configure CPUs | Not started |

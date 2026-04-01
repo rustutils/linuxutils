@@ -1,0 +1,18 @@
+[package]
+name = "linuxutils-blkdiscard"
+description = "Discard sectors on a block device"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+name = "linuxutils_blkdiscard"
+
+[[bin]]
+name = "blkdiscard"
+path = "src/main.rs"
+
+[dependencies]
+clap = { workspace = true }
+libc = { workspace = true }
