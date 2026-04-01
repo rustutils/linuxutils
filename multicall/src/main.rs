@@ -27,6 +27,7 @@ fn tool_subcommands(cmd: Command) -> Command {
         .subcommand(linuxutils_namei::Args::command())
         .subcommand(linuxutils_mountpoint::Args::command())
         .subcommand(linuxutils_nologin::Args::command())
+        .subcommand(linuxutils_nsenter::Args::command())
         .subcommand(linuxutils_prlimit::Args::command())
         .subcommand(linuxutils_rename::Args::command())
         .subcommand(linuxutils_renice::Args::command())
@@ -35,6 +36,7 @@ fn tool_subcommands(cmd: Command) -> Command {
         .subcommand(linuxutils_taskset::Args::command())
         .subcommand(linuxutils_rev::Args::command())
         .subcommand(linuxutils_rfkill::Args::command())
+        .subcommand(linuxutils_unshare::Args::command())
         .subcommand(linuxutils_uuidgen::Args::command())
         .subcommand(linuxutils_uuidparse::Args::command())
         .subcommand(linuxutils_waitpid::Args::command())
@@ -118,6 +120,9 @@ fn dispatch(name: &str, m: &ArgMatches) -> ExitCode {
         "nologin" => linuxutils_nologin::run(
             linuxutils_nologin::Args::from_arg_matches(m).unwrap(),
         ),
+        "nsenter" => linuxutils_nsenter::run(
+            linuxutils_nsenter::Args::from_arg_matches(m).unwrap(),
+        ),
         "prlimit" => linuxutils_prlimit::run(
             linuxutils_prlimit::Args::from_arg_matches(m).unwrap(),
         ),
@@ -141,6 +146,9 @@ fn dispatch(name: &str, m: &ArgMatches) -> ExitCode {
         ),
         "rfkill" => linuxutils_rfkill::run(
             linuxutils_rfkill::Args::from_arg_matches(m).unwrap(),
+        ),
+        "unshare" => linuxutils_unshare::run(
+            linuxutils_unshare::Args::from_arg_matches(m).unwrap(),
         ),
         "uuidgen" => linuxutils_uuidgen::run(
             linuxutils_uuidgen::Args::from_arg_matches(m).unwrap(),

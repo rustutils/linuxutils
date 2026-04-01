@@ -1,0 +1,19 @@
+[package]
+name = "linuxutils-nsenter"
+description = "Run a program in different namespaces"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+name = "linuxutils_nsenter"
+
+[[bin]]
+name = "nsenter"
+path = "src/main.rs"
+
+[dependencies]
+clap = { workspace = true }
+libc = { workspace = true }
+rustix = { workspace = true }

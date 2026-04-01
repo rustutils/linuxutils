@@ -57,7 +57,7 @@
 | `lsns` | List namespaces | Done |
 | `mount` | Mount a filesystem | Not started |
 | `mountpoint` | See if a directory or file is a mountpoint | Done |
-| `nsenter` | Run a program in different namespaces | Not started |
+| `nsenter` | Run a program in different namespaces | Done |
 | `pivot_root` | Change the root filesystem | Not started |
 | `prlimit` | Get and set process resource limits | Done |
 | `readprofile` | Read kernel profiling information | Not started |
@@ -73,7 +73,7 @@
 | `switch_root` | Switch to another filesystem as the root of the mount tree | Not started |
 | `tunelp` | Set various parameters for the lp device | Not started |
 | `umount` | Unmount filesystems | Not started |
-| `unshare` | Run a program in new namespaces | Not started |
+| `unshare` | Run a program in new namespaces | Done |
 | `wdctl` | Show hardware watchdog status | Not started |
 | `zramctl` | Set up and control zram devices | Not started |
 

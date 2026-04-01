@@ -770,12 +770,14 @@ dependencies = [
  "linuxutils-mountpoint",
  "linuxutils-namei",
  "linuxutils-nologin",
+ "linuxutils-nsenter",
  "linuxutils-prlimit",
  "linuxutils-renice",
  "linuxutils-rev",
  "linuxutils-rfkill",
  "linuxutils-setpgid",
  "linuxutils-setsid",
+ "linuxutils-unshare",
  "linuxutils-uuidgen",
  "linuxutils-uuidparse",
  "linuxutils-waitpid",
@@ -836,6 +838,7 @@ dependencies = [
  "linuxutils-mountpoint",
  "linuxutils-namei",
  "linuxutils-nologin",
+ "linuxutils-nsenter",
  "linuxutils-prlimit",
  "linuxutils-rename",
  "linuxutils-renice",
@@ -844,6 +847,7 @@ dependencies = [
  "linuxutils-setpgid",
  "linuxutils-setsid",
  "linuxutils-taskset",
+ "linuxutils-unshare",
  "linuxutils-uuidgen",
  "linuxutils-uuidparse",
  "linuxutils-waitpid",
@@ -865,6 +869,15 @@ dependencies = [
  "assert_cmd",
  "clap",
  "predicates",
+]
+
+[[package]]
+name = "linuxutils-nsenter"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "libc",
+ "rustix",
 ]
 
 [[package]]
@@ -938,6 +951,15 @@ dependencies = [
  "assert_cmd",
  "clap",
  "predicates",
+ "rustix",
+]
+
+[[package]]
+name = "linuxutils-unshare"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "libc",
  "rustix",
 ]
 
