@@ -57,6 +57,9 @@ linuxutils-column = { path = "tools/text/column" }
 linuxutils-getopt = { path = "tools/misc/getopt" }
 linuxutils-hexdump = { path = "tools/text/hexdump" }
 linuxutils-ionice = { path = "tools/sched/ionice" }
+linuxutils-ipcmk = { path = "tools/system/ipcmk" }
+linuxutils-ipcrm = { path = "tools/system/ipcrm" }
+linuxutils-ipcs = { path = "tools/system/ipcs" }
 linuxutils-isosize = { path = "tools/disk/isosize" }
 linuxutils-kill = { path = "tools/misc/kill" }
 linuxutils-line = { path = "tools/text/line" }
@@ -82,6 +85,7 @@ linuxutils-swapoff = { path = "tools/system/swapoff" }
 linuxutils-swapon = { path = "tools/system/swapon" }
 linuxutils-unshare = { path = "tools/system/unshare" }
 linuxutils-uuidgen = { path = "tools/misc/uuidgen" }
+linuxutils-lsipc = { path = "tools/system/lsipc" }
 linuxutils-lsirq = { path = "tools/system/lsirq" }
 linuxutils-lsmem = { path = "tools/system/lsmem" }
 linuxutils-lsns = { path = "tools/system/lsns" }

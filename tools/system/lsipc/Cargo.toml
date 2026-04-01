@@ -1,0 +1,18 @@
+[package]
+name = "linuxutils-lsipc"
+description = "List information on IPC facilities"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+name = "linuxutils_lsipc"
+
+[[bin]]
+name = "lsipc"
+path = "src/main.rs"
+
+[dependencies]
+clap = { workspace = true }
+cols = { workspace = true }

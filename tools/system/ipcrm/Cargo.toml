@@ -1,0 +1,18 @@
+[package]
+name = "linuxutils-ipcrm"
+description = "Remove System V IPC resources"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+name = "linuxutils_ipcrm"
+
+[[bin]]
+name = "ipcrm"
+path = "src/main.rs"
+
+[dependencies]
+clap = { workspace = true }
+libc = { workspace = true }

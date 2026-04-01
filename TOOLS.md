@@ -44,14 +44,14 @@
 | `fsfreeze` | Suspend access to a filesystem | Done |
 | `fstrim` | Discard unused blocks on a mounted filesystem | Done |
 | `hwclock` | Time clocks utility | Not started |
-| `ipcmk` | Make various IPC resources | Not started |
-| `ipcrm` | Remove certain IPC resources | Not started |
-| `ipcs` | Show information on IPC facilities | Not started |
+| `ipcmk` | Make various IPC resources | Done |
+| `ipcrm` | Remove certain IPC resources | Done |
+| `ipcs` | Show information on IPC facilities | Done |
 | `irqtop` | Display kernel interrupt information | Not started |
 | `ldattach` | Attach a line discipline to a serial line | Not started |
 | `losetup` | Set up and control loop devices | Done |
 | `lscpu` | Display information about the CPU architecture | Not started |
-| `lsipc` | Show information on IPC facilities currently employed in the system | Not started |
+| `lsipc` | Show information on IPC facilities currently employed in the system | Done |
 | `lsirq` | Display kernel interrupt information | Done |
 | `lsmem` | List the ranges of available memory with their online status | Done |
 | `lsns` | List namespaces | Done |

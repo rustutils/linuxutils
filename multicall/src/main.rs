@@ -20,12 +20,16 @@ fn tool_subcommands(cmd: Command) -> Command {
         .subcommand(linuxutils_getopt::Args::command())
         .subcommand(linuxutils_hexdump::Args::command())
         .subcommand(linuxutils_ionice::Args::command())
+        .subcommand(linuxutils_ipcmk::Args::command())
+        .subcommand(linuxutils_ipcrm::Args::command())
+        .subcommand(linuxutils_ipcs::Args::command())
         .subcommand(linuxutils_isosize::Args::command())
         .subcommand(linuxutils_kill::Args::command())
         .subcommand(linuxutils_line::Args::command())
         .subcommand(linuxutils_logger::Args::command())
         .subcommand(linuxutils_losetup::Args::command())
         .subcommand(linuxutils_look::Args::command())
+        .subcommand(linuxutils_lsipc::Args::command())
         .subcommand(linuxutils_lsirq::Args::command())
         .subcommand(linuxutils_lslocks::Args::command())
         .subcommand(linuxutils_lsmem::Args::command())
@@ -113,6 +117,15 @@ fn dispatch(name: &str, m: &ArgMatches) -> ExitCode {
         "ionice" => linuxutils_ionice::run(
             linuxutils_ionice::Args::from_arg_matches(m).unwrap(),
         ),
+        "ipcmk" => linuxutils_ipcmk::run(
+            linuxutils_ipcmk::Args::from_arg_matches(m).unwrap(),
+        ),
+        "ipcrm" => linuxutils_ipcrm::run(
+            linuxutils_ipcrm::Args::from_arg_matches(m).unwrap(),
+        ),
+        "ipcs" => linuxutils_ipcs::run(
+            linuxutils_ipcs::Args::from_arg_matches(m).unwrap(),
+        ),
         "isosize" => linuxutils_isosize::run(
             linuxutils_isosize::Args::from_arg_matches(m).unwrap(),
         ),
@@ -130,6 +143,9 @@ fn dispatch(name: &str, m: &ArgMatches) -> ExitCode {
         ),
         "look" => linuxutils_look::run(
             linuxutils_look::Args::from_arg_matches(m).unwrap(),
+        ),
+        "lsipc" => linuxutils_lsipc::run(
+            linuxutils_lsipc::Args::from_arg_matches(m).unwrap(),
         ),
         "lsirq" => linuxutils_lsirq::run(
             linuxutils_lsirq::Args::from_arg_matches(m).unwrap(),

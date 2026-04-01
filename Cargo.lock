@@ -693,6 +693,29 @@ dependencies = [
 ]
 
 [[package]]
+name = "linuxutils-ipcmk"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "libc",
+]
+
+[[package]]
+name = "linuxutils-ipcrm"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "libc",
+]
+
+[[package]]
+name = "linuxutils-ipcs"
+version = "0.1.0"
+dependencies = [
+ "clap",
+]
+
+[[package]]
 name = "linuxutils-isosize"
 version = "0.1.0"
 dependencies = [
@@ -787,6 +810,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "linuxutils-lsipc"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "cols",
+]
+
+[[package]]
 name = "linuxutils-lsirq"
 version = "0.1.0"
 dependencies = [
@@ -840,11 +871,15 @@ dependencies = [
  "linuxutils-getopt",
  "linuxutils-hexdump",
  "linuxutils-ionice",
+ "linuxutils-ipcmk",
+ "linuxutils-ipcrm",
+ "linuxutils-ipcs",
  "linuxutils-kill",
  "linuxutils-line",
  "linuxutils-logger",
  "linuxutils-look",
  "linuxutils-losetup",
+ "linuxutils-lsipc",
  "linuxutils-lsirq",
  "linuxutils-lslocks",
  "linuxutils-lsmem",
@@ -921,12 +956,16 @@ dependencies = [
  "linuxutils-getopt",
  "linuxutils-hexdump",
  "linuxutils-ionice",
+ "linuxutils-ipcmk",
+ "linuxutils-ipcrm",
+ "linuxutils-ipcs",
  "linuxutils-isosize",
  "linuxutils-kill",
  "linuxutils-line",
  "linuxutils-logger",
  "linuxutils-look",
  "linuxutils-losetup",
+ "linuxutils-lsipc",
  "linuxutils-lsirq",
  "linuxutils-lslocks",
  "linuxutils-lsmem",
