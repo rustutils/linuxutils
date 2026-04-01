@@ -1,0 +1,18 @@
+[package]
+name = "linuxutils-copyfilerange"
+description = "Copy byte ranges between files"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+name = "linuxutils_copyfilerange"
+
+[[bin]]
+name = "copyfilerange"
+path = "src/main.rs"
+
+[dependencies]
+clap = { workspace = true }
+libc = { workspace = true }

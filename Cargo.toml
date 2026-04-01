@@ -46,10 +46,12 @@ linuxutils-chrt = { path = "tools/sched/chrt" }
 linuxutils-fallocate = { path = "tools/system/fallocate" }
 linuxutils-flock = { path = "tools/system/flock" }
 linuxutils-colrm = { path = "tools/text/colrm" }
+linuxutils-copyfilerange = { path = "tools/misc/copyfilerange" }
 linuxutils-ctrlaltdel = { path = "tools/system/ctrlaltdel" }
 linuxutils-dmesg = { path = "tools/system/dmesg" }
 linuxutils-eject = { path = "tools/system/eject" }
 linuxutils-fsfreeze = { path = "tools/system/fsfreeze" }
+linuxutils-fadvise = { path = "tools/system/fadvise" }
 linuxutils-fstrim = { path = "tools/system/fstrim" }
 linuxutils-column = { path = "tools/text/column" }
 linuxutils-getopt = { path = "tools/misc/getopt" }
@@ -67,6 +69,8 @@ linuxutils-mesg = { path = "tools/term/mesg" }
 linuxutils-namei = { path = "tools/misc/namei" }
 linuxutils-mountpoint = { path = "tools/system/mountpoint" }
 linuxutils-nologin = { path = "tools/login/nologin" }
+linuxutils-pipesz = { path = "tools/system/pipesz" }
+linuxutils-pivot-root = { path = "tools/system/pivot_root" }
 linuxutils-nsenter = { path = "tools/system/nsenter" }
 linuxutils-prlimit = { path = "tools/system/prlimit" }
 linuxutils-rename = { path = "tools/misc/rename" }

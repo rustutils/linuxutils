@@ -591,6 +591,14 @@ name = "linuxutils-common-sysfs"
 version = "0.1.0"
 
 [[package]]
+name = "linuxutils-copyfilerange"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "libc",
+]
+
+[[package]]
 name = "linuxutils-ctrlaltdel"
 version = "0.1.0"
 dependencies = [
@@ -613,6 +621,14 @@ version = "0.1.0"
 dependencies = [
  "clap",
  "libc",
+]
+
+[[package]]
+name = "linuxutils-fadvise"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "rustix",
 ]
 
 [[package]]
@@ -813,9 +829,11 @@ dependencies = [
  "linuxutils-cal",
  "linuxutils-choom",
  "linuxutils-colrm",
+ "linuxutils-copyfilerange",
  "linuxutils-ctrlaltdel",
  "linuxutils-dmesg",
  "linuxutils-eject",
+ "linuxutils-fadvise",
  "linuxutils-flock",
  "linuxutils-fsfreeze",
  "linuxutils-fstrim",
@@ -837,6 +855,8 @@ dependencies = [
  "linuxutils-namei",
  "linuxutils-nologin",
  "linuxutils-nsenter",
+ "linuxutils-pipesz",
+ "linuxutils-pivot-root",
  "linuxutils-prlimit",
  "linuxutils-renice",
  "linuxutils-rev",
@@ -887,9 +907,11 @@ dependencies = [
  "linuxutils-chrt",
  "linuxutils-colrm",
  "linuxutils-column",
+ "linuxutils-copyfilerange",
  "linuxutils-ctrlaltdel",
  "linuxutils-dmesg",
  "linuxutils-eject",
+ "linuxutils-fadvise",
  "linuxutils-fallocate",
  "linuxutils-flock",
  "linuxutils-fsfreeze",
@@ -913,6 +935,8 @@ dependencies = [
  "linuxutils-namei",
  "linuxutils-nologin",
  "linuxutils-nsenter",
+ "linuxutils-pipesz",
+ "linuxutils-pivot-root",
  "linuxutils-prlimit",
  "linuxutils-rename",
  "linuxutils-renice",
@@ -953,6 +977,22 @@ version = "0.1.0"
 dependencies = [
  "clap",
  "libc",
+ "rustix",
+]
+
+[[package]]
+name = "linuxutils-pipesz"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "libc",
+]
+
+[[package]]
+name = "linuxutils-pivot-root"
+version = "0.1.0"
+dependencies = [
+ "clap",
  "rustix",
 ]
 

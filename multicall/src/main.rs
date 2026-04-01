@@ -7,9 +7,11 @@ fn tool_subcommands(cmd: Command) -> Command {
         .subcommand(linuxutils_choom::Args::command())
         .subcommand(linuxutils_chrt::Args::command())
         .subcommand(linuxutils_colrm::Args::command())
+        .subcommand(linuxutils_copyfilerange::Args::command())
         .subcommand(linuxutils_ctrlaltdel::Args::command())
         .subcommand(linuxutils_dmesg::Args::command())
         .subcommand(linuxutils_eject::Args::command())
+        .subcommand(linuxutils_fadvise::Args::command())
         .subcommand(linuxutils_fsfreeze::Args::command())
         .subcommand(linuxutils_fstrim::Args::command())
         .subcommand(linuxutils_column::Args::command())
@@ -34,6 +36,8 @@ fn tool_subcommands(cmd: Command) -> Command {
         .subcommand(linuxutils_mountpoint::Args::command())
         .subcommand(linuxutils_nologin::Args::command())
         .subcommand(linuxutils_nsenter::Args::command())
+        .subcommand(linuxutils_pipesz::Args::command())
+        .subcommand(linuxutils_pivot_root::Args::command())
         .subcommand(linuxutils_prlimit::Args::command())
         .subcommand(linuxutils_rename::Args::command())
         .subcommand(linuxutils_renice::Args::command())
@@ -68,6 +72,9 @@ fn dispatch(name: &str, m: &ArgMatches) -> ExitCode {
         "colrm" => linuxutils_colrm::run(
             linuxutils_colrm::Args::from_arg_matches(m).unwrap(),
         ),
+        "copyfilerange" => linuxutils_copyfilerange::run(
+            linuxutils_copyfilerange::Args::from_arg_matches(m).unwrap(),
+        ),
         "ctrlaltdel" => linuxutils_ctrlaltdel::run(
             linuxutils_ctrlaltdel::Args::from_arg_matches(m).unwrap(),
         ),
@@ -76,6 +83,9 @@ fn dispatch(name: &str, m: &ArgMatches) -> ExitCode {
         ),
         "eject" => linuxutils_eject::run(
             linuxutils_eject::Args::from_arg_matches(m).unwrap(),
+        ),
+        "fadvise" => linuxutils_fadvise::run(
+            linuxutils_fadvise::Args::from_arg_matches(m).unwrap(),
         ),
         "fsfreeze" => linuxutils_fsfreeze::run(
             linuxutils_fsfreeze::Args::from_arg_matches(m).unwrap(),
@@ -148,6 +158,12 @@ fn dispatch(name: &str, m: &ArgMatches) -> ExitCode {
         ),
         "nsenter" => linuxutils_nsenter::run(
             linuxutils_nsenter::Args::from_arg_matches(m).unwrap(),
+        ),
+        "pipesz" => linuxutils_pipesz::run(
+            linuxutils_pipesz::Args::from_arg_matches(m).unwrap(),
+        ),
+        "pivot_root" => linuxutils_pivot_root::run(
+            linuxutils_pivot_root::Args::from_arg_matches(m).unwrap(),
         ),
         "prlimit" => linuxutils_prlimit::run(
             linuxutils_prlimit::Args::from_arg_matches(m).unwrap(),

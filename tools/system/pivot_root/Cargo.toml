@@ -1,0 +1,18 @@
+[package]
+name = "linuxutils-pivot-root"
+description = "Change the root filesystem"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+name = "linuxutils_pivot_root"
+
+[[bin]]
+name = "pivot_root"
+path = "src/main.rs"
+
+[dependencies]
+clap = { workspace = true }
+rustix = { workspace = true }

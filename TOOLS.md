@@ -58,7 +58,7 @@
 | `mount` | Mount a filesystem | Not started |
 | `mountpoint` | See if a directory or file is a mountpoint | Done |
 | `nsenter` | Run a program in different namespaces | Done |
-| `pivot_root` | Change the root filesystem | Not started |
+| `pivot_root` | Change the root filesystem | Done |
 | `prlimit` | Get and set process resource limits | Done |
 | `readprofile` | Read kernel profiling information | Not started |
 | `renice` | Alter priority of running processes | Done |
@@ -83,10 +83,10 @@
 |------|-------------|--------|
 | `blkid` | Locate and print block device attributes | Not started |
 | `cal` | Display a calendar | Done |
-| `copyfilerange` | Copy range(s) from source to destination file | Not started |
+| `copyfilerange` | Copy range(s) from source to destination file | Done |
 | `enosys` | Make syscalls fail with ENOSYS | Not started |
 | `exch` | Atomically exchange paths between two files | Not started |
-| `fadvise` | Use the posix_fadvise(2) system call | Not started |
+| `fadvise` | Use the posix_fadvise(2) system call | Done |
 | `fincore` | Count pages of file contents in core | Not started |
 | `findfs` | Find a filesystem by label or UUID | Not started |
 | `findmnt` | Find a filesystem | Not started |
@@ -102,7 +102,7 @@
 | `lslocks` | List local system locks | Done |
 | `mcookie` | Generate magic cookies for xauth | Done |
 | `namei` | Follow a pathname until a terminal point is found | Done |
-| `pipesz` | Set or examine pipe and FIFO buffer sizes | Not started |
+| `pipesz` | Set or examine pipe and FIFO buffer sizes | Done |
 | `rename` | Rename files | Done |
 | `uuidd` | UUID generation daemon | Not started |
 | `uuidgen` | Create a new UUID value | Done |
