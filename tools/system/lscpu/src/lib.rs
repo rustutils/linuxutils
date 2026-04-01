@@ -8,6 +8,7 @@ use std::{
 
 const CPU_SYS: &str = "/sys/devices/system/cpu";
 const NODE_SYS: &str = "/sys/devices/system/node";
+const FIELD_WIDTH: usize = 25;
 
 /// Display information about the CPU architecture.
 ///
@@ -53,15 +54,33 @@ fn parse_cpu_list(s: &str) -> Vec<u32> {
     result
 }
 
+fn parse_cache_size_kb(s: &str) -> Option<u64> {
+    let s = s.trim();
+    if let Some(num) = s.strip_suffix('K') {
+        num.trim().parse().ok()
+    } else if let Some(num) = s.strip_suffix('M') {
+        num.trim().parse::<u64>().ok().map(|n| n * 1024)
+    } else {
+        s.parse().ok()
+    }
+}
+
+fn format_cache_size(total_kb: u64) -> String {
+    if total_kb >= 1024 && total_kb.is_multiple_of(1024) {
+        format!("{} MiB", total_kb / 1024)
+    } else {
+        format!("{total_kb} KiB")
+    }
+}
+
 struct CacheInfo {
     name: String,
-    size: String,
+    one_size_kb: u64,
     instances: usize,
 }
 
 fn gather_caches() -> Vec<CacheInfo> {
-    let mut seen: BTreeMap<String, (String, BTreeSet<String>)> =
-        BTreeMap::new();
+    let mut seen: BTreeMap<String, (u64, BTreeSet<String>)> = BTreeMap::new();
 
     let Ok(entries) = fs::read_dir(CPU_SYS) else {
         return Vec::new();
@@ -96,10 +115,12 @@ fn gather_caches() -> Vec<CacheInfo> {
                 sysfs_read(&format!("{base}/level")).unwrap_or_default();
             let cache_type =
                 sysfs_read(&format!("{base}/type")).unwrap_or_default();
-            let size = sysfs_read(&format!("{base}/size")).unwrap_or_default();
+            let size_str =
+                sysfs_read(&format!("{base}/size")).unwrap_or_default();
             let shared = sysfs_read(&format!("{base}/shared_cpu_list"))
                 .unwrap_or_default();
 
+            let size_kb = parse_cache_size_kb(&size_str).unwrap_or(0);
             let type_abbr = match cache_type.as_str() {
                 "Data" => "d",
                 "Instruction" => "i",
@@ -108,16 +129,16 @@ fn gather_caches() -> Vec<CacheInfo> {
             let name = format!("L{level}{type_abbr}");
 
             seen.entry(name)
-                .or_insert_with(|| (size.clone(), BTreeSet::new()))
+                .or_insert_with(|| (size_kb, BTreeSet::new()))
                 .1
                 .insert(shared);
         }
     }
 
     seen.into_iter()
-        .map(|(name, (size, shared_sets))| CacheInfo {
+        .map(|(name, (one_size_kb, shared_sets))| CacheInfo {
             name,
-            size,
+            one_size_kb,
             instances: shared_sets.len(),
         })
         .collect()
@@ -163,8 +184,55 @@ fn gather_vulnerabilities() -> Vec<(String, String)> {
     vulns
 }
 
-fn print_field(label: &str, value: &str) {
-    println!("{label:<23}{value}");
+fn pretty_vuln_name(file_name: &str) -> String {
+    let mut result = file_name.replace('_', " ");
+    if let Some(first) = result.get_mut(..1) {
+        first.make_ascii_uppercase();
+    }
+    result
+}
+
+fn field(indent: usize, label: &str, value: &str) {
+    let padding = " ".repeat(indent);
+    let total_label_width = FIELD_WIDTH - indent;
+    println!("{padding}{label:<total_label_width$}{value}");
+}
+
+fn wrap_flags(flags: &str, indent: usize) {
+    let padding = " ".repeat(indent);
+    let total_label_width = FIELD_WIDTH - indent;
+    let label = "Flags:";
+    let content_start = FIELD_WIDTH;
+    let wrap_width = 80usize.saturating_sub(content_start);
+
+    let words: Vec<&str> = flags.split_whitespace().collect();
+    let mut lines: Vec<String> = Vec::new();
+    let mut current_line = String::new();
+
+    for word in &words {
+        if !current_line.is_empty()
+            && current_line.len() + 1 + word.len() > wrap_width
+        {
+            lines.push(current_line);
+            current_line = word.to_string();
+        } else {
+            if !current_line.is_empty() {
+                current_line.push(' ');
+            }
+            current_line.push_str(word);
+        }
+    }
+    if !current_line.is_empty() {
+        lines.push(current_line);
+    }
+
+    for (i, line) in lines.iter().enumerate() {
+        if i == 0 {
+            println!("{padding}{label:<total_label_width$}{line}");
+        } else {
+            println!("{:>content_start$}{line}", "");
+        }
+    }
 }
 
 pub fn run(_args: Args) -> ExitCode {
@@ -178,7 +246,6 @@ pub fn run(_args: Args) -> ExitCode {
 
     let num_cpus = cpuinfo.num_cores();
 
-    // Basic fields from first CPU
     let vendor = cpuinfo_field(&cpuinfo, 0, "vendor_id").unwrap_or_default();
     let model_name =
         cpuinfo_field(&cpuinfo, 0, "model name").unwrap_or_default();
@@ -191,7 +258,6 @@ pub fn run(_args: Args) -> ExitCode {
     let addr_sizes =
         cpuinfo_field(&cpuinfo, 0, "address sizes").unwrap_or_default();
 
-    // Architecture
     let arch = std::env::consts::ARCH;
     let op_modes = match arch {
         "x86_64" => "32-bit, 64-bit",
@@ -200,12 +266,10 @@ pub fn run(_args: Args) -> ExitCode {
         _ => arch,
     };
 
-    // Online/offline
     let online = sysfs_read(&format!("{CPU_SYS}/online"))
         .unwrap_or_else(|| format!("0-{}", num_cpus - 1));
     let offline = sysfs_read(&format!("{CPU_SYS}/offline")).unwrap_or_default();
 
-    // Topology: sockets, cores, threads
     let mut sockets: BTreeSet<u32> = BTreeSet::new();
     let mut cores_per_socket: BTreeMap<u32, BTreeSet<u32>> = BTreeMap::new();
     let online_cpus = parse_cpu_list(&online);
@@ -236,7 +300,6 @@ pub fn run(_args: Args) -> ExitCode {
     }
     .max(1);
 
-    // Frequency
     let max_mhz =
         sysfs_read(&format!("{CPU_SYS}/cpu0/cpufreq/cpuinfo_max_freq"))
             .and_then(|s| s.parse::<f64>().ok())
@@ -246,85 +309,92 @@ pub fn run(_args: Args) -> ExitCode {
             .and_then(|s| s.parse::<f64>().ok())
             .map(|khz| khz / 1000.0);
 
-    // Virtualization
-    let virt = if flags_str.contains(" svm ")
-        || flags_str.starts_with("svm ")
-        || flags_str.ends_with(" svm")
-    {
+    let virt = if flags_str.split_whitespace().any(|f| f == "svm") {
         Some("AMD-V")
-    } else if flags_str.contains(" vmx ")
-        || flags_str.starts_with("vmx ")
-        || flags_str.ends_with(" vmx")
-    {
+    } else if flags_str.split_whitespace().any(|f| f == "vmx") {
         Some("VT-x")
     } else {
         None
     };
 
-    // Output
-    print_field("Architecture:", arch);
-    print_field("CPU op-mode(s):", op_modes);
+    // Architecture section
+    field(0, "Architecture:", arch);
+    field(2, "CPU op-mode(s):", op_modes);
     if !addr_sizes.is_empty() {
-        print_field("Address sizes:", &addr_sizes);
+        field(2, "Address sizes:", &addr_sizes);
     }
     #[cfg(target_endian = "little")]
-    print_field("Byte Order:", "Little Endian");
+    field(2, "Byte Order:", "Little Endian");
     #[cfg(target_endian = "big")]
-    print_field("Byte Order:", "Big Endian");
+    field(2, "Byte Order:", "Big Endian");
 
-    print_field("CPU(s):", &online_cpus.len().to_string());
-    print_field("On-line CPU(s) list:", &online);
+    // CPU count
+    field(0, "CPU(s):", &online_cpus.len().to_string());
+    field(2, "On-line CPU(s) list:", &online);
     if !offline.is_empty() {
-        print_field("Off-line CPU(s) list:", &offline);
+        field(2, "Off-line CPU(s) list:", &offline);
     }
 
-    print_field("Vendor ID:", &vendor);
-    print_field("Model name:", &model_name);
-    print_field("CPU family:", &cpu_family);
-    print_field("Model:", &model);
-    print_field("Thread(s) per core:", &threads_per_core.to_string());
-    print_field("Core(s) per socket:", &cores_per_sock.to_string());
-    print_field("Socket(s):", &num_sockets.to_string());
-    print_field("Stepping:", &stepping);
-
+    // Vendor / Model
+    field(0, "Vendor ID:", &vendor);
+    field(2, "Model name:", &model_name);
+    field(4, "CPU family:", &cpu_family);
+    field(4, "Model:", &model);
+    field(4, "Thread(s) per core:", &threads_per_core.to_string());
+    field(4, "Core(s) per socket:", &cores_per_sock.to_string());
+    field(4, "Socket(s):", &num_sockets.to_string());
+    field(4, "Stepping:", &stepping);
     if let Some(max) = max_mhz {
-        print_field("CPU max MHz:", &format!("{max:.4}"));
+        field(4, "CPU max MHz:", &format!("{max:.4}"));
     }
     if let Some(min) = min_mhz {
-        print_field("CPU min MHz:", &format!("{min:.4}"));
+        field(4, "CPU min MHz:", &format!("{min:.4}"));
     }
-    print_field("BogoMIPS:", &bogomips);
+    field(4, "BogoMIPS:", &bogomips);
+    if !flags_str.is_empty() {
+        wrap_flags(&flags_str, 4);
+    }
 
+    // Virtualization
     if let Some(v) = virt {
-        print_field("Virtualization:", v);
+        println!("Virtualization features:");
+        field(2, "Virtualization:", v);
     }
 
     // Caches
     let caches = gather_caches();
-    for cache in &caches {
-        let label = format!("{} cache:", cache.name);
-        let value = if cache.instances > 1 {
-            format!("{} ({} instances)", cache.size, cache.instances)
-        } else {
-            cache.size.clone()
-        };
-        print_field(&label, &value);
+    if !caches.is_empty() {
+        println!("Caches (sum of all):");
+        for cache in &caches {
+            let total_kb = cache.one_size_kb * cache.instances as u64;
+            let size_str = format_cache_size(total_kb);
+            let value = if cache.instances > 1 {
+                format!("{size_str} ({} instances)", cache.instances)
+            } else {
+                format!("{size_str} (1 instance)")
+            };
+            field(2, &format!("{}:", cache.name), &value);
+        }
     }
 
     // NUMA
     let numa_nodes = gather_numa_nodes();
     if !numa_nodes.is_empty() {
-        print_field("NUMA node(s):", &numa_nodes.len().to_string());
+        println!("NUMA:");
+        field(2, "NUMA node(s):", &numa_nodes.len().to_string());
         for (node, cpulist) in &numa_nodes {
-            print_field(&format!("NUMA node{node} CPU(s):"), cpulist);
+            field(2, &format!("NUMA node{node} CPU(s):"), cpulist);
         }
     }
 
     // Vulnerabilities
     let vulns = gather_vulnerabilities();
-    for (name, status) in &vulns {
-        let label = format!("Vulnerability {name}:");
-        print_field(&label, status);
+    if !vulns.is_empty() {
+        println!("Vulnerabilities:");
+        for (name, status) in &vulns {
+            let pretty = pretty_vuln_name(name);
+            field(2, &format!("{pretty}:"), status);
+        }
     }
 
     ExitCode::SUCCESS
