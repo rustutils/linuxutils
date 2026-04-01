@@ -6,7 +6,10 @@ fn tool_subcommands(cmd: Command) -> Command {
         .subcommand(linuxutils_choom::Args::command())
         .subcommand(linuxutils_chrt::Args::command())
         .subcommand(linuxutils_colrm::Args::command())
+        .subcommand(linuxutils_ctrlaltdel::Args::command())
         .subcommand(linuxutils_dmesg::Args::command())
+        .subcommand(linuxutils_fsfreeze::Args::command())
+        .subcommand(linuxutils_fstrim::Args::command())
         .subcommand(linuxutils_column::Args::command())
         .subcommand(linuxutils_fallocate::Args::command())
         .subcommand(linuxutils_flock::Args::command())
@@ -59,8 +62,17 @@ fn dispatch(name: &str, m: &ArgMatches) -> ExitCode {
         "colrm" => linuxutils_colrm::run(
             linuxutils_colrm::Args::from_arg_matches(m).unwrap(),
         ),
+        "ctrlaltdel" => linuxutils_ctrlaltdel::run(
+            linuxutils_ctrlaltdel::Args::from_arg_matches(m).unwrap(),
+        ),
         "dmesg" => linuxutils_dmesg::run(
             linuxutils_dmesg::Args::from_arg_matches(m).unwrap(),
+        ),
+        "fsfreeze" => linuxutils_fsfreeze::run(
+            linuxutils_fsfreeze::Args::from_arg_matches(m).unwrap(),
+        ),
+        "fstrim" => linuxutils_fstrim::run(
+            linuxutils_fstrim::Args::from_arg_matches(m).unwrap(),
         ),
         "column" => linuxutils_column::run(
             linuxutils_column::Args::from_arg_matches(m).unwrap(),

@@ -571,6 +571,13 @@ name = "linuxutils-common-sysfs"
 version = "0.1.0"
 
 [[package]]
+name = "linuxutils-ctrlaltdel"
+version = "0.1.0"
+dependencies = [
+ "clap",
+]
+
+[[package]]
 name = "linuxutils-dmesg"
 version = "0.1.0"
 dependencies = [
@@ -597,6 +604,22 @@ version = "0.1.0"
 dependencies = [
  "clap",
  "rustix",
+]
+
+[[package]]
+name = "linuxutils-fsfreeze"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "libc",
+]
+
+[[package]]
+name = "linuxutils-fstrim"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "libc",
 ]
 
 [[package]]
@@ -752,8 +775,11 @@ dependencies = [
  "linuxutils-cal",
  "linuxutils-choom",
  "linuxutils-colrm",
+ "linuxutils-ctrlaltdel",
  "linuxutils-dmesg",
  "linuxutils-flock",
+ "linuxutils-fsfreeze",
+ "linuxutils-fstrim",
  "linuxutils-getopt",
  "linuxutils-hexdump",
  "linuxutils-ionice",
@@ -820,9 +846,12 @@ dependencies = [
  "linuxutils-chrt",
  "linuxutils-colrm",
  "linuxutils-column",
+ "linuxutils-ctrlaltdel",
  "linuxutils-dmesg",
  "linuxutils-fallocate",
  "linuxutils-flock",
+ "linuxutils-fsfreeze",
+ "linuxutils-fstrim",
  "linuxutils-getopt",
  "linuxutils-hexdump",
  "linuxutils-ionice",

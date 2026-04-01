@@ -36,13 +36,13 @@
 | `chcpu` | Configure CPUs | Not started |
 | `chmem` | Configure memory | Not started |
 | `choom` | Display or adjust OOM-killer score | Done |
-| `ctrlaltdel` | Set the function of the Ctrl-Alt-Del combination | Not started |
+| `ctrlaltdel` | Set the function of the Ctrl-Alt-Del combination | Done |
 | `dmesg` | Print or control the kernel ring buffer | Done |
 | `eject` | Eject removable media | Not started |
 | `fallocate` | Preallocate or deallocate space to a file | Done |
 | `flock` | Manage locks from shell scripts | Done |
-| `fsfreeze` | Suspend access to a filesystem | Not started |
-| `fstrim` | Discard unused blocks on a mounted filesystem | Not started |
+| `fsfreeze` | Suspend access to a filesystem | Done |
+| `fstrim` | Discard unused blocks on a mounted filesystem | Done |
 | `hwclock` | Time clocks utility | Not started |
 | `ipcmk` | Make various IPC resources | Not started |
 | `ipcrm` | Remove certain IPC resources | Not started |

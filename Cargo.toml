@@ -45,7 +45,10 @@ linuxutils-chrt = { path = "tools/sched/chrt" }
 linuxutils-fallocate = { path = "tools/system/fallocate" }
 linuxutils-flock = { path = "tools/system/flock" }
 linuxutils-colrm = { path = "tools/text/colrm" }
+linuxutils-ctrlaltdel = { path = "tools/system/ctrlaltdel" }
 linuxutils-dmesg = { path = "tools/system/dmesg" }
+linuxutils-fsfreeze = { path = "tools/system/fsfreeze" }
+linuxutils-fstrim = { path = "tools/system/fstrim" }
 linuxutils-column = { path = "tools/text/column" }
 linuxutils-getopt = { path = "tools/misc/getopt" }
 linuxutils-hexdump = { path = "tools/text/hexdump" }

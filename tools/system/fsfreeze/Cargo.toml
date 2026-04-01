@@ -1,0 +1,18 @@
+[package]
+name = "linuxutils-fsfreeze"
+description = "Suspend or resume access to a filesystem"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+name = "linuxutils_fsfreeze"
+
+[[bin]]
+name = "fsfreeze"
+path = "src/main.rs"
+
+[dependencies]
+clap = { workspace = true }
+libc = { workspace = true }
