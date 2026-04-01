@@ -13,6 +13,7 @@ fn main() -> ExitCode {
     }
 
     let tools: Vec<clap::Command> = vec![
+        linuxutils_blockdev::Args::command(),
         linuxutils_cal::Args::command(),
         linuxutils_choom::Args::command(),
         linuxutils_colrm::Args::command(),

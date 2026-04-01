@@ -20,6 +20,7 @@
       # Tool names — used for installing individual binaries and creating
       # multicall symlinks. Keep in sync with workspace members.
       tools = [
+        "blockdev"
         "cal"
         "choom"
         "chrt"

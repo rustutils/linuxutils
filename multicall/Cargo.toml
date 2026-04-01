@@ -12,6 +12,7 @@ path = "src/main.rs"
 
 [dependencies]
 clap = { workspace = true }
+linuxutils-blockdev.workspace = true
 linuxutils-cal.workspace = true
 linuxutils-choom.workspace = true
 linuxutils-chrt.workspace = true

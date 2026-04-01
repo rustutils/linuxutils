@@ -5,7 +5,7 @@
 | Tool | Description | Status |
 |------|-------------|--------|
 | `addpart` | Tell the kernel about the existence of a partition | Not started |
-| `blockdev` | Call block device ioctls from the command line | Not started |
+| `blockdev` | Call block device ioctls from the command line | Done |
 | `cfdisk` | Display or manipulate a disk partition table (curses-based) | Not started |
 | `delpart` | Tell the kernel to forget about a partition | Not started |
 | `fdformat` | Low-level format a floppy disk | Not started |

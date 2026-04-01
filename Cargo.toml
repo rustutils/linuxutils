@@ -39,6 +39,7 @@ uuid = { version = "1", features = ["v1", "v3", "v4", "v5", "v6", "v7"] }
 # workspace crates
 linuxutils-common-sysfs = { path = "common/sysfs" }
 linuxutils-libsmartcols = { path = "libs/smartcols" }
+linuxutils-blockdev = { path = "tools/disk/blockdev" }
 linuxutils-cal = { path = "tools/misc/cal" }
 linuxutils-choom = { path = "tools/system/choom" }
 linuxutils-chrt = { path = "tools/sched/chrt" }

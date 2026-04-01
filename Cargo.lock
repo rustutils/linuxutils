@@ -530,6 +530,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "32a66949e030da00e8c7d4434b251670a91556f4144941d37452769c25d58a53"
 
 [[package]]
+name = "linuxutils-blockdev"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "cols",
+ "libc",
+]
+
+[[package]]
 name = "linuxutils-cal"
 version = "0.1.0"
 dependencies = [
@@ -800,6 +809,7 @@ version = "0.1.0"
 dependencies = [
  "clap",
  "clap_mangen",
+ "linuxutils-blockdev",
  "linuxutils-cal",
  "linuxutils-choom",
  "linuxutils-colrm",
@@ -871,6 +881,7 @@ name = "linuxutils-multicall"
 version = "0.1.0"
 dependencies = [
  "clap",
+ "linuxutils-blockdev",
  "linuxutils-cal",
  "linuxutils-choom",
  "linuxutils-chrt",

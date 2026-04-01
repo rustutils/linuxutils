@@ -2,7 +2,8 @@ use clap::{ArgMatches, Command, CommandFactory as _, FromArgMatches as _};
 use std::process::ExitCode;
 
 fn tool_subcommands(cmd: Command) -> Command {
-    cmd.subcommand(linuxutils_cal::Args::command())
+    cmd.subcommand(linuxutils_blockdev::Args::command())
+        .subcommand(linuxutils_cal::Args::command())
         .subcommand(linuxutils_choom::Args::command())
         .subcommand(linuxutils_chrt::Args::command())
         .subcommand(linuxutils_colrm::Args::command())
@@ -52,6 +53,9 @@ fn tool_subcommands(cmd: Command) -> Command {
 
 fn dispatch(name: &str, m: &ArgMatches) -> ExitCode {
     match name {
+        "blockdev" => linuxutils_blockdev::run(
+            linuxutils_blockdev::Args::from_arg_matches(m).unwrap(),
+        ),
         "cal" => linuxutils_cal::run(
             linuxutils_cal::Args::from_arg_matches(m).unwrap(),
         ),
