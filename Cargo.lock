@@ -781,6 +781,8 @@ dependencies = [
  "linuxutils-uuidgen",
  "linuxutils-uuidparse",
  "linuxutils-waitpid",
+ "linuxutils-wall",
+ "linuxutils-write",
 ]
 
 [[package]]
@@ -851,7 +853,9 @@ dependencies = [
  "linuxutils-uuidgen",
  "linuxutils-uuidparse",
  "linuxutils-waitpid",
+ "linuxutils-wall",
  "linuxutils-whereis",
+ "linuxutils-write",
 ]
 
 [[package]]
@@ -993,12 +997,30 @@ dependencies = [
 ]
 
 [[package]]
+name = "linuxutils-wall"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "clap",
+ "libc",
+]
+
+[[package]]
 name = "linuxutils-whereis"
 version = "0.1.0"
 dependencies = [
  "assert_cmd",
  "clap",
  "predicates",
+]
+
+[[package]]
+name = "linuxutils-write"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "clap",
+ "libc",
 ]
 
 [[package]]

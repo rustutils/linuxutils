@@ -1,0 +1,19 @@
+[package]
+name = "linuxutils-write"
+description = "Send a message to another user"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+name = "linuxutils_write"
+
+[[bin]]
+name = "write"
+path = "src/main.rs"
+
+[dependencies]
+chrono = { workspace = true }
+clap = { workspace = true }
+libc = { workspace = true }

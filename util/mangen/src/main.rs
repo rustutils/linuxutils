@@ -45,6 +45,8 @@ fn main() -> ExitCode {
         linuxutils_uuidgen::Args::command(),
         linuxutils_uuidparse::Args::command(),
         linuxutils_waitpid::Args::command(),
+        linuxutils_wall::Args::command(),
+        linuxutils_write::Args::command(),
     ];
 
     for cmd in tools {

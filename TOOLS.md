@@ -154,8 +154,8 @@
 | `scriptlive` | Re-run session typescripts using timing information | Not started |
 | `scriptreplay` | Play back typescripts using timing information | Not started |
 | `setterm` | Set terminal attributes | Not started |
-| `wall` | Write a message to all users | Not started |
-| `write` | Send a message to another user | Not started |
+| `wall` | Write a message to all users | Done |
+| `write` | Send a message to another user | Done |
 
 ## Scheduling Utilities
 

@@ -58,7 +58,9 @@
         "uuidgen"
         "uuidparse"
         "waitpid"
+        "wall"
         "whereis"
+        "write"
       ];
 
       craneLibFor = system: crane.mkLib (pkgsFor system);

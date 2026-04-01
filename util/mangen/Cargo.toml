@@ -42,3 +42,5 @@ linuxutils-unshare.workspace = true
 linuxutils-uuidgen.workspace = true
 linuxutils-uuidparse.workspace = true
 linuxutils-waitpid.workspace = true
+linuxutils-wall.workspace = true
+linuxutils-write.workspace = true

@@ -77,7 +77,9 @@ linuxutils-rfkill = { path = "tools/system/rfkill" }
 linuxutils-uuidparse = { path = "tools/misc/uuidparse" }
 linuxutils-taskset = { path = "tools/sched/taskset" }
 linuxutils-waitpid = { path = "tools/misc/waitpid" }
+linuxutils-wall = { path = "tools/term/wall" }
 linuxutils-whereis = { path = "tools/misc/whereis" }
+linuxutils-write = { path = "tools/term/write" }
 
 [workspace.metadata.crane]
 name = "linuxutils-multicall"

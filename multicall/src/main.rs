@@ -40,7 +40,9 @@ fn tool_subcommands(cmd: Command) -> Command {
         .subcommand(linuxutils_uuidgen::Args::command())
         .subcommand(linuxutils_uuidparse::Args::command())
         .subcommand(linuxutils_waitpid::Args::command())
+        .subcommand(linuxutils_wall::Args::command())
         .subcommand(linuxutils_whereis::Args::command())
+        .subcommand(linuxutils_write::Args::command())
 }
 
 fn dispatch(name: &str, m: &ArgMatches) -> ExitCode {
@@ -159,8 +161,14 @@ fn dispatch(name: &str, m: &ArgMatches) -> ExitCode {
         "waitpid" => linuxutils_waitpid::run(
             linuxutils_waitpid::Args::from_arg_matches(m).unwrap(),
         ),
+        "wall" => linuxutils_wall::run(
+            linuxutils_wall::Args::from_arg_matches(m).unwrap(),
+        ),
         "whereis" => linuxutils_whereis::run(
             linuxutils_whereis::Args::from_arg_matches(m).unwrap(),
+        ),
+        "write" => linuxutils_write::run(
+            linuxutils_write::Args::from_arg_matches(m).unwrap(),
         ),
         _ => unreachable!("clap ensures a valid subcommand"),
     }

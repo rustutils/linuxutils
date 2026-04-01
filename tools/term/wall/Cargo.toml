@@ -1,0 +1,19 @@
+[package]
+name = "linuxutils-wall"
+description = "Write a message to all users"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+name = "linuxutils_wall"
+
+[[bin]]
+name = "wall"
+path = "src/main.rs"
+
+[dependencies]
+chrono = { workspace = true }
+clap = { workspace = true }
+libc = { workspace = true }
