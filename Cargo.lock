@@ -863,6 +863,8 @@ dependencies = [
  "linuxutils-rfkill",
  "linuxutils-setpgid",
  "linuxutils-setsid",
+ "linuxutils-swapoff",
+ "linuxutils-swapon",
  "linuxutils-unshare",
  "linuxutils-uuidgen",
  "linuxutils-uuidparse",
@@ -944,6 +946,8 @@ dependencies = [
  "linuxutils-rfkill",
  "linuxutils-setpgid",
  "linuxutils-setsid",
+ "linuxutils-swapoff",
+ "linuxutils-swapon",
  "linuxutils-taskset",
  "linuxutils-unshare",
  "linuxutils-uuidgen",
@@ -1058,6 +1062,23 @@ dependencies = [
  "clap",
  "libc",
  "rustix",
+]
+
+[[package]]
+name = "linuxutils-swapoff"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "libc",
+]
+
+[[package]]
+name = "linuxutils-swapon"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "cols",
+ "libc",
 ]
 
 [[package]]

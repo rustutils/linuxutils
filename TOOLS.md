@@ -68,8 +68,8 @@
 | `setpgid` | Run a program in a new process group | Done |
 | `setpriv` | Run a program with different Linux privilege settings | Not started |
 | `setsid` | Run a program in a new session | Done |
-| `swapoff` | Disable devices and files for paging and swapping | Not started |
-| `swapon` | Enable devices and files for paging and swapping | Not started |
+| `swapoff` | Disable devices and files for paging and swapping | Done |
+| `swapon` | Enable devices and files for paging and swapping | Done |
 | `switch_root` | Switch to another filesystem as the root of the mount tree | Not started |
 | `tunelp` | Set various parameters for the lp device | Not started |
 | `umount` | Unmount filesystems | Not started |

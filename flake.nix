@@ -64,6 +64,8 @@
         "taskset"
         "rev"
         "rfkill"
+        "swapoff"
+        "swapon"
         "unshare"
         "uuidgen"
         "uuidparse"

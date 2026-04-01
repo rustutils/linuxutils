@@ -1,0 +1,19 @@
+[package]
+name = "linuxutils-swapon"
+description = "Enable devices and files for paging and swapping"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+name = "linuxutils_swapon"
+
+[[bin]]
+name = "swapon"
+path = "src/main.rs"
+
+[dependencies]
+clap = { workspace = true }
+cols = { workspace = true }
+libc = { workspace = true }

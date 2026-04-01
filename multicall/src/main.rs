@@ -46,6 +46,8 @@ fn tool_subcommands(cmd: Command) -> Command {
         .subcommand(linuxutils_taskset::Args::command())
         .subcommand(linuxutils_rev::Args::command())
         .subcommand(linuxutils_rfkill::Args::command())
+        .subcommand(linuxutils_swapoff::Args::command())
+        .subcommand(linuxutils_swapon::Args::command())
         .subcommand(linuxutils_unshare::Args::command())
         .subcommand(linuxutils_uuidgen::Args::command())
         .subcommand(linuxutils_uuidparse::Args::command())
@@ -188,6 +190,12 @@ fn dispatch(name: &str, m: &ArgMatches) -> ExitCode {
         ),
         "rfkill" => linuxutils_rfkill::run(
             linuxutils_rfkill::Args::from_arg_matches(m).unwrap(),
+        ),
+        "swapoff" => linuxutils_swapoff::run(
+            linuxutils_swapoff::Args::from_arg_matches(m).unwrap(),
+        ),
+        "swapon" => linuxutils_swapon::run(
+            linuxutils_swapon::Args::from_arg_matches(m).unwrap(),
         ),
         "unshare" => linuxutils_unshare::run(
             linuxutils_unshare::Args::from_arg_matches(m).unwrap(),

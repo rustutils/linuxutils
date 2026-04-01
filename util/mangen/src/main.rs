@@ -51,6 +51,8 @@ fn main() -> ExitCode {
         linuxutils_setsid::Args::command(),
         linuxutils_rev::Args::command(),
         linuxutils_rfkill::Args::command(),
+        linuxutils_swapoff::Args::command(),
+        linuxutils_swapon::Args::command(),
         linuxutils_unshare::Args::command(),
         linuxutils_uuidgen::Args::command(),
         linuxutils_uuidparse::Args::command(),
