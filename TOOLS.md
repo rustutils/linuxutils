@@ -49,7 +49,7 @@
 | `ipcs` | Show information on IPC facilities | Not started |
 | `irqtop` | Display kernel interrupt information | Not started |
 | `ldattach` | Attach a line discipline to a serial line | Not started |
-| `losetup` | Set up and control loop devices | Not started |
+| `losetup` | Set up and control loop devices | Done |
 | `lscpu` | Display information about the CPU architecture | Not started |
 | `lsipc` | Show information on IPC facilities currently employed in the system | Not started |
 | `lsirq` | Display kernel interrupt information | Done |

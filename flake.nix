@@ -38,6 +38,7 @@
         "kill"
         "line"
         "logger"
+        "losetup"
         "look"
         "lsirq"
         "lslocks"

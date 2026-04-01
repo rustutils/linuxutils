@@ -734,6 +734,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "linuxutils-losetup"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "libc",
+]
+
+[[package]]
 name = "linuxutils-lsirq"
 version = "0.1.0"
 dependencies = [
@@ -787,6 +795,7 @@ dependencies = [
  "linuxutils-line",
  "linuxutils-logger",
  "linuxutils-look",
+ "linuxutils-losetup",
  "linuxutils-lsirq",
  "linuxutils-lslocks",
  "linuxutils-lsmem",
@@ -860,6 +869,7 @@ dependencies = [
  "linuxutils-line",
  "linuxutils-logger",
  "linuxutils-look",
+ "linuxutils-losetup",
  "linuxutils-lsirq",
  "linuxutils-lslocks",
  "linuxutils-lsmem",

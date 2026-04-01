@@ -20,6 +20,7 @@ fn tool_subcommands(cmd: Command) -> Command {
         .subcommand(linuxutils_kill::Args::command())
         .subcommand(linuxutils_line::Args::command())
         .subcommand(linuxutils_logger::Args::command())
+        .subcommand(linuxutils_losetup::Args::command())
         .subcommand(linuxutils_look::Args::command())
         .subcommand(linuxutils_lsirq::Args::command())
         .subcommand(linuxutils_lslocks::Args::command())
@@ -103,6 +104,9 @@ fn dispatch(name: &str, m: &ArgMatches) -> ExitCode {
         ),
         "logger" => linuxutils_logger::run(
             linuxutils_logger::Args::from_arg_matches(m).unwrap(),
+        ),
+        "losetup" => linuxutils_losetup::run(
+            linuxutils_losetup::Args::from_arg_matches(m).unwrap(),
         ),
         "look" => linuxutils_look::run(
             linuxutils_look::Args::from_arg_matches(m).unwrap(),

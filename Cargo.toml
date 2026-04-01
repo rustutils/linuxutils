@@ -57,6 +57,7 @@ linuxutils-isosize = { path = "tools/disk/isosize" }
 linuxutils-kill = { path = "tools/misc/kill" }
 linuxutils-line = { path = "tools/text/line" }
 linuxutils-logger = { path = "tools/misc/logger" }
+linuxutils-losetup = { path = "tools/system/losetup" }
 linuxutils-look = { path = "tools/misc/look" }
 linuxutils-lslocks = { path = "tools/misc/lslocks" }
 linuxutils-mcookie = { path = "tools/misc/mcookie" }
