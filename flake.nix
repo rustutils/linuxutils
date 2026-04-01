@@ -48,6 +48,7 @@
         "logger"
         "losetup"
         "look"
+        "lscpu"
         "lsipc"
         "lsirq"
         "lslocks"

@@ -37,6 +37,7 @@ fn main() -> ExitCode {
         linuxutils_losetup::Args::command(),
         linuxutils_line::Args::command(),
         linuxutils_look::Args::command(),
+        linuxutils_lscpu::Args::command(),
         linuxutils_lsipc::Args::command(),
         linuxutils_lsirq::Args::command(),
         linuxutils_lslocks::Args::command(),

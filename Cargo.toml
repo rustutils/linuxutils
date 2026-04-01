@@ -31,6 +31,7 @@ clap = { version = "4", features = ["derive"] }
 colored = "3"
 libc = "0.2"
 predicates = "3"
+procfs = { version = "0.18", default-features = false, features = ["flate2"] }
 tempfile = "3"
 cols = { version = "0.3.0", git = "https://gitlab.com/rustutils/cols", features = ["color", "derive", "regex"] }
 rustix = { version = "1", features = ["event", "fs", "mount", "process", "termios", "thread", "time"] }
@@ -67,6 +68,7 @@ linuxutils-line = { path = "tools/text/line" }
 linuxutils-logger = { path = "tools/misc/logger" }
 linuxutils-losetup = { path = "tools/system/losetup" }
 linuxutils-look = { path = "tools/misc/look" }
+linuxutils-lscpu = { path = "tools/system/lscpu" }
 linuxutils-lslocks = { path = "tools/misc/lslocks" }
 linuxutils-mcookie = { path = "tools/misc/mcookie" }
 linuxutils-mesg = { path = "tools/term/mesg" }

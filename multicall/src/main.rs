@@ -30,6 +30,7 @@ fn tool_subcommands(cmd: Command) -> Command {
         .subcommand(linuxutils_logger::Args::command())
         .subcommand(linuxutils_losetup::Args::command())
         .subcommand(linuxutils_look::Args::command())
+        .subcommand(linuxutils_lscpu::Args::command())
         .subcommand(linuxutils_lsipc::Args::command())
         .subcommand(linuxutils_lsirq::Args::command())
         .subcommand(linuxutils_lslocks::Args::command())
@@ -147,6 +148,9 @@ fn dispatch(name: &str, m: &ArgMatches) -> ExitCode {
         ),
         "look" => linuxutils_look::run(
             linuxutils_look::Args::from_arg_matches(m).unwrap(),
+        ),
+        "lscpu" => linuxutils_lscpu::run(
+            linuxutils_lscpu::Args::from_arg_matches(m).unwrap(),
         ),
         "lsipc" => linuxutils_lsipc::run(
             linuxutils_lsipc::Args::from_arg_matches(m).unwrap(),

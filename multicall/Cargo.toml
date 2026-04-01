@@ -40,6 +40,7 @@ linuxutils-line.workspace = true
 linuxutils-logger.workspace = true
 linuxutils-losetup.workspace = true
 linuxutils-look.workspace = true
+linuxutils-lscpu.workspace = true
 linuxutils-lsipc.workspace = true
 linuxutils-lsirq.workspace = true
 linuxutils-lslocks.workspace = true
