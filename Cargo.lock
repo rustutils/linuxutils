@@ -853,6 +853,7 @@ name = "linuxutils-lscpu"
 version = "0.1.0"
 dependencies = [
  "clap",
+ "cols",
  "procfs",
 ]
 

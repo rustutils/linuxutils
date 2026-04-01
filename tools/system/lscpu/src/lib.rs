@@ -1,14 +1,14 @@
 use clap::Parser;
+use cols::{Cols, print_table};
 use procfs::Current;
 use std::{
     collections::{BTreeMap, BTreeSet},
-    fs,
+    fs, io,
     process::ExitCode,
 };
 
 const CPU_SYS: &str = "/sys/devices/system/cpu";
 const NODE_SYS: &str = "/sys/devices/system/node";
-const FIELD_WIDTH: usize = 25;
 
 /// Display information about the CPU architecture.
 ///
@@ -23,6 +23,32 @@ pub struct Args {
     /// Print sizes in bytes
     #[arg(short = 'B', long)]
     bytes: bool,
+}
+
+#[derive(Cols)]
+struct Row {
+    #[column(header = "", width_fixed = 25)]
+    label: String,
+
+    #[column(header = "", wrap)]
+    value: String,
+}
+
+impl Row {
+    fn new(indent: usize, label: &str, value: &str) -> Self {
+        let padding = " ".repeat(indent);
+        Self {
+            label: format!("{padding}{label}"),
+            value: value.to_string(),
+        }
+    }
+
+    fn section(title: &str) -> Self {
+        Self {
+            label: title.to_string(),
+            value: String::new(),
+        }
+    }
 }
 
 fn sysfs_read(path: &str) -> Option<String> {
@@ -192,49 +218,6 @@ fn pretty_vuln_name(file_name: &str) -> String {
     result
 }
 
-fn field(indent: usize, label: &str, value: &str) {
-    let padding = " ".repeat(indent);
-    let total_label_width = FIELD_WIDTH - indent;
-    println!("{padding}{label:<total_label_width$}{value}");
-}
-
-fn wrap_flags(flags: &str, indent: usize) {
-    let padding = " ".repeat(indent);
-    let total_label_width = FIELD_WIDTH - indent;
-    let label = "Flags:";
-    let content_start = FIELD_WIDTH;
-    let wrap_width = 80usize.saturating_sub(content_start);
-
-    let words: Vec<&str> = flags.split_whitespace().collect();
-    let mut lines: Vec<String> = Vec::new();
-    let mut current_line = String::new();
-
-    for word in &words {
-        if !current_line.is_empty()
-            && current_line.len() + 1 + word.len() > wrap_width
-        {
-            lines.push(current_line);
-            current_line = word.to_string();
-        } else {
-            if !current_line.is_empty() {
-                current_line.push(' ');
-            }
-            current_line.push_str(word);
-        }
-    }
-    if !current_line.is_empty() {
-        lines.push(current_line);
-    }
-
-    for (i, line) in lines.iter().enumerate() {
-        if i == 0 {
-            println!("{padding}{label:<total_label_width$}{line}");
-        } else {
-            println!("{:>content_start$}{line}", "");
-        }
-    }
-}
-
 pub fn run(_args: Args) -> ExitCode {
     let cpuinfo = match procfs::CpuInfo::current() {
         Ok(c) => c,
@@ -245,7 +228,6 @@ pub fn run(_args: Args) -> ExitCode {
     };
 
     let num_cpus = cpuinfo.num_cores();
-
     let vendor = cpuinfo_field(&cpuinfo, 0, "vendor_id").unwrap_or_default();
     let model_name =
         cpuinfo_field(&cpuinfo, 0, "model name").unwrap_or_default();
@@ -317,54 +299,64 @@ pub fn run(_args: Args) -> ExitCode {
         None
     };
 
-    // Architecture section
-    field(0, "Architecture:", arch);
-    field(2, "CPU op-mode(s):", op_modes);
+    let mut rows: Vec<Row> = Vec::new();
+
+    // Architecture
+    rows.push(Row::new(0, "Architecture:", arch));
+    rows.push(Row::new(2, "CPU op-mode(s):", op_modes));
     if !addr_sizes.is_empty() {
-        field(2, "Address sizes:", &addr_sizes);
+        rows.push(Row::new(2, "Address sizes:", &addr_sizes));
     }
     #[cfg(target_endian = "little")]
-    field(2, "Byte Order:", "Little Endian");
+    rows.push(Row::new(2, "Byte Order:", "Little Endian"));
     #[cfg(target_endian = "big")]
-    field(2, "Byte Order:", "Big Endian");
+    rows.push(Row::new(2, "Byte Order:", "Big Endian"));
 
     // CPU count
-    field(0, "CPU(s):", &online_cpus.len().to_string());
-    field(2, "On-line CPU(s) list:", &online);
+    rows.push(Row::new(0, "CPU(s):", &online_cpus.len().to_string()));
+    rows.push(Row::new(2, "On-line CPU(s) list:", &online));
     if !offline.is_empty() {
-        field(2, "Off-line CPU(s) list:", &offline);
+        rows.push(Row::new(2, "Off-line CPU(s) list:", &offline));
     }
 
     // Vendor / Model
-    field(0, "Vendor ID:", &vendor);
-    field(2, "Model name:", &model_name);
-    field(4, "CPU family:", &cpu_family);
-    field(4, "Model:", &model);
-    field(4, "Thread(s) per core:", &threads_per_core.to_string());
-    field(4, "Core(s) per socket:", &cores_per_sock.to_string());
-    field(4, "Socket(s):", &num_sockets.to_string());
-    field(4, "Stepping:", &stepping);
+    rows.push(Row::new(0, "Vendor ID:", &vendor));
+    rows.push(Row::new(2, "Model name:", &model_name));
+    rows.push(Row::new(4, "CPU family:", &cpu_family));
+    rows.push(Row::new(4, "Model:", &model));
+    rows.push(Row::new(
+        4,
+        "Thread(s) per core:",
+        &threads_per_core.to_string(),
+    ));
+    rows.push(Row::new(
+        4,
+        "Core(s) per socket:",
+        &cores_per_sock.to_string(),
+    ));
+    rows.push(Row::new(4, "Socket(s):", &num_sockets.to_string()));
+    rows.push(Row::new(4, "Stepping:", &stepping));
     if let Some(max) = max_mhz {
-        field(4, "CPU max MHz:", &format!("{max:.4}"));
+        rows.push(Row::new(4, "CPU max MHz:", &format!("{max:.4}")));
     }
     if let Some(min) = min_mhz {
-        field(4, "CPU min MHz:", &format!("{min:.4}"));
+        rows.push(Row::new(4, "CPU min MHz:", &format!("{min:.4}")));
     }
-    field(4, "BogoMIPS:", &bogomips);
+    rows.push(Row::new(4, "BogoMIPS:", &bogomips));
     if !flags_str.is_empty() {
-        wrap_flags(&flags_str, 4);
+        rows.push(Row::new(4, "Flags:", &flags_str));
     }
 
     // Virtualization
     if let Some(v) = virt {
-        println!("Virtualization features:");
-        field(2, "Virtualization:", v);
+        rows.push(Row::section("Virtualization features:"));
+        rows.push(Row::new(2, "Virtualization:", v));
     }
 
     // Caches
     let caches = gather_caches();
     if !caches.is_empty() {
-        println!("Caches (sum of all):");
+        rows.push(Row::section("Caches (sum of all):"));
         for cache in &caches {
             let total_kb = cache.one_size_kb * cache.instances as u64;
             let size_str = format_cache_size(total_kb);
@@ -373,29 +365,37 @@ pub fn run(_args: Args) -> ExitCode {
             } else {
                 format!("{size_str} (1 instance)")
             };
-            field(2, &format!("{}:", cache.name), &value);
+            rows.push(Row::new(2, &format!("{}:", cache.name), &value));
         }
     }
 
     // NUMA
     let numa_nodes = gather_numa_nodes();
     if !numa_nodes.is_empty() {
-        println!("NUMA:");
-        field(2, "NUMA node(s):", &numa_nodes.len().to_string());
+        rows.push(Row::section("NUMA:"));
+        rows.push(Row::new(2, "NUMA node(s):", &numa_nodes.len().to_string()));
         for (node, cpulist) in &numa_nodes {
-            field(2, &format!("NUMA node{node} CPU(s):"), cpulist);
+            rows.push(Row::new(
+                2,
+                &format!("NUMA node{node} CPU(s):"),
+                cpulist,
+            ));
         }
     }
 
     // Vulnerabilities
     let vulns = gather_vulnerabilities();
     if !vulns.is_empty() {
-        println!("Vulnerabilities:");
+        rows.push(Row::section("Vulnerabilities:"));
         for (name, status) in &vulns {
             let pretty = pretty_vuln_name(name);
-            field(2, &format!("{pretty}:"), status);
+            rows.push(Row::new(2, &format!("{pretty}:"), status));
         }
     }
+
+    let mut table = Row::to_table(&rows);
+    table.headings_set(false);
+    let _ = print_table(&table, &mut io::stdout().lock());
 
     ExitCode::SUCCESS
 }
