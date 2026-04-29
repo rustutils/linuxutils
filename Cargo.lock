@@ -284,8 +284,9 @@ dependencies = [
 
 [[package]]
 name = "cols"
-version = "0.3.0"
-source = "git+https://gitlab.com/rustutils/cols#26976309799d7fcf6b71d765a659093b2fc3b8c8"
+version = "0.3.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "aaa43599b33420e11264f87c2bc43cfce64e1e5db783b2d0cd4529232378aeff"
 dependencies = [
  "colored",
  "cols-derive",
@@ -295,8 +296,9 @@ dependencies = [
 
 [[package]]
 name = "cols-derive"
-version = "0.1.0"
-source = "git+https://gitlab.com/rustutils/cols#26976309799d7fcf6b71d765a659093b2fc3b8c8"
+version = "0.3.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1e1def6ebe9dfa8eed7cb563e4fd5f04cdd0459c5379b124f67e741051d5c01d"
 dependencies = [
  "proc-macro2",
  "quote",

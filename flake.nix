@@ -127,7 +127,7 @@
 
           # Generate man pages during build.
           postBuild = ''
-            cargo run --release --bin linuxutils-mangen -- target/man
+            cargo run --release --package xtask -- mangen target/man
           '';
 
           # Don't install anything yet — the specific packages below handle that.
@@ -142,7 +142,7 @@
 
           # Individual binaries + libraries + headers + man pages.
           individual = base.overrideAttrs (old: {
-            pname = "linuxutils-multicall";
+            pname = "linuxutils";
 
             installPhase = ''
               runHook preInstall
@@ -197,7 +197,7 @@
           });
         in {
           default = individual;
-          linuxutils-multicall = individual;
+          linuxutils = individual;
           linuxutils-multicall = multicall;
         }
       );
