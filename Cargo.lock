@@ -569,15 +569,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "linuxutils-blockdev"
-version = "0.1.0"
-dependencies = [
- "clap",
- "cols",
- "libc",
-]
-
-[[package]]
 name = "linuxutils-cal"
 version = "0.1.0"
 dependencies = [
@@ -642,6 +633,15 @@ name = "linuxutils-ctrlaltdel"
 version = "0.1.0"
 dependencies = [
  "clap",
+]
+
+[[package]]
+name = "linuxutils-disk"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "cols",
+ "libc",
 ]
 
 [[package]]
@@ -749,13 +749,6 @@ dependencies = [
 
 [[package]]
 name = "linuxutils-ipcs"
-version = "0.1.0"
-dependencies = [
- "clap",
-]
-
-[[package]]
-name = "linuxutils-isosize"
 version = "0.1.0"
 dependencies = [
  "clap",
@@ -905,12 +898,12 @@ dependencies = [
  "clap",
  "clap_mangen",
  "linuxutils-blkdiscard",
- "linuxutils-blockdev",
  "linuxutils-cal",
  "linuxutils-choom",
  "linuxutils-colrm",
  "linuxutils-copyfilerange",
  "linuxutils-ctrlaltdel",
+ "linuxutils-disk",
  "linuxutils-dmesg",
  "linuxutils-eject",
  "linuxutils-fadvise",
@@ -989,7 +982,6 @@ version = "0.1.0"
 dependencies = [
  "clap",
  "linuxutils-blkdiscard",
- "linuxutils-blockdev",
  "linuxutils-cal",
  "linuxutils-choom",
  "linuxutils-chrt",
@@ -997,6 +989,7 @@ dependencies = [
  "linuxutils-column",
  "linuxutils-copyfilerange",
  "linuxutils-ctrlaltdel",
+ "linuxutils-disk",
  "linuxutils-dmesg",
  "linuxutils-eject",
  "linuxutils-fadvise",
@@ -1010,7 +1003,6 @@ dependencies = [
  "linuxutils-ipcmk",
  "linuxutils-ipcrm",
  "linuxutils-ipcs",
- "linuxutils-isosize",
  "linuxutils-kill",
  "linuxutils-line",
  "linuxutils-logger",

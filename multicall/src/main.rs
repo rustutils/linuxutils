@@ -3,7 +3,7 @@ use std::process::ExitCode;
 
 fn tool_subcommands(cmd: Command) -> Command {
     cmd.subcommand(linuxutils_blkdiscard::Args::command())
-        .subcommand(linuxutils_blockdev::Args::command())
+        .subcommand(linuxutils_disk::blockdev::Args::command())
         .subcommand(linuxutils_cal::Args::command())
         .subcommand(linuxutils_choom::Args::command())
         .subcommand(linuxutils_chrt::Args::command())
@@ -24,7 +24,7 @@ fn tool_subcommands(cmd: Command) -> Command {
         .subcommand(linuxutils_ipcmk::Args::command())
         .subcommand(linuxutils_ipcrm::Args::command())
         .subcommand(linuxutils_ipcs::Args::command())
-        .subcommand(linuxutils_isosize::Args::command())
+        .subcommand(linuxutils_disk::isosize::Args::command())
         .subcommand(linuxutils_kill::Args::command())
         .subcommand(linuxutils_line::Args::command())
         .subcommand(linuxutils_logger::Args::command())
@@ -68,8 +68,8 @@ fn dispatch(name: &str, m: &ArgMatches) -> ExitCode {
         "blkdiscard" => linuxutils_blkdiscard::run(
             linuxutils_blkdiscard::Args::from_arg_matches(m).unwrap(),
         ),
-        "blockdev" => linuxutils_blockdev::run(
-            linuxutils_blockdev::Args::from_arg_matches(m).unwrap(),
+        "blockdev" => linuxutils_disk::blockdev::run(
+            linuxutils_disk::blockdev::Args::from_arg_matches(m).unwrap(),
         ),
         "cal" => linuxutils_cal::run(
             linuxutils_cal::Args::from_arg_matches(m).unwrap(),
@@ -131,8 +131,8 @@ fn dispatch(name: &str, m: &ArgMatches) -> ExitCode {
         "ipcs" => linuxutils_ipcs::run(
             linuxutils_ipcs::Args::from_arg_matches(m).unwrap(),
         ),
-        "isosize" => linuxutils_isosize::run(
-            linuxutils_isosize::Args::from_arg_matches(m).unwrap(),
+        "isosize" => linuxutils_disk::isosize::run(
+            linuxutils_disk::isosize::Args::from_arg_matches(m).unwrap(),
         ),
         "kill" => linuxutils_kill::run(
             linuxutils_kill::Args::from_arg_matches(m).unwrap(),

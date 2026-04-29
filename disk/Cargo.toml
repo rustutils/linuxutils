@@ -1,0 +1,28 @@
+[package]
+name = "linuxutils-disk"
+description = "Disk utilities from linuxutils (blockdev, isosize)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[features]
+default = ["full"]
+full = ["blockdev", "isosize"]
+blockdev = ["dep:cols", "dep:libc"]
+isosize = []
+
+[dependencies]
+clap = { workspace = true }
+cols = { workspace = true, optional = true }
+libc = { workspace = true, optional = true }
+
+[[bin]]
+name = "blockdev"
+path = "src/bin/blockdev.rs"
+required-features = ["blockdev"]
+
+[[bin]]
+name = "isosize"
+path = "src/bin/isosize.rs"
+required-features = ["isosize"]

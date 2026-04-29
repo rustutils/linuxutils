@@ -11,8 +11,8 @@ publish = false
 clap = { workspace = true }
 clap_mangen = "0.2"
 linuxutils-blkdiscard.workspace = true
-linuxutils-blockdev.workspace = true
 linuxutils-cal.workspace = true
+linuxutils-disk.workspace = true
 linuxutils-choom.workspace = true
 linuxutils-colrm.workspace = true
 linuxutils-copyfilerange.workspace = true

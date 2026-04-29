@@ -2,13 +2,13 @@
 resolver = "2"
 members = [
     "common/sysfs",
+    "disk",
     "libs/blkid",
     "libs/fdisk",
     "libs/mount",
     "libs/smartcols",
     "libs/uuid",
     "multicall",
-    "tools/disk/*",
     "tools/login/*",
     "tools/misc/*",
     "tools/sched/*",
@@ -40,8 +40,8 @@ uuid = { version = "1", features = ["v1", "v3", "v4", "v5", "v6", "v7"] }
 # workspace crates
 linuxutils-common-sysfs = { path = "common/sysfs" }
 linuxutils-libsmartcols = { path = "libs/smartcols" }
+linuxutils-disk = { path = "disk" }
 linuxutils-blkdiscard = { path = "tools/system/blkdiscard" }
-linuxutils-blockdev = { path = "tools/disk/blockdev" }
 linuxutils-cal = { path = "tools/misc/cal" }
 linuxutils-choom = { path = "tools/system/choom" }
 linuxutils-chrt = { path = "tools/sched/chrt" }
@@ -62,7 +62,6 @@ linuxutils-ionice = { path = "tools/sched/ionice" }
 linuxutils-ipcmk = { path = "tools/system/ipcmk" }
 linuxutils-ipcrm = { path = "tools/system/ipcrm" }
 linuxutils-ipcs = { path = "tools/system/ipcs" }
-linuxutils-isosize = { path = "tools/disk/isosize" }
 linuxutils-kill = { path = "tools/misc/kill" }
 linuxutils-line = { path = "tools/text/line" }
 linuxutils-logger = { path = "tools/misc/logger" }

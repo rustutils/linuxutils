@@ -1,6 +1,6 @@
 #![allow(clippy::missing_safety_doc)]
 
-use std::{ffi::CStr, fmt::Write as _};
+use std::{ffi::{c_char, CStr}, fmt::Write as _};
 use uuid::Uuid;
 
 // uuid_t in C is unsigned char[16], so we work with *mut u8 / *const u8.
@@ -114,7 +114,7 @@ pub unsafe extern "C" fn uuid_is_null(uu: *const u8) -> i32 {
 
 /// Parse a UUID string into a uuid_t. Returns 0 on success, -1 on failure.
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn uuid_parse(input: *const i8, uu: *mut u8) -> i32 {
+pub unsafe extern "C" fn uuid_parse(input: *const c_char, uu: *mut u8) -> i32 {
     let s = match unsafe { CStr::from_ptr(input) }.to_str() {
         Ok(s) => s,
         Err(_) => return -1,
@@ -252,7 +252,7 @@ pub unsafe extern "C" fn uuid_variant(uu: *const u8) -> i32 {
 /// Known aliases: "dns", "url", "oid", "x500", "nil"
 /// Returns null if the alias is unknown.
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn uuid_get_template(alias: *const i8) -> *const u8 {
+pub unsafe extern "C" fn uuid_get_template(alias: *const c_char) -> *const u8 {
     let s = match unsafe { CStr::from_ptr(alias) }.to_str() {
         Ok(s) => s,
         Err(_) => return std::ptr::null(),

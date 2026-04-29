@@ -13,8 +13,8 @@ path = "src/main.rs"
 [dependencies]
 clap = { workspace = true }
 linuxutils-blkdiscard.workspace = true
-linuxutils-blockdev.workspace = true
 linuxutils-cal.workspace = true
+linuxutils-disk.workspace = true
 linuxutils-choom.workspace = true
 linuxutils-chrt.workspace = true
 linuxutils-colrm.workspace = true
@@ -34,7 +34,6 @@ linuxutils-ionice.workspace = true
 linuxutils-ipcmk.workspace = true
 linuxutils-ipcrm.workspace = true
 linuxutils-ipcs.workspace = true
-linuxutils-isosize.workspace = true
 linuxutils-kill.workspace = true
 linuxutils-line.workspace = true
 linuxutils-logger.workspace = true
