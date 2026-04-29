@@ -1,6 +1,7 @@
 use clap::Parser;
+use linuxutils_system::fsfreeze::*;
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
-    linuxutils_system::fsfreeze::run(linuxutils_system::fsfreeze::Args::parse())
+    run(Args::parse())
 }

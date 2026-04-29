@@ -1,6 +1,7 @@
 use clap::Parser;
+use linuxutils_system::ipcrm::*;
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
-    linuxutils_system::ipcrm::run(linuxutils_system::ipcrm::Args::parse())
+    run(Args::parse())
 }

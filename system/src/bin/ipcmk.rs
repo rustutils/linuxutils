@@ -1,6 +1,7 @@
 use clap::Parser;
+use linuxutils_system::ipcmk::*;
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
-    linuxutils_system::ipcmk::run(linuxutils_system::ipcmk::Args::parse())
+    run(Args::parse())
 }

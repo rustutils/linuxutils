@@ -1,6 +1,7 @@
 use clap::Parser;
+use linuxutils_system::lsmem::*;
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
-    linuxutils_system::lsmem::run(linuxutils_system::lsmem::Args::parse())
+    run(Args::parse())
 }

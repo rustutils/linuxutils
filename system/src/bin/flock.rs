@@ -1,6 +1,7 @@
 use clap::Parser;
+use linuxutils_system::flock::*;
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
-    linuxutils_system::flock::run(linuxutils_system::flock::Args::parse())
+    run(Args::parse())
 }

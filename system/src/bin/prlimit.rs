@@ -1,6 +1,7 @@
 use clap::Parser;
+use linuxutils_system::prlimit::*;
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
-    linuxutils_system::prlimit::run(linuxutils_system::prlimit::Args::parse())
+    run(Args::parse())
 }

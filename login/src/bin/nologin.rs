@@ -1,6 +1,7 @@
 use clap::Parser;
+use linuxutils_login::nologin::*;
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
-    linuxutils_login::nologin::run(linuxutils_login::nologin::Args::parse())
+    run(Args::parse())
 }

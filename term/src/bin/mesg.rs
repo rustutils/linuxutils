@@ -1,6 +1,7 @@
 use clap::Parser;
+use linuxutils_term::mesg::*;
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
-    linuxutils_term::mesg::run(linuxutils_term::mesg::Args::parse())
+    run(Args::parse())
 }

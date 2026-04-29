@@ -1,6 +1,7 @@
 use clap::Parser;
+use linuxutils_system::setsid::*;
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
-    linuxutils_system::setsid::run(linuxutils_system::setsid::Args::parse())
+    run(Args::parse())
 }

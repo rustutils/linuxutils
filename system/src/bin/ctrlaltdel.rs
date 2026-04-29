@@ -1,6 +1,7 @@
 use clap::Parser;
+use linuxutils_system::ctrlaltdel::*;
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
-    linuxutils_system::ctrlaltdel::run(linuxutils_system::ctrlaltdel::Args::parse())
+    run(Args::parse())
 }

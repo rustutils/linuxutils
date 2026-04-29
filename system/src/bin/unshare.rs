@@ -1,6 +1,7 @@
 use clap::Parser;
+use linuxutils_system::unshare::*;
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
-    linuxutils_system::unshare::run(linuxutils_system::unshare::Args::parse())
+    run(Args::parse())
 }

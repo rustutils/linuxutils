@@ -1,6 +1,7 @@
 use clap::Parser;
+use linuxutils_system::lscpu::*;
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
-    linuxutils_system::lscpu::run(linuxutils_system::lscpu::Args::parse())
+    run(Args::parse())
 }

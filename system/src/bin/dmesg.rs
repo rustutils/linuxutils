@@ -1,6 +1,7 @@
 use clap::Parser;
+use linuxutils_system::dmesg::*;
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
-    linuxutils_system::dmesg::run(linuxutils_system::dmesg::Args::parse())
+    run(Args::parse())
 }

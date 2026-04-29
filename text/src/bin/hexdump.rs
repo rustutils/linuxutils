@@ -1,6 +1,7 @@
 use clap::Parser;
+use linuxutils_text::hexdump::*;
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
-    linuxutils_text::hexdump::run(linuxutils_text::hexdump::Args::parse())
+    run(Args::parse())
 }

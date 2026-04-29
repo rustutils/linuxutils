@@ -1,6 +1,7 @@
 use clap::Parser;
+use linuxutils_disk::isosize::*;
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
-    linuxutils_disk::isosize::run(linuxutils_disk::isosize::Args::parse())
+    run(Args::parse())
 }

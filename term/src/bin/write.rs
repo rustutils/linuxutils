@@ -1,6 +1,7 @@
 use clap::Parser;
+use linuxutils_term::write::*;
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
-    linuxutils_term::write::run(linuxutils_term::write::Args::parse())
+    run(Args::parse())
 }

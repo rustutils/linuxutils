@@ -1,6 +1,7 @@
 use clap::Parser;
+use linuxutils_system::pivot_root::*;
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
-    linuxutils_system::pivot_root::run(linuxutils_system::pivot_root::Args::parse())
+    run(Args::parse())
 }

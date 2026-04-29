@@ -1,6 +1,7 @@
 use clap::Parser;
+use linuxutils_system::losetup::*;
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
-    linuxutils_system::losetup::run(linuxutils_system::losetup::Args::parse())
+    run(Args::parse())
 }

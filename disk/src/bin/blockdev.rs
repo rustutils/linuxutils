@@ -1,5 +1,7 @@
 use clap::Parser;
+use linuxutils_disk::blockdev::*;
+use std::process::ExitCode;
 
-fn main() -> std::process::ExitCode {
-    linuxutils_disk::blockdev::run(linuxutils_disk::blockdev::Args::parse())
+fn main() -> ExitCode {
+    run(Args::parse())
 }

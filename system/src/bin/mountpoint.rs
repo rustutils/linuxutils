@@ -1,6 +1,7 @@
 use clap::Parser;
+use linuxutils_system::mountpoint::*;
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
-    linuxutils_system::mountpoint::run(linuxutils_system::mountpoint::Args::parse())
+    run(Args::parse())
 }
