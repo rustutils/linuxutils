@@ -1,4 +1,4 @@
-use linuxutils_common::man::ManContent;
+use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
 pub const MAN: ManContent = ManContent::empty();
 
@@ -10,6 +10,7 @@ const NS_TYPES: &[&str] =
     &["mnt", "net", "ipc", "user", "pid", "uts", "cgroup", "time"];
 
 #[derive(Parser)]
+#[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "lsns", about = "List system namespaces")]
 pub struct Args {
     /// Use JSON output format

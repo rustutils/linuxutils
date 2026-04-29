@@ -1,4 +1,4 @@
-use linuxutils_common::man::ManContent;
+use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
 pub const MAN: ManContent = ManContent::empty();
 
@@ -83,6 +83,7 @@ fn set_ioprio(
 }
 
 #[derive(Parser)]
+#[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(
     name = "ionice",
     about = "Set or get process I/O scheduling class and priority",

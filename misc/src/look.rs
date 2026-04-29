@@ -1,4 +1,4 @@
-use linuxutils_common::man::ManContent;
+use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
 pub const MAN: ManContent = ManContent::empty();
 
@@ -13,6 +13,7 @@ const DEFAULT_DICT: &str = "/usr/share/dict/words";
 const ALT_DICT: &str = "/usr/share/dict/web2";
 
 #[derive(Parser)]
+#[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(
     name = "look",
     version,

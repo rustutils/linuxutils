@@ -1,4 +1,4 @@
-use linuxutils_common::man::ManContent;
+use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
 pub const MAN: ManContent = ManContent::empty();
 
@@ -10,6 +10,7 @@ use rustix::{
 use std::{process::ExitCode, time::Instant};
 
 #[derive(Parser)]
+#[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "waitpid", about = "Wait for arbitrary processes to exit")]
 pub struct Args {
     /// Be more verbose

@@ -1,4 +1,4 @@
-use linuxutils_common::man::ManContent;
+use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
 pub const MAN: ManContent = ManContent::empty();
 
@@ -9,6 +9,7 @@ use std::{
 };
 
 #[derive(Parser)]
+#[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "lslocks", about = "List local system locks")]
 pub struct Args {
     /// Print SIZE in bytes rather than human-readable format

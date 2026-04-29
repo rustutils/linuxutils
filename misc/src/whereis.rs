@@ -1,4 +1,4 @@
-use linuxutils_common::man::ManContent;
+use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
 pub const MAN: ManContent = ManContent::empty();
 
@@ -26,6 +26,7 @@ pub struct Args {
 }
 
 #[derive(clap::Parser)]
+#[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(
     name = "whereis",
     about = "Locate the binary, source, and manual page files for a command"

@@ -1,4 +1,4 @@
-use linuxutils_common::man::ManContent;
+use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
 pub const MAN: ManContent = ManContent::empty();
 
@@ -6,6 +6,7 @@ use clap::Parser;
 use std::{fs, os::unix::process::CommandExt, process, process::ExitCode};
 
 #[derive(Parser)]
+#[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(
     name = "choom",
     about = "Display and adjust OOM-killer score",

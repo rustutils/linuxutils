@@ -1,4 +1,4 @@
-use linuxutils_common::man::ManContent;
+use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
 pub const MAN: ManContent = ManContent::empty();
 
@@ -14,6 +14,7 @@ use std::{fs::File, os::unix::io::AsRawFd, process::ExitCode};
 /// Most commonly used with `dontneed` to drop a file's pages from the
 /// page cache.
 #[derive(Parser)]
+#[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(
     name = "fadvise",
     about = "Advise the kernel about file access patterns"

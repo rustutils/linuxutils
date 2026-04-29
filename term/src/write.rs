@@ -1,4 +1,4 @@
-use linuxutils_common::man::ManContent;
+use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
 pub const MAN: ManContent = ManContent::empty();
 
@@ -17,6 +17,7 @@ const UTMP_RECORD_SIZE: usize = 384;
 const UT_USER_PROCESS: i16 = 7;
 
 #[derive(Parser)]
+#[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "write", about = "Send a message to another user")]
 pub struct Args {
     /// User to write to

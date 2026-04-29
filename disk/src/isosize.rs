@@ -1,4 +1,4 @@
-use linuxutils_common::man::ManContent;
+use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
 pub const MAN: ManContent = ManContent::empty();
 
@@ -14,6 +14,7 @@ const PVD_TYPE_PRIMARY: u8 = 1;
 const CD001_MAGIC: &[u8; 5] = b"CD001";
 
 #[derive(Parser)]
+#[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(
     name = "isosize",
     about = "Output the length of an iso9660 filesystem",

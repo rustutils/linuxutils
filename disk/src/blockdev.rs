@@ -1,4 +1,4 @@
-use linuxutils_common::man::ManContent;
+use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
 pub const MAN: ManContent = ManContent::empty();
 
@@ -38,6 +38,7 @@ const BLKDISCARDZEROES: libc::c_ulong = 0x127c;
 /// the specified block device(s). Multiple commands and devices can be
 /// given in a single invocation.
 #[derive(Parser)]
+#[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(
     name = "blockdev",
     about = "Call block device ioctls from the command line",

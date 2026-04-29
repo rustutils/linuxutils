@@ -1,4 +1,4 @@
-use linuxutils_common::man::ManContent;
+use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
 pub const MAN: ManContent = ManContent::empty();
 
@@ -174,6 +174,7 @@ fn get_task_pids(pid: i32) -> Result<Vec<i32>, std::io::Error> {
 }
 
 #[derive(Parser)]
+#[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(
     name = "chrt",
     about = "Manipulate the real-time attributes of a process",

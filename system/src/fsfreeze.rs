@@ -1,4 +1,4 @@
-use linuxutils_common::man::ManContent;
+use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
 pub const MAN: ManContent = ManContent::empty();
 
@@ -9,6 +9,7 @@ const FIFREEZE: libc::c_ulong = 0xc0045877;
 const FITHAW: libc::c_ulong = 0xc0045878;
 
 #[derive(Parser)]
+#[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(
     name = "fsfreeze",
     about = "Suspend or resume access to a filesystem"

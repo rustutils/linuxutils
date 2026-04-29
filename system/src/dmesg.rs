@@ -1,4 +1,4 @@
-use linuxutils_common::man::ManContent;
+use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
 pub const MAN: ManContent = ManContent::empty();
 
@@ -22,6 +22,7 @@ const LEVEL_NAMES: [&str; 8] = [
 ];
 
 #[derive(Parser)]
+#[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "dmesg", about = "Print or control the kernel ring buffer")]
 pub struct Args {
     /// Restrict output to the given comma-separated list of facilities

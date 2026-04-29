@@ -1,4 +1,4 @@
-use linuxutils_common::man::ManContent;
+use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
 pub const MAN: ManContent = ManContent::empty();
 
@@ -16,6 +16,7 @@ const UT_USER_PROCESS: i16 = 7;
 const LINE_WIDTH: usize = 79;
 
 #[derive(Parser)]
+#[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "wall", about = "Write a message to all users")]
 pub struct Args {
     /// Suppress the banner (root only)

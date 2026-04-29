@@ -1,4 +1,4 @@
-use linuxutils_common::man::ManContent;
+use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
 pub const MAN: ManContent = ManContent::empty();
 
@@ -19,6 +19,7 @@ const NODE_SYS: &str = "/sys/devices/system/node";
 /// Gathers CPU information from /proc/cpuinfo and sysfs, displaying
 /// architecture details, topology, caches, frequencies, and vulnerabilities.
 #[derive(Parser)]
+#[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(
     name = "lscpu",
     about = "Display information about the CPU architecture"

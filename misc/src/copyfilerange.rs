@@ -1,4 +1,4 @@
-use linuxutils_common::man::ManContent;
+use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
 pub const MAN: ManContent = ManContent::empty();
 
@@ -15,6 +15,7 @@ use std::{
 /// Performs kernel-space file copies that can create reflinked files
 /// when the filesystem supports it. Range format: `src_off:dst_off:length`.
 #[derive(Parser)]
+#[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "copyfilerange", about = "Copy byte ranges between files")]
 pub struct Args {
     /// Read range specs from file (one per line)

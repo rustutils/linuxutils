@@ -1,4 +1,4 @@
-use linuxutils_common::man::ManContent;
+use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
 pub const MAN: ManContent = ManContent::empty();
 
@@ -12,6 +12,7 @@ use std::{
 
 /// Reverse lines characterwise.
 #[derive(Parser)]
+#[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "rev", version, about)]
 pub struct Args {
     /// Use '\0' as the line separator instead of newline.

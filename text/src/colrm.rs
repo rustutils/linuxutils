@@ -1,4 +1,4 @@
-use linuxutils_common::man::ManContent;
+use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
 pub const MAN: ManContent = ManContent::empty();
 
@@ -11,6 +11,7 @@ use std::{
 const TAB_WIDTH: usize = 8;
 
 #[derive(Parser)]
+#[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "colrm", version, about = "Remove columns from a file")]
 pub struct Args {
     /// First column to remove (1-based)

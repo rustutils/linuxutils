@@ -1,4 +1,4 @@
-use linuxutils_common::man::ManContent;
+use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
 pub const MAN: ManContent = ManContent::empty();
 
@@ -21,6 +21,7 @@ const SWAP_FLAG_DISCARD_PAGES: libc::c_int = 0x40000;
 /// Calls swapon(2) to activate swap areas. Can enable individual devices
 /// or all swap entries from /etc/fstab.
 #[derive(Parser)]
+#[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(
     name = "swapon",
     about = "Enable devices and files for paging and swapping"

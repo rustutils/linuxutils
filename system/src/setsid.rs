@@ -1,4 +1,4 @@
-use linuxutils_common::man::ManContent;
+use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
 pub const MAN: ManContent = ManContent::empty();
 
@@ -9,6 +9,7 @@ use rustix::process::{
 use std::{ffi::CString, os::unix::io::AsRawFd, process::ExitCode};
 
 #[derive(Parser)]
+#[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "setsid", version, about = "Run a program in a new session")]
 pub struct Args {
     /// Set the controlling terminal to the current one

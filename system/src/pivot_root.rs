@@ -1,4 +1,4 @@
-use linuxutils_common::man::ManContent;
+use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
 pub const MAN: ManContent = ManContent::empty();
 
@@ -11,6 +11,7 @@ use std::process::ExitCode;
 /// Both paths must be directories; `new_root` must be a mount point and
 /// `put_old` must be at or under `new_root`.
 #[derive(Parser)]
+#[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "pivot_root", about = "Change the root filesystem")]
 pub struct Args {
     /// New root filesystem path

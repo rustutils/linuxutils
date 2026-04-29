@@ -1,4 +1,4 @@
-use linuxutils_common::man::ManContent;
+use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
 pub const MAN: ManContent = ManContent {
     description: Some(include_str!("../man/nologin/description.man")),
@@ -25,6 +25,7 @@ const NOLOGIN_TXT: &str = "/etc/nologin.txt";
 /// Displays a message that an account is not available and exits non-zero.
 /// Intended as a replacement shell field to deny login access to an account.
 #[derive(Parser)]
+#[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "nologin", version, about = "Politely refuse a login")]
 pub struct Args {
     /// Ignored (shell compatibility).

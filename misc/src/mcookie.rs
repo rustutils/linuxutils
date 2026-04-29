@@ -1,4 +1,4 @@
-use linuxutils_common::man::ManContent;
+use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
 pub const MAN: ManContent = ManContent::empty();
 
@@ -15,6 +15,7 @@ use std::{
 /// Generates a 128-bit random hexadecimal number for use with the X authority
 /// system.
 #[derive(Parser)]
+#[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "mcookie", version, about)]
 pub struct Args {
     /// Use this file as an additional source of randomness.

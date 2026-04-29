@@ -1,4 +1,4 @@
-use linuxutils_common::man::ManContent;
+use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
 pub const MAN: ManContent = ManContent::empty();
 
@@ -10,6 +10,7 @@ use std::{io, process::ExitCode};
 /// Creates shared memory segments, message queues, or semaphore arrays
 /// using shmget(2), msgget(2), or semget(2) with IPC_PRIVATE.
 #[derive(Parser)]
+#[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "ipcmk", about = "Create System V IPC resources")]
 pub struct Args {
     /// Create shared memory segment of given size in bytes

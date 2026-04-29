@@ -1,4 +1,4 @@
-use linuxutils_common::man::ManContent;
+use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
 pub const MAN: ManContent = ManContent::empty();
 
@@ -50,6 +50,7 @@ const LEVELS: &[(&str, u8)] = &[
 ];
 
 #[derive(Parser)]
+#[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "logger", about = "Enter messages into the system log")]
 pub struct Args {
     /// Log the PID of the logger process

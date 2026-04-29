@@ -1,4 +1,4 @@
-use linuxutils_common::man::ManContent;
+use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
 pub const MAN: ManContent = ManContent::empty();
 
@@ -16,6 +16,7 @@ use std::{
 /// swap contents back to RAM before deactivating, which may take
 /// significant time if the swap is heavily used.
 #[derive(Parser)]
+#[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(
     name = "swapoff",
     about = "Disable devices and files for paging and swapping"

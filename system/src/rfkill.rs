@@ -1,4 +1,4 @@
-use linuxutils_common::man::ManContent;
+use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
 pub const MAN: ManContent = ManContent::empty();
 
@@ -28,6 +28,7 @@ const OP_CHANGE: u8 = 2;
 const OP_CHANGE_ALL: u8 = 3;
 
 #[derive(Parser)]
+#[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "rfkill", about = "Enable and disable wireless devices")]
 pub struct Args {
     /// Use JSON output format

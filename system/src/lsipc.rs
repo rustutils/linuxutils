@@ -1,4 +1,4 @@
-use linuxutils_common::man::ManContent;
+use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
 pub const MAN: ManContent = ManContent::empty();
 
@@ -16,6 +16,7 @@ use std::{
 /// /proc/sys/kernel/* to display IPC resource information
 /// in tabular format.
 #[derive(Parser)]
+#[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "lsipc", about = "List information on IPC facilities")]
 pub struct Args {
     /// List shared memory segments

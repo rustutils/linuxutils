@@ -1,4 +1,4 @@
-use linuxutils_common::man::ManContent;
+use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
 pub const MAN: ManContent = ManContent::empty();
 
@@ -14,6 +14,7 @@ use std::{
 /// Reads /proc/sysvipc/{shm,msg,sem} to display active IPC resources,
 /// system limits, or usage summaries.
 #[derive(Parser)]
+#[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "ipcs", about = "Show information on System V IPC facilities")]
 pub struct Args {
     /// Show shared memory segments
