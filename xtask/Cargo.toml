@@ -1,6 +1,6 @@
 [package]
-name = "linuxutils-mangen"
-description = "Man page generator for linuxutils tools"
+name = "xtask"
+description = "Developer-only tasks for the linuxutils workspace"
 version.workspace = true
 edition.workspace = true
 license.workspace = true

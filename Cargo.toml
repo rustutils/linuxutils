@@ -15,7 +15,7 @@ members = [
     "system",
     "term",
     "text",
-    "util/mangen", "common",
+    "xtask", "common",
 ]
 
 [workspace.package]
@@ -39,13 +39,13 @@ uuid = { version = "1", features = ["v1", "v3", "v4", "v5", "v6", "v7"] }
 
 # workspace crates
 linuxutils-libsmartcols = { path = "libs/smartcols" }
-linuxutils-disk = { path = "disk" }
-linuxutils-login = { path = "login" }
-linuxutils-misc = { path = "misc" }
-linuxutils-sched = { path = "sched" }
-linuxutils-system = { path = "system" }
-linuxutils-term = { path = "term" }
-linuxutils-text = { path = "text" }
+linuxutils-disk = { path = "disk", version = "0.1.0" }
+linuxutils-login = { path = "login", version = "0.1.0" }
+linuxutils-misc = { path = "misc", version = "0.1.0" }
+linuxutils-sched = { path = "sched", version = "0.1.0" }
+linuxutils-system = { path = "system", version = "0.1.0" }
+linuxutils-term = { path = "term", version = "0.1.0" }
+linuxutils-text = { path = "text", version = "0.1.0" }
 
 [workspace.metadata.crane]
 name = "linuxutils-multicall"

@@ -2,13 +2,9 @@ use clap::CommandFactory as _;
 use clap_mangen::Man;
 use std::{fs, process::ExitCode};
 
-fn main() -> ExitCode {
-    let output = std::env::args()
-        .nth(1)
-        .unwrap_or_else(|| "target/man".to_string());
-
-    if let Err(e) = fs::create_dir_all(&output) {
-        eprintln!("mangen: failed to create output directory: {e}");
+pub fn run(output: &str) -> ExitCode {
+    if let Err(e) = fs::create_dir_all(output) {
+        eprintln!("xtask mangen: failed to create output directory: {e}");
         return ExitCode::FAILURE;
     }
 
@@ -81,12 +77,12 @@ fn main() -> ExitCode {
 
         let mut buf = Vec::new();
         if let Err(e) = man.render(&mut buf) {
-            eprintln!("mangen: failed to render {name}: {e}");
+            eprintln!("xtask mangen: failed to render {name}: {e}");
             return ExitCode::FAILURE;
         }
 
         if let Err(e) = fs::write(&path, buf) {
-            eprintln!("mangen: failed to write {path}: {e}");
+            eprintln!("xtask mangen: failed to write {path}: {e}");
             return ExitCode::FAILURE;
         }
 
