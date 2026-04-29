@@ -1,7 +1,10 @@
 # linuxutils
 
-A collection of Linux utilities written in Rust, aspiring to be drop-in
-compatible with [util-linux](https://github.com/util-linux/util-linux).
+A collection of Linux utilities written in Rust, drop-in compatible with the
+standard Linux toolbox. The bulk of the tools come from
+[util-linux](https://github.com/util-linux/util-linux), with kernel module
+tools from [kmod](https://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git)
+also planned.
 
 Tools are grouped into per-category crates (e.g. `linuxutils-disk`,
 `linuxutils-system`) with one cargo feature per tool, so you can install the
@@ -10,16 +13,46 @@ original C libraries are also provided as cdylibs for FFI consumers.
 
 ## Project Structure
 
-| Directory | Contents |
-|-----------|----------|
-| `disk/`, `login/`, `misc/`, `sched/`, `system/`, `term/`, `text/` | Group crates — each contains every tool in that category as a feature-gated module + binary |
-| `common/` | `linuxutils-common` — shared types (e.g. `ManContent` for man-page generation) |
-| `libs/` | ABI-compatible C library reimplementations (libblkid, libfdisk, libmount, libsmartcols, libuuid) — built as cdylibs |
-| `linuxutils/` | Multicall binary that dispatches to any tool by `argv[0]` or as a subcommand |
-| `xtask/` | Developer-only tasks (man-page generation, etc.); not published |
+### Group crates
+
+Each group crate contains every tool in its category as a feature-gated
+module + binary. Defaults to all tools; individual tools can be selected via
+`--no-default-features --features <tool>`.
+
+| Directory | Crate | Tools |
+|-----------|-------|-------|
+| `disk/` | `linuxutils-disk` | `blockdev`, `isosize` |
+| `kmod/` | `linuxutils-kmod` | _planned: `lsmod`, `modinfo`, `modprobe`, `insmod`, `rmmod`, `depmod`_ |
+| `login/` | `linuxutils-login` | `nologin` |
+| `misc/` | `linuxutils-misc` | `cal`, `copyfilerange`, `getopt`, `kill`, `logger`, `look`, `lslocks`, `mcookie`, `namei`, `rename`, `uuidgen`, `uuidparse`, `waitpid`, `whereis` |
+| `sched/` | `linuxutils-sched` | `chrt`, `ionice`, `taskset` |
+| `system/` | `linuxutils-system` | `blkdiscard`, `choom`, `ctrlaltdel`, `dmesg`, `eject`, `fadvise`, `fallocate`, `flock`, `fsfreeze`, `fstrim`, `ipcmk`, `ipcrm`, `ipcs`, `losetup`, `lscpu`, `lsipc`, `lsirq`, `lsmem`, `lsns`, `mountpoint`, `nsenter`, `pipesz`, `pivot_root`, `prlimit`, `renice`, `rfkill`, `setpgid`, `setsid`, `swapoff`, `swapon`, `unshare` |
+| `term/` | `linuxutils-term` | `mesg`, `wall`, `write` |
+| `text/` | `linuxutils-text` | `colrm`, `column`, `hexdump`, `line`, `rev` |
+
+### ABI-compatible C library reimplementations
+
+Built as `cdylib`s for FFI consumers. Drop-in replacements for the upstream
+shared libraries.
+
+| Directory | Crate |
+|-----------|-------|
+| `libs/blkid/` | `linuxutils-libblkid` |
+| `libs/fdisk/` | `linuxutils-libfdisk` |
+| `libs/mount/` | `linuxutils-libmount` |
+| `libs/smartcols/` | `linuxutils-libsmartcols` |
+| `libs/uuid/` | `linuxutils-libuuid` |
+
+### Other crates
+
+| Directory | Crate | Purpose |
+|-----------|-------|---------|
+| `common/` | `linuxutils-common` | Shared types (`ManContent`, `HELP_WIDTH_MAX`) used by every tool |
+| `linuxutils/` | `linuxutils` | Multicall binary that dispatches to any tool by `argv[0]` or as a subcommand |
+| `xtask/` | `xtask` | Developer-only tasks (man-page generation, etc.); not published |
 
 All published crates are prefixed with `linuxutils-` to avoid naming collisions
-on crates.io (e.g. `linuxutils-text`, `linuxutils-libmount`).
+on crates.io.
 
 ## Status
 

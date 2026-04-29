@@ -623,6 +623,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "linuxutils-kmod"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "linuxutils-common",
+]
+
+[[package]]
 name = "linuxutils-libblkid"
 version = "0.1.0"
 dependencies = [

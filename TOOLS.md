@@ -167,6 +167,19 @@
 | `taskset` | Set or retrieve a process's CPU affinity | Done |
 | `uclampset` | Manipulate the utilization clamping attributes of the system or a process | Not started |
 
+## Kernel Module Utilities
+
+These tools come from the [kmod](https://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git) project rather than util-linux, but are part of the standard Linux toolbox for managing kernel modules.
+
+| Tool | Description | Status |
+|------|-------------|--------|
+| `depmod` | Generate `modules.dep` and map files for `modprobe` | Not started |
+| `insmod` | Insert a module into the running kernel | Not started |
+| `lsmod` | Show the status of modules in the Linux Kernel | Not started |
+| `modinfo` | Show information about a Linux Kernel module | Not started |
+| `modprobe` | Add and remove modules from the Linux Kernel (with dependency resolution) | Not started |
+| `rmmod` | Remove a module from the Linux Kernel | Not started |
+
 ## File Descriptor Utilities
 
 | Tool | Description | Status |

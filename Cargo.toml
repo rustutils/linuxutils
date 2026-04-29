@@ -3,6 +3,7 @@ resolver = "2"
 members = [
     "common",
     "disk",
+    "kmod",
     "libs/blkid",
     "libs/fdisk",
     "libs/mount",
@@ -43,6 +44,7 @@ uuid = { version = "1", features = ["v1", "v3", "v4", "v5", "v6", "v7"] }
 # workspace crates
 linuxutils-common = { path = "common", version = "0.1.0" }
 linuxutils-disk = { path = "disk", version = "0.1.0" }
+linuxutils-kmod = { path = "kmod", version = "0.1.0" }
 linuxutils-login = { path = "login", version = "0.1.0" }
 linuxutils-misc = { path = "misc", version = "0.1.0" }
 linuxutils-sched = { path = "sched", version = "0.1.0" }
