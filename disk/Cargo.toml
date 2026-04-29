@@ -3,8 +3,18 @@ name = "linuxutils-disk"
 description = "Disk utilities from linuxutils (blockdev, isosize)"
 version.workspace = true
 edition.workspace = true
+rust-version.workspace = true
 license.workspace = true
 repository.workspace = true
+authors.workspace = true
+readme = "README.md"
+keywords = ["linux", "cli", "util-linux", "disk", "block-device"]
+categories = ["command-line-utilities", "os::linux-apis", "filesystem"]
+
+[package.metadata.docs.rs]
+default-target = "x86_64-unknown-linux-gnu"
+targets = []
+all-features = true
 
 [features]
 default = ["full"]

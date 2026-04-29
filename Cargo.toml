@@ -15,14 +15,16 @@ members = [
     "system",
     "term",
     "text",
-    "xtask", "common",
+    "xtask",
 ]
 
 [workspace.package]
 version = "0.1.0"
 edition = "2024"
+rust-version = "1.85"
 license = "MIT"
 repository = "https://github.com/rustutils/linuxutils"
+authors = ["Patrick Elsen <pelsen@xfbs.net>"]
 
 [workspace.dependencies]
 assert_cmd = "2"
@@ -38,7 +40,7 @@ rustix = { version = "1", features = ["event", "fs", "mount", "process", "termio
 uuid = { version = "1", features = ["v1", "v3", "v4", "v5", "v6", "v7"] }
 
 # workspace crates
-linuxutils-common = { path = "common" }
+linuxutils-common = { path = "common", version = "0.1.0" }
 linuxutils-disk = { path = "disk", version = "0.1.0" }
 linuxutils-login = { path = "login", version = "0.1.0" }
 linuxutils-misc = { path = "misc", version = "0.1.0" }
@@ -48,4 +50,4 @@ linuxutils-term = { path = "term", version = "0.1.0" }
 linuxutils-text = { path = "text", version = "0.1.0" }
 
 [workspace.metadata.crane]
-name = "linuxutils-multicall"
+name = "linuxutils"
