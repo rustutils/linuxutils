@@ -10,7 +10,7 @@ members = [
     "libs/uuid",
     "login",
     "misc",
-    "multicall",
+    "linuxutils",
     "sched",
     "system",
     "term",

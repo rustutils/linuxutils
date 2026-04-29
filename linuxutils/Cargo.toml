@@ -1,5 +1,5 @@
 [package]
-name = "linuxutils-multicall"
+name = "linuxutils"
 description = "Multicall binary for linuxutils tools"
 version.workspace = true
 edition.workspace = true
