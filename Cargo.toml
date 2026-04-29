@@ -8,13 +8,13 @@ members = [
     "libs/mount",
     "libs/smartcols",
     "libs/uuid",
+    "login",
+    "misc",
     "multicall",
-    "tools/login/*",
-    "tools/misc/*",
-    "tools/sched/*",
-    "tools/system/*",
-    "tools/term/*",
-    "tools/text/*",
+    "sched",
+    "system",
+    "term",
+    "text",
     "util/mangen",
 ]
 
@@ -41,63 +41,12 @@ uuid = { version = "1", features = ["v1", "v3", "v4", "v5", "v6", "v7"] }
 linuxutils-common-sysfs = { path = "common/sysfs" }
 linuxutils-libsmartcols = { path = "libs/smartcols" }
 linuxutils-disk = { path = "disk" }
-linuxutils-blkdiscard = { path = "tools/system/blkdiscard" }
-linuxutils-cal = { path = "tools/misc/cal" }
-linuxutils-choom = { path = "tools/system/choom" }
-linuxutils-chrt = { path = "tools/sched/chrt" }
-linuxutils-fallocate = { path = "tools/system/fallocate" }
-linuxutils-flock = { path = "tools/system/flock" }
-linuxutils-colrm = { path = "tools/text/colrm" }
-linuxutils-copyfilerange = { path = "tools/misc/copyfilerange" }
-linuxutils-ctrlaltdel = { path = "tools/system/ctrlaltdel" }
-linuxutils-dmesg = { path = "tools/system/dmesg" }
-linuxutils-eject = { path = "tools/system/eject" }
-linuxutils-fsfreeze = { path = "tools/system/fsfreeze" }
-linuxutils-fadvise = { path = "tools/system/fadvise" }
-linuxutils-fstrim = { path = "tools/system/fstrim" }
-linuxutils-column = { path = "tools/text/column" }
-linuxutils-getopt = { path = "tools/misc/getopt" }
-linuxutils-hexdump = { path = "tools/text/hexdump" }
-linuxutils-ionice = { path = "tools/sched/ionice" }
-linuxutils-ipcmk = { path = "tools/system/ipcmk" }
-linuxutils-ipcrm = { path = "tools/system/ipcrm" }
-linuxutils-ipcs = { path = "tools/system/ipcs" }
-linuxutils-kill = { path = "tools/misc/kill" }
-linuxutils-line = { path = "tools/text/line" }
-linuxutils-logger = { path = "tools/misc/logger" }
-linuxutils-losetup = { path = "tools/system/losetup" }
-linuxutils-look = { path = "tools/misc/look" }
-linuxutils-lscpu = { path = "tools/system/lscpu" }
-linuxutils-lslocks = { path = "tools/misc/lslocks" }
-linuxutils-mcookie = { path = "tools/misc/mcookie" }
-linuxutils-mesg = { path = "tools/term/mesg" }
-linuxutils-namei = { path = "tools/misc/namei" }
-linuxutils-mountpoint = { path = "tools/system/mountpoint" }
-linuxutils-nologin = { path = "tools/login/nologin" }
-linuxutils-pipesz = { path = "tools/system/pipesz" }
-linuxutils-pivot-root = { path = "tools/system/pivot_root" }
-linuxutils-nsenter = { path = "tools/system/nsenter" }
-linuxutils-prlimit = { path = "tools/system/prlimit" }
-linuxutils-rename = { path = "tools/misc/rename" }
-linuxutils-renice = { path = "tools/system/renice" }
-linuxutils-rev = { path = "tools/text/rev" }
-linuxutils-setpgid = { path = "tools/system/setpgid" }
-linuxutils-setsid = { path = "tools/system/setsid" }
-linuxutils-swapoff = { path = "tools/system/swapoff" }
-linuxutils-swapon = { path = "tools/system/swapon" }
-linuxutils-unshare = { path = "tools/system/unshare" }
-linuxutils-uuidgen = { path = "tools/misc/uuidgen" }
-linuxutils-lsipc = { path = "tools/system/lsipc" }
-linuxutils-lsirq = { path = "tools/system/lsirq" }
-linuxutils-lsmem = { path = "tools/system/lsmem" }
-linuxutils-lsns = { path = "tools/system/lsns" }
-linuxutils-rfkill = { path = "tools/system/rfkill" }
-linuxutils-uuidparse = { path = "tools/misc/uuidparse" }
-linuxutils-taskset = { path = "tools/sched/taskset" }
-linuxutils-waitpid = { path = "tools/misc/waitpid" }
-linuxutils-wall = { path = "tools/term/wall" }
-linuxutils-whereis = { path = "tools/misc/whereis" }
-linuxutils-write = { path = "tools/term/write" }
+linuxutils-login = { path = "login" }
+linuxutils-misc = { path = "misc" }
+linuxutils-sched = { path = "sched" }
+linuxutils-system = { path = "system" }
+linuxutils-term = { path = "term" }
+linuxutils-text = { path = "text" }
 
 [workspace.metadata.crane]
 name = "linuxutils-multicall"

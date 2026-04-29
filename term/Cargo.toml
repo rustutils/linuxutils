@@ -1,0 +1,35 @@
+[package]
+name = "linuxutils-term"
+description = "Terminal utilities from linuxutils (mesg, wall, write)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[features]
+default = ["full"]
+full = ["mesg", "wall", "write"]
+mesg = ["dep:rustix"]
+wall = ["dep:chrono", "dep:libc"]
+write = ["dep:chrono", "dep:libc"]
+
+[dependencies]
+clap = { workspace = true }
+chrono = { workspace = true, optional = true }
+libc = { workspace = true, optional = true }
+rustix = { workspace = true, optional = true }
+
+[[bin]]
+name = "mesg"
+path = "src/bin/mesg.rs"
+required-features = ["mesg"]
+
+[[bin]]
+name = "wall"
+path = "src/bin/wall.rs"
+required-features = ["wall"]
+
+[[bin]]
+name = "write"
+path = "src/bin/write.rs"
+required-features = ["write"]

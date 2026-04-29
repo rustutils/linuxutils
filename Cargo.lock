@@ -561,79 +561,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "32a66949e030da00e8c7d4434b251670a91556f4144941d37452769c25d58a53"
 
 [[package]]
-name = "linuxutils-blkdiscard"
-version = "0.1.0"
-dependencies = [
- "clap",
- "libc",
-]
-
-[[package]]
-name = "linuxutils-cal"
-version = "0.1.0"
-dependencies = [
- "assert_cmd",
- "chrono",
- "clap",
- "predicates",
-]
-
-[[package]]
-name = "linuxutils-choom"
-version = "0.1.0"
-dependencies = [
- "clap",
-]
-
-[[package]]
-name = "linuxutils-chrt"
-version = "0.1.0"
-dependencies = [
- "assert_cmd",
- "clap",
- "libc",
- "predicates",
-]
-
-[[package]]
-name = "linuxutils-colrm"
-version = "0.1.0"
-dependencies = [
- "assert_cmd",
- "clap",
- "predicates",
-]
-
-[[package]]
-name = "linuxutils-column"
-version = "0.1.0"
-dependencies = [
- "assert_cmd",
- "clap",
- "cols",
- "predicates",
- "rustix",
- "tempfile",
-]
-
-[[package]]
 name = "linuxutils-common-sysfs"
 version = "0.1.0"
-
-[[package]]
-name = "linuxutils-copyfilerange"
-version = "0.1.0"
-dependencies = [
- "clap",
- "libc",
-]
-
-[[package]]
-name = "linuxutils-ctrlaltdel"
-version = "0.1.0"
-dependencies = [
- "clap",
-]
 
 [[package]]
 name = "linuxutils-disk"
@@ -642,124 +571,6 @@ dependencies = [
  "clap",
  "cols",
  "libc",
-]
-
-[[package]]
-name = "linuxutils-dmesg"
-version = "0.1.0"
-dependencies = [
- "chrono",
- "clap",
- "colored",
- "rustix",
-]
-
-[[package]]
-name = "linuxutils-eject"
-version = "0.1.0"
-dependencies = [
- "clap",
- "libc",
-]
-
-[[package]]
-name = "linuxutils-fadvise"
-version = "0.1.0"
-dependencies = [
- "clap",
- "rustix",
-]
-
-[[package]]
-name = "linuxutils-fallocate"
-version = "0.1.0"
-dependencies = [
- "assert_cmd",
- "clap",
- "predicates",
- "rustix",
- "tempfile",
-]
-
-[[package]]
-name = "linuxutils-flock"
-version = "0.1.0"
-dependencies = [
- "clap",
- "rustix",
-]
-
-[[package]]
-name = "linuxutils-fsfreeze"
-version = "0.1.0"
-dependencies = [
- "clap",
- "libc",
-]
-
-[[package]]
-name = "linuxutils-fstrim"
-version = "0.1.0"
-dependencies = [
- "clap",
- "libc",
-]
-
-[[package]]
-name = "linuxutils-getopt"
-version = "0.1.0"
-dependencies = [
- "assert_cmd",
- "clap",
- "predicates",
-]
-
-[[package]]
-name = "linuxutils-hexdump"
-version = "0.1.0"
-dependencies = [
- "clap",
-]
-
-[[package]]
-name = "linuxutils-ionice"
-version = "0.1.0"
-dependencies = [
- "assert_cmd",
- "clap",
- "libc",
- "predicates",
-]
-
-[[package]]
-name = "linuxutils-ipcmk"
-version = "0.1.0"
-dependencies = [
- "clap",
- "libc",
-]
-
-[[package]]
-name = "linuxutils-ipcrm"
-version = "0.1.0"
-dependencies = [
- "clap",
- "libc",
-]
-
-[[package]]
-name = "linuxutils-ipcs"
-version = "0.1.0"
-dependencies = [
- "clap",
-]
-
-[[package]]
-name = "linuxutils-kill"
-version = "0.1.0"
-dependencies = [
- "clap",
- "rustix",
 ]
 
 [[package]]
@@ -808,87 +619,12 @@ dependencies = [
 ]
 
 [[package]]
-name = "linuxutils-line"
+name = "linuxutils-login"
 version = "0.1.0"
 dependencies = [
  "assert_cmd",
  "clap",
  "predicates",
-]
-
-[[package]]
-name = "linuxutils-logger"
-version = "0.1.0"
-dependencies = [
- "clap",
- "rustix",
-]
-
-[[package]]
-name = "linuxutils-look"
-version = "0.1.0"
-dependencies = [
- "clap",
- "tempfile",
-]
-
-[[package]]
-name = "linuxutils-losetup"
-version = "0.1.0"
-dependencies = [
- "clap",
- "cols",
- "libc",
-]
-
-[[package]]
-name = "linuxutils-lscpu"
-version = "0.1.0"
-dependencies = [
- "clap",
- "cols",
- "procfs",
-]
-
-[[package]]
-name = "linuxutils-lsipc"
-version = "0.1.0"
-dependencies = [
- "clap",
- "cols",
-]
-
-[[package]]
-name = "linuxutils-lsirq"
-version = "0.1.0"
-dependencies = [
- "clap",
- "cols",
-]
-
-[[package]]
-name = "linuxutils-lslocks"
-version = "0.1.0"
-dependencies = [
- "clap",
- "cols",
-]
-
-[[package]]
-name = "linuxutils-lsmem"
-version = "0.1.0"
-dependencies = [
- "clap",
- "cols",
- "linuxutils-common-sysfs",
-]
-
-[[package]]
-name = "linuxutils-lsns"
-version = "0.1.0"
-dependencies = [
- "clap",
- "cols",
 ]
 
 [[package]]
@@ -897,83 +633,28 @@ version = "0.1.0"
 dependencies = [
  "clap",
  "clap_mangen",
- "linuxutils-blkdiscard",
- "linuxutils-cal",
- "linuxutils-choom",
- "linuxutils-colrm",
- "linuxutils-copyfilerange",
- "linuxutils-ctrlaltdel",
  "linuxutils-disk",
- "linuxutils-dmesg",
- "linuxutils-eject",
- "linuxutils-fadvise",
- "linuxutils-flock",
- "linuxutils-fsfreeze",
- "linuxutils-fstrim",
- "linuxutils-getopt",
- "linuxutils-hexdump",
- "linuxutils-ionice",
- "linuxutils-ipcmk",
- "linuxutils-ipcrm",
- "linuxutils-ipcs",
- "linuxutils-kill",
- "linuxutils-line",
- "linuxutils-logger",
- "linuxutils-look",
- "linuxutils-losetup",
- "linuxutils-lscpu",
- "linuxutils-lsipc",
- "linuxutils-lsirq",
- "linuxutils-lslocks",
- "linuxutils-lsmem",
- "linuxutils-lsns",
- "linuxutils-mcookie",
- "linuxutils-mesg",
- "linuxutils-mountpoint",
- "linuxutils-namei",
- "linuxutils-nologin",
- "linuxutils-nsenter",
- "linuxutils-pipesz",
- "linuxutils-pivot-root",
- "linuxutils-prlimit",
- "linuxutils-renice",
- "linuxutils-rev",
- "linuxutils-rfkill",
- "linuxutils-setpgid",
- "linuxutils-setsid",
- "linuxutils-swapoff",
- "linuxutils-swapon",
- "linuxutils-unshare",
- "linuxutils-uuidgen",
- "linuxutils-uuidparse",
- "linuxutils-waitpid",
- "linuxutils-wall",
- "linuxutils-write",
+ "linuxutils-login",
+ "linuxutils-misc",
+ "linuxutils-sched",
+ "linuxutils-system",
+ "linuxutils-term",
+ "linuxutils-text",
 ]
 
 [[package]]
-name = "linuxutils-mcookie"
+name = "linuxutils-misc"
 version = "0.1.0"
 dependencies = [
  "assert_cmd",
+ "chrono",
  "clap",
+ "cols",
+ "libc",
  "predicates",
-]
-
-[[package]]
-name = "linuxutils-mesg"
-version = "0.1.0"
-dependencies = [
- "clap",
  "rustix",
-]
-
-[[package]]
-name = "linuxutils-mountpoint"
-version = "0.1.0"
-dependencies = [
- "clap",
- "rustix",
+ "tempfile",
+ "uuid",
 ]
 
 [[package]]
@@ -981,262 +662,63 @@ name = "linuxutils-multicall"
 version = "0.1.0"
 dependencies = [
  "clap",
- "linuxutils-blkdiscard",
- "linuxutils-cal",
- "linuxutils-choom",
- "linuxutils-chrt",
- "linuxutils-colrm",
- "linuxutils-column",
- "linuxutils-copyfilerange",
- "linuxutils-ctrlaltdel",
  "linuxutils-disk",
- "linuxutils-dmesg",
- "linuxutils-eject",
- "linuxutils-fadvise",
- "linuxutils-fallocate",
- "linuxutils-flock",
- "linuxutils-fsfreeze",
- "linuxutils-fstrim",
- "linuxutils-getopt",
- "linuxutils-hexdump",
- "linuxutils-ionice",
- "linuxutils-ipcmk",
- "linuxutils-ipcrm",
- "linuxutils-ipcs",
- "linuxutils-kill",
- "linuxutils-line",
- "linuxutils-logger",
- "linuxutils-look",
- "linuxutils-losetup",
- "linuxutils-lscpu",
- "linuxutils-lsipc",
- "linuxutils-lsirq",
- "linuxutils-lslocks",
- "linuxutils-lsmem",
- "linuxutils-lsns",
- "linuxutils-mcookie",
- "linuxutils-mesg",
- "linuxutils-mountpoint",
- "linuxutils-namei",
- "linuxutils-nologin",
- "linuxutils-nsenter",
- "linuxutils-pipesz",
- "linuxutils-pivot-root",
- "linuxutils-prlimit",
- "linuxutils-rename",
- "linuxutils-renice",
- "linuxutils-rev",
- "linuxutils-rfkill",
- "linuxutils-setpgid",
- "linuxutils-setsid",
- "linuxutils-swapoff",
- "linuxutils-swapon",
- "linuxutils-taskset",
- "linuxutils-unshare",
- "linuxutils-uuidgen",
- "linuxutils-uuidparse",
- "linuxutils-waitpid",
- "linuxutils-wall",
- "linuxutils-whereis",
- "linuxutils-write",
+ "linuxutils-login",
+ "linuxutils-misc",
+ "linuxutils-sched",
+ "linuxutils-system",
+ "linuxutils-term",
+ "linuxutils-text",
 ]
 
 [[package]]
-name = "linuxutils-namei"
-version = "0.1.0"
-dependencies = [
- "clap",
- "rustix",
-]
-
-[[package]]
-name = "linuxutils-nologin"
+name = "linuxutils-sched"
 version = "0.1.0"
 dependencies = [
  "assert_cmd",
  "clap",
+ "libc",
  "predicates",
-]
-
-[[package]]
-name = "linuxutils-nsenter"
-version = "0.1.0"
-dependencies = [
- "clap",
- "libc",
  "rustix",
 ]
 
 [[package]]
-name = "linuxutils-pipesz"
+name = "linuxutils-system"
 version = "0.1.0"
 dependencies = [
+ "assert_cmd",
+ "chrono",
  "clap",
- "libc",
-]
-
-[[package]]
-name = "linuxutils-pivot-root"
-version = "0.1.0"
-dependencies = [
- "clap",
- "rustix",
-]
-
-[[package]]
-name = "linuxutils-prlimit"
-version = "0.1.0"
-dependencies = [
- "clap",
+ "colored",
  "cols",
- "rustix",
-]
-
-[[package]]
-name = "linuxutils-rename"
-version = "0.1.0"
-dependencies = [
- "assert_cmd",
- "clap",
+ "libc",
+ "linuxutils-common-sysfs",
  "predicates",
+ "procfs",
+ "rustix",
  "tempfile",
 ]
 
 [[package]]
-name = "linuxutils-renice"
-version = "0.1.0"
-dependencies = [
- "clap",
- "libc",
- "rustix",
-]
-
-[[package]]
-name = "linuxutils-rev"
-version = "0.1.0"
-dependencies = [
- "assert_cmd",
- "clap",
- "predicates",
- "tempfile",
-]
-
-[[package]]
-name = "linuxutils-rfkill"
-version = "0.1.0"
-dependencies = [
- "clap",
- "cols",
-]
-
-[[package]]
-name = "linuxutils-setpgid"
-version = "0.1.0"
-dependencies = [
- "clap",
- "libc",
- "rustix",
-]
-
-[[package]]
-name = "linuxutils-setsid"
-version = "0.1.0"
-dependencies = [
- "clap",
- "libc",
- "rustix",
-]
-
-[[package]]
-name = "linuxutils-swapoff"
-version = "0.1.0"
-dependencies = [
- "clap",
- "libc",
-]
-
-[[package]]
-name = "linuxutils-swapon"
-version = "0.1.0"
-dependencies = [
- "clap",
- "cols",
- "libc",
-]
-
-[[package]]
-name = "linuxutils-taskset"
-version = "0.1.0"
-dependencies = [
- "assert_cmd",
- "clap",
- "predicates",
- "rustix",
-]
-
-[[package]]
-name = "linuxutils-unshare"
-version = "0.1.0"
-dependencies = [
- "clap",
- "libc",
- "rustix",
-]
-
-[[package]]
-name = "linuxutils-uuidgen"
-version = "0.1.0"
-dependencies = [
- "assert_cmd",
- "clap",
- "predicates",
- "uuid",
-]
-
-[[package]]
-name = "linuxutils-uuidparse"
-version = "0.1.0"
-dependencies = [
- "assert_cmd",
- "clap",
- "libc",
- "predicates",
- "uuid",
-]
-
-[[package]]
-name = "linuxutils-waitpid"
-version = "0.1.0"
-dependencies = [
- "clap",
- "rustix",
-]
-
-[[package]]
-name = "linuxutils-wall"
+name = "linuxutils-term"
 version = "0.1.0"
 dependencies = [
  "chrono",
  "clap",
  "libc",
+ "rustix",
 ]
 
 [[package]]
-name = "linuxutils-whereis"
+name = "linuxutils-text"
 version = "0.1.0"
 dependencies = [
  "assert_cmd",
  "clap",
+ "cols",
  "predicates",
-]
-
-[[package]]
-name = "linuxutils-write"
-version = "0.1.0"
-dependencies = [
- "chrono",
- "clap",
- "libc",
+ "rustix",
+ "tempfile",
 ]
 
 [[package]]

@@ -1,0 +1,244 @@
+[package]
+name = "linuxutils-system"
+description = "System utilities from linuxutils"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[features]
+default = ["full"]
+full = [
+    "blkdiscard",
+    "choom",
+    "ctrlaltdel",
+    "dmesg",
+    "eject",
+    "fadvise",
+    "fallocate",
+    "flock",
+    "fsfreeze",
+    "fstrim",
+    "ipcmk",
+    "ipcrm",
+    "ipcs",
+    "losetup",
+    "lscpu",
+    "lsipc",
+    "lsirq",
+    "lsmem",
+    "lsns",
+    "mountpoint",
+    "nsenter",
+    "pipesz",
+    "pivot_root",
+    "prlimit",
+    "renice",
+    "rfkill",
+    "setpgid",
+    "setsid",
+    "swapoff",
+    "swapon",
+    "unshare",
+]
+blkdiscard = ["dep:libc"]
+choom = []
+ctrlaltdel = []
+dmesg = ["dep:chrono", "dep:colored", "dep:rustix"]
+eject = ["dep:libc"]
+fadvise = ["dep:rustix"]
+fallocate = ["dep:rustix"]
+flock = ["dep:rustix"]
+fsfreeze = ["dep:libc"]
+fstrim = ["dep:libc"]
+ipcmk = ["dep:libc"]
+ipcrm = ["dep:libc"]
+ipcs = []
+losetup = ["dep:cols", "dep:libc"]
+lscpu = ["dep:cols", "dep:procfs"]
+lsipc = ["dep:cols"]
+lsirq = ["dep:cols"]
+lsmem = ["dep:cols", "dep:linuxutils-common-sysfs"]
+lsns = ["dep:cols"]
+mountpoint = ["dep:rustix"]
+nsenter = ["dep:libc", "dep:rustix"]
+pipesz = ["dep:libc"]
+pivot_root = ["dep:rustix"]
+prlimit = ["dep:cols", "dep:rustix"]
+renice = ["dep:libc", "dep:rustix"]
+rfkill = ["dep:cols"]
+setpgid = ["dep:libc", "dep:rustix"]
+setsid = ["dep:libc", "dep:rustix"]
+swapoff = ["dep:libc"]
+swapon = ["dep:cols", "dep:libc"]
+unshare = ["dep:libc", "dep:rustix"]
+
+[dependencies]
+clap = { workspace = true }
+chrono = { workspace = true, optional = true }
+cols = { workspace = true, optional = true }
+colored = { workspace = true, optional = true }
+libc = { workspace = true, optional = true }
+procfs = { workspace = true, optional = true }
+rustix = { workspace = true, optional = true }
+linuxutils-common-sysfs = { workspace = true, optional = true }
+
+[dev-dependencies]
+assert_cmd = { workspace = true }
+predicates = { workspace = true }
+tempfile = { workspace = true }
+
+[[bin]]
+name = "blkdiscard"
+path = "src/bin/blkdiscard.rs"
+required-features = ["blkdiscard"]
+
+[[bin]]
+name = "choom"
+path = "src/bin/choom.rs"
+required-features = ["choom"]
+
+[[bin]]
+name = "ctrlaltdel"
+path = "src/bin/ctrlaltdel.rs"
+required-features = ["ctrlaltdel"]
+
+[[bin]]
+name = "dmesg"
+path = "src/bin/dmesg.rs"
+required-features = ["dmesg"]
+
+[[bin]]
+name = "eject"
+path = "src/bin/eject.rs"
+required-features = ["eject"]
+
+[[bin]]
+name = "fadvise"
+path = "src/bin/fadvise.rs"
+required-features = ["fadvise"]
+
+[[bin]]
+name = "fallocate"
+path = "src/bin/fallocate.rs"
+required-features = ["fallocate"]
+
+[[bin]]
+name = "flock"
+path = "src/bin/flock.rs"
+required-features = ["flock"]
+
+[[bin]]
+name = "fsfreeze"
+path = "src/bin/fsfreeze.rs"
+required-features = ["fsfreeze"]
+
+[[bin]]
+name = "fstrim"
+path = "src/bin/fstrim.rs"
+required-features = ["fstrim"]
+
+[[bin]]
+name = "ipcmk"
+path = "src/bin/ipcmk.rs"
+required-features = ["ipcmk"]
+
+[[bin]]
+name = "ipcrm"
+path = "src/bin/ipcrm.rs"
+required-features = ["ipcrm"]
+
+[[bin]]
+name = "ipcs"
+path = "src/bin/ipcs.rs"
+required-features = ["ipcs"]
+
+[[bin]]
+name = "losetup"
+path = "src/bin/losetup.rs"
+required-features = ["losetup"]
+
+[[bin]]
+name = "lscpu"
+path = "src/bin/lscpu.rs"
+required-features = ["lscpu"]
+
+[[bin]]
+name = "lsipc"
+path = "src/bin/lsipc.rs"
+required-features = ["lsipc"]
+
+[[bin]]
+name = "lsirq"
+path = "src/bin/lsirq.rs"
+required-features = ["lsirq"]
+
+[[bin]]
+name = "lsmem"
+path = "src/bin/lsmem.rs"
+required-features = ["lsmem"]
+
+[[bin]]
+name = "lsns"
+path = "src/bin/lsns.rs"
+required-features = ["lsns"]
+
+[[bin]]
+name = "mountpoint"
+path = "src/bin/mountpoint.rs"
+required-features = ["mountpoint"]
+
+[[bin]]
+name = "nsenter"
+path = "src/bin/nsenter.rs"
+required-features = ["nsenter"]
+
+[[bin]]
+name = "pipesz"
+path = "src/bin/pipesz.rs"
+required-features = ["pipesz"]
+
+[[bin]]
+name = "pivot_root"
+path = "src/bin/pivot_root.rs"
+required-features = ["pivot_root"]
+
+[[bin]]
+name = "prlimit"
+path = "src/bin/prlimit.rs"
+required-features = ["prlimit"]
+
+[[bin]]
+name = "renice"
+path = "src/bin/renice.rs"
+required-features = ["renice"]
+
+[[bin]]
+name = "rfkill"
+path = "src/bin/rfkill.rs"
+required-features = ["rfkill"]
+
+[[bin]]
+name = "setpgid"
+path = "src/bin/setpgid.rs"
+required-features = ["setpgid"]
+
+[[bin]]
+name = "setsid"
+path = "src/bin/setsid.rs"
+required-features = ["setsid"]
+
+[[bin]]
+name = "swapoff"
+path = "src/bin/swapoff.rs"
+required-features = ["swapoff"]
+
+[[bin]]
+name = "swapon"
+path = "src/bin/swapon.rs"
+required-features = ["swapon"]
+
+[[bin]]
+name = "unshare"
+path = "src/bin/unshare.rs"
+required-features = ["unshare"]

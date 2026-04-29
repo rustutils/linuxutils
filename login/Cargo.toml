@@ -1,0 +1,24 @@
+[package]
+name = "linuxutils-login"
+description = "Login utilities from linuxutils"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[features]
+default = ["full"]
+full = ["nologin"]
+nologin = []
+
+[dependencies]
+clap = { workspace = true }
+
+[dev-dependencies]
+assert_cmd = { workspace = true }
+predicates = { workspace = true }
+
+[[bin]]
+name = "nologin"
+path = "src/bin/nologin.rs"
+required-features = ["nologin"]

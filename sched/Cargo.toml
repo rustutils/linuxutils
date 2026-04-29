@@ -1,0 +1,38 @@
+[package]
+name = "linuxutils-sched"
+description = "Scheduling utilities from linuxutils (chrt, ionice, taskset)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[features]
+default = ["full"]
+full = ["chrt", "ionice", "taskset"]
+chrt = ["dep:libc"]
+ionice = ["dep:libc"]
+taskset = ["dep:rustix"]
+
+[dependencies]
+clap = { workspace = true }
+libc = { workspace = true, optional = true }
+rustix = { workspace = true, optional = true }
+
+[dev-dependencies]
+assert_cmd = { workspace = true }
+predicates = { workspace = true }
+
+[[bin]]
+name = "chrt"
+path = "src/bin/chrt.rs"
+required-features = ["chrt"]
+
+[[bin]]
+name = "ionice"
+path = "src/bin/ionice.rs"
+required-features = ["ionice"]
+
+[[bin]]
+name = "taskset"
+path = "src/bin/taskset.rs"
+required-features = ["taskset"]

@@ -1,0 +1,123 @@
+[package]
+name = "linuxutils-misc"
+description = "Miscellaneous utilities from linuxutils"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[features]
+default = ["full"]
+full = [
+    "cal",
+    "copyfilerange",
+    "getopt",
+    "kill",
+    "logger",
+    "look",
+    "lslocks",
+    "mcookie",
+    "namei",
+    "rename",
+    "uuidgen",
+    "uuidparse",
+    "waitpid",
+    "whereis",
+]
+cal = ["dep:chrono"]
+copyfilerange = ["dep:libc"]
+getopt = []
+kill = ["dep:rustix"]
+logger = ["dep:rustix"]
+look = []
+lslocks = ["dep:cols"]
+mcookie = []
+namei = ["dep:rustix"]
+rename = []
+uuidgen = ["dep:uuid"]
+uuidparse = ["dep:libc", "dep:uuid"]
+waitpid = ["dep:rustix"]
+whereis = []
+
+[dependencies]
+clap = { workspace = true }
+chrono = { workspace = true, optional = true }
+cols = { workspace = true, optional = true }
+libc = { workspace = true, optional = true }
+rustix = { workspace = true, optional = true }
+uuid = { workspace = true, optional = true }
+
+[dev-dependencies]
+assert_cmd = { workspace = true }
+predicates = { workspace = true }
+tempfile = { workspace = true }
+
+[[bin]]
+name = "cal"
+path = "src/bin/cal.rs"
+required-features = ["cal"]
+
+[[bin]]
+name = "copyfilerange"
+path = "src/bin/copyfilerange.rs"
+required-features = ["copyfilerange"]
+
+[[bin]]
+name = "getopt"
+path = "src/bin/getopt.rs"
+required-features = ["getopt"]
+
+[[bin]]
+name = "kill"
+path = "src/bin/kill.rs"
+required-features = ["kill"]
+
+[[bin]]
+name = "logger"
+path = "src/bin/logger.rs"
+required-features = ["logger"]
+
+[[bin]]
+name = "look"
+path = "src/bin/look.rs"
+required-features = ["look"]
+
+[[bin]]
+name = "lslocks"
+path = "src/bin/lslocks.rs"
+required-features = ["lslocks"]
+
+[[bin]]
+name = "mcookie"
+path = "src/bin/mcookie.rs"
+required-features = ["mcookie"]
+
+[[bin]]
+name = "namei"
+path = "src/bin/namei.rs"
+required-features = ["namei"]
+
+[[bin]]
+name = "rename"
+path = "src/bin/rename.rs"
+required-features = ["rename"]
+
+[[bin]]
+name = "uuidgen"
+path = "src/bin/uuidgen.rs"
+required-features = ["uuidgen"]
+
+[[bin]]
+name = "uuidparse"
+path = "src/bin/uuidparse.rs"
+required-features = ["uuidparse"]
+
+[[bin]]
+name = "waitpid"
+path = "src/bin/waitpid.rs"
+required-features = ["waitpid"]
+
+[[bin]]
+name = "whereis"
+path = "src/bin/whereis.rs"
+required-features = ["whereis"]
