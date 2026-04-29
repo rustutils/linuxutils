@@ -1,6 +1,7 @@
 use clap::Parser;
+use linuxutils_misc::namei::*;
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
-    linuxutils_misc::namei::run(linuxutils_misc::namei::Args::parse())
+    run(Args::parse())
 }

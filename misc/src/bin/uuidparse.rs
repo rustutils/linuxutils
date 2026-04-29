@@ -1,6 +1,7 @@
 use clap::Parser;
+use linuxutils_misc::uuidparse::*;
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
-    linuxutils_misc::uuidparse::run(linuxutils_misc::uuidparse::Args::parse())
+    run(Args::parse())
 }

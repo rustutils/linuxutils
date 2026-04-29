@@ -1,6 +1,7 @@
 use clap::Parser;
+use linuxutils_misc::copyfilerange::*;
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
-    linuxutils_misc::copyfilerange::run(linuxutils_misc::copyfilerange::Args::parse())
+    run(Args::parse())
 }

@@ -1,6 +1,7 @@
 use clap::Parser;
+use linuxutils_misc::mcookie::*;
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
-    linuxutils_misc::mcookie::run(linuxutils_misc::mcookie::Args::parse())
+    run(Args::parse())
 }

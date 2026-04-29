@@ -1,6 +1,7 @@
 use clap::Parser;
+use linuxutils_misc::getopt::*;
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
-    linuxutils_misc::getopt::run(linuxutils_misc::getopt::Args::parse())
+    run(Args::parse())
 }

@@ -1,6 +1,7 @@
 use clap::Parser;
+use linuxutils_sched::chrt::*;
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
-    linuxutils_sched::chrt::run(linuxutils_sched::chrt::Args::parse())
+    run(Args::parse())
 }

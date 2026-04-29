@@ -1,6 +1,7 @@
 use clap::Parser;
+use linuxutils_misc::logger::*;
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
-    linuxutils_misc::logger::run(linuxutils_misc::logger::Args::parse())
+    run(Args::parse())
 }

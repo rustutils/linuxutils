@@ -1,6 +1,7 @@
 use clap::Parser;
+use linuxutils_misc::lslocks::*;
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
-    linuxutils_misc::lslocks::run(linuxutils_misc::lslocks::Args::parse())
+    run(Args::parse())
 }
