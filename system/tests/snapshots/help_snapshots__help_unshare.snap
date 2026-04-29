@@ -1,0 +1,33 @@
+---
+source: system/tests/help_snapshots.rs
+expression: "help_output(\"unshare\")"
+---
+Run a program in new namespaces
+
+Usage: unshare [OPTIONS] [COMMAND]...
+
+Arguments:
+  [COMMAND]...  Program and arguments to run
+
+Options:
+  -m, --mount                      Unshare mount namespace
+  -u, --uts                        Unshare UTS namespace (hostname/domainname)
+  -i, --ipc                        Unshare IPC namespace
+  -n, --net                        Unshare network namespace
+  -p, --pid                        Unshare PID namespace
+  -U, --user                       Unshare user namespace
+  -C, --cgroup                     Unshare cgroup namespace
+  -T, --time                       Unshare time namespace
+  -f, --fork                       Fork before executing the program
+  -r, --map-root-user              Map current user to root in user namespace (implies --user)
+  -c, --map-current-user           Map current user to same UID/GID in user namespace (implies
+                                   --user)
+      --mount-proc [<MOUNT_PROC>]  Mount /proc filesystem (implies --mount)
+      --propagation <PROPAGATION>  Set mount propagation (private, shared, slave, unchanged)
+                                   [default: private]
+  -R, --root <ROOT_DIR>            Set root directory
+  -w, --wd <WORK_DIR>              Set working directory
+  -S, --setuid <SET_UID>           Set UID in entered namespace
+  -G, --setgid <SET_GID>           Set GID in entered namespace
+      --setgroups <SETGROUPS>      Allow or deny setgroups in user namespace (allow, deny)
+  -h, --help                       Print help

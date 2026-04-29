@@ -1,0 +1,26 @@
+---
+source: misc/tests/help_snapshots.rs
+expression: "help_output(\"mcookie\")"
+---
+Generate magic cookies for xauth.
+
+Generates a 128-bit random hexadecimal number for use with the X authority system.
+
+Usage: mcookie [OPTIONS]
+
+Options:
+  -f, --file <FILE>
+          Use this file as an additional source of randomness. When file is '-', characters are read
+          from standard input
+
+  -m, --max-size <MAX_SIZE>
+          Read from file only this number of bytes
+
+  -v, --verbose
+          Inform where randomness originated
+
+  -h, --help
+          Print help (see a summary with '-h')
+
+  -V, --version
+          Print version

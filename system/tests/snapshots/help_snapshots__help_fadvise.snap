@@ -1,0 +1,35 @@
+---
+source: system/tests/help_snapshots.rs
+expression: "help_output(\"fadvise\")"
+---
+Advise the kernel about file access patterns via posix_fadvise(2).
+
+Most commonly used with `dontneed` to drop a file's pages from the page cache.
+
+Usage: fadvise [OPTIONS] [FILENAME]
+
+Arguments:
+  [FILENAME]
+          File to advise on
+
+Options:
+  -a, --advice <ADVICE>
+          Advice to apply: normal, sequential, random, noreuse, willneed, dontneed
+          
+          [default: dontneed]
+
+  -o, --offset <OFFSET>
+          Beginning offset in bytes
+          
+          [default: 0]
+
+  -l, --length <LENGTH>
+          Length of range in bytes (0 = to end of file)
+          
+          [default: 0]
+
+  -d, --fd <FILE_DESCRIPTOR>
+          Operate on an already-open file descriptor
+
+  -h, --help
+          Print help (see a summary with '-h')

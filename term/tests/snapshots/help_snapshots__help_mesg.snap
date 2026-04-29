@@ -1,0 +1,15 @@
+---
+source: term/tests/help_snapshots.rs
+expression: "help_output(\"mesg\")"
+---
+Display (or do not display) messages from other users
+
+Usage: mesg [OPTIONS] [ACTION]
+
+Arguments:
+  [ACTION]  y to allow messages, n to disallow
+
+Options:
+  -v, --verbose  Explain what is being done
+  -h, --help     Print help
+  -V, --version  Print version

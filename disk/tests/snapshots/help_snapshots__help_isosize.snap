@@ -1,0 +1,15 @@
+---
+source: disk/tests/help_snapshots.rs
+expression: "help_output(\"isosize\")"
+---
+Output the length of an iso9660 filesystem
+
+Usage: isosize [options] <iso9660_image_file> ...
+
+Arguments:
+  <FILES>...  ISO 9660 image files
+
+Options:
+  -x, --sectors           Show sector count and sector size
+  -d, --divisor <number>  Divisor for the output size (when not using --sectors) [default: 1]
+  -h, --help              Print help

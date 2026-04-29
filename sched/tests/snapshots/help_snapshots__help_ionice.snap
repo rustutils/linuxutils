@@ -1,0 +1,23 @@
+---
+source: sched/tests/help_snapshots.rs
+expression: "help_output(\"ionice\")"
+---
+Set or get process I/O scheduling class and priority
+
+Usage: ionice [-c class] [-n level] [-t] -p PID...
+       ionice [-c class] [-n level] [-t] -P PGID...
+       ionice [-c class] [-n level] [-t] -u UID...
+       ionice [-c class] [-n level] [-t] command [args...]
+       ionice [-p PID...] [-P PGID...] [-u UID...]
+
+Arguments:
+  [COMMAND]...  Command to run with the given I/O scheduling
+
+Options:
+  -c, --class <CLASS>          I/O scheduling class (0=none, 1=realtime, 2=best-effort, 3=idle)
+  -n, --classdata <CLASSDATA>  I/O scheduling priority level (0-7, 0 is highest)
+  -p, --pid <PID>...           Process IDs to query or set
+  -P, --pgid <PGID>...         Process group IDs to query or set
+  -u, --uid <UID>...           User IDs to query or set
+  -t, --ignore                 Ignore failure to set the requested priority
+  -h, --help                   Print help

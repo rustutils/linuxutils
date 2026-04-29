@@ -1,0 +1,15 @@
+---
+source: text/tests/help_snapshots.rs
+expression: "help_output(\"rev\")"
+---
+Text utilities from linuxutils (colrm, column, hexdump, line, rev)
+
+Usage: rev [OPTIONS] [FILES]...
+
+Arguments:
+  [FILES]...  Files to read. If none are given, reads from standard input
+
+Options:
+  -0, --zero     Use '\0' as the line separator instead of newline
+  -h, --help     Print help
+  -V, --version  Print version

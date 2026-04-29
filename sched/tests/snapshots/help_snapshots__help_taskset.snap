@@ -1,0 +1,17 @@
+---
+source: sched/tests/help_snapshots.rs
+expression: "help_output(\"taskset\")"
+---
+Set or retrieve a process's CPU affinity
+
+Usage: taskset [options] [mask] command [arg...]
+       taskset [options] -p [mask] pid
+
+Arguments:
+  [ARGS]...  Positional arguments: mask and/or PID/command
+
+Options:
+  -p, --pid        Operate on an existing PID
+  -c, --cpu-list   Interpret mask as CPU list instead of bitmask
+  -a, --all-tasks  Operate on all tasks (threads) for a given PID
+  -h, --help       Print help

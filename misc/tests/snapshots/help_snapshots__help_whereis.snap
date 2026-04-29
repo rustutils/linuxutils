@@ -1,0 +1,16 @@
+---
+source: misc/tests/help_snapshots.rs
+expression: "help_output(\"whereis\")"
+---
+Locate the binary, source, and manual page files for a command
+
+Usage: whereis [OPTIONS]
+
+Options:
+  -b          Search for binaries only
+  -m          Search for manuals only
+  -s          Search for sources only
+  -u          Only show unusual entries
+  -l          List effective lookup paths
+  -g          Interpret names as glob patterns
+  -h, --help  Print help

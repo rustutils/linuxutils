@@ -1,0 +1,19 @@
+---
+source: disk/tests/help_snapshots.rs
+expression: "help_output(\"blockdev\")"
+---
+Call block device ioctls from the command line.
+
+Each `--getXXX` or `--setXXX` command performs a single ioctl on the specified block device(s).
+Multiple commands and devices can be given in a single invocation.
+
+Usage: blockdev [-q] [-v] command [command...] device [device...]
+       blockdev --report [device...]
+
+Arguments:
+  [ARGS]...
+          Commands, arguments, and device paths
+
+Options:
+  -h, --help
+          Print help (see a summary with '-h')

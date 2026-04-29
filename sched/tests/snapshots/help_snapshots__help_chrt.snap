@@ -1,0 +1,29 @@
+---
+source: sched/tests/help_snapshots.rs
+expression: "help_output(\"chrt\")"
+---
+Manipulate the real-time attributes of a process
+
+Usage: chrt [options] <priority> <command> [<arg>...]
+       chrt [options] --pid [-p] <priority> <pid>
+       chrt [options] --pid [-p] <pid>
+
+Arguments:
+  [ARGS]...  Positional arguments: priority and/or PID/command
+
+Options:
+  -p, --pid                              Operate on an existing PID
+  -m, --max                              Show min/max valid priorities, then exit
+  -v, --verbose                          Show status information
+  -R, --reset-on-fork                    Set SCHED_RESET_ON_FORK flag
+  -a, --all-tasks                        Operate on all tasks (threads) of a given PID
+  -o, --other                            Set scheduling policy to SCHED_OTHER
+  -f, --fifo                             Set scheduling policy to SCHED_FIFO
+  -r, --rr                               Set scheduling policy to SCHED_RR
+  -b, --batch                            Set scheduling policy to SCHED_BATCH
+  -i, --idle                             Set scheduling policy to SCHED_IDLE
+  -d, --deadline                         Set scheduling policy to SCHED_DEADLINE
+  -T, --sched-runtime <SCHED_RUNTIME>    Runtime parameter for SCHED_DEADLINE (nanoseconds)
+  -P, --sched-period <SCHED_PERIOD>      Period parameter for SCHED_DEADLINE (nanoseconds)
+  -D, --sched-deadline <SCHED_DEADLINE>  Deadline parameter for SCHED_DEADLINE (nanoseconds)
+  -h, --help                             Print help

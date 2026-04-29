@@ -1,0 +1,21 @@
+---
+source: system/tests/help_snapshots.rs
+expression: "help_output(\"fstrim\")"
+---
+Discard unused blocks on a mounted filesystem
+
+Usage: fstrim [OPTIONS] [MOUNTPOINT]
+
+Arguments:
+  [MOUNTPOINT]  Mountpoint to trim (not used with --all or --fstab)
+
+Options:
+  -a, --all                Trim all mounted filesystems that support discard
+  -A, --fstab              Trim all mounted filesystems mentioned in /etc/fstab
+  -o, --offset <OFFSET>    Byte offset to start trimming from [default: 0]
+  -l, --length <LENGTH>    Number of bytes to trim
+  -m, --minimum <MINIMUM>  Minimum contiguous free range to discard [default: 0]
+  -t, --types <TYPES>      Comma-separated filesystem type filter
+  -v, --verbose            Print number of discarded bytes
+  -n, --dry-run            Do everything except the actual FITRIM ioctl
+  -h, --help               Print help

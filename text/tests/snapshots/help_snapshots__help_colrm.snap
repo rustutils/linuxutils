@@ -1,0 +1,15 @@
+---
+source: text/tests/help_snapshots.rs
+expression: "help_output(\"colrm\")"
+---
+Remove columns from a file
+
+Usage: colrm [FIRST] [LAST]
+
+Arguments:
+  [FIRST]  First column to remove (1-based)
+  [LAST]   Last column to remove (1-based, inclusive)
+
+Options:
+  -h, --help     Print help
+  -V, --version  Print version

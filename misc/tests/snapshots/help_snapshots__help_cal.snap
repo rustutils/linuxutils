@@ -1,0 +1,22 @@
+---
+source: misc/tests/help_snapshots.rs
+expression: "help_output(\"cal\")"
+---
+Display a calendar
+
+Usage: cal [OPTIONS] [ARGS]...
+
+Arguments:
+  [ARGS]...  Positional arguments: [[[day] month] year]
+
+Options:
+  -1, --one                Display single month output (default)
+  -3, --three              Display three months spanning the date
+  -n, --months <MONTHS>    Display number of months starting from the date
+  -s, --sunday             Display Sunday as the first day of the week
+  -m, --monday             Display Monday as the first day of the week
+  -y, --year               Display a calendar for the whole year
+  -Y, --twelve             Display a calendar for the next twelve months
+  -j, --julian             Use day-of-year (ordinal) numbering
+  -c, --columns <COLUMNS>  Number of columns to use [default: 3]
+  -h, --help               Print help

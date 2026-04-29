@@ -1,0 +1,15 @@
+---
+source: system/tests/help_snapshots.rs
+expression: "help_output(\"setpgid\")"
+---
+Run a program in a new process group
+
+Usage: setpgid [OPTIONS] <COMMAND>...
+
+Arguments:
+  <COMMAND>...  Program and its arguments
+
+Options:
+  -f, --foreground  Make the new process group the foreground process group
+  -h, --help        Print help
+  -V, --version     Print version

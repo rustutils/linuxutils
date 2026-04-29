@@ -1,0 +1,24 @@
+---
+source: misc/tests/help_snapshots.rs
+expression: "help_output(\"uuidparse\")"
+---
+A utility to parse unique identifiers
+
+Usage: uuidparse [OPTIONS] [UUIDS]...
+
+Arguments:
+  [UUIDS]...  UUIDs to parse
+
+Options:
+  -J, --json             Use JSON output format
+  -n, --noheadings       Do not print a header line
+  -o, --output <OUTPUT>  Specify which output columns to print (UUID,VARIANT,TYPE,TIME)
+  -r, --raw              Use the raw output format
+  -h, --help             Print help
+  -V, --version          Print version
+
+Available output columns:
+     UUID  unique identifier
+  VARIANT  variant name
+     TYPE  type name
+     TIME  timestamp

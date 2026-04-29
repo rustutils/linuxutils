@@ -1,0 +1,17 @@
+---
+source: login/tests/help_snapshots.rs
+expression: "help_output(\"nologin\")"
+---
+Politely refuse a login.
+
+Displays a message that an account is not available and exits non-zero. Intended as a replacement
+shell field to deny login access to an account.
+
+Usage: nologin
+
+Options:
+  -h, --help
+          Print help (see a summary with '-h')
+
+  -V, --version
+          Print version

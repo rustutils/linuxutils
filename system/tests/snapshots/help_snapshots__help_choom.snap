@@ -1,0 +1,17 @@
+---
+source: system/tests/help_snapshots.rs
+expression: "help_output(\"choom\")"
+---
+Display and adjust OOM-killer score
+
+Usage: choom [options] -p pid
+       choom [options] -n number -p pid
+       choom [options] -n number [--] command [args...]
+
+Arguments:
+  [COMMAND]...  Command and arguments to run with adjusted OOM score
+
+Options:
+  -n, --adjust <num>  OOM score adjust value to set (-1000 to 1000)
+  -p, --pid <num>     Process ID to display or adjust
+  -h, --help          Print help

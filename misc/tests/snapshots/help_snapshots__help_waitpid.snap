@@ -1,0 +1,17 @@
+---
+source: misc/tests/help_snapshots.rs
+expression: "help_output(\"waitpid\")"
+---
+Wait for arbitrary processes to exit
+
+Usage: waitpid [OPTIONS] <PIDS>...
+
+Arguments:
+  <PIDS>...  PIDs to wait for
+
+Options:
+  -v, --verbose            Be more verbose
+  -t, --timeout <TIMEOUT>  Maximum number of seconds to wait
+  -e, --exited             Don't error on already-exited PIDs
+  -c, --count <COUNT>      Number of process exits to wait for
+  -h, --help               Print help

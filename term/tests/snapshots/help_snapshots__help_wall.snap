@@ -1,0 +1,16 @@
+---
+source: term/tests/help_snapshots.rs
+expression: "help_output(\"wall\")"
+---
+Write a message to all users
+
+Usage: wall [OPTIONS] [MESSAGE]...
+
+Arguments:
+  [MESSAGE]...  Message or file to send
+
+Options:
+  -n, --nobanner           Suppress the banner (root only)
+  -t, --timeout <TIMEOUT>  Write timeout in seconds [default: 300]
+  -g, --group <GROUP>      Limit message to members of a group
+  -h, --help               Print help

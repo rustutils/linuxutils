@@ -1,0 +1,42 @@
+---
+source: text/tests/help_snapshots.rs
+expression: "help_output(\"column\")"
+---
+Text utilities from linuxutils (colrm, column, hexdump, line, rev)
+
+Usage: column [OPTIONS] [FILES]...
+
+Arguments:
+  [FILES]...  Files to read. If none are given, reads from standard input
+
+Options:
+  -t, --table                         Create a table from delimited input
+  -J, --json                          Use JSON output format (requires -N)
+  -n, --table-name <name>             Specify the table name for JSON output
+  -r, --tree <column>                 Specify column to use for tree-like output
+  -i, --tree-id <column>              Specify column containing line IDs for tree parent-child
+                                      relations
+  -p, --tree-parent <column>          Specify column containing parent IDs for tree parent-child
+                                      relations
+  -s, --separator <separators>        Possible input item delimiters (default is whitespace)
+  -o, --output-separator <string>     Column delimiter for table output (default is two spaces)
+  -N, --table-columns <names>         Specify column names (comma-separated)
+  -d, --table-noheadings              Omit printing the table header
+  -l, --table-columns-limit <number>  Maximum number of input columns
+  -R, --table-right <columns>         Right align text in specified columns
+  -T, --table-truncate <columns>      Truncate text in specified columns when necessary
+  -E, --table-noextreme <columns>     Ignore unusually long cells when calculating column width
+  -W, --table-wrap <columns>          Allow multi-line wrapping in specified columns
+  -H, --table-hide <columns>          Don't print specified columns
+  -O, --table-order <columns>         Specify output column order
+  -e, --table-header-repeat           Print header line for each page
+  -C, --table-column <attributes>     Define a column with attributes (can be repeated)
+  -m, --table-maxout                  Fill all available space on output
+  -x, --fillrows                      Fill rows before columns
+  -c, --output-width <width>          Output width (default: terminal width or 80). Use 0 or
+                                      "unlimited" for no limit
+  -S, --use-spaces <number>           Use spaces instead of tabs, with this minimum spacing between
+                                      columns
+  -L, --keep-empty-lines              Preserve blank lines in input
+  -h, --help                          Print help
+  -V, --version                       Print version

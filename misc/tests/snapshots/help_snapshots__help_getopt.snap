@@ -1,0 +1,25 @@
+---
+source: misc/tests/help_snapshots.rs
+expression: "help_output(\"getopt\")"
+---
+Parse command options (enhanced)
+
+Usage: getopt optstring parameters
+       getopt [options] [--] optstring parameters
+       getopt [options] -o|--options optstring [--] parameters
+
+Arguments:
+  [PARAMS]...  Parameters to parse
+
+Options:
+  -a, --alternative                Allow long options to start with a single -
+  -l, --longoptions <LONGOPTIONS>  Long options to recognize (comma-separated)
+  -n, --name <NAME>                Program name for error messages
+  -o, --options <OPTIONS>          Short options string to recognize
+  -q, --quiet                      Disable error output from getopt
+  -Q, --quiet-output               Suppress normal output
+  -s, --shell <SHELL>              Set quoting conventions for shell (sh, bash, csh, tcsh) [default:
+                                   bash]
+  -T, --test                       Test for enhanced getopt version (returns exit code 4)
+  -u, --unquoted                   Don't quote the output
+  -h, --help                       Print help

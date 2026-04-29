@@ -1,0 +1,14 @@
+---
+source: term/tests/help_snapshots.rs
+expression: "help_output(\"write\")"
+---
+Send a message to another user
+
+Usage: write <USER> [TTYNAME]
+
+Arguments:
+  <USER>     User to write to
+  [TTYNAME]  Terminal to write to (e.g. pts/1)
+
+Options:
+  -h, --help  Print help

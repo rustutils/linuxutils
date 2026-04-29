@@ -1,0 +1,23 @@
+---
+source: text/tests/help_snapshots.rs
+expression: "help_output(\"hexdump\")"
+---
+Display file contents in hexadecimal, decimal, octal, or ascii
+
+Usage: hexdump [OPTIONS] [FILES]...
+
+Arguments:
+  [FILES]...  Files to display
+
+Options:
+  -b, --one-byte-octal     One-byte octal display
+  -X, --one-byte-hex       One-byte hex display
+  -c, --one-byte-char      One-byte character display
+  -C, --canonical          Canonical hex+ASCII display
+  -d, --two-bytes-decimal  Two-byte decimal display
+  -o, --two-bytes-octal    Two-byte octal display
+  -x, --two-bytes-hex      Two-byte hexadecimal display
+  -n, --length <LENGTH>    Interpret only length bytes of input
+  -s, --skip <SKIP>        Skip offset bytes from the beginning
+  -v, --no-squeezing       Display all data (don't squeeze identical lines)
+  -h, --help               Print help

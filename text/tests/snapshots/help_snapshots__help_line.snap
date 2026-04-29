@@ -1,0 +1,11 @@
+---
+source: text/tests/help_snapshots.rs
+expression: "help_output(\"line\")"
+---
+Text utilities from linuxutils (colrm, column, hexdump, line, rev)
+
+Usage: line
+
+Options:
+  -h, --help     Print help
+  -V, --version  Print version

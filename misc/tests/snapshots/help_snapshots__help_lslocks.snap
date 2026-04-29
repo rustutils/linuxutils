@@ -1,0 +1,19 @@
+---
+source: misc/tests/help_snapshots.rs
+expression: "help_output(\"lslocks\")"
+---
+List local system locks
+
+Usage: lslocks [OPTIONS]
+
+Options:
+  -b, --bytes            Print SIZE in bytes rather than human-readable format
+  -J, --json             Use JSON output format
+  -i, --noinaccessible   Ignore locks without read permissions on the file
+  -n, --noheadings       Don't print headings
+  -o, --output <OUTPUT>  Define which output columns to use
+      --output-all       Output all available columns
+  -p, --pid <pid>        Display only locks held by this PID
+  -r, --raw              Use the raw output format
+  -u, --notruncate       Don't truncate text in columns
+  -h, --help             Print help
