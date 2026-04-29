@@ -1,3 +1,6 @@
+<img class="banner-light" alt="linuxutils" src="branding/banner-light.svg">
+<img class="banner-dark" alt="linuxutils" src="branding/banner-dark.svg">
+
 # Introduction
 
 `linuxutils` is a suite of Linux command-line utilities written from scratch

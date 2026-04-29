@@ -1,3 +1,9 @@
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/branding/banner-dark.svg">
+  <img alt="linuxutils" src="docs/branding/banner-light.svg">
+</picture>
+
+
 # linuxutils
 
 A collection of Linux utilities written in Rust, drop-in compatible with the
