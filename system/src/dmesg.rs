@@ -1,3 +1,7 @@
+use linuxutils_common::man::ManContent;
+
+pub const MAN: ManContent = ManContent::empty();
+
 use chrono::{Local, TimeZone};
 use clap::Parser;
 use colored::Colorize;

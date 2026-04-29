@@ -17,6 +17,7 @@ rev = []
 
 [dependencies]
 clap = { workspace = true }
+linuxutils-common = { workspace = true }
 cols = { workspace = true, optional = true }
 rustix = { workspace = true, optional = true }
 

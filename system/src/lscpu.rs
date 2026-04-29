@@ -1,3 +1,7 @@
+use linuxutils_common::man::ManContent;
+
+pub const MAN: ManContent = ManContent::empty();
+
 use clap::Parser;
 use cols::{Cols, print_table};
 use procfs::Current;

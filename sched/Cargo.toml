@@ -15,6 +15,7 @@ taskset = ["dep:rustix"]
 
 [dependencies]
 clap = { workspace = true }
+linuxutils-common = { workspace = true }
 libc = { workspace = true, optional = true }
 rustix = { workspace = true, optional = true }
 

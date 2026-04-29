@@ -41,6 +41,7 @@ whereis = []
 
 [dependencies]
 clap = { workspace = true }
+linuxutils-common = { workspace = true }
 chrono = { workspace = true, optional = true }
 cols = { workspace = true, optional = true }
 libc = { workspace = true, optional = true }

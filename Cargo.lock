@@ -585,6 +585,7 @@ dependencies = [
  "clap",
  "cols",
  "libc",
+ "linuxutils-common",
 ]
 
 [[package]]
@@ -638,6 +639,7 @@ version = "0.1.0"
 dependencies = [
  "assert_cmd",
  "clap",
+ "linuxutils-common",
  "predicates",
 ]
 
@@ -650,6 +652,7 @@ dependencies = [
  "clap",
  "cols",
  "libc",
+ "linuxutils-common",
  "predicates",
  "rustix",
  "tempfile",
@@ -663,6 +666,7 @@ dependencies = [
  "assert_cmd",
  "clap",
  "libc",
+ "linuxutils-common",
  "predicates",
  "rustix",
 ]
@@ -677,6 +681,7 @@ dependencies = [
  "colored",
  "cols",
  "libc",
+ "linuxutils-common",
  "predicates",
  "procfs",
  "rustix",
@@ -690,6 +695,7 @@ dependencies = [
  "chrono",
  "clap",
  "libc",
+ "linuxutils-common",
  "rustix",
 ]
 
@@ -700,6 +706,7 @@ dependencies = [
  "assert_cmd",
  "clap",
  "cols",
+ "linuxutils-common",
  "predicates",
  "rustix",
  "tempfile",
@@ -1352,6 +1359,7 @@ version = "0.1.0"
 dependencies = [
  "clap",
  "clap_mangen",
+ "linuxutils-common",
  "linuxutils-disk",
  "linuxutils-login",
  "linuxutils-misc",

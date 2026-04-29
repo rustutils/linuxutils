@@ -1,3 +1,7 @@
+use linuxutils_common::man::ManContent;
+
+pub const MAN: ManContent = ManContent::empty();
+
 use clap::Parser;
 use rustix::process::{self, Pid, Signal};
 use std::process::ExitCode;

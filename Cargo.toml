@@ -38,6 +38,7 @@ rustix = { version = "1", features = ["event", "fs", "mount", "process", "termio
 uuid = { version = "1", features = ["v1", "v3", "v4", "v5", "v6", "v7"] }
 
 # workspace crates
+linuxutils-common = { path = "common" }
 linuxutils-disk = { path = "disk", version = "0.1.0" }
 linuxutils-login = { path = "login", version = "0.1.0" }
 linuxutils-misc = { path = "misc", version = "0.1.0" }

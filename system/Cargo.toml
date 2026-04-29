@@ -75,6 +75,7 @@ unshare = ["dep:libc", "dep:rustix"]
 
 [dependencies]
 clap = { workspace = true }
+linuxutils-common = { workspace = true }
 chrono = { workspace = true, optional = true }
 cols = { workspace = true, optional = true }
 colored = { workspace = true, optional = true }

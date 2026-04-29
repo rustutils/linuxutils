@@ -15,6 +15,7 @@ write = ["dep:chrono", "dep:libc"]
 
 [dependencies]
 clap = { workspace = true }
+linuxutils-common = { workspace = true }
 chrono = { workspace = true, optional = true }
 libc = { workspace = true, optional = true }
 rustix = { workspace = true, optional = true }

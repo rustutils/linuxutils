@@ -1,3 +1,7 @@
+use linuxutils_common::man::ManContent;
+
+pub const MAN: ManContent = ManContent::empty();
+
 use clap::{Parser, Subcommand};
 use cols::{OutputMode, Table, WidthHint, print_table};
 use std::{

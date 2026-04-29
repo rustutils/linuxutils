@@ -1,3 +1,7 @@
+use linuxutils_common::man::ManContent;
+
+pub const MAN: ManContent = ManContent::empty();
+
 use clap::Parser;
 use rustix::process::{
     Pid, Uid, getpriority_pgrp, getpriority_process, getpriority_user,
