@@ -16,3 +16,5 @@ check:
 test:
   cargo nextest run
 
+mangen:
+    cargo run -p linuxutils-mangen target/man

@@ -32,6 +32,7 @@ fn main() -> ExitCode {
         linuxutils_ipcmk::Args::command(),
         linuxutils_ipcrm::Args::command(),
         linuxutils_ipcs::Args::command(),
+        linuxutils_disk::isosize::Args::command(),
         linuxutils_kill::Args::command(),
         linuxutils_logger::Args::command(),
         linuxutils_losetup::Args::command(),
