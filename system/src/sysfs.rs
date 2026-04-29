@@ -1,21 +1,11 @@
 //! Helpers for reading Linux sysfs attributes.
 //!
 //! Sysfs exposes kernel objects as directories with plain-text attribute
-//! files. This crate provides a thin typed API for reading them.
-//!
-//! ```no_run
-//! use linuxutils_common_sysfs::SysfsDevice;
-//!
-//! let dev = SysfsDevice::new("/sys/devices/system/memory/memory0");
-//! let state: String = dev.read_attr("state").unwrap();
-//! let removable: bool = dev.read_attr_bool("removable").unwrap();
-//! let index: u64 = dev.read_attr_hex("phys_index").unwrap();
-//! ```
+//! files. This module provides a thin typed API for reading them.
 
 use std::{
     fmt, fs, io,
     path::{Path, PathBuf},
-    str::FromStr,
 };
 
 /// A handle to a sysfs directory (device, subsystem, etc.).
@@ -65,19 +55,6 @@ impl SysfsDevice {
         Ok(content.trim().to_string())
     }
 
-    /// Read an attribute and parse it with `FromStr`.
-    pub fn read_attr_parse<T: FromStr>(
-        &self,
-        name: &str,
-    ) -> Result<T, SysfsError>
-    where
-        T::Err: fmt::Display,
-    {
-        let s = self.read_attr(name)?;
-        s.parse::<T>()
-            .map_err(|e| SysfsError::Parse(format!("{name}: {e}")))
-    }
-
     /// Read an attribute as a boolean (`"1"` / `"0"` or `"yes"` / `"no"`).
     pub fn read_attr_bool(&self, name: &str) -> Result<bool, SysfsError> {
         let s = self.read_attr(name)?;
@@ -96,16 +73,6 @@ impl SysfsDevice {
         let s = s.strip_prefix("0x").unwrap_or(&s);
         u64::from_str_radix(s, 16)
             .map_err(|e| SysfsError::Parse(format!("{name}: {e}")))
-    }
-
-    /// Check whether a named attribute file exists.
-    pub fn has_attr(&self, name: &str) -> bool {
-        self.path.join(name).exists()
-    }
-
-    /// Open a child device directory.
-    pub fn child(&self, name: &str) -> Self {
-        Self::new(self.path.join(name))
     }
 
     /// List child directories matching a prefix (e.g., `"memory"` lists

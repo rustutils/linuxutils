@@ -575,7 +575,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "linuxutils-common-sysfs"
+name = "linuxutils-common"
 version = "0.1.0"
 
 [[package]]
@@ -692,7 +692,6 @@ dependencies = [
  "colored",
  "cols",
  "libc",
- "linuxutils-common-sysfs",
  "predicates",
  "procfs",
  "rustix",

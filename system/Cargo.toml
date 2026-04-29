@@ -58,7 +58,7 @@ losetup = ["dep:cols", "dep:libc"]
 lscpu = ["dep:cols", "dep:procfs"]
 lsipc = ["dep:cols"]
 lsirq = ["dep:cols"]
-lsmem = ["dep:cols", "dep:linuxutils-common-sysfs"]
+lsmem = ["dep:cols"]
 lsns = ["dep:cols"]
 mountpoint = ["dep:rustix"]
 nsenter = ["dep:libc", "dep:rustix"]
@@ -81,7 +81,6 @@ colored = { workspace = true, optional = true }
 libc = { workspace = true, optional = true }
 procfs = { workspace = true, optional = true }
 rustix = { workspace = true, optional = true }
-linuxutils-common-sysfs = { workspace = true, optional = true }
 
 [dev-dependencies]
 assert_cmd = { workspace = true }

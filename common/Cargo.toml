@@ -1,9 +1,9 @@
 [package]
-name = "linuxutils-common-sysfs"
-description = "Helpers for reading Linux sysfs attributes"
+name = "linuxutils-common"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
 repository.workspace = true
+publish = false
 
 [dependencies]

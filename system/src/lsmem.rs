@@ -1,6 +1,6 @@
 use clap::Parser;
 use cols::{OutputMode, Table, WidthHint, print_table};
-use linuxutils_common_sysfs::SysfsDevice;
+use crate::sysfs::SysfsDevice;
 use std::{
     path::{Path, PathBuf},
     process::ExitCode,

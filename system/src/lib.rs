@@ -1,3 +1,6 @@
+#[cfg(feature = "lsmem")]
+mod sysfs;
+
 #[cfg(feature = "blkdiscard")]
 pub mod blkdiscard;
 
