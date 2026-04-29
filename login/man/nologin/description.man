@@ -1,0 +1,13 @@
+\fBnologin\fR displays a message that an account is unavailable and
+exits non-zero. It is typically used as a replacement login shell to
+deny interactive access to an account, while still allowing services
+that don't require a real shell (cron jobs, FTP, etc.) to function.
+.PP
+If the file \fI/etc/nologin.txt\fR exists, its contents are printed in
+place of the default message. This lets administrators provide an
+explanation (e.g., scheduled maintenance) without changing the binary.
+.PP
+\fBnologin\fR ignores any options or arguments passed to it; in
+particular, the shell-compatibility flags \fB\-c\fR, \fB\-i\fR,
+\fB\-l\fR, and \fB\-\-rcfile\fR are accepted and silently discarded so
+that programs invoking it as a shell don't error out.

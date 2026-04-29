@@ -1,0 +1,3 @@
+\fBnologin\fR always exits with status \fB1\fR. There is no condition
+under which it returns success — refusing the login is the entire
+point of the program.

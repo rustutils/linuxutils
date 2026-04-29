@@ -1,0 +1,4 @@
+.TP
+.I /etc/nologin.txt
+Optional file whose contents replace the default
+\fIThis account is currently not available.\fR message.

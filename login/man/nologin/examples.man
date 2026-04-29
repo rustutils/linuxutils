@@ -1,0 +1,8 @@
+.TP
+.B usermod -s /usr/sbin/nologin alice
+Set \fBnologin\fR as the login shell for user \fIalice\fR. Subsequent
+login attempts print the nologin message and exit with status 1.
+.TP
+.B echo "System down for maintenance until 18:00 UTC" > /etc/nologin.txt
+Override the default message. Any future invocation of \fBnologin\fR
+will print this text instead.
