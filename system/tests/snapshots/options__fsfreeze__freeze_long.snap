@@ -1,0 +1,9 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"fsfreeze\", \"--freeze\", \"/data\",])"
+---
+Args {
+    freeze: true,
+    unfreeze: false,
+    mountpoint: "/data",
+}

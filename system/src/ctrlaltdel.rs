@@ -7,7 +7,7 @@ use std::process::ExitCode;
 
 const PROC_PATH: &str = "/proc/sys/kernel/ctrl-alt-del";
 
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(
     name = "ctrlaltdel",

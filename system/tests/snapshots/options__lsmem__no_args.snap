@@ -1,0 +1,17 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"lsmem\"])"
+---
+Args {
+    all: false,
+    bytes: false,
+    json: false,
+    noheadings: false,
+    output: None,
+    output_all: false,
+    pairs: false,
+    raw: false,
+    split: None,
+    sysroot: None,
+    summary: Always,
+}

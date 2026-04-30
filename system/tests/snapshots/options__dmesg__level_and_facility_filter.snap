@@ -1,0 +1,27 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"dmesg\", \"-l\", \"err,warn\", \"-f\", \"kern,daemon\",])"
+---
+Args {
+    facility: [
+        "kern",
+        "daemon",
+    ],
+    human: false,
+    kernel: false,
+    level: [
+        "err",
+        "warn",
+    ],
+    color: None,
+    raw: false,
+    ctime: false,
+    notime: false,
+    userspace: false,
+    follow: false,
+    follow_new: false,
+    decode: false,
+    show_delta: false,
+    reltime: false,
+    time_format: None,
+}

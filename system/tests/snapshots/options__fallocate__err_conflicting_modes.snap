@@ -1,0 +1,10 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"fallocate\", \"-c\", \"-p\", \"-l\", \"4K\", \"data.bin\",])"
+---
+ERROR:
+error: the argument '--collapse-range' cannot be used with '--punch-hole'
+
+Usage: fallocate [options] <filename>
+
+For more information, try '--help'.

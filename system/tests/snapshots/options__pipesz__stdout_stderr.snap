@@ -1,0 +1,17 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"pipesz\", \"-g\", \"-o\", \"-e\",])"
+---
+Args {
+    get: true,
+    set: None,
+    file: [],
+    fd: [],
+    stdin: false,
+    stdout: true,
+    stderr: true,
+    check: false,
+    quiet: false,
+    verbose: false,
+    command: [],
+}

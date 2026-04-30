@@ -10,7 +10,7 @@ use std::process::ExitCode;
 /// Moves the current root to `put_old` and makes `new_root` the new root.
 /// Both paths must be directories; `new_root` must be a mount point and
 /// `put_old` must be at or under `new_root`.
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "pivot_root", about = "Change the root filesystem")]
 pub struct Args {

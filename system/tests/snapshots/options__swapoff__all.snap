@@ -1,0 +1,9 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"swapoff\", \"-a\"])"
+---
+Args {
+    all: true,
+    verbose: false,
+    devices: [],
+}

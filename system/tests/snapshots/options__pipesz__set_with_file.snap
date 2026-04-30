@@ -1,0 +1,21 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"pipesz\", \"-s\", \"65536\", \"-f\", \"/tmp/myfifo\",])"
+---
+Args {
+    get: false,
+    set: Some(
+        65536,
+    ),
+    file: [
+        "/tmp/myfifo",
+    ],
+    fd: [],
+    stdin: false,
+    stdout: false,
+    stderr: false,
+    check: false,
+    quiet: false,
+    verbose: false,
+    command: [],
+}

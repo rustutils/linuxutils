@@ -1,0 +1,7 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"lscpu\"])"
+---
+Args {
+    bytes: false,
+}

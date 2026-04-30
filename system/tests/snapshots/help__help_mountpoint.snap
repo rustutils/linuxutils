@@ -1,0 +1,18 @@
+---
+source: system/tests/help.rs
+expression: "help_output(\"mountpoint\")"
+---
+See if a directory or file is a mountpoint
+
+Usage: mountpoint [OPTIONS] <PATH>
+
+Arguments:
+  <PATH>  Directory, file, or device to check
+
+Options:
+  -d, --fs-devno  Show the major/minor numbers of the device mounted on the given directory
+  -q, --quiet     Be quiet - don't print anything
+      --nofollow  Do not follow symbolic link if it is the last element of the path
+  -x, --devno     Show the major/minor numbers of the given block device
+  -h, --help      Print help
+  -V, --version   Print version

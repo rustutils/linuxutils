@@ -1,0 +1,12 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"setsid\", \"--bogus\"])"
+---
+Args {
+    ctty: false,
+    fork: false,
+    wait: false,
+    command: [
+        "--bogus",
+    ],
+}

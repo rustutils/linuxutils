@@ -1,0 +1,17 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"fstrim\", \"-t\", \"ext4,xfs\", \"-v\", \"-a\",])"
+---
+Args {
+    all: true,
+    fstab: false,
+    offset: 0,
+    length: None,
+    minimum: 0,
+    types: Some(
+        "ext4,xfs",
+    ),
+    verbose: true,
+    dry_run: false,
+    mountpoint: None,
+}

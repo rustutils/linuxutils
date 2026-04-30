@@ -1,0 +1,19 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"fallocate\", \"-c\", \"-n\", \"-o\", \"0\", \"-l\", \"4096\",\n\"data.bin\",])"
+---
+Args {
+    length: Some(
+        "4096",
+    ),
+    offset: "0",
+    keep_size: true,
+    collapse_range: true,
+    dig_holes: false,
+    insert_range: false,
+    punch_hole: false,
+    zero_range: false,
+    posix: false,
+    verbose: false,
+    filename: "data.bin",
+}

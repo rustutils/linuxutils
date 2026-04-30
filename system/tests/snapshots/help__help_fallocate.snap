@@ -1,0 +1,23 @@
+---
+source: system/tests/help.rs
+expression: "help_output(\"fallocate\")"
+---
+Preallocate or deallocate space to a file
+
+Usage: fallocate [options] <filename>
+
+Arguments:
+  <FILENAME>  The file to operate on
+
+Options:
+  -l, --length <length>  Length of the range in bytes (required unless --dig-holes)
+  -o, --offset <offset>  Offset of the range in bytes [default: 0]
+  -n, --keep-size        Do not modify the apparent length of the file
+  -c, --collapse-range   Remove a byte range from the file without leaving a hole
+  -d, --dig-holes        Detect zeroes and replace with holes
+  -i, --insert-range     Insert a hole at the specified offset, shifting existing data
+  -p, --punch-hole       Deallocate space (punch a hole) in the byte range
+  -z, --zero-range       Zero a byte range in the file
+  -x, --posix            Use posix_fallocate(3) compatible operation
+  -v, --verbose          Verbose mode
+  -h, --help             Print help

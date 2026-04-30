@@ -1,0 +1,10 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"ipcmk\"])"
+---
+Args {
+    shmem: None,
+    queue: false,
+    semaphore: None,
+    mode: "0644",
+}

@@ -1,0 +1,10 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"dmesg\", \"--bogus\"])"
+---
+ERROR:
+error: unexpected argument '--bogus' found
+
+Usage: dmesg [OPTIONS]
+
+For more information, try '--help'.

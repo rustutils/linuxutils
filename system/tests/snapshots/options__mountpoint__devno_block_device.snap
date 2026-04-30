@@ -1,0 +1,11 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"mountpoint\", \"-x\", \"/dev/sda1\",])"
+---
+Args {
+    fs_devno: false,
+    quiet: false,
+    nofollow: false,
+    devno: true,
+    path: "/dev/sda1",
+}

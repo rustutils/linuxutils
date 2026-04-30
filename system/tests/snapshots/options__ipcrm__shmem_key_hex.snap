@@ -1,0 +1,16 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"ipcrm\", \"-M\", \"0x1234abcd\",])"
+---
+Args {
+    shmem_id: [],
+    shmem_key: [
+        "0x1234abcd",
+    ],
+    queue_id: [],
+    queue_key: [],
+    semaphore_id: [],
+    semaphore_key: [],
+    all: None,
+    verbose: false,
+}

@@ -1,0 +1,45 @@
+---
+source: system/tests/help.rs
+expression: "help_output(\"swapon\")"
+---
+Enable devices and files for paging and swapping.
+
+Calls swapon(2) to activate swap areas. Can enable individual devices or all swap entries from
+/etc/fstab.
+
+Usage: swapon [OPTIONS] [DEVICES]...
+
+Arguments:
+  [DEVICES]...
+          Devices or files to enable
+
+Options:
+  -a, --all
+          Enable all swap entries from /etc/fstab
+
+  -d, --discard [<DISCARD>]
+          Enable discard (once, pages, or both if no policy given)
+
+  -e, --ifexists
+          Silently skip non-existent devices
+
+  -p, --priority <PRIORITY>
+          Set swap priority (0-32767)
+
+  -s, --summary
+          Display /proc/swaps summary (deprecated)
+
+      --show [<SHOW>]
+          Display formatted table of swap areas
+
+      --noheadings
+          Suppress table headers
+
+      --bytes
+          Show sizes in bytes instead of human-friendly units
+
+  -v, --verbose
+          Verbose output
+
+  -h, --help
+          Print help (see a summary with '-h')

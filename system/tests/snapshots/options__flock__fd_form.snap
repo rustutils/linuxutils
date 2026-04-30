@@ -1,0 +1,18 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"flock\", \"200\"])"
+---
+Args {
+    shared: false,
+    exclusive: false,
+    unlock: false,
+    nonblock: false,
+    timeout: None,
+    conflict_exit_code: 1,
+    close: false,
+    no_fork: false,
+    command: None,
+    verbose: false,
+    file: "200",
+    args: [],
+}

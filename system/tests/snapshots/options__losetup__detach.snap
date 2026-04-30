@@ -1,0 +1,23 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"losetup\", \"-d\", \"/dev/loop0\",])"
+---
+Args {
+    all: false,
+    detach: true,
+    detach_all: false,
+    find: false,
+    set_capacity: false,
+    associated: None,
+    offset: None,
+    sizelimit: None,
+    partscan: false,
+    read_only: false,
+    show: false,
+    list: false,
+    noheadings: false,
+    verbose: false,
+    positional: [
+        "/dev/loop0",
+    ],
+}

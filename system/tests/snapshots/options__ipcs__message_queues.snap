@@ -1,0 +1,13 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"ipcs\", \"-q\"])"
+---
+Args {
+    shmems: false,
+    queues: true,
+    semaphores: false,
+    all: false,
+    limits: false,
+    summary: false,
+    bytes: false,
+}

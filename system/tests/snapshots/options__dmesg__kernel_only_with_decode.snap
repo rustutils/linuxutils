@@ -1,0 +1,21 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"dmesg\", \"-k\", \"-x\"])"
+---
+Args {
+    facility: [],
+    human: false,
+    kernel: true,
+    level: [],
+    color: None,
+    raw: false,
+    ctime: false,
+    notime: false,
+    userspace: false,
+    follow: false,
+    follow_new: false,
+    decode: true,
+    show_delta: false,
+    reltime: false,
+    time_format: None,
+}

@@ -1,0 +1,11 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"mountpoint\", \"-q\", \"/mnt\",])"
+---
+Args {
+    fs_devno: false,
+    quiet: true,
+    nofollow: false,
+    devno: false,
+    path: "/mnt",
+}

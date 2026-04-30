@@ -1,0 +1,27 @@
+---
+source: system/tests/help.rs
+expression: "help_output(\"losetup\")"
+---
+Set up and control loop devices
+
+Usage: losetup [OPTIONS] [POSITIONAL]...
+
+Arguments:
+  [POSITIONAL]...  Device and/or file arguments
+
+Options:
+  -a, --all                      List all used devices
+  -d, --detach                   Detach one or more devices
+  -D, --detach-all               Detach all used devices
+  -f, --find                     Find first unused device
+  -c, --set-capacity             Resize loop device (reread backing file size)
+  -j, --associated <ASSOCIATED>  List devices associated with a backing file
+  -o, --offset <OFFSET>          Byte offset into backing file
+      --sizelimit <SIZELIMIT>    Limit device size in bytes
+  -P, --partscan                 Force kernel partition table scan
+  -r, --read-only                Set up read-only
+      --show                     Print device name after setup (with -f)
+  -l, --list                     Tabular list format
+  -n, --noheadings               Suppress headers in list output
+  -v, --verbose                  Verbose mode
+  -h, --help                     Print help

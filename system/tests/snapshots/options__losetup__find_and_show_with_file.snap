@@ -1,0 +1,23 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"losetup\", \"-f\", \"--show\", \"disk.img\",])"
+---
+Args {
+    all: false,
+    detach: false,
+    detach_all: false,
+    find: true,
+    set_capacity: false,
+    associated: None,
+    offset: None,
+    sizelimit: None,
+    partscan: false,
+    read_only: false,
+    show: true,
+    list: false,
+    noheadings: false,
+    verbose: false,
+    positional: [
+        "disk.img",
+    ],
+}

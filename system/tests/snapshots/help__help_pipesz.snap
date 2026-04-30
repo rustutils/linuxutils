@@ -1,0 +1,48 @@
+---
+source: system/tests/help.rs
+expression: "help_output(\"pipesz\")"
+---
+Set or examine pipe and FIFO buffer sizes.
+
+Uses fcntl(2) with F_GETPIPE_SZ / F_SETPIPE_SZ to get or set the internal buffer sizes of pipes and
+FIFOs.
+
+Usage: pipesz [OPTIONS] [COMMAND]...
+
+Arguments:
+  [COMMAND]...
+          Command to execute after setting pipe sizes
+
+Options:
+  -g, --get
+          Report pipe buffer sizes
+
+  -s, --set <SET>
+          Set pipe buffer size in bytes
+
+  -f, --file <FILE>
+          Operate on a FIFO/pipe at this path (repeatable)
+
+  -n, --fd <FD>
+          Operate on this file descriptor number (repeatable)
+
+  -i, --stdin
+          Shorthand for --fd 0
+
+  -o, --stdout
+          Shorthand for --fd 1
+
+  -e, --stderr
+          Shorthand for --fd 2
+
+  -c, --check
+          Exit immediately on any error
+
+  -q, --quiet
+          Suppress non-fatal warnings
+
+  -v, --verbose
+          Emit headers (get) or print actual sizes (set)
+
+  -h, --help
+          Print help (see a summary with '-h')

@@ -1,0 +1,10 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"fsfreeze\", \"-f\", \"-u\", \"/mnt\",])"
+---
+ERROR:
+error: the argument '--freeze' cannot be used with '--unfreeze'
+
+Usage: fsfreeze --freeze <MOUNTPOINT>
+
+For more information, try '--help'.

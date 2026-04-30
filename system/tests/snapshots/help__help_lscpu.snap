@@ -1,0 +1,17 @@
+---
+source: system/tests/help.rs
+expression: "help_output(\"lscpu\")"
+---
+Display information about the CPU architecture.
+
+Gathers CPU information from /proc/cpuinfo and sysfs, displaying architecture details, topology,
+caches, frequencies, and vulnerabilities.
+
+Usage: lscpu [OPTIONS]
+
+Options:
+  -B, --bytes
+          Print sizes in bytes
+
+  -h, --help
+          Print help (see a summary with '-h')

@@ -1,0 +1,14 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"lsirq\", \"-P\", \"-n\"])"
+---
+Args {
+    json: false,
+    pairs: true,
+    noheadings: true,
+    output: None,
+    sort: None,
+    softirq: false,
+    threshold: None,
+    cpu_list: None,
+}

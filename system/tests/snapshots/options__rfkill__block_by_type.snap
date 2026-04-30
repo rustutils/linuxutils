@@ -1,0 +1,18 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"rfkill\", \"block\", \"bluetooth\",])"
+---
+Args {
+    json: false,
+    noheadings: false,
+    output: None,
+    output_all: false,
+    raw: false,
+    command: Some(
+        Block {
+            identifiers: [
+                "bluetooth",
+            ],
+        },
+    ),
+}

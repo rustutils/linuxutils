@@ -1,0 +1,8 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"unshare\", \"-S\", \"abc\",])"
+---
+ERROR:
+error: invalid value 'abc' for '--setuid <SET_UID>': invalid digit found in string
+
+For more information, try '--help'.

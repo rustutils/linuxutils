@@ -1,0 +1,8 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"swapon\", \"-p\", \"abc\", \"/swapfile\",])"
+---
+ERROR:
+error: invalid value 'abc' for '--priority <PRIORITY>': invalid digit found in string
+
+For more information, try '--help'.

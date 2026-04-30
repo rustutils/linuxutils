@@ -13,7 +13,7 @@ use std::{
 ///
 /// Uses fcntl(2) with F_GETPIPE_SZ / F_SETPIPE_SZ to get or set the
 /// internal buffer sizes of pipes and FIFOs.
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "pipesz", about = "Set or examine pipe and FIFO buffer sizes")]
 pub struct Args {

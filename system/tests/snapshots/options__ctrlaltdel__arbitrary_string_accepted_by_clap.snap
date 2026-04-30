@@ -1,0 +1,9 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"ctrlaltdel\", \"bogus\"])"
+---
+Args {
+    mode: Some(
+        "bogus",
+    ),
+}

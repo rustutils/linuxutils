@@ -1,0 +1,18 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"rfkill\", \"toggle\", \"wifi\",])"
+---
+Args {
+    json: false,
+    noheadings: false,
+    output: None,
+    output_all: false,
+    raw: false,
+    command: Some(
+        Toggle {
+            identifiers: [
+                "wifi",
+            ],
+        },
+    ),
+}

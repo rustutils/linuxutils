@@ -1,0 +1,23 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"nsenter\"])"
+---
+Args {
+    target: None,
+    all: false,
+    mount: None,
+    uts: None,
+    ipc: None,
+    net: None,
+    pid: None,
+    user: None,
+    cgroup: None,
+    time: None,
+    no_fork: false,
+    preserve_credentials: false,
+    root_dir: None,
+    work_dir: None,
+    set_uid: None,
+    set_gid: None,
+    command: [],
+}

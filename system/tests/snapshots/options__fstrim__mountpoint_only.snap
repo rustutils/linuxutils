@@ -1,0 +1,17 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"fstrim\", \"/\"])"
+---
+Args {
+    all: false,
+    fstab: false,
+    offset: 0,
+    length: None,
+    minimum: 0,
+    types: None,
+    verbose: false,
+    dry_run: false,
+    mountpoint: Some(
+        "/",
+    ),
+}

@@ -1,0 +1,11 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"setpgid\", \"--foreground\", \"myprog\", \"arg\",])"
+---
+Args {
+    foreground: true,
+    command: [
+        "myprog",
+        "arg",
+    ],
+}

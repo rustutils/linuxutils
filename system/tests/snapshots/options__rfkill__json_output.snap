@@ -1,0 +1,12 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"rfkill\", \"-J\"])"
+---
+Args {
+    json: true,
+    noheadings: false,
+    output: None,
+    output_all: false,
+    raw: false,
+    command: None,
+}

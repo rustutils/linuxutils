@@ -1,0 +1,12 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"lsipc\", \"-q\"])"
+---
+Args {
+    shmems: false,
+    queues: true,
+    semaphores: false,
+    global: false,
+    noheadings: false,
+    bytes: false,
+}

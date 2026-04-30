@@ -1,0 +1,10 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"setpgid\", \"--bogus\"])"
+---
+Args {
+    foreground: false,
+    command: [
+        "--bogus",
+    ],
+}

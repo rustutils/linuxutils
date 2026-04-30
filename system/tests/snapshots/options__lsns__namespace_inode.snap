@@ -1,0 +1,17 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"lsns\", \"4026531840\",])"
+---
+Args {
+    json: false,
+    list: false,
+    noheadings: false,
+    output: None,
+    output_all: false,
+    raw: false,
+    ns_type: None,
+    task: None,
+    namespace: Some(
+        4026531840,
+    ),
+}

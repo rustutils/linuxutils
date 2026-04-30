@@ -1,0 +1,8 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"fstrim\", \"-m\", \"abc\", \"/\",])"
+---
+ERROR:
+error: invalid value 'abc' for '--minimum <MINIMUM>': invalid digit found in string
+
+For more information, try '--help'.

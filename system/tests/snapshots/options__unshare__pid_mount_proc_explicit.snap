@@ -1,0 +1,29 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"unshare\", \"-p\", \"-f\", \"--mount-proc=/myproc\", \"bash\",])"
+---
+Args {
+    mount: false,
+    uts: false,
+    ipc: false,
+    net: false,
+    pid: true,
+    user: false,
+    cgroup: false,
+    time: false,
+    fork: true,
+    map_root_user: false,
+    map_current_user: false,
+    mount_proc: Some(
+        "/myproc",
+    ),
+    propagation: "private",
+    root_dir: None,
+    work_dir: None,
+    set_uid: None,
+    set_gid: None,
+    setgroups: None,
+    command: [
+        "bash",
+    ],
+}

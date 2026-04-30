@@ -15,7 +15,7 @@ const BLKZEROOUT: libc::c_ulong = 0x127f;
 ///
 /// Sends BLKDISCARD, BLKSECDISCARD, or BLKZEROOUT ioctls to tell the
 /// storage device that a range of blocks is no longer in use.
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "blkdiscard", about = "Discard sectors on a block device")]
 pub struct Args {

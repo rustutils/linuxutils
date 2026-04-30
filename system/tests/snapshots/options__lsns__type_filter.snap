@@ -1,0 +1,17 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"lsns\", \"-t\", \"net\"])"
+---
+Args {
+    json: false,
+    list: false,
+    noheadings: false,
+    output: None,
+    output_all: false,
+    raw: false,
+    ns_type: Some(
+        "net",
+    ),
+    task: None,
+    namespace: None,
+}

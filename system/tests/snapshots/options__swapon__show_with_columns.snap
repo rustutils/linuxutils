@@ -1,0 +1,18 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"swapon\", \"--show\", \"NAME,TYPE,SIZE\", \"--noheadings\",\n\"--bytes\",])"
+---
+Args {
+    all: false,
+    discard: None,
+    ifexists: false,
+    priority: None,
+    summary: false,
+    show: Some(
+        "NAME,TYPE,SIZE",
+    ),
+    noheadings: true,
+    bytes: true,
+    verbose: false,
+    devices: [],
+}

@@ -1,0 +1,11 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"setpgid\"])"
+---
+ERROR:
+error: the following required arguments were not provided:
+  <COMMAND>...
+
+Usage: setpgid <COMMAND>...
+
+For more information, try '--help'.

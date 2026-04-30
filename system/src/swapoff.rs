@@ -15,7 +15,7 @@ use std::{
 /// Calls swapoff(2) to deactivate swap areas. The kernel pages all
 /// swap contents back to RAM before deactivating, which may take
 /// significant time if the swap is heavily used.
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(
     name = "swapoff",

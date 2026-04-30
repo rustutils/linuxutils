@@ -1,0 +1,23 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"losetup\", \"-j\", \"/path/to/file.img\",])"
+---
+Args {
+    all: false,
+    detach: false,
+    detach_all: false,
+    find: false,
+    set_capacity: false,
+    associated: Some(
+        "/path/to/file.img",
+    ),
+    offset: None,
+    sizelimit: None,
+    partscan: false,
+    read_only: false,
+    show: false,
+    list: false,
+    noheadings: false,
+    verbose: false,
+    positional: [],
+}

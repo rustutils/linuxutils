@@ -1,0 +1,19 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"lsmem\", \"-s\", \"/sysroot\", \"--summary\", \"only\",])"
+---
+Args {
+    all: false,
+    bytes: false,
+    json: false,
+    noheadings: false,
+    output: None,
+    output_all: false,
+    pairs: false,
+    raw: false,
+    split: None,
+    sysroot: Some(
+        "/sysroot",
+    ),
+    summary: Only,
+}

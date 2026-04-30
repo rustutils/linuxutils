@@ -1,0 +1,11 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"fallocate\", \"-l\", \"1M\"])"
+---
+ERROR:
+error: the following required arguments were not provided:
+  <FILENAME>
+
+Usage: fallocate [options] <filename>
+
+For more information, try '--help'.

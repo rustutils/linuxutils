@@ -1,0 +1,22 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"swapon\", \"-p\", \"10\", \"-d\", \"pages\", \"/swapfile\",])"
+---
+Args {
+    all: false,
+    discard: Some(
+        "pages",
+    ),
+    ifexists: false,
+    priority: Some(
+        10,
+    ),
+    summary: false,
+    show: None,
+    noheadings: false,
+    bytes: false,
+    verbose: false,
+    devices: [
+        "/swapfile",
+    ],
+}

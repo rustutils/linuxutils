@@ -1,0 +1,11 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"rfkill\", \"block\"])"
+---
+ERROR:
+error: the following required arguments were not provided:
+  <IDENTIFIERS>...
+
+Usage: rfkill block <IDENTIFIERS>...
+
+For more information, try '--help'.

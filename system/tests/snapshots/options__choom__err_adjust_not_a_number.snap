@@ -1,0 +1,8 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"choom\", \"-n\", \"abc\", \"-p\", \"1234\",])"
+---
+ERROR:
+error: invalid value 'abc' for '--adjust <num>': invalid digit found in string
+
+For more information, try '--help'.

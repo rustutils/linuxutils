@@ -1,0 +1,28 @@
+---
+source: system/tests/help.rs
+expression: "help_output(\"flock\")"
+---
+Manage locks from shell scripts
+
+Usage: flock [options] <file>|<directory> <command> [<argument>...]
+       flock [options] <file>|<directory> -c <command>
+       flock [options] <file descriptor number>
+
+Arguments:
+  <FILE>     File, directory, or open file descriptor number
+  [ARGS]...  Command and arguments to execute
+
+Options:
+  -s, --shared                       Get a shared lock
+  -x, --exclusive                    Get an exclusive lock (default)
+  -u, --unlock                       Remove a lock
+  -n, --nonblock                     Fail rather than wait if the lock cannot be immediately
+                                     acquired
+  -w, --timeout <secs>               Wait at most this many seconds; decimal fractions allowed
+  -E, --conflict-exit-code <number>  Exit code when the lock cannot be acquired (default: 1)
+                                     [default: 1]
+  -o, --close                        Close the file descriptor before executing the command
+  -F, --no-fork                      Execute command without forking
+  -c, --command <command>            Run a single command string through the shell
+      --verbose                      Increase verbosity
+  -h, --help                         Print help

@@ -1,0 +1,32 @@
+---
+source: system/tests/help.rs
+expression: "help_output(\"lsipc\")"
+---
+List information on IPC facilities.
+
+Modern replacement for ipcs. Reads /proc/sysvipc/* and /proc/sys/kernel/* to display IPC resource
+information in tabular format.
+
+Usage: lsipc [OPTIONS]
+
+Options:
+  -m, --shmems
+          List shared memory segments
+
+  -q, --queues
+          List message queues
+
+  -s, --semaphores
+          List semaphore arrays
+
+  -g, --global
+          Show system-wide usage and limits
+
+      --noheadings
+          Suppress table headers
+
+  -b, --bytes
+          Show sizes in bytes
+
+  -h, --help
+          Print help (see a summary with '-h')

@@ -1,0 +1,16 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"swapon\", \"-e\", \"-v\", \"-a\",])"
+---
+Args {
+    all: true,
+    discard: None,
+    ifexists: true,
+    priority: None,
+    summary: false,
+    show: None,
+    noheadings: false,
+    bytes: false,
+    verbose: true,
+    devices: [],
+}

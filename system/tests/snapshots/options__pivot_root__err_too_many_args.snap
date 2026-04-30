@@ -1,0 +1,10 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"pivot_root\", \"/a\", \"/b\", \"/c\",])"
+---
+ERROR:
+error: unexpected argument '/c' found
+
+Usage: pivot_root <NEW_ROOT> <PUT_OLD>
+
+For more information, try '--help'.

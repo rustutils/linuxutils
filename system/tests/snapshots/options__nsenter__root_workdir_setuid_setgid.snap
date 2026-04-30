@@ -1,0 +1,35 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"nsenter\", \"-t\", \"1234\", \"-r\", \"/\", \"-w\", \"/tmp\", \"-S\",\n\"1000\", \"-G\", \"1000\", \"ls\",])"
+---
+Args {
+    target: Some(
+        1234,
+    ),
+    all: false,
+    mount: None,
+    uts: None,
+    ipc: None,
+    net: None,
+    pid: None,
+    user: None,
+    cgroup: None,
+    time: None,
+    no_fork: false,
+    preserve_credentials: false,
+    root_dir: Some(
+        "/",
+    ),
+    work_dir: Some(
+        "/tmp",
+    ),
+    set_uid: Some(
+        1000,
+    ),
+    set_gid: Some(
+        1000,
+    ),
+    command: [
+        "ls",
+    ],
+}

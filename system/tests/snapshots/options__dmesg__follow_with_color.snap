@@ -1,0 +1,23 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"dmesg\", \"-w\", \"--color\", \"always\",])"
+---
+Args {
+    facility: [],
+    human: false,
+    kernel: false,
+    level: [],
+    color: Some(
+        "always",
+    ),
+    raw: false,
+    ctime: false,
+    notime: false,
+    userspace: false,
+    follow: true,
+    follow_new: false,
+    decode: false,
+    show_delta: false,
+    reltime: false,
+    time_format: None,
+}

@@ -1,0 +1,44 @@
+---
+source: system/tests/help.rs
+expression: "help_output(\"blkdiscard\")"
+---
+Discard sectors on a block device.
+
+Sends BLKDISCARD, BLKSECDISCARD, or BLKZEROOUT ioctls to tell the storage device that a range of
+blocks is no longer in use.
+
+Usage: blkdiscard [OPTIONS] <DEVICE>
+
+Arguments:
+  <DEVICE>
+          Block device to operate on
+
+Options:
+  -f, --force
+          Disable exclusive open mode (O_EXCL)
+
+  -o, --offset <OFFSET>
+          Byte offset to start discarding (default: 0)
+          
+          [default: 0]
+
+  -l, --length <LENGTH>
+          Number of bytes to discard (default: to end of device)
+
+  -p, --step <STEP>
+          Bytes to discard per ioctl call (default: all at once)
+
+  -q, --quiet
+          Suppress warnings
+
+  -s, --secure
+          Secure discard (BLKSECDISCARD)
+
+  -z, --zeroout
+          Zero-fill instead of discard (BLKZEROOUT)
+
+  -v, --verbose
+          Show progress
+
+  -h, --help
+          Print help (see a summary with '-h')

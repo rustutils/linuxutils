@@ -1,0 +1,8 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"flock\", \"-w\", \"abc\", \"/var/lock/myapp\", \"mycmd\",])"
+---
+ERROR:
+error: invalid value 'abc' for '--timeout <secs>': invalid float literal
+
+For more information, try '--help'.

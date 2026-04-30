@@ -1,0 +1,22 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"lsmem\", \"-S\", \"STATE,NODE\",])"
+---
+Args {
+    all: false,
+    bytes: false,
+    json: false,
+    noheadings: false,
+    output: None,
+    output_all: false,
+    pairs: false,
+    raw: false,
+    split: Some(
+        [
+            "STATE",
+            "NODE",
+        ],
+    ),
+    sysroot: None,
+    summary: Always,
+}

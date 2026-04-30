@@ -13,7 +13,7 @@ use std::{fs::File, os::unix::io::AsRawFd, process::ExitCode};
 ///
 /// Most commonly used with `dontneed` to drop a file's pages from the
 /// page cache.
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(
     name = "fadvise",

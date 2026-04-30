@@ -1,0 +1,35 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"prlimit\", \"-p\", \"1234\", \"-o\", \"RESOURCE,SOFT,HARD\",\n\"--raw\",])"
+---
+Args {
+    pid: Some(
+        1234,
+    ),
+    output: Some(
+        [
+            "RESOURCE",
+            "SOFT",
+            "HARD",
+        ],
+    ),
+    noheadings: false,
+    raw: true,
+    core: None,
+    data: None,
+    nice: None,
+    fsize: None,
+    sigpending: None,
+    memlock: None,
+    rss: None,
+    nofile: None,
+    msgqueue: None,
+    rtprio: None,
+    stack: None,
+    cpu: None,
+    nproc: None,
+    addr_space: None,
+    locks: None,
+    rttime: None,
+    command: [],
+}

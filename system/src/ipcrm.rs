@@ -13,7 +13,7 @@ use std::{
 ///
 /// Uses shmctl(2), msgctl(2), or semctl(2) with IPC_RMID to remove
 /// shared memory segments, message queues, or semaphore arrays.
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "ipcrm", about = "Remove System V IPC resources")]
 pub struct Args {

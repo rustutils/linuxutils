@@ -1,0 +1,18 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"swapon\", \"-d\", \"/swapfile\",])"
+---
+Args {
+    all: false,
+    discard: Some(
+        "/swapfile",
+    ),
+    ifexists: false,
+    priority: None,
+    summary: false,
+    show: None,
+    noheadings: false,
+    bytes: false,
+    verbose: false,
+    devices: [],
+}

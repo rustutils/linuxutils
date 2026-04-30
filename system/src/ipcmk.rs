@@ -9,7 +9,7 @@ use std::{io, process::ExitCode};
 ///
 /// Creates shared memory segments, message queues, or semaphore arrays
 /// using shmget(2), msgget(2), or semget(2) with IPC_PRIVATE.
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "ipcmk", about = "Create System V IPC resources")]
 pub struct Args {

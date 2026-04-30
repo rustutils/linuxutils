@@ -1,0 +1,11 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"swapoff\", \"/dev/sda2\",])"
+---
+Args {
+    all: false,
+    verbose: false,
+    devices: [
+        "/dev/sda2",
+    ],
+}

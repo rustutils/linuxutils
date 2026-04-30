@@ -9,7 +9,7 @@ use std::{collections::HashMap, fs, process::ExitCode};
 const NS_TYPES: &[&str] =
     &["mnt", "net", "ipc", "user", "pid", "uts", "cgroup", "time"];
 
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "lsns", about = "List system namespaces")]
 pub struct Args {

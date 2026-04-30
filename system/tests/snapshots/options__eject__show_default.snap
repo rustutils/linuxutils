@@ -1,0 +1,20 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"eject\", \"-d\"])"
+---
+Args {
+    default: true,
+    force: false,
+    floppy: false,
+    manualeject: None,
+    no_partitions_unmount: false,
+    no_unmount: false,
+    noop: false,
+    tape: false,
+    cdrom: false,
+    scsi: false,
+    traytoggle: false,
+    trayclose: false,
+    verbose: false,
+    device: None,
+}

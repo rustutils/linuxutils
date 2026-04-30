@@ -1,0 +1,11 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"blkdiscard\"])"
+---
+ERROR:
+error: the following required arguments were not provided:
+  <DEVICE>
+
+Usage: blkdiscard <DEVICE>
+
+For more information, try '--help'.

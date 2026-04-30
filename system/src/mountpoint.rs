@@ -12,7 +12,7 @@ use std::{
 
 const EXIT_NOTMOUNT: u8 = 32;
 
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(
     name = "mountpoint",

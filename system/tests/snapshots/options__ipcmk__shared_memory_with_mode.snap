@@ -1,0 +1,12 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"ipcmk\", \"-M\", \"1024\", \"-p\", \"0600\",])"
+---
+Args {
+    shmem: Some(
+        1024,
+    ),
+    queue: false,
+    semaphore: None,
+    mode: "0600",
+}

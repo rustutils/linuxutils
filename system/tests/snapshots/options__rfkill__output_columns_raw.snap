@@ -1,0 +1,20 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"rfkill\", \"-o\", \"ID,TYPE,DEVICE,SOFT,HARD\", \"-r\",])"
+---
+Args {
+    json: false,
+    noheadings: false,
+    output: Some(
+        [
+            "ID",
+            "TYPE",
+            "DEVICE",
+            "SOFT",
+            "HARD",
+        ],
+    ),
+    output_all: false,
+    raw: true,
+    command: None,
+}

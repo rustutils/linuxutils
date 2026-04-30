@@ -1,0 +1,10 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"mountpoint\", \"-x\", \"-q\", \"/dev/sda1\",])"
+---
+ERROR:
+error: the argument '--devno' cannot be used with '--quiet'
+
+Usage: mountpoint --devno <PATH>
+
+For more information, try '--help'.

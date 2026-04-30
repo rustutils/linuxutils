@@ -1,0 +1,29 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"nsenter\", \"--mount=/proc/1234/ns/mnt\",\n\"--net=/proc/1234/ns/net\", \"ls\",])"
+---
+Args {
+    target: None,
+    all: false,
+    mount: Some(
+        "/proc/1234/ns/mnt",
+    ),
+    uts: None,
+    ipc: None,
+    net: Some(
+        "/proc/1234/ns/net",
+    ),
+    pid: None,
+    user: None,
+    cgroup: None,
+    time: None,
+    no_fork: false,
+    preserve_credentials: false,
+    root_dir: None,
+    work_dir: None,
+    set_uid: None,
+    set_gid: None,
+    command: [
+        "ls",
+    ],
+}

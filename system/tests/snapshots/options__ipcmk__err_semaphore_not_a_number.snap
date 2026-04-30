@@ -1,0 +1,8 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"ipcmk\", \"-S\", \"abc\"])"
+---
+ERROR:
+error: invalid value 'abc' for '--semaphore <SEMAPHORE>': invalid digit found in string
+
+For more information, try '--help'.

@@ -1,0 +1,15 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"fstrim\", \"-a\"])"
+---
+Args {
+    all: true,
+    fstab: false,
+    offset: 0,
+    length: None,
+    minimum: 0,
+    types: None,
+    verbose: false,
+    dry_run: false,
+    mountpoint: None,
+}

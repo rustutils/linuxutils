@@ -1,0 +1,23 @@
+---
+source: system/tests/help.rs
+expression: "help_output(\"rfkill\")"
+---
+Enable and disable wireless devices
+
+Usage: rfkill [OPTIONS] [COMMAND]
+
+Commands:
+  event    Listen for rfkill events and display them on stdout
+  list     List the current state of all available devices (deprecated format)
+  block    Disable the corresponding device
+  unblock  Enable the corresponding device
+  toggle   Enable or disable the corresponding device
+  help     Print this message or the help of the given subcommand(s)
+
+Options:
+  -J, --json             Use JSON output format
+  -n, --noheadings       Don't print headings
+  -o, --output <OUTPUT>  Define which output columns to use
+      --output-all       Output all available columns
+  -r, --raw              Use the raw output format
+  -h, --help             Print help

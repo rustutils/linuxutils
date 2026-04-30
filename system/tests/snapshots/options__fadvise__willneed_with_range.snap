@@ -1,0 +1,13 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"fadvise\", \"-a\", \"willneed\", \"-o\", \"0\", \"-l\", \"65536\",\n\"data.bin\",])"
+---
+Args {
+    advice: "willneed",
+    offset: 0,
+    length: 65536,
+    file_descriptor: None,
+    filename: Some(
+        "data.bin",
+    ),
+}

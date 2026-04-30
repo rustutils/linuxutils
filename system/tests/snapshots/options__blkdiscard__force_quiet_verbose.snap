@@ -1,0 +1,15 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"blkdiscard\", \"-f\", \"-q\", \"-v\", \"/dev/sda\",])"
+---
+Args {
+    force: true,
+    offset: 0,
+    length: None,
+    step: None,
+    quiet: true,
+    secure: false,
+    zeroout: false,
+    verbose: true,
+    device: "/dev/sda",
+}

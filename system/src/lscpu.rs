@@ -18,7 +18,7 @@ const NODE_SYS: &str = "/sys/devices/system/node";
 ///
 /// Gathers CPU information from /proc/cpuinfo and sysfs, displaying
 /// architecture details, topology, caches, frequencies, and vulnerabilities.
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(
     name = "lscpu",

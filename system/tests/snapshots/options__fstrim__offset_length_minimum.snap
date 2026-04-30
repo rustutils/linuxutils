@@ -1,0 +1,19 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"fstrim\", \"-o\", \"0\", \"-l\", \"1073741824\", \"-m\", \"4096\",\n\"/mnt\",])"
+---
+Args {
+    all: false,
+    fstab: false,
+    offset: 0,
+    length: Some(
+        1073741824,
+    ),
+    minimum: 4096,
+    types: None,
+    verbose: false,
+    dry_run: false,
+    mountpoint: Some(
+        "/mnt",
+    ),
+}

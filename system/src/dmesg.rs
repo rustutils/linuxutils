@@ -21,7 +21,7 @@ const LEVEL_NAMES: [&str; 8] = [
     "emerg", "alert", "crit", "err", "warn", "notice", "info", "debug",
 ];
 
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "dmesg", about = "Print or control the kernel ring buffer")]
 pub struct Args {

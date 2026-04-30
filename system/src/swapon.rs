@@ -20,7 +20,7 @@ const SWAP_FLAG_DISCARD_PAGES: libc::c_int = 0x40000;
 ///
 /// Calls swapon(2) to activate swap areas. Can enable individual devices
 /// or all swap entries from /etc/fstab.
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(
     name = "swapon",

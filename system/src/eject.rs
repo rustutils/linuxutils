@@ -63,7 +63,7 @@ struct SgIoHdr {
     info: u32,
 }
 
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "eject", about = "Eject removable media")]
 pub struct Args {

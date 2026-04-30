@@ -1,0 +1,11 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"pivot_root\", \"/mnt/newroot\",])"
+---
+ERROR:
+error: the following required arguments were not provided:
+  <PUT_OLD>
+
+Usage: pivot_root <NEW_ROOT> <PUT_OLD>
+
+For more information, try '--help'.

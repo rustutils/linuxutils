@@ -1,0 +1,26 @@
+---
+source: system/tests/help.rs
+expression: "help_output(\"eject\")"
+---
+Eject removable media
+
+Usage: eject [OPTIONS] [DEVICE]
+
+Arguments:
+  [DEVICE]  Device or mountpoint to eject
+
+Options:
+  -d, --default                    Display default device name
+  -F, --force                      Force eject, skip device type check
+  -f, --floppy                     Use floppy eject method
+  -i, --manualeject <MANUALEJECT>  Lock or unlock hardware eject button (on|off)
+  -M, --no-partitions-unmount      Don't unmount other partitions on the device
+  -m, --no-unmount                 Don't unmount the device before ejecting
+  -n, --noop                       Show device but take no action
+  -q, --tape                       Use tape drive offline command
+  -r, --cdrom                      Use CD-ROM eject command
+  -s, --scsi                       Use SCSI eject commands
+  -T, --traytoggle                 Toggle tray open/close
+  -t, --trayclose                  Close CD-ROM tray
+  -v, --verbose                    Verbose output
+  -h, --help                       Print help

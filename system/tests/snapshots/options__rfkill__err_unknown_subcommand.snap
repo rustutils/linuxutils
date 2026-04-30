@@ -1,0 +1,10 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"rfkill\", \"bogus\"])"
+---
+ERROR:
+error: unrecognized subcommand 'bogus'
+
+Usage: rfkill [OPTIONS] [COMMAND]
+
+For more information, try '--help'.

@@ -1,0 +1,11 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"mountpoint\"])"
+---
+ERROR:
+error: the following required arguments were not provided:
+  <PATH>
+
+Usage: mountpoint <PATH>
+
+For more information, try '--help'.

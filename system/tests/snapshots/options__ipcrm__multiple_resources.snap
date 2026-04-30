@@ -1,0 +1,19 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"ipcrm\", \"-q\", \"100\", \"-q\", \"200\", \"-s\", \"300\",])"
+---
+Args {
+    shmem_id: [],
+    shmem_key: [],
+    queue_id: [
+        "100",
+        "200",
+    ],
+    queue_key: [],
+    semaphore_id: [
+        "300",
+    ],
+    semaphore_key: [],
+    all: None,
+    verbose: false,
+}

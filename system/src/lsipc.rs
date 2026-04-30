@@ -15,7 +15,7 @@ use std::{
 /// Modern replacement for ipcs. Reads /proc/sysvipc/* and
 /// /proc/sys/kernel/* to display IPC resource information
 /// in tabular format.
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "lsipc", about = "List information on IPC facilities")]
 pub struct Args {

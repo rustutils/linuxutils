@@ -1,0 +1,8 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"fadvise\", \"-o\", \"abc\", \"data.bin\",])"
+---
+ERROR:
+error: invalid value 'abc' for '--offset <OFFSET>': invalid digit found in string
+
+For more information, try '--help'.

@@ -1,0 +1,20 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"flock\", \"-o\", \"-F\", \"/var/lock/myapp\", \"mycmd\",])"
+---
+Args {
+    shared: false,
+    exclusive: false,
+    unlock: false,
+    nonblock: false,
+    timeout: None,
+    conflict_exit_code: 1,
+    close: true,
+    no_fork: true,
+    command: None,
+    verbose: false,
+    file: "/var/lock/myapp",
+    args: [
+        "mycmd",
+    ],
+}

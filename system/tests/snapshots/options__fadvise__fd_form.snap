@@ -1,0 +1,13 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"fadvise\", \"-d\", \"3\"])"
+---
+Args {
+    advice: "dontneed",
+    offset: 0,
+    length: 0,
+    file_descriptor: Some(
+        3,
+    ),
+    filename: None,
+}

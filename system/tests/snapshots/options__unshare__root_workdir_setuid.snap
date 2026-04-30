@@ -1,0 +1,35 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"unshare\", \"-m\", \"-R\", \"/newroot\", \"-w\", \"/tmp\", \"-S\", \"1000\",\n\"-G\", \"1000\", \"bash\",])"
+---
+Args {
+    mount: true,
+    uts: false,
+    ipc: false,
+    net: false,
+    pid: false,
+    user: false,
+    cgroup: false,
+    time: false,
+    fork: false,
+    map_root_user: false,
+    map_current_user: false,
+    mount_proc: None,
+    propagation: "private",
+    root_dir: Some(
+        "/newroot",
+    ),
+    work_dir: Some(
+        "/tmp",
+    ),
+    set_uid: Some(
+        1000,
+    ),
+    set_gid: Some(
+        1000,
+    ),
+    setgroups: None,
+    command: [
+        "bash",
+    ],
+}

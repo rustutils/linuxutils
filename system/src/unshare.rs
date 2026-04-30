@@ -16,7 +16,7 @@ use std::{
     process::{Command, ExitCode},
 };
 
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "unshare", about = "Run a program in new namespaces")]
 pub struct Args {

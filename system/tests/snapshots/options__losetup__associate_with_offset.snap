@@ -1,0 +1,28 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"losetup\", \"-o\", \"1048576\", \"--sizelimit\", \"10485760\",\n\"/dev/loop0\", \"disk.img\",])"
+---
+Args {
+    all: false,
+    detach: false,
+    detach_all: false,
+    find: false,
+    set_capacity: false,
+    associated: None,
+    offset: Some(
+        1048576,
+    ),
+    sizelimit: Some(
+        10485760,
+    ),
+    partscan: false,
+    read_only: false,
+    show: false,
+    list: false,
+    noheadings: false,
+    verbose: false,
+    positional: [
+        "/dev/loop0",
+        "disk.img",
+    ],
+}

@@ -1,0 +1,13 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"fadvise\", \"-a\", \"sequential\", \"log.txt\",])"
+---
+Args {
+    advice: "sequential",
+    offset: 0,
+    length: 0,
+    file_descriptor: None,
+    filename: Some(
+        "log.txt",
+    ),
+}

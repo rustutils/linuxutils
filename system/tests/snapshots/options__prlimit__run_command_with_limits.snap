@@ -1,0 +1,34 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"prlimit\", \"--nofile=2048\", \"--cpu=60\", \"myprog\", \"arg1\",])"
+---
+Args {
+    pid: None,
+    output: None,
+    noheadings: false,
+    raw: false,
+    core: None,
+    data: None,
+    nice: None,
+    fsize: None,
+    sigpending: None,
+    memlock: None,
+    rss: None,
+    nofile: Some(
+        "2048",
+    ),
+    msgqueue: None,
+    rtprio: None,
+    stack: None,
+    cpu: Some(
+        "60",
+    ),
+    nproc: None,
+    addr_space: None,
+    locks: None,
+    rttime: None,
+    command: [
+        "myprog",
+        "arg1",
+    ],
+}

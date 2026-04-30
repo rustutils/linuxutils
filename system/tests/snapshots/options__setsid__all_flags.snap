@@ -1,0 +1,12 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"setsid\", \"-c\", \"-f\", \"-w\", \"myprog\",])"
+---
+Args {
+    ctty: true,
+    fork: true,
+    wait: true,
+    command: [
+        "myprog",
+    ],
+}

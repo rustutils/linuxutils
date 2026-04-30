@@ -1,0 +1,27 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"unshare\", \"-m\", \"--propagation\", \"shared\", \"bash\",])"
+---
+Args {
+    mount: true,
+    uts: false,
+    ipc: false,
+    net: false,
+    pid: false,
+    user: false,
+    cgroup: false,
+    time: false,
+    fork: false,
+    map_root_user: false,
+    map_current_user: false,
+    mount_proc: None,
+    propagation: "shared",
+    root_dir: None,
+    work_dir: None,
+    set_uid: None,
+    set_gid: None,
+    setgroups: None,
+    command: [
+        "bash",
+    ],
+}

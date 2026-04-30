@@ -1,0 +1,13 @@
+---
+source: system/tests/help.rs
+expression: "help_output(\"ctrlaltdel\")"
+---
+Set the function of the Ctrl-Alt-Del combination
+
+Usage: ctrlaltdel [MODE]
+
+Arguments:
+  [MODE]  Mode: hard or soft (omit to query current setting)
+
+Options:
+  -h, --help  Print help

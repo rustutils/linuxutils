@@ -8,7 +8,7 @@ use rustix::process::{
 };
 use std::{ffi::CString, os::unix::io::AsRawFd, process::ExitCode};
 
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "setsid", version, about = "Run a program in a new session")]
 pub struct Args {

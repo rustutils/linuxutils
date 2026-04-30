@@ -1,0 +1,16 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"renice\", \"-n\", \"5\", \"-u\", \"1000\",])"
+---
+Args {
+    priority_flag: Some(
+        5,
+    ),
+    relative: false,
+    pid: false,
+    pgrp: false,
+    user: true,
+    args: [
+        "1000",
+    ],
+}

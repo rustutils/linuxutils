@@ -1,0 +1,12 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"swapoff\", \"--bogus\"])"
+---
+ERROR:
+error: unexpected argument '--bogus' found
+
+  tip: to pass '--bogus' as a value, use '-- --bogus'
+
+Usage: swapoff [OPTIONS] [DEVICES]...
+
+For more information, try '--help'.

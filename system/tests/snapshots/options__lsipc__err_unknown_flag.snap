@@ -1,0 +1,10 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"lsipc\", \"--bogus\"])"
+---
+ERROR:
+error: unexpected argument '--bogus' found
+
+Usage: lsipc [OPTIONS]
+
+For more information, try '--help'.

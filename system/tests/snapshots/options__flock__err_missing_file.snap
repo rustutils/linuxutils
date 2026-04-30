@@ -1,0 +1,13 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"flock\"])"
+---
+ERROR:
+error: the following required arguments were not provided:
+  <FILE>
+
+Usage: flock [options] <file>|<directory> <command> [<argument>...]
+       flock [options] <file>|<directory> -c <command>
+       flock [options] <file descriptor number>
+
+For more information, try '--help'.

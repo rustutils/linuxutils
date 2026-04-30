@@ -1,0 +1,8 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"ipcmk\", \"-M\", \"abc\"])"
+---
+ERROR:
+error: invalid value 'abc' for '--shmem <SHMEM>': invalid digit found in string
+
+For more information, try '--help'.

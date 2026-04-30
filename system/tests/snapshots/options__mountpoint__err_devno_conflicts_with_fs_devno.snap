@@ -1,0 +1,10 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"mountpoint\", \"-d\", \"-x\", \"/dev/sda1\",])"
+---
+ERROR:
+error: the argument '--fs-devno' cannot be used with '--devno'
+
+Usage: mountpoint --fs-devno <PATH>
+
+For more information, try '--help'.

@@ -1,0 +1,21 @@
+---
+source: system/tests/help.rs
+expression: "help_output(\"pivot_root\")"
+---
+Change the root filesystem via pivot_root(2).
+
+Moves the current root to `put_old` and makes `new_root` the new root. Both paths must be
+directories; `new_root` must be a mount point and `put_old` must be at or under `new_root`.
+
+Usage: pivot_root <NEW_ROOT> <PUT_OLD>
+
+Arguments:
+  <NEW_ROOT>
+          New root filesystem path
+
+  <PUT_OLD>
+          Where to move the old root
+
+Options:
+  -h, --help
+          Print help (see a summary with '-h')

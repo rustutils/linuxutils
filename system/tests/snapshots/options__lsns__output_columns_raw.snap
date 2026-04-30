@@ -1,0 +1,22 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"lsns\", \"-o\", \"NS,TYPE,PID,COMMAND\", \"-r\",])"
+---
+Args {
+    json: false,
+    list: false,
+    noheadings: false,
+    output: Some(
+        [
+            "NS",
+            "TYPE",
+            "PID",
+            "COMMAND",
+        ],
+    ),
+    output_all: false,
+    raw: true,
+    ns_type: None,
+    task: None,
+    namespace: None,
+}

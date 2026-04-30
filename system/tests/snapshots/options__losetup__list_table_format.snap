@@ -1,0 +1,21 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"losetup\", \"-l\", \"-n\",])"
+---
+Args {
+    all: false,
+    detach: false,
+    detach_all: false,
+    find: false,
+    set_capacity: false,
+    associated: None,
+    offset: None,
+    sizelimit: None,
+    partscan: false,
+    read_only: false,
+    show: false,
+    list: true,
+    noheadings: true,
+    verbose: false,
+    positional: [],
+}

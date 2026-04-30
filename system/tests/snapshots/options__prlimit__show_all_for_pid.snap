@@ -1,0 +1,29 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"prlimit\", \"-p\", \"1234\"])"
+---
+Args {
+    pid: Some(
+        1234,
+    ),
+    output: None,
+    noheadings: false,
+    raw: false,
+    core: None,
+    data: None,
+    nice: None,
+    fsize: None,
+    sigpending: None,
+    memlock: None,
+    rss: None,
+    nofile: None,
+    msgqueue: None,
+    rtprio: None,
+    stack: None,
+    cpu: None,
+    nproc: None,
+    addr_space: None,
+    locks: None,
+    rttime: None,
+    command: [],
+}

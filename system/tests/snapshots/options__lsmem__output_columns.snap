@@ -1,0 +1,23 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"lsmem\", \"-o\", \"RANGE,SIZE,STATE\",])"
+---
+Args {
+    all: false,
+    bytes: false,
+    json: false,
+    noheadings: false,
+    output: Some(
+        [
+            "RANGE",
+            "SIZE",
+            "STATE",
+        ],
+    ),
+    output_all: false,
+    pairs: false,
+    raw: false,
+    split: None,
+    sysroot: None,
+    summary: Always,
+}

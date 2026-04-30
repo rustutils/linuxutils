@@ -1,0 +1,13 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"renice\"])"
+---
+ERROR:
+error: the following required arguments were not provided:
+  <ARGS>...
+
+Usage: renice [-n|--priority|--relative] priority [-p|--pid] pid...
+       renice [-n|--priority|--relative] priority -g|--pgrp pgid...
+       renice [-n|--priority|--relative] priority -u|--user user...
+
+For more information, try '--help'.

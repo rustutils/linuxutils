@@ -1,0 +1,14 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"choom\", \"-n\", \"100\", \"--\", \"myprog\", \"--flag\",])"
+---
+Args {
+    adjust: Some(
+        100,
+    ),
+    pid: None,
+    command: [
+        "myprog",
+        "--flag",
+    ],
+}

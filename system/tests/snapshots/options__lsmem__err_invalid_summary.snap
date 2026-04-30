@@ -1,0 +1,8 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"lsmem\", \"--summary\", \"bogus\",])"
+---
+ERROR:
+error: invalid value 'bogus' for '--summary <SUMMARY>': invalid summary mode: bogus
+
+For more information, try '--help'.

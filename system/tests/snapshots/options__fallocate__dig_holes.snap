@@ -1,0 +1,17 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"fallocate\", \"-d\", \"data.bin\",])"
+---
+Args {
+    length: None,
+    offset: "0",
+    keep_size: false,
+    collapse_range: false,
+    dig_holes: true,
+    insert_range: false,
+    punch_hole: false,
+    zero_range: false,
+    posix: false,
+    verbose: false,
+    filename: "data.bin",
+}

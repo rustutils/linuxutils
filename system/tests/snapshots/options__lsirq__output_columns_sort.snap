@@ -1,0 +1,22 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"lsirq\", \"-o\", \"IRQ,TOTAL,NAME\", \"-s\", \"TOTAL\",])"
+---
+Args {
+    json: false,
+    pairs: false,
+    noheadings: false,
+    output: Some(
+        [
+            "IRQ",
+            "TOTAL",
+            "NAME",
+        ],
+    ),
+    sort: Some(
+        "TOTAL",
+    ),
+    softirq: false,
+    threshold: None,
+    cpu_list: None,
+}

@@ -1,0 +1,8 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"pivot_root\", \"/mnt/newroot\", \"/mnt/newroot/oldroot\",])"
+---
+Args {
+    new_root: "/mnt/newroot",
+    put_old: "/mnt/newroot/oldroot",
+}

@@ -8,7 +8,7 @@ use std::{fs::File, io, os::unix::io::AsRawFd, process::ExitCode};
 const FIFREEZE: libc::c_ulong = 0xc0045877;
 const FITHAW: libc::c_ulong = 0xc0045878;
 
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(
     name = "fsfreeze",

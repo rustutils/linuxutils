@@ -1,0 +1,8 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"choom\", \"-n\", \"99999\", \"-p\", \"1234\",])"
+---
+ERROR:
+error: invalid value '99999' for '--adjust <num>': 99999 is not in -32768..=32767
+
+For more information, try '--help'.

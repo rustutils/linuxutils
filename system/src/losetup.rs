@@ -40,7 +40,7 @@ struct LoopInfo64 {
     lo_init: [u64; 2],
 }
 
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "losetup", about = "Set up and control loop devices")]
 pub struct Args {

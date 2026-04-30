@@ -1,0 +1,13 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"choom\", \"-n\", \"500\", \"-p\", \"1234\",])"
+---
+Args {
+    adjust: Some(
+        500,
+    ),
+    pid: Some(
+        1234,
+    ),
+    command: [],
+}

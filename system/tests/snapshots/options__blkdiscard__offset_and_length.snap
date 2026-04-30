@@ -1,0 +1,17 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"blkdiscard\", \"-o\", \"1048576\", \"-l\", \"10485760\", \"/dev/sda\",])"
+---
+Args {
+    force: false,
+    offset: 1048576,
+    length: Some(
+        10485760,
+    ),
+    step: None,
+    quiet: false,
+    secure: false,
+    zeroout: false,
+    verbose: false,
+    device: "/dev/sda",
+}

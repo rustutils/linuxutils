@@ -7,7 +7,7 @@ use cols::{OutputMode, Table, WidthHint, print_table};
 use rustix::process::{Pid, Resource, Rlimit, getrlimit, prlimit, setrlimit};
 use std::{fs, os::unix::process::CommandExt, process, process::ExitCode};
 
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(
     name = "prlimit",

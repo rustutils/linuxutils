@@ -1,0 +1,35 @@
+---
+source: system/tests/help.rs
+expression: "help_output(\"ipcs\")"
+---
+Show information on System V IPC facilities.
+
+Reads /proc/sysvipc/{shm,msg,sem} to display active IPC resources, system limits, or usage
+summaries.
+
+Usage: ipcs [OPTIONS]
+
+Options:
+  -m, --shmems
+          Show shared memory segments
+
+  -q, --queues
+          Show message queues
+
+  -s, --semaphores
+          Show semaphore arrays
+
+  -a, --all
+          Show all three resource types
+
+  -l, --limits
+          Show system resource limits
+
+  -u, --summary
+          Show usage summary
+
+  -b, --bytes
+          Show sizes in bytes
+
+  -h, --help
+          Print help (see a summary with '-h')

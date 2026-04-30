@@ -27,7 +27,7 @@ const OP_DEL: u8 = 1;
 const OP_CHANGE: u8 = 2;
 const OP_CHANGE_ALL: u8 = 3;
 
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "rfkill", about = "Enable and disable wireless devices")]
 pub struct Args {
@@ -55,7 +55,7 @@ pub struct Args {
     command: Option<Cmd>,
 }
 
-#[derive(Subcommand)]
+#[derive(Subcommand, Debug)]
 enum Cmd {
     /// Listen for rfkill events and display them on stdout
     Event,
