@@ -1,0 +1,68 @@
+---
+source: misc/tests/lslocks_fixtures.rs
+expression: "run_lslocks_json(\"basic\", &[\"--output-all\"])"
+---
+{
+   "locks": [
+      {
+         "command": "vim",
+         "pid": "1234",
+         "type": "POSIX",
+         "size": "",
+         "inode": "1234567",
+         "maj:min": "253:1",
+         "mode": "WRITE",
+         "m": "0",
+         "start": "0",
+         "end": "EOF",
+         "path": "",
+         "blocker": "",
+         "holders": ""
+      },
+      {
+         "command": "tail",
+         "pid": "5678",
+         "type": "FLOCK",
+         "size": "",
+         "inode": "7654321",
+         "maj:min": "253:1",
+         "mode": "WRITE",
+         "m": "0",
+         "start": "0",
+         "end": "EOF",
+         "path": "",
+         "blocker": "",
+         "holders": ""
+      },
+      {
+         "command": "sqlite3",
+         "pid": "9012",
+         "type": "OFDLCK",
+         "size": "",
+         "inode": "9999999",
+         "maj:min": "253:1",
+         "mode": "READ",
+         "m": "0",
+         "start": "100",
+         "end": "200",
+         "path": "",
+         "blocker": "",
+         "holders": ""
+      },
+      {
+         "command": "systemd",
+         "pid": "1",
+         "type": "POSIX",
+         "size": "",
+         "inode": "42",
+         "maj:min": "253:1",
+         "mode": "WRITE",
+         "m": "0",
+         "start": "0",
+         "end": "EOF",
+         "path": "",
+         "blocker": "",
+         "holders": ""
+      }
+   ]
+}

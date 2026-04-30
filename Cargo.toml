@@ -11,6 +11,7 @@ members = [
     "sched",
     "system",
     "term",
+    "testutil",
     "text",
     "xtask",
 ]
@@ -47,6 +48,7 @@ linuxutils-sched = { path = "sched", version = "0.1.0" }
 linuxutils-system = { path = "system", version = "0.1.0" }
 linuxutils-term = { path = "term", version = "0.1.0" }
 linuxutils-text = { path = "text", version = "0.1.0" }
+testutil = { path = "testutil" }
 
 [workspace.metadata.crane]
 name = "linuxutils"

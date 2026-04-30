@@ -1,0 +1,32 @@
+---
+source: misc/tests/lslocks_fixtures.rs
+expression: "run_lslocks_json(\"basic\", &[\"--output\", \"PID,COMMAND,TYPE,MODE\"],)"
+---
+{
+   "locks": [
+      {
+         "pid": "1234",
+         "command": "vim",
+         "type": "POSIX",
+         "mode": "WRITE"
+      },
+      {
+         "pid": "5678",
+         "command": "tail",
+         "type": "FLOCK",
+         "mode": "WRITE"
+      },
+      {
+         "pid": "9012",
+         "command": "sqlite3",
+         "type": "OFDLCK",
+         "mode": "READ"
+      },
+      {
+         "pid": "1",
+         "command": "systemd",
+         "type": "POSIX",
+         "mode": "WRITE"
+      }
+   ]
+}

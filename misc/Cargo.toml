@@ -10,6 +10,10 @@ authors.workspace = true
 readme = "README.md"
 keywords = ["linux", "cli", "util-linux", "utilities"]
 categories = ["command-line-utilities", "os::linux-apis"]
+# tests/fixtures may contain symlinks (e.g. fake /proc/[pid]/fd/* trees);
+# `cargo publish` follows symlinks while archiving and chokes on dangling
+# ones, so omit fixtures from the .crate tarball entirely.
+exclude = ["tests/fixtures/**"]
 
 [package.metadata.docs.rs]
 default-target = "x86_64-unknown-linux-gnu"
@@ -63,6 +67,7 @@ assert_cmd = { workspace = true }
 insta = { workspace = true }
 predicates = { workspace = true }
 tempfile = { workspace = true }
+testutil = { workspace = true }
 
 [[bin]]
 name = "cal"

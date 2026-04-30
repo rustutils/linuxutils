@@ -1,0 +1,9 @@
+---
+source: misc/tests/lslocks_fixtures.rs
+expression: "run_with_columns(\"basic\", &[\"--bytes\"])"
+---
+COMMAND          PID TYPE   SIZE  MODE  M      START        END PATH
+vim             1234 POSIX        WRITE 0          0        EOF
+tail            5678 FLOCK        WRITE 0          0        EOF
+sqlite3         9012 OFDLCK       READ  0        100        200
+systemd            1 POSIX        WRITE 0          0        EOF

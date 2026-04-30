@@ -1,0 +1,23 @@
+---
+source: misc/tests/lslocks_fixtures.rs
+expression: "run_lslocks_json(\"basic\", &[\"--pid\", \"1234\", \"--output-all\"],)"
+---
+{
+   "locks": [
+      {
+         "command": "vim",
+         "pid": "1234",
+         "type": "POSIX",
+         "size": "",
+         "inode": "1234567",
+         "maj:min": "253:1",
+         "mode": "WRITE",
+         "m": "0",
+         "start": "0",
+         "end": "EOF",
+         "path": "",
+         "blocker": "",
+         "holders": ""
+      }
+   ]
+}
