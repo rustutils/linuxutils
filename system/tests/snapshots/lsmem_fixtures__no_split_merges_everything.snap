@@ -1,0 +1,17 @@
+---
+source: system/tests/lsmem_fixtures.rs
+expression: "run_ok(\"basic\", &[\"--split=none\", \"-J\", \"--output-all\"],)"
+---
+{
+   "memory": [
+      {
+         "range": "0x0000000000000000-0x0000000027ffffff",
+         "size": "640M",
+         "state": "online",
+         "removable": "no",
+         "block": "0-4",
+         "node": "0",
+         "zones": "Normal"
+      }
+   ]
+}

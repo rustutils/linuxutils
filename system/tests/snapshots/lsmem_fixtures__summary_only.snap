@@ -1,0 +1,7 @@
+---
+source: system/tests/lsmem_fixtures.rs
+expression: "run_ok(\"basic\", &[\"--summary=only\", \"--bytes\"])"
+---
+Memory block size:           134217728
+Total online memory:         536870912
+Total offline memory:        134217728

@@ -10,6 +10,10 @@ authors.workspace = true
 readme = "README.md"
 keywords = ["linux", "cli", "util-linux", "system"]
 categories = ["command-line-utilities", "os::linux-apis"]
+# tests/fixtures may contain symlinks (e.g. fake /sys NUMA-node trees);
+# `cargo publish` follows symlinks while archiving and chokes on dangling
+# ones, so omit fixtures from the .crate tarball entirely.
+exclude = ["tests/fixtures/**"]
 
 [package.metadata.docs.rs]
 default-target = "x86_64-unknown-linux-gnu"

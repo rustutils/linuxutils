@@ -1,0 +1,23 @@
+---
+source: system/tests/lsmem_fixtures.rs
+expression: "run_ok(\"basic\", &[\"-J\", \"--output\", \"RANGE,SIZE,STATE\"],)"
+---
+{
+   "memory": [
+      {
+         "range": "0x0000000000000000-0x0000000017ffffff",
+         "size": "384M",
+         "state": "online"
+      },
+      {
+         "range": "0x0000000018000000-0x000000001fffffff",
+         "size": "128M",
+         "state": "offline"
+      },
+      {
+         "range": "0x0000000020000000-0x0000000027ffffff",
+         "size": "128M",
+         "state": "online"
+      }
+   ]
+}
