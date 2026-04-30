@@ -1,0 +1,63 @@
+---
+source: system/tests/lsirq_fixtures.rs
+expression: "trim_trailing(lsirq(\"basic\").args([\"-J\", \"-C\", \"0,1\"]).run_ok(),)"
+---
+{
+   "interrupts": [
+      {
+         "irq": "LOC",
+         "total": "35801",
+         "name": "Local timer interrupts"
+      },
+      {
+         "irq": "8",
+         "total": "500",
+         "name": "IO-APIC 8-edge rtc0"
+      },
+      {
+         "irq": "19",
+         "total": "300",
+         "name": "IO-APIC 19-fasteoi ata_piix, uhci_hcd"
+      },
+      {
+         "irq": "RES",
+         "total": "300",
+         "name": "Rescheduling interrupts"
+      },
+      {
+         "irq": "16",
+         "total": "110",
+         "name": "IO-APIC 16-fasteoi ehci_hcd"
+      },
+      {
+         "irq": "0",
+         "total": "100",
+         "name": "IO-APIC 2-edge timer"
+      },
+      {
+         "irq": "1",
+         "total": "15",
+         "name": "IO-APIC 1-edge i8042"
+      },
+      {
+         "irq": "9",
+         "total": "3",
+         "name": "IO-APIC 9-fasteoi acpi"
+      },
+      {
+         "irq": "ERR",
+         "total": "2",
+         "name": ""
+      },
+      {
+         "irq": "NMI",
+         "total": "0",
+         "name": "Non-maskable interrupts"
+      },
+      {
+         "irq": "MIS",
+         "total": "0",
+         "name": ""
+      }
+   ]
+}

@@ -1,0 +1,58 @@
+---
+source: system/tests/lsirq_fixtures.rs
+expression: "trim_trailing(lsirq(\"basic\").args([\"-S\", \"-J\"]).run_ok(),)"
+---
+{
+   "interrupts": [
+      {
+         "irq": "SCHED",
+         "total": "10000",
+         "name": ""
+      },
+      {
+         "irq": "NET_RX",
+         "total": "2600",
+         "name": ""
+      },
+      {
+         "irq": "TIMER",
+         "total": "1000",
+         "name": ""
+      },
+      {
+         "irq": "RCU",
+         "total": "1000",
+         "name": ""
+      },
+      {
+         "irq": "BLOCK",
+         "total": "100",
+         "name": ""
+      },
+      {
+         "irq": "TASKLET",
+         "total": "10",
+         "name": ""
+      },
+      {
+         "irq": "NET_TX",
+         "total": "5",
+         "name": ""
+      },
+      {
+         "irq": "HI",
+         "total": "0",
+         "name": ""
+      },
+      {
+         "irq": "IRQ_POLL",
+         "total": "0",
+         "name": ""
+      },
+      {
+         "irq": "HRTIMER",
+         "total": "0",
+         "name": ""
+      }
+   ]
+}

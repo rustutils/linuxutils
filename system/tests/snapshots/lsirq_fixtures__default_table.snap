@@ -1,0 +1,16 @@
+---
+source: system/tests/lsirq_fixtures.rs
+expression: "trim_trailing(lsirq(\"basic\").run_ok())"
+---
+IRQ  TOTAL NAME
+LOC 116046 Local timer interrupts
+RES   1000 Rescheduling interrupts
+  8    500 IO-APIC 8-edge rtc0
+ 19    375 IO-APIC 19-fasteoi ata_piix, uhci_hcd
+ 16    260 IO-APIC 16-fasteoi ehci_hcd
+  0    100 IO-APIC 2-edge timer
+  1     50 IO-APIC 1-edge i8042
+  9     10 IO-APIC 9-fasteoi acpi
+ERR      2
+NMI      0 Non-maskable interrupts
+MIS      0

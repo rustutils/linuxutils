@@ -1,0 +1,18 @@
+---
+source: system/tests/lsirq_fixtures.rs
+expression: "trim_trailing(lsirq(\"basic\").args([\"-J\", \"--threshold\", \"1K\"]).run_ok(),)"
+---
+{
+   "interrupts": [
+      {
+         "irq": "LOC",
+         "total": "116046",
+         "name": "Local timer interrupts"
+      },
+      {
+         "irq": "RES",
+         "total": "1000",
+         "name": "Rescheduling interrupts"
+      }
+   ]
+}

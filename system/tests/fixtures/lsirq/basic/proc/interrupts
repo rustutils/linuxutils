@@ -1,0 +1,12 @@
+            CPU0       CPU1       CPU2       CPU3
+   0:        100          0          0          0   IO-APIC    2-edge      timer
+   1:          5         10         15         20   IO-APIC    1-edge      i8042
+   8:        500          0          0          0   IO-APIC    8-edge      rtc0
+   9:          1          2          3          4   IO-APIC    9-fasteoi   acpi
+  16:         50         60         70         80   IO-APIC   16-fasteoi   ehci_hcd
+  19:        200        100         50         25   IO-APIC   19-fasteoi   ata_piix, uhci_hcd
+ NMI:          0          0          0          0   Non-maskable interrupts
+ LOC:      12345      23456      34567      45678   Local timer interrupts
+ RES:        100        200        300        400   Rescheduling interrupts
+ ERR:          2
+ MIS:          0

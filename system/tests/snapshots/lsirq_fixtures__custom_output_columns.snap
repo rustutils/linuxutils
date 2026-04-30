@@ -1,0 +1,52 @@
+---
+source: system/tests/lsirq_fixtures.rs
+expression: "trim_trailing(lsirq(\"basic\").args([\"-J\", \"--output\", \"IRQ,TOTAL\"]).run_ok(),)"
+---
+{
+   "interrupts": [
+      {
+         "irq": "LOC",
+         "total": "116046"
+      },
+      {
+         "irq": "RES",
+         "total": "1000"
+      },
+      {
+         "irq": "8",
+         "total": "500"
+      },
+      {
+         "irq": "19",
+         "total": "375"
+      },
+      {
+         "irq": "16",
+         "total": "260"
+      },
+      {
+         "irq": "0",
+         "total": "100"
+      },
+      {
+         "irq": "1",
+         "total": "50"
+      },
+      {
+         "irq": "9",
+         "total": "10"
+      },
+      {
+         "irq": "ERR",
+         "total": "2"
+      },
+      {
+         "irq": "NMI",
+         "total": "0"
+      },
+      {
+         "irq": "MIS",
+         "total": "0"
+      }
+   ]
+}

@@ -1,0 +1,15 @@
+---
+source: system/tests/lsirq_fixtures.rs
+expression: "trim_trailing(lsirq(\"basic\").args([\"--pairs\", \"--noheadings\"]).run_ok(),)"
+---
+IRQ="LOC" TOTAL="116046" NAME="Local timer interrupts"
+IRQ="RES" TOTAL="1000" NAME="Rescheduling interrupts"
+IRQ="8" TOTAL="500" NAME="IO-APIC 8-edge rtc0"
+IRQ="19" TOTAL="375" NAME="IO-APIC 19-fasteoi ata_piix, uhci_hcd"
+IRQ="16" TOTAL="260" NAME="IO-APIC 16-fasteoi ehci_hcd"
+IRQ="0" TOTAL="100" NAME="IO-APIC 2-edge timer"
+IRQ="1" TOTAL="50" NAME="IO-APIC 1-edge i8042"
+IRQ="9" TOTAL="10" NAME="IO-APIC 9-fasteoi acpi"
+IRQ="ERR" TOTAL="2" NAME=""
+IRQ="NMI" TOTAL="0" NAME="Non-maskable interrupts"
+IRQ="MIS" TOTAL="0" NAME=""
