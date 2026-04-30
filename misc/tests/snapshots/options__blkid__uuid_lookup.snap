@@ -1,0 +1,17 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"blkid\", \"-U\", \"12345678-1234-1234-1234-123456789abc\",])"
+---
+Args {
+    label: None,
+    uuid: Some(
+        "12345678-1234-1234-1234-123456789abc",
+    ),
+    output: "full",
+    list_one: false,
+    no_encoding: false,
+    cache_file: None,
+    probe: false,
+    info: false,
+    devices: [],
+}

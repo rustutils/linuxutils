@@ -25,6 +25,7 @@ default = ["full"]
 full = [
     "cal",
     "copyfilerange",
+    "blkid",
     "exch",
     "fincore",
     "findfs",
@@ -43,6 +44,7 @@ full = [
     "waitpid",
     "whereis",
 ]
+blkid = ["dep:linuxutils-blkid"]
 cal = ["dep:chrono"]
 copyfilerange = ["dep:libc"]
 exch = ["dep:rustix"]
@@ -80,6 +82,11 @@ insta = { workspace = true }
 predicates = { workspace = true }
 tempfile = { workspace = true }
 testutil = { workspace = true }
+
+[[bin]]
+name = "blkid"
+path = "src/bin/blkid.rs"
+required-features = ["blkid"]
 
 [[bin]]
 name = "cal"

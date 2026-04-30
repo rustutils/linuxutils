@@ -1,0 +1,18 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"blkid\", \"/dev/sda1\", \"/dev/sda2\",])"
+---
+Args {
+    label: None,
+    uuid: None,
+    output: "full",
+    list_one: false,
+    no_encoding: false,
+    cache_file: None,
+    probe: false,
+    info: false,
+    devices: [
+        "/dev/sda1",
+        "/dev/sda2",
+    ],
+}

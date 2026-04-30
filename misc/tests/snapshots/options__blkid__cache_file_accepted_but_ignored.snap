@@ -1,0 +1,17 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"blkid\", \"-c\", \"/dev/null\",])"
+---
+Args {
+    label: None,
+    uuid: None,
+    output: "full",
+    list_one: false,
+    no_encoding: false,
+    cache_file: Some(
+        "/dev/null",
+    ),
+    probe: false,
+    info: false,
+    devices: [],
+}

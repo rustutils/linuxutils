@@ -1,3 +1,6 @@
+#[cfg(feature = "blkid")]
+pub mod blkid;
+
 #[cfg(feature = "cal")]
 pub mod cal;
 

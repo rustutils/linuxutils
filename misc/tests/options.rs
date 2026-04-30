@@ -18,6 +18,78 @@ fn parse<P: Parser + Debug>(argv: &[&str]) -> String {
     }
 }
 
+mod blkid {
+    use super::parse;
+    use linuxutils_misc::blkid::Args;
+
+    // ---- SYNOPSIS form: blkid [options] [device...]
+
+    #[test]
+    fn no_args() {
+        insta::assert_snapshot!(parse::<Args>(&["blkid"]));
+    }
+
+    #[test]
+    fn label_lookup() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "blkid", "-L", "root",
+        ]));
+    }
+
+    #[test]
+    fn uuid_lookup() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "blkid", "-U", "12345678-1234-1234-1234-123456789abc",
+        ]));
+    }
+
+    #[test]
+    fn output_format_export() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "blkid", "-o", "export",
+        ]));
+    }
+
+    #[test]
+    fn explicit_devices() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "blkid", "/dev/sda1", "/dev/sda2",
+        ]));
+    }
+
+    #[test]
+    fn probe_flag_accepted_at_parse_time() {
+        // --probe is parsed but errors at run time. The parse itself
+        // should succeed (no UI surprise).
+        insta::assert_snapshot!(parse::<Args>(&[
+            "blkid", "--probe", "/dev/sda1",
+        ]));
+    }
+
+    #[test]
+    fn list_one_with_label() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "blkid", "-l", "-L", "root",
+        ]));
+    }
+
+    #[test]
+    fn cache_file_accepted_but_ignored() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "blkid", "-c", "/dev/null",
+        ]));
+    }
+
+    // ---- Error cases
+
+    #[test]
+    fn err_unknown_flag() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "blkid", "--bogus",
+        ]));
+    }
+}
+
 mod cal {
     use super::parse;
     use linuxutils_misc::cal::Args;

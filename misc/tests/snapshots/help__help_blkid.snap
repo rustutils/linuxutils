@@ -1,0 +1,46 @@
+---
+source: misc/tests/help.rs
+expression: "help_output(\"blkid\")"
+---
+Locate or print block device attributes (LABEL, UUID, PARTLABEL, PARTUUID, ID).
+
+Resolution and listing go through the udev `/dev/disk/by-*` symlink layer. The on-disk
+filesystem-signature probe path (`-p, --probe`) is **not implemented** in this v0 — invocations that
+need it will exit with a clear error rather than silently returning incomplete data. Use upstream
+`blkid` for probing.
+
+Usage: blkid [OPTIONS] [DEVICES]...
+
+Arguments:
+  [DEVICES]...
+          Devices to print attributes for; empty means list every device known to udev
+
+Options:
+  -L, --label <LABEL>
+          Look up the device that uses this filesystem label
+
+  -U, --uuid <UUID>
+          Look up the device with this UUID
+
+  -o, --output <FORMAT>
+          Output format: `full` (default), `value`, `device`, `export`
+          
+          [default: full]
+
+  -l, --list-one
+          Only print the first match for -L / -U
+
+  -d, --no-encoding
+          Don't encode non-printing characters (no-op in v0; kept for command-line compatibility)
+
+  -c, --cache-file <FILE>
+          Cache file (ignored — v0 reads udev symlinks directly)
+
+  -p, --probe
+          Stub: probing isn't implemented in v0
+
+  -i, --info
+          Stub: probing-info isn't implemented in v0
+
+  -h, --help
+          Print help (see a summary with '-h')

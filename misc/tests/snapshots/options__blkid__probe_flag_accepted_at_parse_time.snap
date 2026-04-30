@@ -1,0 +1,17 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"blkid\", \"--probe\", \"/dev/sda1\",])"
+---
+Args {
+    label: None,
+    uuid: None,
+    output: "full",
+    list_one: false,
+    no_encoding: false,
+    cache_file: None,
+    probe: true,
+    info: false,
+    devices: [
+        "/dev/sda1",
+    ],
+}

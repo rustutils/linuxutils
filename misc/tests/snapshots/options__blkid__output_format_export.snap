@@ -1,0 +1,15 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"blkid\", \"-o\", \"export\",])"
+---
+Args {
+    label: None,
+    uuid: None,
+    output: "export",
+    list_one: false,
+    no_encoding: false,
+    cache_file: None,
+    probe: false,
+    info: false,
+    devices: [],
+}

@@ -81,7 +81,7 @@
 
 | Tool | Description | Status |
 |------|-------------|--------|
-| `blkid` | Locate and print block device attributes | Not started |
+| `blkid` | Locate and print block device attributes | Partial (no probe layer) |
 | `cal` | Display a calendar | Done |
 | `copyfilerange` | Copy range(s) from source to destination file | Done |
 | `enosys` | Make syscalls fail with ENOSYS | Not started |

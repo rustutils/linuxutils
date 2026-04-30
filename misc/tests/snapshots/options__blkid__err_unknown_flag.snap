@@ -1,0 +1,12 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"blkid\", \"--bogus\",])"
+---
+ERROR:
+error: unexpected argument '--bogus' found
+
+  tip: to pass '--bogus' as a value, use '-- --bogus'
+
+Usage: blkid [OPTIONS] [DEVICES]...
+
+For more information, try '--help'.
