@@ -1,0 +1,14 @@
+---
+source: text/tests/options.rs
+expression: "parse::<Args>(&[\"bits\", \"-w\", \"64\", \"--list\", \"2,22,74,79\",])"
+---
+Args {
+    mask: false,
+    grouped_mask: false,
+    binary: false,
+    list: true,
+    width: 64,
+    masks: [
+        "2,22,74,79",
+    ],
+}

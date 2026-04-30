@@ -1,0 +1,14 @@
+---
+source: text/tests/options.rs
+expression: "parse::<Args>(&[\"bits\", \"-b\", \"0x10\",])"
+---
+Args {
+    mask: false,
+    grouped_mask: false,
+    binary: true,
+    list: false,
+    width: 8192,
+    masks: [
+        "0x10",
+    ],
+}

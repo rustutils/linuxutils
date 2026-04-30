@@ -1,0 +1,10 @@
+---
+source: text/tests/options.rs
+expression: "parse::<Args>(&[\"bits\", \"-l\", \"-b\", \"0x1\",])"
+---
+ERROR:
+error: the argument '--list' cannot be used with '--binary'
+
+Usage: bits --list <MASKS>...
+
+For more information, try '--help'.

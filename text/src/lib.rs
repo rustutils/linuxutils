@@ -1,3 +1,6 @@
+#[cfg(feature = "bits")]
+pub mod bits;
+
 #[cfg(feature = "colrm")]
 pub mod colrm;
 

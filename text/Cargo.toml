@@ -18,7 +18,8 @@ all-features = true
 
 [features]
 default = ["full"]
-full = ["colrm", "column", "hexdump", "line", "rev"]
+full = ["bits", "colrm", "column", "hexdump", "line", "rev"]
+bits = []
 colrm = []
 column = ["dep:cols", "dep:rustix"]
 hexdump = []
@@ -36,6 +37,11 @@ assert_cmd = { workspace = true }
 insta = { workspace = true }
 predicates = { workspace = true }
 tempfile = { workspace = true }
+
+[[bin]]
+name = "bits"
+path = "src/bin/bits.rs"
+required-features = ["bits"]
 
 [[bin]]
 name = "colrm"

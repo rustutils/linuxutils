@@ -18,6 +18,76 @@ fn parse<P: Parser + Debug>(argv: &[&str]) -> String {
     }
 }
 
+mod bits {
+    use super::parse;
+    use linuxutils_text::bits::Args;
+
+    // ---- SYNOPSIS form: bits [-w N] [<MODE>] [<MASK_OR_LIST>...]
+
+    #[test]
+    fn default_mode() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "bits", "0xeec2",
+        ]));
+    }
+
+    #[test]
+    fn list_mode_multiple_groups() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "bits", "--list", "4,5-8", "16,30",
+        ]));
+    }
+
+    #[test]
+    fn binary_mode() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "bits", "-b", "0x10",
+        ]));
+    }
+
+    #[test]
+    fn grouped_mask_mode() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "bits", "--grouped-mask", "2,22,74,79",
+        ]));
+    }
+
+    #[test]
+    fn explicit_mask_mode() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "bits", "-m", "0x1",
+        ]));
+    }
+
+    #[test]
+    fn width_override() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "bits", "-w", "64", "--list", "2,22,74,79",
+        ]));
+    }
+
+    #[test]
+    fn no_args_reads_stdin() {
+        insta::assert_snapshot!(parse::<Args>(&["bits"]));
+    }
+
+    // ---- Error cases
+
+    #[test]
+    fn err_conflicting_modes() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "bits", "-l", "-b", "0x1",
+        ]));
+    }
+
+    #[test]
+    fn err_width_not_a_number() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "bits", "-w", "abc",
+        ]));
+    }
+}
+
 mod colrm {
     use super::parse;
     use linuxutils_text::colrm::Args;

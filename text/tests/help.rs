@@ -20,6 +20,11 @@ fn help_output(bin: &str) -> String {
 }
 
 #[test]
+fn help_bits() {
+    insta::assert_snapshot!(help_output("bits"));
+}
+
+#[test]
 fn help_colrm() {
     insta::assert_snapshot!(help_output("colrm"));
 }

@@ -115,7 +115,7 @@
 
 | Tool | Description | Status |
 |------|-------------|--------|
-| `bits` | Convert bit masks or lists from/to various formats | Not started |
+| `bits` | Convert bit masks or lists from/to various formats | Done |
 | `col` | Filter reverse line feeds from input | Not started |
 | `colcrt` | Filter nroff output for CRT previewing | Not started |
 | `colrm` | Remove columns from a file | Done |

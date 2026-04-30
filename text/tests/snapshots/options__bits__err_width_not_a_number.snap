@@ -1,0 +1,8 @@
+---
+source: text/tests/options.rs
+expression: "parse::<Args>(&[\"bits\", \"-w\", \"abc\",])"
+---
+ERROR:
+error: invalid value 'abc' for '--width <WIDTH>': invalid digit found in string
+
+For more information, try '--help'.
