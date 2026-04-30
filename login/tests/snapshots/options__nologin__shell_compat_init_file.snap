@@ -1,0 +1,17 @@
+---
+source: login/tests/options.rs
+expression: "parse::<Args>(&[\"nologin\", \"--init-file\", \"/tmp/init\",])"
+---
+Args {
+    command: None,
+    init_file: Some(
+        "/tmp/init",
+    ),
+    interactive: false,
+    login: false,
+    noprofile: false,
+    norc: false,
+    posix: false,
+    rcfile: None,
+    restricted: false,
+}

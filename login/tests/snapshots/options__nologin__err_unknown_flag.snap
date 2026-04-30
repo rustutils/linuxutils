@@ -1,0 +1,10 @@
+---
+source: login/tests/options.rs
+expression: "parse::<Args>(&[\"nologin\", \"--bogus\"])"
+---
+ERROR:
+error: unexpected argument '--bogus' found
+
+Usage: nologin
+
+For more information, try '--help'.

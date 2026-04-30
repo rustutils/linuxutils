@@ -1,0 +1,17 @@
+---
+source: login/tests/options.rs
+expression: "parse::<Args>(&[\"nologin\", \"-c\", \"echo hi\",])"
+---
+Args {
+    command: Some(
+        "echo hi",
+    ),
+    init_file: None,
+    interactive: false,
+    login: false,
+    noprofile: false,
+    norc: false,
+    posix: false,
+    rcfile: None,
+    restricted: false,
+}

@@ -1,5 +1,5 @@
 ---
-source: login/tests/help_snapshots.rs
+source: login/tests/help.rs
 expression: "help_output(\"nologin\")"
 ---
 Politely refuse a login.
