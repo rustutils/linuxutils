@@ -164,6 +164,94 @@ mod exch {
     }
 }
 
+mod findmnt {
+    use super::parse;
+    use linuxutils_misc::findmnt::Args;
+
+    // ---- SYNOPSIS form: findmnt [options] [DEVICE-OR-MOUNTPOINT]
+
+    #[test]
+    fn no_args() {
+        insta::assert_snapshot!(parse::<Args>(&["findmnt"]));
+    }
+
+    #[test]
+    fn target_filter() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "findmnt", "--target", "/proc",
+        ]));
+    }
+
+    #[test]
+    fn source_filter() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "findmnt", "--source", "LABEL=root",
+        ]));
+    }
+
+    #[test]
+    fn positional_path_or_spec() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "findmnt", "/proc",
+        ]));
+    }
+
+    #[test]
+    fn types_filter_with_inversion() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "findmnt", "-t", "ext4,nofuse",
+        ]));
+    }
+
+    #[test]
+    fn fstab_source_switch() {
+        insta::assert_snapshot!(parse::<Args>(&["findmnt", "-s"]));
+    }
+
+    #[test]
+    fn swaps_source_switch() {
+        insta::assert_snapshot!(parse::<Args>(&["findmnt", "--swaps"]));
+    }
+
+    #[test]
+    fn custom_tab_file() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "findmnt", "-F", "/tmp/my-mtab",
+        ]));
+    }
+
+    #[test]
+    fn json_with_columns() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "findmnt", "-J", "-o", "TARGET,SOURCE,FSTYPE",
+        ]));
+    }
+
+    #[test]
+    fn raw_noheadings() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "findmnt", "--raw", "--noheadings",
+        ]));
+    }
+
+    #[test]
+    fn output_all() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "findmnt", "--output-all",
+        ]));
+    }
+
+    // ---- Error cases
+
+    #[test]
+    fn err_conflicting_sources() {
+        // --fstab, --swaps, --kernel are in the same group.
+        insta::assert_snapshot!(parse::<Args>(&[
+            "findmnt", "--fstab", "--swaps",
+        ]));
+    }
+}
+
 mod fincore {
     use super::parse;
     use linuxutils_misc::fincore::Args;

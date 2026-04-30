@@ -1,0 +1,19 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"findmnt\", \"--raw\", \"--noheadings\",])"
+---
+Args {
+    fstab: false,
+    swaps: false,
+    kernel: false,
+    tab_file: None,
+    source: None,
+    target: None,
+    types: None,
+    json: false,
+    raw: true,
+    noheadings: true,
+    output: None,
+    output_all: false,
+    spec: None,
+}

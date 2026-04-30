@@ -1,0 +1,19 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"findmnt\", \"--output-all\",])"
+---
+Args {
+    fstab: false,
+    swaps: false,
+    kernel: false,
+    tab_file: None,
+    source: None,
+    target: None,
+    types: None,
+    json: false,
+    raw: false,
+    noheadings: false,
+    output: None,
+    output_all: true,
+    spec: None,
+}

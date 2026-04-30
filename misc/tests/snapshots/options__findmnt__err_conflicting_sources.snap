@@ -1,0 +1,10 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"findmnt\", \"--fstab\", \"--swaps\",])"
+---
+ERROR:
+error: the argument '--fstab' cannot be used with '--swaps'
+
+Usage: findmnt --fstab [DEVICE-OR-MOUNTPOINT]
+
+For more information, try '--help'.

@@ -704,6 +704,7 @@ dependencies = [
  "insta",
  "libc",
  "linuxutils-common",
+ "linuxutils-mount",
  "predicates",
  "rustix",
  "tempfile",

@@ -1,0 +1,24 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"findmnt\", \"-t\", \"ext4,nofuse\",])"
+---
+Args {
+    fstab: false,
+    swaps: false,
+    kernel: false,
+    tab_file: None,
+    source: None,
+    target: None,
+    types: Some(
+        [
+            "ext4",
+            "nofuse",
+        ],
+    ),
+    json: false,
+    raw: false,
+    noheadings: false,
+    output: None,
+    output_all: false,
+    spec: None,
+}

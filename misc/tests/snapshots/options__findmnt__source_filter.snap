@@ -1,0 +1,21 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"findmnt\", \"--source\", \"LABEL=root\",])"
+---
+Args {
+    fstab: false,
+    swaps: false,
+    kernel: false,
+    tab_file: None,
+    source: Some(
+        "LABEL=root",
+    ),
+    target: None,
+    types: None,
+    json: false,
+    raw: false,
+    noheadings: false,
+    output: None,
+    output_all: false,
+    spec: None,
+}

@@ -1,0 +1,21 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"findmnt\", \"--target\", \"/proc\",])"
+---
+Args {
+    fstab: false,
+    swaps: false,
+    kernel: false,
+    tab_file: None,
+    source: None,
+    target: Some(
+        "/proc",
+    ),
+    types: None,
+    json: false,
+    raw: false,
+    noheadings: false,
+    output: None,
+    output_all: false,
+    spec: None,
+}

@@ -1,0 +1,25 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"findmnt\", \"-J\", \"-o\", \"TARGET,SOURCE,FSTYPE\",])"
+---
+Args {
+    fstab: false,
+    swaps: false,
+    kernel: false,
+    tab_file: None,
+    source: None,
+    target: None,
+    types: None,
+    json: true,
+    raw: false,
+    noheadings: false,
+    output: Some(
+        [
+            "TARGET",
+            "SOURCE",
+            "FSTYPE",
+        ],
+    ),
+    output_all: false,
+    spec: None,
+}

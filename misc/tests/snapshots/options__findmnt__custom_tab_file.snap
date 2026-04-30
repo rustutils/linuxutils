@@ -1,0 +1,21 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"findmnt\", \"-F\", \"/tmp/my-mtab\",])"
+---
+Args {
+    fstab: false,
+    swaps: false,
+    kernel: false,
+    tab_file: Some(
+        "/tmp/my-mtab",
+    ),
+    source: None,
+    target: None,
+    types: None,
+    json: false,
+    raw: false,
+    noheadings: false,
+    output: None,
+    output_all: false,
+    spec: None,
+}
