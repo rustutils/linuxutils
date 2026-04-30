@@ -90,7 +90,7 @@
 | `fincore` | Count pages of file contents in core | Done |
 | `findfs` | Find a filesystem by label or UUID | Not started |
 | `findmnt` | Find a filesystem | Not started |
-| `getino` | Print the unique inode number associated to a process file descriptor or namespace for a given PID | Not started |
+| `getino` | Print the unique inode number associated to a process file descriptor or namespace for a given PID | Done |
 | `getopt` | Parse command options (enhanced) | Done |
 | `hardlink` | Link multiple copies of a file | Not started |
 | `kill` | Terminate a process | Done |

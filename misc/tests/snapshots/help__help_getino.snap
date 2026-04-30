@@ -1,0 +1,49 @@
+---
+source: misc/tests/help.rs
+expression: "help_output(\"getino\")"
+---
+Print the inode number of a process's pidfd or one of its namespaces, given a PID.
+
+The kernel guarantees that a pidfs inode is not reused during the current boot, so the `PID:inode`
+form (`-p`) is a race-free handle for that process — usable e.g. with `kill PID:inode`. Namespace
+inodes match those reported under `/proc/<pid>/ns/<type>`.
+
+Usage: getino [OPTIONS] <PIDS>...
+
+Arguments:
+  <PIDS>...
+          Process IDs (each may have an optional `:inode` suffix that is ignored)
+
+Options:
+      --pidfs
+          Print the pidfs file-descriptor inode (default)
+
+      --cgroupns
+          Print the cgroup namespace inode
+
+      --ipcns
+          Print the IPC namespace inode
+
+      --netns
+          Print the network namespace inode
+
+      --mntns
+          Print the mount namespace inode
+
+      --pidns
+          Print the PID namespace inode
+
+      --timens
+          Print the time namespace inode
+
+      --userns
+          Print the user namespace inode
+
+      --utsns
+          Print the UTS namespace inode
+
+  -p, --print-pid
+          Prefix output with the PID, separated by a colon
+
+  -h, --help
+          Print help (see a summary with '-h')

@@ -40,6 +40,11 @@ fn help_fincore() {
 }
 
 #[test]
+fn help_getino() {
+    insta::assert_snapshot!(help_output("getino"));
+}
+
+#[test]
 fn help_getopt() {
     insta::assert_snapshot!(help_output("getopt"));
 }

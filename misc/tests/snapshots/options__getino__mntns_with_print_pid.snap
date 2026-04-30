@@ -1,0 +1,19 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"getino\", \"--mntns\", \"-p\", \"1234\",])"
+---
+Args {
+    pidfs: false,
+    cgroupns: false,
+    ipcns: false,
+    netns: false,
+    mntns: true,
+    pidns: false,
+    timens: false,
+    userns: false,
+    utsns: false,
+    print_pid: true,
+    pids: [
+        "1234",
+    ],
+}

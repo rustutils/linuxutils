@@ -225,6 +225,60 @@ mod fincore {
     }
 }
 
+mod getino {
+    use super::parse;
+    use linuxutils_misc::getino::Args;
+
+    // ---- SYNOPSIS form: getino [<KIND>] [-p] PID[:inode]...
+
+    #[test]
+    fn default_kind() {
+        insta::assert_snapshot!(parse::<Args>(&["getino", "1"]));
+    }
+
+    #[test]
+    fn explicit_pidfs() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "getino", "--pidfs", "1",
+        ]));
+    }
+
+    #[test]
+    fn mntns_with_print_pid() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "getino", "--mntns", "-p", "1234",
+        ]));
+    }
+
+    #[test]
+    fn pid_with_inode_suffix() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "getino", "1234:5678",
+        ]));
+    }
+
+    #[test]
+    fn multiple_pids() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "getino", "--netns", "1", "100", "1234",
+        ]));
+    }
+
+    // ---- Error cases
+
+    #[test]
+    fn err_no_args() {
+        insta::assert_snapshot!(parse::<Args>(&["getino"]));
+    }
+
+    #[test]
+    fn err_conflicting_kinds() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "getino", "--mntns", "--netns", "1",
+        ]));
+    }
+}
+
 mod getopt {
     use super::parse;
     use linuxutils_misc::getopt::Args;

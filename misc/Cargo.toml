@@ -27,6 +27,7 @@ full = [
     "copyfilerange",
     "exch",
     "fincore",
+    "getino",
     "getopt",
     "kill",
     "logger",
@@ -44,6 +45,7 @@ cal = ["dep:chrono"]
 copyfilerange = ["dep:libc"]
 exch = ["dep:rustix"]
 fincore = ["dep:cols", "dep:libc"]
+getino = ["dep:rustix"]
 getopt = []
 kill = ["dep:rustix"]
 logger = ["dep:rustix"]
@@ -92,6 +94,11 @@ required-features = ["exch"]
 name = "fincore"
 path = "src/bin/fincore.rs"
 required-features = ["fincore"]
+
+[[bin]]
+name = "getino"
+path = "src/bin/getino.rs"
+required-features = ["getino"]
 
 [[bin]]
 name = "getopt"

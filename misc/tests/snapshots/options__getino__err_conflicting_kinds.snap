@@ -1,0 +1,10 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"getino\", \"--mntns\", \"--netns\", \"1\",])"
+---
+ERROR:
+error: the argument '--mntns' cannot be used with '--netns'
+
+Usage: getino --mntns <PIDS>...
+
+For more information, try '--help'.

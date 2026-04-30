@@ -10,6 +10,9 @@ pub mod exch;
 #[cfg(feature = "fincore")]
 pub mod fincore;
 
+#[cfg(feature = "getino")]
+pub mod getino;
+
 #[cfg(feature = "getopt")]
 pub mod getopt;
 
