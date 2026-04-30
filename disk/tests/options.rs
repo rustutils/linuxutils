@@ -163,6 +163,108 @@ mod isosize {
     }
 }
 
+mod mount {
+    use super::parse;
+    use linuxutils_disk::mount::Args;
+
+    // ---- SYNOPSIS forms:
+    //   mount                                     — list
+    //   mount [opts] <target>                     — fstab lookup
+    //   mount [opts] <source> <target>            — direct
+    //   mount [opts] -L LABEL <target>            — shortcut
+    //   mount [opts] -U UUID  <target>            — shortcut
+
+    #[test]
+    fn no_args() {
+        insta::assert_snapshot!(parse::<Args>(&["mount"]));
+    }
+
+    #[test]
+    fn fstab_lookup_form() {
+        insta::assert_snapshot!(parse::<Args>(&["mount", "/proc"]));
+    }
+
+    #[test]
+    fn direct_form_with_fstype() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "mount", "-t", "tmpfs", "tmpfs", "/tmp/mnt",
+        ]));
+    }
+
+    #[test]
+    fn direct_form_with_options() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "mount", "-t", "ext4", "-o", "ro,noatime",
+            "/dev/sda1", "/mnt",
+        ]));
+    }
+
+    #[test]
+    fn label_shortcut() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "mount", "-L", "root", "/mnt",
+        ]));
+    }
+
+    #[test]
+    fn uuid_shortcut() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "mount", "-U", "abc-123", "/mnt",
+        ]));
+    }
+
+    #[test]
+    fn bind_form() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "mount", "--bind", "/src", "/dst",
+        ]));
+    }
+
+    #[test]
+    fn rbind_form() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "mount", "-R", "/src", "/dst",
+        ]));
+    }
+
+    #[test]
+    fn remount_form() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "mount", "--remount", "-o", "ro", "/mnt",
+        ]));
+    }
+
+    #[test]
+    fn read_only_alias() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "mount", "-r", "-t", "ext4", "/dev/sda1", "/mnt",
+        ]));
+    }
+
+    #[test]
+    fn alternate_fstab_file() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "mount", "-T", "/etc/my-fstab", "/mnt",
+        ]));
+    }
+
+    #[test]
+    fn no_mtab_and_verbose() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "mount", "-n", "-v", "-t", "tmpfs", "tmpfs", "/tmp/mnt",
+        ]));
+    }
+
+    // ---- Error cases
+
+    #[test]
+    fn err_unknown_flag() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "mount", "--bogus", "/mnt",
+        ]));
+    }
+}
+
 mod umount {
     use super::parse;
     use linuxutils_disk::umount::Args;

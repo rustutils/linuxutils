@@ -1,0 +1,24 @@
+---
+source: disk/tests/options.rs
+expression: "parse::<Args>(&[\"mount\", \"-U\", \"abc-123\", \"/mnt\",])"
+---
+Args {
+    fstype: None,
+    options: None,
+    read_only: false,
+    read_write: false,
+    bind: false,
+    rbind: false,
+    remount: false,
+    fstab_file: None,
+    label: None,
+    uuid: Some(
+        "abc-123",
+    ),
+    no_mtab: false,
+    verbose: false,
+    spec: Some(
+        "/mnt",
+    ),
+    target: None,
+}

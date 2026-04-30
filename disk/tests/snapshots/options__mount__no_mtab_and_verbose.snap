@@ -1,0 +1,26 @@
+---
+source: disk/tests/options.rs
+expression: "parse::<Args>(&[\"mount\", \"-n\", \"-v\", \"-t\", \"tmpfs\", \"tmpfs\", \"/tmp/mnt\",])"
+---
+Args {
+    fstype: Some(
+        "tmpfs",
+    ),
+    options: None,
+    read_only: false,
+    read_write: false,
+    bind: false,
+    rbind: false,
+    remount: false,
+    fstab_file: None,
+    label: None,
+    uuid: None,
+    no_mtab: true,
+    verbose: true,
+    spec: Some(
+        "tmpfs",
+    ),
+    target: Some(
+        "/tmp/mnt",
+    ),
+}

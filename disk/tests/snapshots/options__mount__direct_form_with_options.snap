@@ -1,0 +1,28 @@
+---
+source: disk/tests/options.rs
+expression: "parse::<Args>(&[\"mount\", \"-t\", \"ext4\", \"-o\", \"ro,noatime\", \"/dev/sda1\",\n\"/mnt\",])"
+---
+Args {
+    fstype: Some(
+        "ext4",
+    ),
+    options: Some(
+        "ro,noatime",
+    ),
+    read_only: false,
+    read_write: false,
+    bind: false,
+    rbind: false,
+    remount: false,
+    fstab_file: None,
+    label: None,
+    uuid: None,
+    no_mtab: false,
+    verbose: false,
+    spec: Some(
+        "/dev/sda1",
+    ),
+    target: Some(
+        "/mnt",
+    ),
+}

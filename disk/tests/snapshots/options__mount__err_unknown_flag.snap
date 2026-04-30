@@ -1,0 +1,12 @@
+---
+source: disk/tests/options.rs
+expression: "parse::<Args>(&[\"mount\", \"--bogus\", \"/mnt\",])"
+---
+ERROR:
+error: unexpected argument '--bogus' found
+
+  tip: to pass '--bogus' as a value, use '-- --bogus'
+
+Usage: mount [OPTIONS] [SPEC] [TARGET]
+
+For more information, try '--help'.

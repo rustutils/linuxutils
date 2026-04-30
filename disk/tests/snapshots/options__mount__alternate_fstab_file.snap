@@ -1,0 +1,24 @@
+---
+source: disk/tests/options.rs
+expression: "parse::<Args>(&[\"mount\", \"-T\", \"/etc/my-fstab\", \"/mnt\",])"
+---
+Args {
+    fstype: None,
+    options: None,
+    read_only: false,
+    read_write: false,
+    bind: false,
+    rbind: false,
+    remount: false,
+    fstab_file: Some(
+        "/etc/my-fstab",
+    ),
+    label: None,
+    uuid: None,
+    no_mtab: false,
+    verbose: false,
+    spec: Some(
+        "/mnt",
+    ),
+    target: None,
+}

@@ -1,0 +1,22 @@
+---
+source: disk/tests/options.rs
+expression: "parse::<Args>(&[\"mount\", \"/proc\"])"
+---
+Args {
+    fstype: None,
+    options: None,
+    read_only: false,
+    read_write: false,
+    bind: false,
+    rbind: false,
+    remount: false,
+    fstab_file: None,
+    label: None,
+    uuid: None,
+    no_mtab: false,
+    verbose: false,
+    spec: Some(
+        "/proc",
+    ),
+    target: None,
+}

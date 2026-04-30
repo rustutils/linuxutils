@@ -1,0 +1,65 @@
+---
+source: disk/tests/help.rs
+expression: "help_output(\"mount\")"
+---
+Mount a filesystem.
+
+Three forms: - `mount` (no args) — list active mounts (like `findmnt`). - `mount <target>` — look up
+the target in `/etc/fstab` and mount it as configured. - `mount <source> <target>` — direct mount.
+`<source>` may be a device path or a `LABEL=`/`UUID=` tag (resolved via blkid).
+
+Userspace-only and propagation features deferred to v1: `-a/--all`, `--move`,
+`--make-{shared,slave,private,unbindable}`, `mount.<fstype>` helpers, loop devices, mtab/utab
+writing.
+
+Usage: mount [OPTIONS] [SPEC] [TARGET]
+
+Arguments:
+  [SPEC]
+          Source (device, NFS export, tag, ...) — when only one positional is given, it's
+          interpreted as the target instead
+
+  [TARGET]
+          Target mount point
+
+Options:
+  -t, --types <TYPE>
+          Filesystem type (e.g. ext4, tmpfs, proc). Required for direct mounts unless an option like
+          `--bind` is given
+
+  -o, --options <LIST>
+          Mount options (comma-separated). Combined with options from fstab when looking up a target
+
+  -r, --read-only
+          Mount read-only (alias for `-o ro`)
+
+  -w, --rw
+          Mount read-write (alias for `-o rw`, the default)
+
+  -B, --bind
+          Bind-mount (`MS_BIND`); two positional arguments are required
+
+  -R, --rbind
+          Recursive bind (`MS_BIND | MS_REC`)
+
+      --remount
+          Remount an already-mounted filesystem with new options
+
+  -T, --fstab <FILE>
+          Use `<file>` as the fstab instead of `/etc/fstab`
+
+  -L, --label <LABEL>
+          Source by label (alias for `<source>` = `LABEL=<label>`)
+
+  -U, --uuid <UUID>
+          Source by UUID (alias for `<source>` = `UUID=<uuid>`)
+
+  -n, --no-mtab
+          Don't write to /etc/mtab on success (no-op for us — we don't write mtab — but accepted for
+          command-line compatibility)
+
+  -v, --verbose
+          Print what we're doing
+
+  -h, --help
+          Print help (see a summary with '-h')

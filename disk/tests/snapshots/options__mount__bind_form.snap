@@ -1,0 +1,24 @@
+---
+source: disk/tests/options.rs
+expression: "parse::<Args>(&[\"mount\", \"--bind\", \"/src\", \"/dst\",])"
+---
+Args {
+    fstype: None,
+    options: None,
+    read_only: false,
+    read_write: false,
+    bind: true,
+    rbind: false,
+    remount: false,
+    fstab_file: None,
+    label: None,
+    uuid: None,
+    no_mtab: false,
+    verbose: false,
+    spec: Some(
+        "/src",
+    ),
+    target: Some(
+        "/dst",
+    ),
+}

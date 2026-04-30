@@ -55,7 +55,7 @@
 | `lsirq` | Display kernel interrupt information | Done |
 | `lsmem` | List the ranges of available memory with their online status | Done |
 | `lsns` | List namespaces | Done |
-| `mount` | Mount a filesystem | Not started |
+| `mount` | Mount a filesystem | Partial (no -a / propagation / helpers) |
 | `mountpoint` | See if a directory or file is a mountpoint | Done |
 | `nsenter` | Run a program in different namespaces | Done |
 | `pivot_root` | Change the root filesystem | Done |

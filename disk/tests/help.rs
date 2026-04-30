@@ -30,6 +30,11 @@ fn help_isosize() {
 }
 
 #[test]
+fn help_mount() {
+    insta::assert_snapshot!(help_output("mount"));
+}
+
+#[test]
 fn help_umount() {
     insta::assert_snapshot!(help_output("umount"));
 }

@@ -627,7 +627,9 @@ dependencies = [
  "cols",
  "insta",
  "libc",
+ "linuxutils-blkid",
  "linuxutils-common",
+ "linuxutils-mount",
 ]
 
 [[package]]

@@ -1,0 +1,24 @@
+---
+source: disk/tests/options.rs
+expression: "parse::<Args>(&[\"mount\", \"--remount\", \"-o\", \"ro\", \"/mnt\",])"
+---
+Args {
+    fstype: None,
+    options: Some(
+        "ro",
+    ),
+    read_only: false,
+    read_write: false,
+    bind: false,
+    rbind: false,
+    remount: true,
+    fstab_file: None,
+    label: None,
+    uuid: None,
+    no_mtab: false,
+    verbose: false,
+    spec: Some(
+        "/mnt",
+    ),
+    target: None,
+}

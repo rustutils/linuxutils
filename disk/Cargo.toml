@@ -18,9 +18,10 @@ all-features = true
 
 [features]
 default = ["full"]
-full = ["blockdev", "isosize", "umount"]
+full = ["blockdev", "isosize", "mount", "umount"]
 blockdev = ["dep:cols", "dep:libc"]
 isosize = []
+mount = ["dep:cols", "dep:linuxutils-blkid", "dep:linuxutils-mount"]
 umount = ["dep:linuxutils-blkid", "dep:linuxutils-mount"]
 
 [dependencies]
@@ -44,6 +45,11 @@ required-features = ["blockdev"]
 name = "isosize"
 path = "src/bin/isosize.rs"
 required-features = ["isosize"]
+
+[[bin]]
+name = "mount"
+path = "src/bin/mount.rs"
+required-features = ["mount"]
 
 [[bin]]
 name = "umount"
