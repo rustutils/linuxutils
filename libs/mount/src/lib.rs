@@ -11,10 +11,15 @@
 //! mount-table model and parsers (`mountinfo`, `fstab`, `swaps`) land
 //! in subsequent slices.
 
+pub mod entry;
 pub mod flags;
+pub mod mountinfo;
 pub mod options;
 pub mod spec;
+pub mod table;
 
+pub use entry::{MountEntry, Propagation};
 pub use flags::MountFlags;
 pub use options::{MountOption, OptionList};
 pub use spec::{Spec, Tag, TagKind};
+pub use table::MountTable;

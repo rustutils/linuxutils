@@ -23,6 +23,9 @@ use std::path::{Path, PathBuf};
 /// A mount source: either a concrete device path or an unresolved tag.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Spec {
+    // (`Default` is implemented manually below as `Path(PathBuf::new())`
+    // so that downstream types can derive `Default`.)
+
     /// A literal filesystem path. Typically a device node like
     /// `/dev/sda1`, but any path is allowed — bind mounts use
     /// directories, NFS uses `host:/export`, and the literal `none`
@@ -89,6 +92,12 @@ impl TagKind {
             "ID" => Some(TagKind::Id),
             _ => None,
         }
+    }
+}
+
+impl Default for Spec {
+    fn default() -> Self {
+        Spec::Path(PathBuf::new())
     }
 }
 
