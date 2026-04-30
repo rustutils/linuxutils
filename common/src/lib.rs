@@ -1,4 +1,7 @@
 pub mod man;
+pub mod tag;
+
+pub use tag::{Tag, TagKind};
 
 /// Cap for `--help` output width. Tools should set
 /// `#[command(max_term_width = HELP_WIDTH_MAX)]` so help text wraps
