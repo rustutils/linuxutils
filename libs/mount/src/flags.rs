@@ -14,7 +14,7 @@ use bitflags::bitflags;
 bitflags! {
     /// VFS mount flags passed to `mount(2)`.
     #[repr(transparent)]
-    #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+    #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Default)]
     pub struct MountFlags: u64 {
         /// `MS_RDONLY` — mount read-only.
         const RDONLY        = 1;

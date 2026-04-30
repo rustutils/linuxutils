@@ -711,6 +711,7 @@ dependencies = [
  "cols",
  "insta",
  "libc",
+ "linuxutils-blkid",
  "linuxutils-common",
  "linuxutils-mount",
  "predicates",
@@ -727,6 +728,7 @@ dependencies = [
  "bitflags",
  "insta",
  "linuxutils-common",
+ "rustix",
 ]
 
 [[package]]

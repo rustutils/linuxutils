@@ -18,6 +18,7 @@ all-features = true
 [dependencies]
 bitflags = { workspace = true }
 linuxutils-common = { workspace = true }
+rustix = { workspace = true }
 
 [dev-dependencies]
 insta = { workspace = true }

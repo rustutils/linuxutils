@@ -14,7 +14,8 @@ wraps this crate, not the other way around.
 | Area                          | Status      | Upstream symbol                | Notes |
 |-------------------------------|-------------|--------------------------------|-------|
 | `Spec` / `Tag` source types   | Done        | `mnt_resolve_spec`             | Path/Tag split, opaque OsString values for label-shaped fields. |
-| `OptionList` / `MountOption`  | Done        | `mnt_optstr_*`                 | Parser only. Optmap classification (VFS/FS/user) not yet. |
+| `OptionList` / `MountOption`  | Done        | `mnt_optstr_*`                 | Parser. Classification (VFS/FS/user) lives in `optmap`. |
+| Optmap (option classify)      | Done        | `mnt_split_optstr` etc.        | Common VFS names + `x-*` userspace namespace; unknown → fs data. |
 | `MountFlags`                  | Done        | `MS_*` in `<sys/mount.h>`      | bitflags wrapper, bit pattern matches kernel uapi. |
 | `MountEntry` / `MountTable`   | Done        | `libmnt_fs` / `libmnt_table`   | Same shape across mountinfo/fstab/swaps; non-applicable fields stay `None`. |
 | mountinfo parsing             | Done        | `mnt_table_parse_file`         | Strict mode only. Octal escapes, optional fields, raw + decoded propagation. |
@@ -24,8 +25,8 @@ wraps this crate, not the other way around.
 | utab parsing (user options)   | Not started | userspace mount table          | Needed for `mount -m` round-trip and `MountEntry::user_options`. |
 | Tag resolution                | Not started | `mnt_resolve_tag`              | Pluggable trait — `linuxutils-blkid` will be the v0 implementation (symlink-based). |
 | Path canonicalisation         | Not started | `mnt_resolve_path`, cache      | v0: call rustix each time. Cache layer deferred. |
-| `mount(2)` syscall wrapper    | Not started | `mnt_context_do_mount`         | Thin wrapper over `rustix::mount::mount`. |
-| `umount(2)` syscall wrapper   | Not started | `mnt_context_do_umount`        | Likewise via `rustix::mount::unmount`. |
+| `mount(2)` syscall wrapper    | Done        | `mnt_context_do_mount`         | `mount`/`remount`/`bind`/`rbind`/`change_propagation`/`move_mount`. |
+| `umount(2)` syscall wrapper   | Done        | `mnt_context_do_umount`        | `umount` with `UnmountFlags` ({FORCE,DETACH,EXPIRE,NOFOLLOW}). |
 | `MountBuilder` / context      | Not started | `libmnt_context`               | High-level orchestration: fstab lookup + tag resolution + flag merge + syscall + utab update. |
 | Lock (mtab/utab)              | Not started | `mnt_lock_*`                   | rustix flock when we add utab writes. |
 | Helper invocation             | Not started | `mount.<fstype>` lookup        | For fs-specific mount helpers. |

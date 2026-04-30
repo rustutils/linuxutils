@@ -16,13 +16,17 @@ pub(crate) mod escape;
 pub mod flags;
 pub mod fstab;
 pub mod mountinfo;
+pub mod optmap;
 pub mod options;
 pub mod spec;
 pub mod swaps;
+pub mod syscall;
 pub mod table;
 
 pub use entry::{MountEntry, Propagation};
 pub use flags::MountFlags;
+pub use optmap::{Classified, classify};
 pub use options::{MountOption, OptionList};
 pub use spec::{Spec, Tag, TagKind};
+pub use syscall::UnmountFlags;
 pub use table::MountTable;
