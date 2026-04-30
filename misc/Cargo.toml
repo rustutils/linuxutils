@@ -25,6 +25,7 @@ default = ["full"]
 full = [
     "cal",
     "copyfilerange",
+    "fincore",
     "getopt",
     "kill",
     "logger",
@@ -40,6 +41,7 @@ full = [
 ]
 cal = ["dep:chrono"]
 copyfilerange = ["dep:libc"]
+fincore = ["dep:cols", "dep:libc"]
 getopt = []
 kill = ["dep:rustix"]
 logger = ["dep:rustix"]
@@ -78,6 +80,11 @@ required-features = ["cal"]
 name = "copyfilerange"
 path = "src/bin/copyfilerange.rs"
 required-features = ["copyfilerange"]
+
+[[bin]]
+name = "fincore"
+path = "src/bin/fincore.rs"
+required-features = ["fincore"]
 
 [[bin]]
 name = "getopt"

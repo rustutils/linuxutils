@@ -87,7 +87,7 @@
 | `enosys` | Make syscalls fail with ENOSYS | Not started |
 | `exch` | Atomically exchange paths between two files | Not started |
 | `fadvise` | Use the posix_fadvise(2) system call | Done |
-| `fincore` | Count pages of file contents in core | Not started |
+| `fincore` | Count pages of file contents in core | Done |
 | `findfs` | Find a filesystem by label or UUID | Not started |
 | `findmnt` | Find a filesystem | Not started |
 | `getino` | Print the unique inode number associated to a process file descriptor or namespace for a given PID | Not started |

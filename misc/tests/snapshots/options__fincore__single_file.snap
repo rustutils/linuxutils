@@ -1,0 +1,15 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"fincore\", \"/etc/hostname\"])"
+---
+Args {
+    bytes: false,
+    json: false,
+    noheadings: false,
+    output: None,
+    output_all: false,
+    raw: false,
+    files: [
+        "/etc/hostname",
+    ],
+}

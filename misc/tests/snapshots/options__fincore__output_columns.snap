@@ -1,0 +1,22 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"fincore\", \"-o\", \"RES,PAGES,SIZE,FILE\", \"f\",])"
+---
+Args {
+    bytes: false,
+    json: false,
+    noheadings: false,
+    output: Some(
+        [
+            "RES",
+            "PAGES",
+            "SIZE",
+            "FILE",
+        ],
+    ),
+    output_all: false,
+    raw: false,
+    files: [
+        "f",
+    ],
+}

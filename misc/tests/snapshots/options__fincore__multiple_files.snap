@@ -1,0 +1,17 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"fincore\", \"a.bin\", \"b.bin\", \"c.bin\",])"
+---
+Args {
+    bytes: false,
+    json: false,
+    noheadings: false,
+    output: None,
+    output_all: false,
+    raw: false,
+    files: [
+        "a.bin",
+        "b.bin",
+        "c.bin",
+    ],
+}

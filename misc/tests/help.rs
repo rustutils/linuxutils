@@ -30,6 +30,11 @@ fn help_copyfilerange() {
 }
 
 #[test]
+fn help_fincore() {
+    insta::assert_snapshot!(help_output("fincore"));
+}
+
+#[test]
 fn help_getopt() {
     insta::assert_snapshot!(help_output("getopt"));
 }

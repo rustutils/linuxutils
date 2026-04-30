@@ -1,0 +1,36 @@
+---
+source: misc/tests/help.rs
+expression: "help_output(\"fincore\")"
+---
+Count pages of file contents in core via the `mincore(2)` syscall.
+
+For each file, maps it `MAP_PRIVATE | MAP_NORESERVE`, queries which pages are currently resident in
+the page cache, and reports the resident byte count alongside the file's size.
+
+Usage: fincore [OPTIONS] <FILES>...
+
+Arguments:
+  <FILES>...
+          Files to inspect
+
+Options:
+  -b, --bytes
+          Print SIZE in bytes rather than human-readable format
+
+  -J, --json
+          Use JSON output format
+
+  -n, --noheadings
+          Don't print headings
+
+  -o, --output <OUTPUT>
+          Define which output columns to use
+
+      --output-all
+          Output all available columns
+
+  -r, --raw
+          Use the raw output format
+
+  -h, --help
+          Print help (see a summary with '-h')

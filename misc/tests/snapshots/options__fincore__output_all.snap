@@ -1,0 +1,15 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"fincore\", \"--output-all\", \"f\",])"
+---
+Args {
+    bytes: false,
+    json: false,
+    noheadings: false,
+    output: None,
+    output_all: true,
+    raw: false,
+    files: [
+        "f",
+    ],
+}

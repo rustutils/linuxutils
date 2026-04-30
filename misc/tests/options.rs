@@ -133,6 +133,67 @@ mod copyfilerange {
     }
 }
 
+mod fincore {
+    use super::parse;
+    use linuxutils_misc::fincore::Args;
+
+    // ---- SYNOPSIS form: fincore [options] file...
+
+    #[test]
+    fn single_file() {
+        insta::assert_snapshot!(parse::<Args>(&["fincore", "/etc/hostname"]));
+    }
+
+    #[test]
+    fn multiple_files() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "fincore", "a.bin", "b.bin", "c.bin",
+        ]));
+    }
+
+    #[test]
+    fn json_bytes() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "fincore", "-J", "-b", "f",
+        ]));
+    }
+
+    #[test]
+    fn raw_noheadings() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "fincore", "--raw", "--noheadings", "f",
+        ]));
+    }
+
+    #[test]
+    fn output_columns() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "fincore", "-o", "RES,PAGES,SIZE,FILE", "f",
+        ]));
+    }
+
+    #[test]
+    fn output_all() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "fincore",
+            "--output-all",
+            "f",
+        ]));
+    }
+
+    // ---- Error cases
+
+    #[test]
+    fn err_no_files() {
+        insta::assert_snapshot!(parse::<Args>(&["fincore"]));
+    }
+
+    #[test]
+    fn err_unknown_flag() {
+        insta::assert_snapshot!(parse::<Args>(&["fincore", "--bogus", "f"]));
+    }
+}
+
 mod getopt {
     use super::parse;
     use linuxutils_misc::getopt::Args;
