@@ -1,0 +1,10 @@
+---
+source: text/tests/options.rs
+expression: "parse::<Args>(&[\"colrm\", \"1\", \"2\", \"3\",])"
+---
+ERROR:
+error: unexpected argument '3' found
+
+Usage: colrm [FIRST] [LAST]
+
+For more information, try '--help'.

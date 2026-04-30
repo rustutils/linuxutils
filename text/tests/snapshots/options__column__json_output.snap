@@ -1,0 +1,35 @@
+---
+source: text/tests/options.rs
+expression: "parse::<Args>(&[\"column\", \"-J\", \"-N\", \"NAME,SIZE\", \"-n\", \"items\",])"
+---
+Args {
+    table: false,
+    json: true,
+    table_name: Some(
+        "items",
+    ),
+    tree: None,
+    tree_id: None,
+    tree_parent: None,
+    separator: None,
+    output_separator: None,
+    table_columns: Some(
+        "NAME,SIZE",
+    ),
+    table_noheadings: false,
+    table_columns_limit: None,
+    table_right: None,
+    table_truncate: None,
+    table_noextreme: None,
+    table_wrap: None,
+    table_hide: None,
+    table_order: None,
+    table_header_repeat: false,
+    table_column: [],
+    table_maxout: false,
+    fill_rows: false,
+    output_width: None,
+    use_spaces: None,
+    keep_empty_lines: false,
+    files: [],
+}

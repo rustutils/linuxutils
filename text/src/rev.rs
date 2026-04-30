@@ -11,7 +11,7 @@ use std::{
 };
 
 /// Reverse lines characterwise.
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "rev", version, about)]
 pub struct Args {

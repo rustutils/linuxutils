@@ -13,7 +13,7 @@ use std::{
 const TAB_WIDTH: usize = 8;
 
 /// Columnate lists.
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "column", version, about)]
 pub struct Args {

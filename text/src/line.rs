@@ -9,7 +9,7 @@ use std::{
 };
 
 /// Read one line from standard input and write it to standard output.
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "line", version, about)]
 pub struct Args {}

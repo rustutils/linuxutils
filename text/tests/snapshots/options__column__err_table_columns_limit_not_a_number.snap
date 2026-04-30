@@ -1,0 +1,8 @@
+---
+source: text/tests/options.rs
+expression: "parse::<Args>(&[\"column\", \"-t\", \"-l\", \"abc\",])"
+---
+ERROR:
+error: invalid value 'abc' for '--table-columns-limit <number>': invalid digit found in string
+
+For more information, try '--help'.

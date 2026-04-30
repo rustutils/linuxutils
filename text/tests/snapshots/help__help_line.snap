@@ -1,5 +1,5 @@
 ---
-source: text/tests/help_snapshots.rs
+source: text/tests/help.rs
 expression: "help_output(\"line\")"
 ---
 Text utilities from linuxutils (colrm, column, hexdump, line, rev)

@@ -1,0 +1,12 @@
+---
+source: text/tests/options.rs
+expression: "parse::<Args>(&[\"colrm\", \"10\", \"20\"])"
+---
+Args {
+    first: Some(
+        10,
+    ),
+    last: Some(
+        20,
+    ),
+}

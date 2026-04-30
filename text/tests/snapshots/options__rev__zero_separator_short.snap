@@ -1,0 +1,8 @@
+---
+source: text/tests/options.rs
+expression: "parse::<Args>(&[\"rev\", \"-0\"])"
+---
+Args {
+    zero: true,
+    files: [],
+}

@@ -1,0 +1,8 @@
+---
+source: text/tests/options.rs
+expression: "parse::<Args>(&[\"colrm\", \"abc\"])"
+---
+ERROR:
+error: invalid value 'abc' for '[FIRST]': invalid digit found in string
+
+For more information, try '--help'.

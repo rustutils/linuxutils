@@ -1,0 +1,10 @@
+---
+source: text/tests/options.rs
+expression: "parse::<Args>(&[\"rev\", \"input.txt\"])"
+---
+Args {
+    zero: false,
+    files: [
+        "input.txt",
+    ],
+}

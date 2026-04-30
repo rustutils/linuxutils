@@ -1,0 +1,31 @@
+---
+source: text/tests/options.rs
+expression: "parse::<Args>(&[\"column\", \"-t\"])"
+---
+Args {
+    table: true,
+    json: false,
+    table_name: None,
+    tree: None,
+    tree_id: None,
+    tree_parent: None,
+    separator: None,
+    output_separator: None,
+    table_columns: None,
+    table_noheadings: false,
+    table_columns_limit: None,
+    table_right: None,
+    table_truncate: None,
+    table_noextreme: None,
+    table_wrap: None,
+    table_hide: None,
+    table_order: None,
+    table_header_repeat: false,
+    table_column: [],
+    table_maxout: false,
+    fill_rows: false,
+    output_width: None,
+    use_spaces: None,
+    keep_empty_lines: false,
+    files: [],
+}

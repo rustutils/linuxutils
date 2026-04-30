@@ -1,0 +1,19 @@
+---
+source: text/tests/options.rs
+expression: "parse::<Args>(&[\"hexdump\", \"-b\", \"input.bin\",])"
+---
+Args {
+    one_byte_octal: true,
+    one_byte_hex: false,
+    one_byte_char: false,
+    canonical: false,
+    two_bytes_decimal: false,
+    two_bytes_octal: false,
+    two_bytes_hex: false,
+    length: None,
+    skip: None,
+    no_squeezing: false,
+    files: [
+        "input.bin",
+    ],
+}

@@ -1,0 +1,8 @@
+---
+source: text/tests/options.rs
+expression: "parse::<Args>(&[\"colrm\"])"
+---
+Args {
+    first: None,
+    last: None,
+}

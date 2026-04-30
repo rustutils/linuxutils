@@ -1,0 +1,11 @@
+---
+source: text/tests/options.rs
+expression: "parse::<Args>(&[\"rev\", \"a.txt\", \"b.txt\",])"
+---
+Args {
+    zero: false,
+    files: [
+        "a.txt",
+        "b.txt",
+    ],
+}

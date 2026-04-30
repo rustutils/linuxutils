@@ -10,7 +10,7 @@ use std::{
 
 const TAB_WIDTH: usize = 8;
 
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "colrm", version, about = "Remove columns from a file")]
 pub struct Args {

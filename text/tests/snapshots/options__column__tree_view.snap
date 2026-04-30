@@ -1,0 +1,39 @@
+---
+source: text/tests/options.rs
+expression: "parse::<Args>(&[\"column\", \"-t\", \"-N\", \"NAME,PID,PPID\", \"-r\", \"NAME\", \"-i\",\n\"PID\", \"-p\", \"PPID\",])"
+---
+Args {
+    table: true,
+    json: false,
+    table_name: None,
+    tree: Some(
+        "NAME",
+    ),
+    tree_id: Some(
+        "PID",
+    ),
+    tree_parent: Some(
+        "PPID",
+    ),
+    separator: None,
+    output_separator: None,
+    table_columns: Some(
+        "NAME,PID,PPID",
+    ),
+    table_noheadings: false,
+    table_columns_limit: None,
+    table_right: None,
+    table_truncate: None,
+    table_noextreme: None,
+    table_wrap: None,
+    table_hide: None,
+    table_order: None,
+    table_header_repeat: false,
+    table_column: [],
+    table_maxout: false,
+    fill_rows: false,
+    output_width: None,
+    use_spaces: None,
+    keep_empty_lines: false,
+    files: [],
+}

@@ -1,0 +1,10 @@
+---
+source: text/tests/options.rs
+expression: "parse::<Args>(&[\"line\", \"extra\"])"
+---
+ERROR:
+error: unexpected argument 'extra' found
+
+Usage: line
+
+For more information, try '--help'.
