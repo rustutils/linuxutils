@@ -1,0 +1,22 @@
+---
+source: misc/tests/help.rs
+expression: "help_output(\"findfs\")"
+---
+Resolve a `LABEL=` / `UUID=` / `PARTLABEL=` / `PARTUUID=` / `ID=` tag to the device path it refers
+to.
+
+Lookups go through the udev `/dev/disk/by-*` symlink layer. Filesystem-signature probing is not
+implemented; if the host's udev didn't populate the symlinks, no resolution happens.
+
+Exit status: 0 on success, 1 on not-found, 2 on usage error.
+
+Usage: findfs <NAME=value>
+
+Arguments:
+  <NAME=value>
+          Tag to resolve, e.g. `LABEL=root` or `UUID=12345...`. Anything not in `KIND=value` form is
+          echoed verbatim, matching upstream findfs(8)
+
+Options:
+  -h, --help
+          Print help (see a summary with '-h')

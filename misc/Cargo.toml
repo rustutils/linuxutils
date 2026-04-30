@@ -27,6 +27,7 @@ full = [
     "copyfilerange",
     "exch",
     "fincore",
+    "findfs",
     "findmnt",
     "getino",
     "getopt",
@@ -46,6 +47,7 @@ cal = ["dep:chrono"]
 copyfilerange = ["dep:libc"]
 exch = ["dep:rustix"]
 fincore = ["dep:cols", "dep:libc"]
+findfs = ["dep:linuxutils-blkid"]
 findmnt = ["dep:cols", "dep:linuxutils-mount"]
 getino = ["dep:rustix"]
 getopt = []
@@ -67,6 +69,7 @@ linuxutils-common = { workspace = true }
 chrono = { workspace = true, optional = true }
 cols = { workspace = true, optional = true }
 libc = { workspace = true, optional = true }
+linuxutils-blkid = { workspace = true, optional = true }
 linuxutils-mount = { workspace = true, optional = true }
 rustix = { workspace = true, optional = true }
 uuid = { workspace = true, optional = true }
@@ -97,6 +100,11 @@ required-features = ["exch"]
 name = "fincore"
 path = "src/bin/fincore.rs"
 required-features = ["fincore"]
+
+[[bin]]
+name = "findfs"
+path = "src/bin/findfs.rs"
+required-features = ["findfs"]
 
 [[bin]]
 name = "findmnt"

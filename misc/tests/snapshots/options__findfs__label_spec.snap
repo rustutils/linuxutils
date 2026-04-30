@@ -1,0 +1,7 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"findfs\", \"LABEL=root\",])"
+---
+Args {
+    spec: "LABEL=root",
+}

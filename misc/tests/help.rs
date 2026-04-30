@@ -40,6 +40,11 @@ fn help_fincore() {
 }
 
 #[test]
+fn help_findfs() {
+    insta::assert_snapshot!(help_output("findfs"));
+}
+
+#[test]
 fn help_findmnt() {
     insta::assert_snapshot!(help_output("findmnt"));
 }

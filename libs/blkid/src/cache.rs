@@ -8,7 +8,6 @@ use linuxutils_common::{Tag, TagKind};
 use std::ffi::{OsStr, OsString};
 use std::fs;
 use std::io;
-use std::os::unix::ffi::OsStrExt;
 use std::path::{Path, PathBuf};
 
 const DEFAULT_DISK_ROOT: &str = "/dev/disk";

@@ -164,6 +164,52 @@ mod exch {
     }
 }
 
+mod findfs {
+    use super::parse;
+    use linuxutils_misc::findfs::Args;
+
+    // ---- SYNOPSIS form: findfs NAME=value
+
+    #[test]
+    fn label_spec() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "findfs", "LABEL=root",
+        ]));
+    }
+
+    #[test]
+    fn uuid_spec() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "findfs",
+            "UUID=12345678-1234-1234-1234-123456789abc",
+        ]));
+    }
+
+    #[test]
+    fn non_tag_input() {
+        // Upstream copies the input to stdout for non-tag inputs;
+        // clap accepts it as just a string, and the binary handles
+        // the policy.
+        insta::assert_snapshot!(parse::<Args>(&[
+            "findfs", "/dev/sda1",
+        ]));
+    }
+
+    // ---- Error cases
+
+    #[test]
+    fn err_no_args() {
+        insta::assert_snapshot!(parse::<Args>(&["findfs"]));
+    }
+
+    #[test]
+    fn err_too_many_args() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "findfs", "UUID=a", "UUID=b",
+        ]));
+    }
+}
+
 mod findmnt {
     use super::parse;
     use linuxutils_misc::findmnt::Args;

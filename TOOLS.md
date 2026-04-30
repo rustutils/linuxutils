@@ -88,7 +88,7 @@
 | `exch` | Atomically exchange paths between two files | Done |
 | `fadvise` | Use the posix_fadvise(2) system call | Done |
 | `fincore` | Count pages of file contents in core | Done |
-| `findfs` | Find a filesystem by label or UUID | Not started |
+| `findfs` | Find a filesystem by label or UUID | Done |
 | `findmnt` | Find a filesystem | Done |
 | `getino` | Print the unique inode number associated to a process file descriptor or namespace for a given PID | Done |
 | `getopt` | Parse command options (enhanced) | Done |

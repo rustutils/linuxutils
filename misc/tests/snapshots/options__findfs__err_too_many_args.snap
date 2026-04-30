@@ -1,0 +1,10 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"findfs\", \"UUID=a\", \"UUID=b\",])"
+---
+ERROR:
+error: unexpected argument 'UUID=b' found
+
+Usage: findfs <NAME=value>
+
+For more information, try '--help'.

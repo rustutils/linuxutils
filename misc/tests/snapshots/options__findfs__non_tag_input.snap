@@ -1,0 +1,7 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"findfs\", \"/dev/sda1\",])"
+---
+Args {
+    spec: "/dev/sda1",
+}
