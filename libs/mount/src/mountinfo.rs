@@ -107,8 +107,8 @@ fn parse_line(line: &[u8]) -> Result<MountEntry, String> {
         root: Some(root),
         propagation,
         optional_fields: Some(optional_fields_raw),
-        freq: None,
-        passno: None,
+        // fstab- and swaps-only fields stay defaulted.
+        ..Default::default()
     })
 }
 

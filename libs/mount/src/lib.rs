@@ -18,6 +18,7 @@ pub mod fstab;
 pub mod mountinfo;
 pub mod options;
 pub mod spec;
+pub mod swaps;
 pub mod table;
 
 pub use entry::{MountEntry, Propagation};

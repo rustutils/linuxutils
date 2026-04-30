@@ -76,6 +76,24 @@ pub struct MountEntry {
 
     /// `fsck(8)` pass number (column 6). `None` outside fstab.
     pub passno: Option<u32>,
+
+    // -- swaps-only (`/proc/swaps`) --
+    /// Swap area type, either `"partition"` or `"file"`. `None`
+    /// outside `/proc/swaps`. Mirrors `mnt_fs_get_swaptype()`.
+    pub swap_type: Option<String>,
+
+    /// Swap area size in bytes. `None` outside `/proc/swaps`. Mirrors
+    /// `mnt_fs_get_size()` — kernel reports in 1 KiB units, we
+    /// convert to bytes at parse time.
+    pub swap_size: Option<u64>,
+
+    /// Swap bytes currently in use. `None` outside `/proc/swaps`.
+    /// Mirrors `mnt_fs_get_usedsize()`. Bytes (KiB-converted).
+    pub swap_used: Option<u64>,
+
+    /// Swap priority. Higher = preferred. `None` outside
+    /// `/proc/swaps`. Mirrors `mnt_fs_get_priority()`.
+    pub swap_priority: Option<i32>,
 }
 
 /// Mount propagation state.
