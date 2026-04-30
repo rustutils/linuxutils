@@ -1,0 +1,15 @@
+---
+source: system/tests/lsns_fixtures.rs
+expression: "trim_trailing(lsns(\"basic\").args([\"--raw\", \"--noheadings\"]).run_ok(),)"
+---
+4026531835 mnt 3 1 root /sbin/init
+4026531836 net 3 1 root /sbin/init
+4026531837 pid 4 1 root /sbin/init
+4026531838 user 4 1 root /sbin/init
+4026531839 uts 4 1 root /sbin/init
+4026531840 ipc 3 1 root /sbin/init
+4026531841 cgroup 4 1 root /sbin/init
+4026531842 time 4 1 root /sbin/init
+4026532000 mnt 1 1234 alice vim\x20file.txt
+4026532001 net 1 1234 alice vim\x20file.txt
+4026532002 ipc 1 5678 root /usr/sbin/sshd\x20-D

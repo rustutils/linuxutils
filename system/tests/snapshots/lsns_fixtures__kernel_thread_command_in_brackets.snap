@@ -1,0 +1,48 @@
+---
+source: system/tests/lsns_fixtures.rs
+expression: "trim_trailing(lsns(\"basic\").args([\"-J\", \"--task\", \"100\", \"--output\",\n\"NS,TYPE,COMMAND\"]).run_ok(),)"
+---
+{
+   "namespaces": [
+      {
+         "ns": "4026531835",
+         "type": "mnt",
+         "command": "[kthreadd]"
+      },
+      {
+         "ns": "4026531836",
+         "type": "net",
+         "command": "[kthreadd]"
+      },
+      {
+         "ns": "4026531837",
+         "type": "pid",
+         "command": "[kthreadd]"
+      },
+      {
+         "ns": "4026531838",
+         "type": "user",
+         "command": "[kthreadd]"
+      },
+      {
+         "ns": "4026531839",
+         "type": "uts",
+         "command": "[kthreadd]"
+      },
+      {
+         "ns": "4026531840",
+         "type": "ipc",
+         "command": "[kthreadd]"
+      },
+      {
+         "ns": "4026531841",
+         "type": "cgroup",
+         "command": "[kthreadd]"
+      },
+      {
+         "ns": "4026531842",
+         "type": "time",
+         "command": "[kthreadd]"
+      }
+   ]
+}

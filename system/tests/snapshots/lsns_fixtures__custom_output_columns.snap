@@ -1,0 +1,74 @@
+---
+source: system/tests/lsns_fixtures.rs
+expression: "trim_trailing(lsns(\"basic\").args([\"-J\", \"--output\",\n\"NS,TYPE,NPROCS,UID\"]).run_ok(),)"
+---
+{
+   "namespaces": [
+      {
+         "ns": "4026531835",
+         "type": "mnt",
+         "nprocs": "3",
+         "uid": "0"
+      },
+      {
+         "ns": "4026531836",
+         "type": "net",
+         "nprocs": "3",
+         "uid": "0"
+      },
+      {
+         "ns": "4026531837",
+         "type": "pid",
+         "nprocs": "4",
+         "uid": "0"
+      },
+      {
+         "ns": "4026531838",
+         "type": "user",
+         "nprocs": "4",
+         "uid": "0"
+      },
+      {
+         "ns": "4026531839",
+         "type": "uts",
+         "nprocs": "4",
+         "uid": "0"
+      },
+      {
+         "ns": "4026531840",
+         "type": "ipc",
+         "nprocs": "3",
+         "uid": "0"
+      },
+      {
+         "ns": "4026531841",
+         "type": "cgroup",
+         "nprocs": "4",
+         "uid": "0"
+      },
+      {
+         "ns": "4026531842",
+         "type": "time",
+         "nprocs": "4",
+         "uid": "0"
+      },
+      {
+         "ns": "4026532000",
+         "type": "mnt",
+         "nprocs": "1",
+         "uid": "1000"
+      },
+      {
+         "ns": "4026532001",
+         "type": "net",
+         "nprocs": "1",
+         "uid": "1000"
+      },
+      {
+         "ns": "4026532002",
+         "type": "ipc",
+         "nprocs": "1",
+         "uid": "0"
+      }
+   ]
+}

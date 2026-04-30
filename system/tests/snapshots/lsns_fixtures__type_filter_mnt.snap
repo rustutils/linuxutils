@@ -1,0 +1,24 @@
+---
+source: system/tests/lsns_fixtures.rs
+expression: "trim_trailing(lsns(\"basic\").args([\"-J\", \"--type\", \"mnt\"]).run_ok(),)"
+---
+{
+   "namespaces": [
+      {
+         "ns": "4026531835",
+         "type": "mnt",
+         "nprocs": "3",
+         "pid": "1",
+         "user": "root",
+         "command": "/sbin/init"
+      },
+      {
+         "ns": "4026532000",
+         "type": "mnt",
+         "nprocs": "1",
+         "pid": "1234",
+         "user": "alice",
+         "command": "vim file.txt"
+      }
+   ]
+}

@@ -1,0 +1,88 @@
+---
+source: system/tests/lsns_fixtures.rs
+expression: "trim_trailing(lsns(\"basic\").args([\"-J\", \"--task\", \"1234\",\n\"--output-all\"]).run_ok(),)"
+---
+{
+   "namespaces": [
+      {
+         "ns": "4026531837",
+         "type": "pid",
+         "nprocs": "1",
+         "pid": "1234",
+         "ppid": "1",
+         "command": "vim file.txt",
+         "uid": "1000",
+         "user": "alice"
+      },
+      {
+         "ns": "4026531838",
+         "type": "user",
+         "nprocs": "1",
+         "pid": "1234",
+         "ppid": "1",
+         "command": "vim file.txt",
+         "uid": "1000",
+         "user": "alice"
+      },
+      {
+         "ns": "4026531839",
+         "type": "uts",
+         "nprocs": "1",
+         "pid": "1234",
+         "ppid": "1",
+         "command": "vim file.txt",
+         "uid": "1000",
+         "user": "alice"
+      },
+      {
+         "ns": "4026531840",
+         "type": "ipc",
+         "nprocs": "1",
+         "pid": "1234",
+         "ppid": "1",
+         "command": "vim file.txt",
+         "uid": "1000",
+         "user": "alice"
+      },
+      {
+         "ns": "4026531841",
+         "type": "cgroup",
+         "nprocs": "1",
+         "pid": "1234",
+         "ppid": "1",
+         "command": "vim file.txt",
+         "uid": "1000",
+         "user": "alice"
+      },
+      {
+         "ns": "4026531842",
+         "type": "time",
+         "nprocs": "1",
+         "pid": "1234",
+         "ppid": "1",
+         "command": "vim file.txt",
+         "uid": "1000",
+         "user": "alice"
+      },
+      {
+         "ns": "4026532000",
+         "type": "mnt",
+         "nprocs": "1",
+         "pid": "1234",
+         "ppid": "1",
+         "command": "vim file.txt",
+         "uid": "1000",
+         "user": "alice"
+      },
+      {
+         "ns": "4026532001",
+         "type": "net",
+         "nprocs": "1",
+         "pid": "1234",
+         "ppid": "1",
+         "command": "vim file.txt",
+         "uid": "1000",
+         "user": "alice"
+      }
+   ]
+}

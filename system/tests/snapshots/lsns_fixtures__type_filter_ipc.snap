@@ -1,0 +1,24 @@
+---
+source: system/tests/lsns_fixtures.rs
+expression: "trim_trailing(lsns(\"basic\").args([\"-J\", \"--type\", \"ipc\"]).run_ok(),)"
+---
+{
+   "namespaces": [
+      {
+         "ns": "4026531840",
+         "type": "ipc",
+         "nprocs": "3",
+         "pid": "1",
+         "user": "root",
+         "command": "/sbin/init"
+      },
+      {
+         "ns": "4026532002",
+         "type": "ipc",
+         "nprocs": "1",
+         "pid": "5678",
+         "user": "root",
+         "command": "/usr/sbin/sshd -D"
+      }
+   ]
+}
