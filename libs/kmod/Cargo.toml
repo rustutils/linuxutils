@@ -1,0 +1,15 @@
+[package]
+name = "linuxutils-libkmod"
+description = "ABI-compatible libkmod implementation"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+publish = false
+
+[lib]
+name = "kmod"
+crate-type = ["cdylib"]
+
+[dependencies]
+libc = "0.2"

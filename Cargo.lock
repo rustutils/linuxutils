@@ -645,6 +645,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "linuxutils-libkmod"
+version = "0.1.0"
+dependencies = [
+ "libc",
+]
+
+[[package]]
 name = "linuxutils-libmount"
 version = "0.1.0"
 dependencies = [
