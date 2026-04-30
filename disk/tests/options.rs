@@ -1,0 +1,164 @@
+//! Snapshot tests for argument parsing across every tool in this group.
+//!
+//! Captures each tool's parsed `Args` (via `Debug`) for valid invocations,
+//! and the rendered error message for invalid ones. Complements the
+//! help-text snapshots in `help.rs` by detecting drift in defaults, field
+//! types, and validation rules — things the help text doesn't always show.
+//!
+//! Run `cargo insta review` after intentional CLI changes to accept the
+//! updated snapshots.
+
+use clap::Parser;
+use std::fmt::Debug;
+
+fn parse<P: Parser + Debug>(argv: &[&str]) -> String {
+    match P::try_parse_from(argv) {
+        Ok(v) => format!("{v:#?}"),
+        Err(e) => format!("ERROR:\n{e}"),
+    }
+}
+
+mod blockdev {
+    use super::parse;
+    use linuxutils_disk::blockdev::Args;
+
+    // blockdev exposes a single `args: Vec<String>` with
+    // `trailing_var_arg = true, allow_hyphen_values = true`. All command
+    // dispatch happens at run time, so the snapshots here mostly verify
+    // the trailing-args round-trip — clap should never reject input.
+
+    // ---- SYNOPSIS form 1: blockdev [-q] [-v] command [command...] device...
+
+    #[test]
+    fn report_single_device() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "blockdev", "--report", "/dev/sda",
+        ]));
+    }
+
+    #[test]
+    fn report_multiple_devices() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "blockdev", "--report", "/dev/sda", "/dev/sdb",
+        ]));
+    }
+
+    #[test]
+    fn report_no_devices() {
+        insta::assert_snapshot!(parse::<Args>(&["blockdev", "--report"]));
+    }
+
+    #[test]
+    fn getsize64_device() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "blockdev", "--getsize64", "/dev/sda",
+        ]));
+    }
+
+    #[test]
+    fn getro_device() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "blockdev", "--getro", "/dev/sda",
+        ]));
+    }
+
+    #[test]
+    fn setro_device() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "blockdev", "--setro", "/dev/sda",
+        ]));
+    }
+
+    #[test]
+    fn setra_with_value() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "blockdev", "--setra", "256", "/dev/sda",
+        ]));
+    }
+
+    #[test]
+    fn multiple_commands_one_device() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "blockdev", "--getro", "--getsize64", "/dev/sda",
+        ]));
+    }
+
+    #[test]
+    fn quiet_and_verbose_passthrough() {
+        // -q and -v are documented in the SYNOPSIS but blockdev's clap
+        // surface treats them as just more positional tokens; they're
+        // interpreted later. Pinned so any future change to make them
+        // real flags is intentional.
+        insta::assert_snapshot!(parse::<Args>(&[
+            "blockdev", "-q", "-v", "--getsize64", "/dev/sda",
+        ]));
+    }
+
+    #[test]
+    fn no_args() {
+        insta::assert_snapshot!(parse::<Args>(&["blockdev"]));
+    }
+}
+
+mod isosize {
+    use super::parse;
+    use linuxutils_disk::isosize::Args;
+
+    // ---- SYNOPSIS form: isosize [options] <iso9660_image_file>...
+
+    #[test]
+    fn single_file() {
+        insta::assert_snapshot!(parse::<Args>(&["isosize", "image.iso"]));
+    }
+
+    #[test]
+    fn multiple_files() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "isosize", "a.iso", "b.iso", "c.iso",
+        ]));
+    }
+
+    #[test]
+    fn sectors_flag() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "isosize", "-x", "image.iso",
+        ]));
+    }
+
+    #[test]
+    fn divisor_flag() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "isosize", "-d", "1024", "image.iso",
+        ]));
+    }
+
+    #[test]
+    fn long_flags() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "isosize",
+            "--sectors",
+            "--divisor",
+            "2048",
+            "image.iso",
+        ]));
+    }
+
+    // ---- Error cases
+
+    #[test]
+    fn err_no_files() {
+        insta::assert_snapshot!(parse::<Args>(&["isosize"]));
+    }
+
+    #[test]
+    fn err_unknown_flag() {
+        insta::assert_snapshot!(parse::<Args>(&["isosize", "--bogus"]));
+    }
+
+    #[test]
+    fn err_divisor_not_a_number() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "isosize", "-d", "abc", "image.iso",
+        ]));
+    }
+}

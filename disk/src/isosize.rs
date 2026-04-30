@@ -13,7 +13,7 @@ const PVD_OFFSET: u64 = 0x8000;
 const PVD_TYPE_PRIMARY: u8 = 1;
 const CD001_MAGIC: &[u8; 5] = b"CD001";
 
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(
     name = "isosize",

@@ -1,0 +1,11 @@
+---
+source: disk/tests/options.rs
+expression: "parse::<Args>(&[\"isosize\", \"-d\", \"1024\", \"image.iso\",])"
+---
+Args {
+    sectors: false,
+    divisor: 1024,
+    files: [
+        "image.iso",
+    ],
+}

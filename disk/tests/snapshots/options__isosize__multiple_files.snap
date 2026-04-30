@@ -1,0 +1,13 @@
+---
+source: disk/tests/options.rs
+expression: "parse::<Args>(&[\"isosize\", \"a.iso\", \"b.iso\", \"c.iso\",])"
+---
+Args {
+    sectors: false,
+    divisor: 1,
+    files: [
+        "a.iso",
+        "b.iso",
+        "c.iso",
+    ],
+}

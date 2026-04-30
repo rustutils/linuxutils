@@ -1,0 +1,11 @@
+---
+source: disk/tests/options.rs
+expression: "parse::<Args>(&[\"blockdev\", \"--setra\", \"256\", \"/dev/sda\",])"
+---
+Args {
+    args: [
+        "--setra",
+        "256",
+        "/dev/sda",
+    ],
+}

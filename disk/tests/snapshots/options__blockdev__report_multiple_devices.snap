@@ -1,0 +1,11 @@
+---
+source: disk/tests/options.rs
+expression: "parse::<Args>(&[\"blockdev\", \"--report\", \"/dev/sda\", \"/dev/sdb\",])"
+---
+Args {
+    args: [
+        "--report",
+        "/dev/sda",
+        "/dev/sdb",
+    ],
+}

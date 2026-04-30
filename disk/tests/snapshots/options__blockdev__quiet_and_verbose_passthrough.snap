@@ -1,0 +1,12 @@
+---
+source: disk/tests/options.rs
+expression: "parse::<Args>(&[\"blockdev\", \"-q\", \"-v\", \"--getsize64\", \"/dev/sda\",])"
+---
+Args {
+    args: [
+        "-q",
+        "-v",
+        "--getsize64",
+        "/dev/sda",
+    ],
+}

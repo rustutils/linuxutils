@@ -1,5 +1,5 @@
 ---
-source: disk/tests/help_snapshots.rs
+source: disk/tests/help.rs
 expression: "help_output(\"isosize\")"
 ---
 Output the length of an iso9660 filesystem

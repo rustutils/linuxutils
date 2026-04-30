@@ -1,0 +1,11 @@
+---
+source: disk/tests/options.rs
+expression: "parse::<Args>(&[\"isosize\"])"
+---
+ERROR:
+error: the following required arguments were not provided:
+  <FILES>...
+
+Usage: isosize [options] <iso9660_image_file> ...
+
+For more information, try '--help'.

@@ -1,0 +1,7 @@
+---
+source: disk/tests/options.rs
+expression: "parse::<Args>(&[\"blockdev\"])"
+---
+Args {
+    args: [],
+}

@@ -1,5 +1,5 @@
 ---
-source: disk/tests/help_snapshots.rs
+source: disk/tests/help.rs
 expression: "help_output(\"blockdev\")"
 ---
 Call block device ioctls from the command line.

@@ -37,7 +37,7 @@ const BLKDISCARDZEROES: libc::c_ulong = 0x127c;
 /// Each `--getXXX` or `--setXXX` command performs a single ioctl on
 /// the specified block device(s). Multiple commands and devices can be
 /// given in a single invocation.
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(
     name = "blockdev",
