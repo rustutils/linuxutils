@@ -12,7 +12,9 @@
 //! in subsequent slices.
 
 pub mod entry;
+pub(crate) mod escape;
 pub mod flags;
+pub mod fstab;
 pub mod mountinfo;
 pub mod options;
 pub mod spec;

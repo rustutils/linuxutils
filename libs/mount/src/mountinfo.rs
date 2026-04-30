@@ -17,7 +17,7 @@
 //! Reference: `Documentation/filesystems/proc.rst` in the kernel
 //! source, and `mnt_unmangle()` in upstream libmount.
 
-use crate::{MountEntry, MountTable, OptionList, Propagation, Spec};
+use crate::{MountEntry, MountTable, OptionList, Propagation, Spec, escape::unmangle};
 use std::ffi::OsString;
 use std::io::{self, BufRead};
 use std::os::unix::ffi::OsStringExt;
@@ -45,39 +45,6 @@ impl MountTable {
             table.push(entry);
         }
         Ok(table)
-    }
-}
-
-/// Decode `\NNN` octal escapes in a mountinfo path-like field.
-///
-/// Only sequences of exactly three octal digits decode; lone
-/// backslashes or shorter runs pass through verbatim, matching what
-/// the kernel produces.
-fn unmangle(s: &[u8]) -> Vec<u8> {
-    let mut out = Vec::with_capacity(s.len());
-    let mut i = 0;
-    while i < s.len() {
-        if s[i] == b'\\' && i + 3 < s.len() {
-            if let (Some(a), Some(b), Some(c)) = (
-                octal_digit(s[i + 1]),
-                octal_digit(s[i + 2]),
-                octal_digit(s[i + 3]),
-            ) {
-                out.push(a * 64 + b * 8 + c);
-                i += 4;
-                continue;
-            }
-        }
-        out.push(s[i]);
-        i += 1;
-    }
-    out
-}
-
-fn octal_digit(b: u8) -> Option<u8> {
-    match b {
-        b'0'..=b'7' => Some(b - b'0'),
-        _ => None,
     }
 }
 
