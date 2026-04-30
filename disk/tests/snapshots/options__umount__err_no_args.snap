@@ -1,0 +1,11 @@
+---
+source: disk/tests/options.rs
+expression: "parse::<Args>(&[\"umount\"])"
+---
+ERROR:
+error: the following required arguments were not provided:
+  <TARGET>...
+
+Usage: umount <TARGET>...
+
+For more information, try '--help'.

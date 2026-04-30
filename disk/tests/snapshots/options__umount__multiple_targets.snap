@@ -1,0 +1,16 @@
+---
+source: disk/tests/options.rs
+expression: "parse::<Args>(&[\"umount\", \"/mnt/a\", \"/mnt/b\", \"UUID=foo\",])"
+---
+Args {
+    force: false,
+    lazy: false,
+    read_only_fallback: false,
+    no_mtab: false,
+    verbose: false,
+    targets: [
+        "/mnt/a",
+        "/mnt/b",
+        "UUID=foo",
+    ],
+}

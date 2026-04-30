@@ -28,3 +28,8 @@ fn help_blockdev() {
 fn help_isosize() {
     insta::assert_snapshot!(help_output("isosize"));
 }
+
+#[test]
+fn help_umount() {
+    insta::assert_snapshot!(help_output("umount"));
+}

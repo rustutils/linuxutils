@@ -1,0 +1,14 @@
+---
+source: disk/tests/options.rs
+expression: "parse::<Args>(&[\"umount\", \"-n\", \"-v\", \"/mnt\",])"
+---
+Args {
+    force: false,
+    lazy: false,
+    read_only_fallback: false,
+    no_mtab: true,
+    verbose: true,
+    targets: [
+        "/mnt",
+    ],
+}

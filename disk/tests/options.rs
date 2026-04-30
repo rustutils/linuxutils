@@ -162,3 +162,64 @@ mod isosize {
         ]));
     }
 }
+
+mod umount {
+    use super::parse;
+    use linuxutils_disk::umount::Args;
+
+    // ---- SYNOPSIS form: umount [options] <target>...
+
+    #[test]
+    fn single_target() {
+        insta::assert_snapshot!(parse::<Args>(&["umount", "/mnt"]));
+    }
+
+    #[test]
+    fn force_lazy_combined() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "umount", "-f", "-l", "/mnt",
+        ]));
+    }
+
+    #[test]
+    fn read_only_fallback() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "umount", "-r", "/mnt",
+        ]));
+    }
+
+    #[test]
+    fn no_mtab_and_verbose() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "umount", "-n", "-v", "/mnt",
+        ]));
+    }
+
+    #[test]
+    fn tag_target() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "umount", "LABEL=root",
+        ]));
+    }
+
+    #[test]
+    fn multiple_targets() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "umount", "/mnt/a", "/mnt/b", "UUID=foo",
+        ]));
+    }
+
+    // ---- Error cases
+
+    #[test]
+    fn err_no_args() {
+        insta::assert_snapshot!(parse::<Args>(&["umount"]));
+    }
+
+    #[test]
+    fn err_unknown_flag() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "umount", "--bogus", "/mnt",
+        ]));
+    }
+}

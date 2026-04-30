@@ -72,7 +72,7 @@
 | `swapon` | Enable devices and files for paging and swapping | Done |
 | `switch_root` | Switch to another filesystem as the root of the mount tree | Not started |
 | `tunelp` | Set various parameters for the lp device | Not started |
-| `umount` | Unmount filesystems | Not started |
+| `umount` | Unmount filesystems | Partial (no -R / -A / -a) |
 | `unshare` | Run a program in new namespaces | Done |
 | `wdctl` | Show hardware watchdog status | Not started |
 | `zramctl` | Set up and control zram devices | Not started |

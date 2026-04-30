@@ -1,0 +1,36 @@
+---
+source: disk/tests/help.rs
+expression: "help_output(\"umount\")"
+---
+Unmount a filesystem.
+
+Each positional argument can be a mount point, a source device, or a `LABEL=`/`UUID=` tag. Tags are
+resolved via libblkid; sources are looked up in `/proc/self/mountinfo` to find the target mount
+point that's actually unmounted.
+
+Usage: umount [OPTIONS] <TARGET>...
+
+Arguments:
+  <TARGET>...
+          Targets to unmount: mount point, device path, or tag (`LABEL=foo`, `UUID=...`)
+
+Options:
+  -f, --force
+          Force the unmount even if the device is busy (`MNT_FORCE`)
+
+  -l, --lazy
+          Lazy unmount — detach now, free when no longer busy (`MNT_DETACH`)
+
+  -r, --read-only
+          On failure, try a `mount -o remount,ro` fallback so the data is still flushed and the fs
+          is read-only afterwards
+
+  -n, --no-mtab
+          Do not write to /etc/mtab on success (no-op for us — we don't write mtab — but accepted
+          for command-line compatibility)
+
+  -v, --verbose
+          Print what we're doing
+
+  -h, --help
+          Print help (see a summary with '-h')
