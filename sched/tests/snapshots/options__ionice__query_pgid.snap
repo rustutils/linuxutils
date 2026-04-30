@@ -1,0 +1,17 @@
+---
+source: sched/tests/options.rs
+expression: "parse::<Args>(&[\"ionice\", \"-P\", \"100\"])"
+---
+Args {
+    class: None,
+    classdata: None,
+    pid: None,
+    pgid: Some(
+        [
+            100,
+        ],
+    ),
+    uid: None,
+    ignore: false,
+    command: [],
+}

@@ -1,0 +1,8 @@
+---
+source: sched/tests/options.rs
+expression: "parse::<Args>(&[\"chrt\", \"-T\", \"notanumber\", \"-d\", \"0\", \"myprog\",])"
+---
+ERROR:
+error: invalid value 'notanumber' for '--sched-runtime <SCHED_RUNTIME>': invalid digit found in string
+
+For more information, try '--help'.

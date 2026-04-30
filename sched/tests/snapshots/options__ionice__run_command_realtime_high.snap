@@ -1,0 +1,20 @@
+---
+source: sched/tests/options.rs
+expression: "parse::<Args>(&[\"ionice\", \"-c\", \"realtime\", \"-n\", \"0\", \"myprog\", \"--flag\",])"
+---
+Args {
+    class: Some(
+        "realtime",
+    ),
+    classdata: Some(
+        0,
+    ),
+    pid: None,
+    pgid: None,
+    uid: None,
+    ignore: false,
+    command: [
+        "myprog",
+        "--flag",
+    ],
+}

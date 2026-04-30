@@ -1,0 +1,12 @@
+---
+source: sched/tests/options.rs
+expression: "parse::<Args>(&[\"taskset\", \"--bogus\"])"
+---
+Args {
+    pid: false,
+    cpu_list: false,
+    all_tasks: false,
+    args: [
+        "--bogus",
+    ],
+}

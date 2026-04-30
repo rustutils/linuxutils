@@ -1,0 +1,21 @@
+---
+source: sched/tests/options.rs
+expression: "parse::<Args>(&[\"chrt\", \"-m\"])"
+---
+Args {
+    pid: false,
+    max: true,
+    verbose: false,
+    reset_on_fork: false,
+    all_tasks: false,
+    other: false,
+    fifo: false,
+    rr: false,
+    batch: false,
+    idle: false,
+    deadline: false,
+    sched_runtime: None,
+    sched_period: None,
+    sched_deadline: None,
+    args: [],
+}

@@ -173,7 +173,7 @@ fn get_task_pids(pid: i32) -> Result<Vec<i32>, std::io::Error> {
     Ok(pids)
 }
 
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(
     name = "chrt",

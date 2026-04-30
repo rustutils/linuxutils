@@ -1,0 +1,16 @@
+---
+source: sched/tests/options.rs
+expression: "parse::<Args>(&[\"ionice\", \"--bogus\"])"
+---
+ERROR:
+error: unexpected argument '--bogus' found
+
+  tip: to pass '--bogus' as a value, use '-- --bogus'
+
+Usage: ionice [-c class] [-n level] [-t] -p PID...
+       ionice [-c class] [-n level] [-t] -P PGID...
+       ionice [-c class] [-n level] [-t] -u UID...
+       ionice [-c class] [-n level] [-t] command [args...]
+       ionice [-p PID...] [-P PGID...] [-u UID...]
+
+For more information, try '--help'.

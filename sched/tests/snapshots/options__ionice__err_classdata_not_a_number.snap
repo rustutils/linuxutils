@@ -1,0 +1,8 @@
+---
+source: sched/tests/options.rs
+expression: "parse::<Args>(&[\"ionice\", \"-n\", \"notanumber\",])"
+---
+ERROR:
+error: invalid value 'notanumber' for '--classdata <CLASSDATA>': invalid digit found in string
+
+For more information, try '--help'.

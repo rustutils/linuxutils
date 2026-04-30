@@ -1,0 +1,13 @@
+---
+source: sched/tests/options.rs
+expression: "parse::<Args>(&[\"taskset\", \"-pc\", \"0-3\", \"1234\",])"
+---
+Args {
+    pid: true,
+    cpu_list: true,
+    all_tasks: false,
+    args: [
+        "0-3",
+        "1234",
+    ],
+}

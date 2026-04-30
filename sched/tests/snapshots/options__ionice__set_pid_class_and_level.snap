@@ -1,0 +1,21 @@
+---
+source: sched/tests/options.rs
+expression: "parse::<Args>(&[\"ionice\", \"-c\", \"1\", \"-n\", \"4\", \"-p\", \"1234\",])"
+---
+Args {
+    class: Some(
+        "1",
+    ),
+    classdata: Some(
+        4,
+    ),
+    pid: Some(
+        [
+            1234,
+        ],
+    ),
+    pgid: None,
+    uid: None,
+    ignore: false,
+    command: [],
+}

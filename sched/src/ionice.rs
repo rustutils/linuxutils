@@ -82,7 +82,7 @@ fn set_ioprio(
     }
 }
 
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(
     name = "ionice",

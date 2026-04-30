@@ -7,11 +7,13 @@
 //! Run `cargo insta review` after intentional CLI changes to accept
 //! the updated snapshots.
 
+use linuxutils_common::HELP_WIDTH_MAX;
+
 fn help_output(bin: &str) -> String {
     let output = assert_cmd::Command::cargo_bin(bin)
         .unwrap()
         .arg("--help")
-        .env("COLUMNS", "100")
+        .env("COLUMNS", HELP_WIDTH_MAX.to_string())
         .output()
         .unwrap();
     String::from_utf8(output.stdout).unwrap()
@@ -31,4 +33,3 @@ fn help_ionice() {
 fn help_taskset() {
     insta::assert_snapshot!(help_output("taskset"));
 }
-

@@ -1,5 +1,5 @@
 ---
-source: sched/tests/help_snapshots.rs
+source: sched/tests/help.rs
 expression: "help_output(\"taskset\")"
 ---
 Set or retrieve a process's CPU affinity
