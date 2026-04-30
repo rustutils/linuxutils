@@ -1,0 +1,22 @@
+[package]
+name = "linuxutils-mount"
+description = "Rust-native mount/fstab/mountinfo parsing and mount(2) syscall wrappers"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+keywords = ["linux", "mount", "fstab", "mountinfo"]
+categories = ["filesystem", "os::linux-apis", "parsing"]
+
+[package.metadata.docs.rs]
+default-target = "x86_64-unknown-linux-gnu"
+targets = []
+all-features = true
+
+[dependencies]
+bitflags = { workspace = true }
+
+[dev-dependencies]
+insta = { workspace = true }

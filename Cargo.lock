@@ -712,6 +712,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "linuxutils-mount"
+version = "0.1.0"
+dependencies = [
+ "bitflags",
+ "insta",
+]
+
+[[package]]
 name = "linuxutils-sched"
 version = "0.1.0"
 dependencies = [

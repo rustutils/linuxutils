@@ -5,6 +5,7 @@ members = [
     "disk",
     "kmod",
     "compat/*",
+    "libs/*",
     "login",
     "misc",
     "linuxutils",
@@ -26,6 +27,7 @@ authors = ["Patrick Elsen <pelsen@xfbs.net>"]
 
 [workspace.dependencies]
 assert_cmd = "2"
+bitflags = "2"
 chrono = { version = "0.4", default-features = false, features = ["clock"] }
 insta = "1"
 clap = { version = "4", features = ["derive", "wrap_help"] }
@@ -44,6 +46,7 @@ linuxutils-disk = { path = "disk", version = "0.1.0" }
 linuxutils-kmod = { path = "kmod", version = "0.1.0" }
 linuxutils-login = { path = "login", version = "0.1.0" }
 linuxutils-misc = { path = "misc", version = "0.1.0" }
+linuxutils-mount = { path = "libs/mount", version = "0.1.0" }
 linuxutils-sched = { path = "sched", version = "0.1.0" }
 linuxutils-system = { path = "system", version = "0.1.0" }
 linuxutils-term = { path = "term", version = "0.1.0" }
