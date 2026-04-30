@@ -188,6 +188,14 @@ These tools come from the [kmod](https://git.kernel.org/pub/scm/utils/kernel/kmo
 
 ## Libraries
 
+The `compat/<name>/` shims aim for ABI-compatible drop-in
+replacements for upstream `lib<name>.so`, useful for external C
+codebases that link against them. The Rust-native libraries in
+`libs/<name>/` are our internal APIs — the shims wrap them, and
+linuxutils tools consume them directly.
+
+### ABI-compat shims (`compat/`)
+
 | Library | Description | Status |
 |---------|-------------|--------|
 | `libblkid` | Block device identification library for identifying block devices by content, extracting filesystem information like labels and UUIDs, and managing block device caching | Stub |
@@ -196,3 +204,9 @@ These tools come from the [kmod](https://git.kernel.org/pub/scm/utils/kernel/kmo
 | `libmount` | Library for parsing /etc/fstab, /etc/mtab and /proc/self/mountinfo, managing the mtab file, and evaluating mount options | Stub |
 | `libsmartcols` | Library for smart adaptive formatting of tabular data with support for filtering and various display options | Stub |
 | `libuuid` | DCE-compatible Universally Unique Identifier library for generating unique identifiers compatible with RFC-4122 | Done |
+
+### Rust-native libraries (`libs/`)
+
+| Library | Description | Status |
+|---------|-------------|--------|
+| `linuxutils-mount` | Mount / fstab / mountinfo data model and parsers | Partial — see [libs/mount/README.md](libs/mount/README.md) |
