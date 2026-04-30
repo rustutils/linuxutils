@@ -1,0 +1,11 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"exch\", \"a\"])"
+---
+ERROR:
+error: the following required arguments were not provided:
+  <PATH2>
+
+Usage: exch <PATH1> <PATH2>
+
+For more information, try '--help'.

@@ -1,0 +1,21 @@
+---
+source: misc/tests/help.rs
+expression: "help_output(\"exch\")"
+---
+Atomically exchange two filesystem paths.
+
+Wraps `renameat2(2)` with the `RENAME_EXCHANGE` flag. Both paths must exist and live on the same
+filesystem.
+
+Usage: exch <PATH1> <PATH2>
+
+Arguments:
+  <PATH1>
+          First path
+
+  <PATH2>
+          Second path
+
+Options:
+  -h, --help
+          Print help (see a summary with '-h')

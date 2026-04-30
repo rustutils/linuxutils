@@ -4,6 +4,9 @@ pub mod cal;
 #[cfg(feature = "copyfilerange")]
 pub mod copyfilerange;
 
+#[cfg(feature = "exch")]
+pub mod exch;
+
 #[cfg(feature = "fincore")]
 pub mod fincore;
 

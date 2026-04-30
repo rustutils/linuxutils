@@ -133,6 +133,37 @@ mod copyfilerange {
     }
 }
 
+mod exch {
+    use super::parse;
+    use linuxutils_misc::exch::Args;
+
+    // ---- SYNOPSIS form: exch path1 path2
+
+    #[test]
+    fn two_paths() {
+        insta::assert_snapshot!(parse::<Args>(&["exch", "a", "b"]));
+    }
+
+    // ---- Error cases
+
+    #[test]
+    fn err_no_args() {
+        insta::assert_snapshot!(parse::<Args>(&["exch"]));
+    }
+
+    #[test]
+    fn err_one_arg() {
+        insta::assert_snapshot!(parse::<Args>(&["exch", "a"]));
+    }
+
+    #[test]
+    fn err_three_args() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "exch", "a", "b", "c",
+        ]));
+    }
+}
+
 mod fincore {
     use super::parse;
     use linuxutils_misc::fincore::Args;

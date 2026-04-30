@@ -85,7 +85,7 @@
 | `cal` | Display a calendar | Done |
 | `copyfilerange` | Copy range(s) from source to destination file | Done |
 | `enosys` | Make syscalls fail with ENOSYS | Not started |
-| `exch` | Atomically exchange paths between two files | Not started |
+| `exch` | Atomically exchange paths between two files | Done |
 | `fadvise` | Use the posix_fadvise(2) system call | Done |
 | `fincore` | Count pages of file contents in core | Done |
 | `findfs` | Find a filesystem by label or UUID | Not started |

@@ -25,6 +25,7 @@ default = ["full"]
 full = [
     "cal",
     "copyfilerange",
+    "exch",
     "fincore",
     "getopt",
     "kill",
@@ -41,6 +42,7 @@ full = [
 ]
 cal = ["dep:chrono"]
 copyfilerange = ["dep:libc"]
+exch = ["dep:rustix"]
 fincore = ["dep:cols", "dep:libc"]
 getopt = []
 kill = ["dep:rustix"]
@@ -80,6 +82,11 @@ required-features = ["cal"]
 name = "copyfilerange"
 path = "src/bin/copyfilerange.rs"
 required-features = ["copyfilerange"]
+
+[[bin]]
+name = "exch"
+path = "src/bin/exch.rs"
+required-features = ["exch"]
 
 [[bin]]
 name = "fincore"
