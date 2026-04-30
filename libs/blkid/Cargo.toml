@@ -1,0 +1,22 @@
+[package]
+name = "linuxutils-blkid"
+description = "Rust-native block-device tag resolution via the udev /dev/disk/by-* symlink layer"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+keywords = ["linux", "blkid", "udev", "filesystem"]
+categories = ["filesystem", "os::linux-apis"]
+
+[package.metadata.docs.rs]
+default-target = "x86_64-unknown-linux-gnu"
+targets = []
+all-features = true
+
+[dependencies]
+linuxutils-common = { workspace = true }
+
+[dev-dependencies]
+tempfile = { workspace = true }

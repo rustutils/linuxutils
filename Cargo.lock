@@ -607,6 +607,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "linuxutils-blkid"
+version = "0.1.0"
+dependencies = [
+ "linuxutils-common",
+ "tempfile",
+]
+
+[[package]]
 name = "linuxutils-common"
 version = "0.1.0"
 

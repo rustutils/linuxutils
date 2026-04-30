@@ -209,4 +209,5 @@ linuxutils tools consume them directly.
 
 | Library | Description | Status |
 |---------|-------------|--------|
+| `linuxutils-blkid` | Block-device tag resolution via `/dev/disk/by-*` (no probe layer) | Partial — see [libs/blkid/README.md](libs/blkid/README.md) |
 | `linuxutils-mount` | Mount / fstab / mountinfo data model and parsers | Partial — see [libs/mount/README.md](libs/mount/README.md) |
