@@ -1,0 +1,15 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"lslocks\", \"--output-all\", \"-r\",])"
+---
+Args {
+    bytes: false,
+    json: false,
+    noinaccessible: false,
+    noheadings: false,
+    output: None,
+    output_all: true,
+    pid: None,
+    raw: true,
+    notruncate: false,
+}

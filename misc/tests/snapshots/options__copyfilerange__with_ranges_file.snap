@@ -1,0 +1,13 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"copyfilerange\", \"-r\", \"ranges.txt\", \"src\", \"dst\",])"
+---
+Args {
+    ranges_file: Some(
+        "ranges.txt",
+    ),
+    verbose: false,
+    source: "src",
+    destination: "dst",
+    ranges: [],
+}

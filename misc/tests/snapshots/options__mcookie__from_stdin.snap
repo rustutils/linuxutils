@@ -1,0 +1,11 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"mcookie\", \"-f\", \"-\"])"
+---
+Args {
+    file: Some(
+        "-",
+    ),
+    max_size: None,
+    verbose: false,
+}

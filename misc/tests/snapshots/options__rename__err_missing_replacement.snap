@@ -1,0 +1,12 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"rename\", \"expr\"])"
+---
+ERROR:
+error: the following required arguments were not provided:
+  <REPLACEMENT>
+  <FILES>...
+
+Usage: rename [options] <expression> <replacement> <file>...
+
+For more information, try '--help'.

@@ -1,0 +1,19 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"rename\", \".txt\", \".md\", \"a.txt\", \"b.txt\",])"
+---
+Args {
+    symlink: false,
+    verbose: false,
+    no_act: false,
+    all: false,
+    last: false,
+    no_overwrite: false,
+    interactive: false,
+    expression: ".txt",
+    replacement: ".md",
+    files: [
+        "a.txt",
+        "b.txt",
+    ],
+}

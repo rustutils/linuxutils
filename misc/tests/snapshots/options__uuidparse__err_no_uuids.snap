@@ -1,0 +1,11 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"uuidparse\"])"
+---
+Args {
+    json: false,
+    noheadings: false,
+    output: None,
+    raw: false,
+    uuids: [],
+}

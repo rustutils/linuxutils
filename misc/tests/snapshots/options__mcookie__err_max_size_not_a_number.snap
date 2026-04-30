@@ -1,0 +1,8 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"mcookie\", \"-m\", \"abc\",])"
+---
+ERROR:
+error: invalid value 'abc' for '--max-size <MAX_SIZE>': invalid digit found in string
+
+For more information, try '--help'.

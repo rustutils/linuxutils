@@ -14,7 +14,7 @@ use std::{
 ///
 /// Generates a 128-bit random hexadecimal number for use with the X authority
 /// system.
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "mcookie", version, about)]
 pub struct Args {

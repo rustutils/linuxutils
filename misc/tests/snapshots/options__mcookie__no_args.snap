@@ -1,0 +1,9 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"mcookie\"])"
+---
+Args {
+    file: None,
+    max_size: None,
+    verbose: false,
+}

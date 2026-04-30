@@ -1,0 +1,16 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"namei\", \"/etc/passwd\", \"/var/log/messages\",])"
+---
+Args {
+    long: false,
+    modes: false,
+    nosymlinks: false,
+    owners: false,
+    vertical: false,
+    mountpoints: false,
+    pathnames: [
+        "/etc/passwd",
+        "/var/log/messages",
+    ],
+}

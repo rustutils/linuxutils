@@ -1,0 +1,21 @@
+---
+source: misc/tests/options.rs
+expression: "parse(&[\"-B\", \"/opt/bin\", \"/usr/local/bin\", \"-f\", \"ls\",])"
+---
+Args {
+    search_binaries: false,
+    search_manuals: false,
+    search_sources: false,
+    unusual_only: false,
+    list_paths: false,
+    glob_mode: false,
+    custom_bin_dirs: [
+        "/opt/bin",
+        "/usr/local/bin",
+    ],
+    custom_man_dirs: [],
+    custom_src_dirs: [],
+    names: [
+        "ls",
+    ],
+}

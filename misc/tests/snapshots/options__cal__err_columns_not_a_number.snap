@@ -1,0 +1,8 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"cal\", \"-c\", \"abc\"])"
+---
+ERROR:
+error: invalid value 'abc' for '--columns <COLUMNS>': invalid digit found in string
+
+For more information, try '--help'.

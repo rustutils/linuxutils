@@ -1,0 +1,8 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"look\", \"-t\", \"abc\", \"needle\",])"
+---
+ERROR:
+error: invalid value 'abc' for '--terminate <TERMINATE>': too many characters in string
+
+For more information, try '--help'.

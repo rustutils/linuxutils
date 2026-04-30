@@ -1,0 +1,16 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"uuidgen\"])"
+---
+Args {
+    random: false,
+    time: false,
+    time_v6: false,
+    time_v7: false,
+    md5: false,
+    sha1: false,
+    namespace: None,
+    name: None,
+    count: 1,
+    hex: false,
+}

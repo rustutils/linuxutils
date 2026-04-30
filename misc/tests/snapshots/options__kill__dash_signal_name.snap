@@ -1,0 +1,10 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"kill\", \"-HUP\", \"1234\"])"
+---
+Args {
+    args: [
+        "-HUP",
+        "1234",
+    ],
+}

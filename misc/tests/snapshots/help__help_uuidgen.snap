@@ -1,0 +1,21 @@
+---
+source: misc/tests/help.rs
+expression: "help_output(\"uuidgen\")"
+---
+Create a new UUID value
+
+Usage: uuidgen [OPTIONS]
+
+Options:
+  -r, --random                 Generate a random-based UUID (v4)
+  -t, --time                   Generate a time-based UUID (v1)
+  -6, --time-v6                Generate a time-based UUID (v6), lexicographically sortable
+  -7, --time-v7                Generate a time-based UUID (v7), lexicographically sortable
+  -m, --md5                    Use MD5 as the hash algorithm (v3)
+  -s, --sha1                   Use SHA1 as the hash algorithm (v5)
+  -n, --namespace <NAMESPACE>  Namespace UUID or alias (@dns, @url, @oid, @x500)
+  -N, --name <NAME>            Name to hash
+  -C, --count <COUNT>          Number of UUIDs to generate [default: 1]
+  -x, --hex                    Interpret name as a hexadecimal string
+  -h, --help                   Print help
+  -V, --version                Print version

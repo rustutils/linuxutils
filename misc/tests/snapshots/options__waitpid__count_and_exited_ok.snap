@@ -1,0 +1,17 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"waitpid\", \"-e\", \"-c\", \"2\", \"1234\", \"5678\", \"9999\",])"
+---
+Args {
+    verbose: false,
+    timeout: None,
+    exited: true,
+    count: Some(
+        2,
+    ),
+    pids: [
+        1234,
+        5678,
+        9999,
+    ],
+}

@@ -1,0 +1,22 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"getopt\", \"ab:c\", \"-a\", \"-b\", \"x\", \"-c\",])"
+---
+Args {
+    alternative: false,
+    longoptions: [],
+    name: None,
+    options: None,
+    quiet: false,
+    quiet_output: false,
+    shell: "bash",
+    test: false,
+    unquoted: false,
+    params: [
+        "ab:c",
+        "-a",
+        "-b",
+        "x",
+        "-c",
+    ],
+}

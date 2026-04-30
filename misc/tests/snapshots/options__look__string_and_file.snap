@@ -1,0 +1,14 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"look\", \"abc\", \"/usr/share/dict/words\",])"
+---
+Args {
+    alternative: false,
+    alphanum: false,
+    ignore_case: false,
+    terminate: None,
+    string: "abc",
+    file: Some(
+        "/usr/share/dict/words",
+    ),
+}

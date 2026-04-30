@@ -1,0 +1,17 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"logger\", \"hello\", \"world\",])"
+---
+Args {
+    log_pid: false,
+    file: None,
+    skip_empty: false,
+    priority: "user.notice",
+    stderr: false,
+    tag: None,
+    socket: None,
+    message: [
+        "hello",
+        "world",
+    ],
+}

@@ -1,0 +1,11 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"look\"])"
+---
+ERROR:
+error: the following required arguments were not provided:
+  <STRING>
+
+Usage: look <STRING> [FILE]
+
+For more information, try '--help'.

@@ -1,0 +1,20 @@
+---
+source: misc/tests/help.rs
+expression: "help_output(\"look\")"
+---
+Display lines beginning with a given string
+
+Usage: look [OPTIONS] <STRING> [FILE]
+
+Arguments:
+  <STRING>  String to search for
+  [FILE]    File to search (default: /usr/share/dict/words)
+
+Options:
+  -a, --alternative            Use the alternative dictionary file
+  -d, --alphanum               Use normal dictionary character set and order (only blanks and
+                               alphanumeric characters are compared)
+  -f, --ignore-case            Ignore the case of alphabetic characters
+  -t, --terminate <TERMINATE>  String termination character
+  -h, --help                   Print help
+  -V, --version                Print version

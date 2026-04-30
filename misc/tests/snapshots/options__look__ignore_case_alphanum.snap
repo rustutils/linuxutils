@@ -1,0 +1,12 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"look\", \"-d\", \"-f\", \"abc\",])"
+---
+Args {
+    alternative: false,
+    alphanum: true,
+    ignore_case: true,
+    terminate: None,
+    string: "abc",
+    file: None,
+}

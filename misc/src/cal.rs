@@ -33,7 +33,7 @@ const DAYS_HEADER_MON: &str = "Mo Tu We Th Fr Sa Su";
 const MONTH_WIDTH: usize = 20;
 const MONTH_GAP: &str = "  ";
 
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "cal", about = "Display a calendar")]
 pub struct Args {

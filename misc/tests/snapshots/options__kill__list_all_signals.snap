@@ -1,0 +1,9 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"kill\", \"-l\"])"
+---
+Args {
+    args: [
+        "-l",
+    ],
+}

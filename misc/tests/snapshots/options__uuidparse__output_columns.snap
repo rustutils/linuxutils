@@ -1,0 +1,19 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"uuidparse\", \"-o\", \"UUID,VARIANT,TYPE\",\n\"00000000-0000-0000-0000-000000000000\",])"
+---
+Args {
+    json: false,
+    noheadings: false,
+    output: Some(
+        [
+            "UUID",
+            "VARIANT",
+            "TYPE",
+        ],
+    ),
+    raw: false,
+    uuids: [
+        "00000000-0000-0000-0000-000000000000",
+    ],
+}

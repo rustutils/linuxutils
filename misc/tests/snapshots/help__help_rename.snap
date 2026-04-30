@@ -1,0 +1,22 @@
+---
+source: misc/tests/help.rs
+expression: "help_output(\"rename\")"
+---
+Rename files by replacing occurrences of a string in their filenames
+
+Usage: rename [options] <expression> <replacement> <file>...
+
+Arguments:
+  <EXPRESSION>   The expression to search for
+  <REPLACEMENT>  The replacement string
+  <FILES>...     Files to rename
+
+Options:
+  -s, --symlink       Act on the target of symlinks instead of the symlink itself
+  -v, --verbose       Show which files were renamed
+  -n, --no-act        Don't actually rename, just show what would happen
+  -a, --all           Replace all occurrences of expression, not just the first
+  -l, --last          Replace the last occurrence instead of the first
+  -o, --no-overwrite  Don't overwrite existing files
+  -i, --interactive   Ask before overwriting existing files
+  -h, --help          Print help

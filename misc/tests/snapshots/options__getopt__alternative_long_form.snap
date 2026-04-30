@@ -1,0 +1,22 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"getopt\", \"-a\", \"-o\", \"x\", \"-l\", \"longopt\", \"--\",\n\"-longopt\",])"
+---
+Args {
+    alternative: true,
+    longoptions: [
+        "longopt",
+    ],
+    name: None,
+    options: Some(
+        "x",
+    ),
+    quiet: false,
+    quiet_output: false,
+    shell: "bash",
+    test: false,
+    unquoted: false,
+    params: [
+        "-longopt",
+    ],
+}

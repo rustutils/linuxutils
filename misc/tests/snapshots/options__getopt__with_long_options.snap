@@ -1,0 +1,25 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"getopt\", \"-o\", \"ab:c\", \"-l\", \"alpha,beta:,gamma\", \"--\",\n\"--alpha\", \"--beta=x\",])"
+---
+Args {
+    alternative: false,
+    longoptions: [
+        "alpha",
+        "beta:",
+        "gamma",
+    ],
+    name: None,
+    options: Some(
+        "ab:c",
+    ),
+    quiet: false,
+    quiet_output: false,
+    shell: "bash",
+    test: false,
+    unquoted: false,
+    params: [
+        "--alpha",
+        "--beta=x",
+    ],
+}

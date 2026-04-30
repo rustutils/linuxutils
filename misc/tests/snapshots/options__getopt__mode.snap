@@ -1,0 +1,16 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"getopt\", \"-T\"])"
+---
+Args {
+    alternative: false,
+    longoptions: [],
+    name: None,
+    options: None,
+    quiet: false,
+    quiet_output: false,
+    shell: "bash",
+    test: true,
+    unquoted: false,
+    params: [],
+}

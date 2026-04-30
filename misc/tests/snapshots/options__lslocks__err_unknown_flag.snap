@@ -1,0 +1,10 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"lslocks\", \"--bogus\"])"
+---
+ERROR:
+error: unexpected argument '--bogus' found
+
+Usage: lslocks [OPTIONS]
+
+For more information, try '--help'.

@@ -1,0 +1,18 @@
+---
+source: misc/tests/options.rs
+expression: "parse(&[\"-u\", \"ls\"])"
+---
+Args {
+    search_binaries: false,
+    search_manuals: false,
+    search_sources: false,
+    unusual_only: true,
+    list_paths: false,
+    glob_mode: false,
+    custom_bin_dirs: [],
+    custom_man_dirs: [],
+    custom_src_dirs: [],
+    names: [
+        "ls",
+    ],
+}

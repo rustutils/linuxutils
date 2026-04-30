@@ -14,7 +14,7 @@ use std::{
 ///
 /// Performs kernel-space file copies that can create reflinked files
 /// when the filesystem supports it. Range format: `src_off:dst_off:length`.
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "copyfilerange", about = "Copy byte ranges between files")]
 pub struct Args {

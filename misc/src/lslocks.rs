@@ -8,7 +8,7 @@ use std::{
     collections::HashMap, fs, os::unix::fs::MetadataExt, process::ExitCode,
 };
 
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "lslocks", about = "List local system locks")]
 pub struct Args {

@@ -1,0 +1,16 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"logger\", \"-f\", \"log.txt\", \"-e\",])"
+---
+Args {
+    log_pid: false,
+    file: Some(
+        "log.txt",
+    ),
+    skip_empty: true,
+    priority: "user.notice",
+    stderr: false,
+    tag: None,
+    socket: None,
+    message: [],
+}

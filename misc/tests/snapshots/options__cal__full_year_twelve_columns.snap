@@ -1,0 +1,18 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"cal\", \"-Y\", \"-c\", \"4\", \"2025\",])"
+---
+Args {
+    one: false,
+    three: false,
+    months: None,
+    sunday: false,
+    monday: false,
+    year: false,
+    twelve: true,
+    julian: false,
+    columns: 4,
+    args: [
+        "2025",
+    ],
+}

@@ -1,0 +1,12 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"uuidgen\", \"--md5\"])"
+---
+ERROR:
+error: the following required arguments were not provided:
+  --namespace <NAMESPACE>
+  --name <NAME>
+
+Usage: uuidgen --namespace <NAMESPACE> --name <NAME> --md5
+
+For more information, try '--help'.

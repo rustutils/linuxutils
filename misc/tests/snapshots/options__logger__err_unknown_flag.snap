@@ -1,0 +1,12 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"logger\", \"--bogus\"])"
+---
+ERROR:
+error: unexpected argument '--bogus' found
+
+  tip: to pass '--bogus' as a value, use '-- --bogus'
+
+Usage: logger [OPTIONS] [MESSAGE]...
+
+For more information, try '--help'.

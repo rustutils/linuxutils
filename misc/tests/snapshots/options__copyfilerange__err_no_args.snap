@@ -1,0 +1,12 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"copyfilerange\"])"
+---
+ERROR:
+error: the following required arguments were not provided:
+  <SOURCE>
+  <DESTINATION>
+
+Usage: copyfilerange <SOURCE> <DESTINATION> [RANGES]...
+
+For more information, try '--help'.

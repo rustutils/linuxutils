@@ -1,0 +1,18 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"rename\", \"-v\", \"-n\", \".bak\", \"\", \"old.bak\",])"
+---
+Args {
+    symlink: false,
+    verbose: true,
+    no_act: true,
+    all: false,
+    last: false,
+    no_overwrite: false,
+    interactive: false,
+    expression: ".bak",
+    replacement: "",
+    files: [
+        "old.bak",
+    ],
+}

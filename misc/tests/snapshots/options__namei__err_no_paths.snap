@@ -1,0 +1,11 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"namei\"])"
+---
+ERROR:
+error: the following required arguments were not provided:
+  <PATHNAMES>...
+
+Usage: namei [options] <pathname>...
+
+For more information, try '--help'.

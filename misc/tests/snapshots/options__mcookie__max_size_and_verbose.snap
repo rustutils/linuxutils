@@ -1,0 +1,13 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"mcookie\", \"-f\", \"/tmp/seed\", \"-m\", \"1024\", \"-v\",])"
+---
+Args {
+    file: Some(
+        "/tmp/seed",
+    ),
+    max_size: Some(
+        1024,
+    ),
+    verbose: true,
+}

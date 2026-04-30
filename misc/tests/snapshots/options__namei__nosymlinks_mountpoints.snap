@@ -1,0 +1,15 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"namei\", \"-n\", \"-x\", \"/var\",])"
+---
+Args {
+    long: false,
+    modes: false,
+    nosymlinks: true,
+    owners: false,
+    vertical: false,
+    mountpoints: true,
+    pathnames: [
+        "/var",
+    ],
+}

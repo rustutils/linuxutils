@@ -1,0 +1,16 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"logger\", \"-p\", \"daemon.warning\", \"boot complete\",])"
+---
+Args {
+    log_pid: false,
+    file: None,
+    skip_empty: false,
+    priority: "daemon.warning",
+    stderr: false,
+    tag: None,
+    socket: None,
+    message: [
+        "boot complete",
+    ],
+}

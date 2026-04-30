@@ -1,0 +1,18 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"logger\", \"-t\", \"myapp\", \"-i\", \"starting\",])"
+---
+Args {
+    log_pid: true,
+    file: None,
+    skip_empty: false,
+    priority: "user.notice",
+    stderr: false,
+    tag: Some(
+        "myapp",
+    ),
+    socket: None,
+    message: [
+        "starting",
+    ],
+}

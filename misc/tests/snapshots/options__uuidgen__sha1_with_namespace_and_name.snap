@@ -1,0 +1,20 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"uuidgen\", \"--sha1\", \"-n\", \"@url\", \"-N\",\n\"https://example.com\",])"
+---
+Args {
+    random: false,
+    time: false,
+    time_v6: false,
+    time_v7: false,
+    md5: false,
+    sha1: true,
+    namespace: Some(
+        "@url",
+    ),
+    name: Some(
+        "https://example.com",
+    ),
+    count: 1,
+    hex: false,
+}

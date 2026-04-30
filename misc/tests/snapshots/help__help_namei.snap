@@ -1,0 +1,19 @@
+---
+source: misc/tests/help.rs
+expression: "help_output(\"namei\")"
+---
+Follow a pathname until a terminal point is found
+
+Usage: namei [options] <pathname>...
+
+Arguments:
+  <PATHNAMES>...  Pathnames to follow
+
+Options:
+  -l, --long         Long listing (equivalent to -m -o -v)
+  -m, --modes        Show the mode bits of each file type
+  -n, --nosymlinks   Don't follow symlinks
+  -o, --owners       Show owner and group name
+  -v, --vertical     Vertically align modes and owners
+  -x, --mountpoints  Show mountpoints with 'D' instead of 'd'
+  -h, --help         Print help

@@ -1,0 +1,14 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"uuidparse\", \"00000000-0000-0000-0000-000000000000\",\n\"ffffffff-ffff-ffff-ffff-ffffffffffff\",])"
+---
+Args {
+    json: false,
+    noheadings: false,
+    output: None,
+    raw: false,
+    uuids: [
+        "00000000-0000-0000-0000-000000000000",
+        "ffffffff-ffff-ffff-ffff-ffffffffffff",
+    ],
+}

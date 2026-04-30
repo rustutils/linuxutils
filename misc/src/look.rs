@@ -12,7 +12,7 @@ use std::{
 const DEFAULT_DICT: &str = "/usr/share/dict/words";
 const ALT_DICT: &str = "/usr/share/dict/web2";
 
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(
     name = "look",

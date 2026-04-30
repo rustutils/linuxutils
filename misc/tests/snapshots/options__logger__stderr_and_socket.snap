@@ -1,0 +1,18 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"logger\", \"-s\", \"-u\", \"/tmp/log.sock\", \"test\",])"
+---
+Args {
+    log_pid: false,
+    file: None,
+    skip_empty: false,
+    priority: "user.notice",
+    stderr: true,
+    tag: None,
+    socket: Some(
+        "/tmp/log.sock",
+    ),
+    message: [
+        "test",
+    ],
+}

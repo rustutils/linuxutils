@@ -1,0 +1,15 @@
+---
+source: misc/tests/help.rs
+expression: "help_output(\"kill\")"
+---
+Terminate a process
+
+Usage: kill [-s <signal>|-<signal>] <pid>...
+       kill -l [<number>]
+       kill -L
+
+Arguments:
+  [ARGS]...  
+
+Options:
+  -h, --help  Print help

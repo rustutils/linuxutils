@@ -1,0 +1,11 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"mcookie\", \"-f\", \"/dev/urandom\",])"
+---
+Args {
+    file: Some(
+        "/dev/urandom",
+    ),
+    max_size: None,
+    verbose: false,
+}

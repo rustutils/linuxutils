@@ -1,0 +1,15 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"namei\", \"-l\", \"/etc\"])"
+---
+Args {
+    long: true,
+    modes: false,
+    nosymlinks: false,
+    owners: false,
+    vertical: false,
+    mountpoints: false,
+    pathnames: [
+        "/etc",
+    ],
+}

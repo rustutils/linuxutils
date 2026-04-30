@@ -9,7 +9,7 @@ use rustix::{
 };
 use std::{process::ExitCode, time::Instant};
 
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "waitpid", about = "Wait for arbitrary processes to exit")]
 pub struct Args {

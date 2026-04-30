@@ -1,0 +1,18 @@
+---
+source: misc/tests/options.rs
+expression: "parse::<Args>(&[\"rename\", \"-a\", \"foo\", \"bar\", \"foofoo.txt\",])"
+---
+Args {
+    symlink: false,
+    verbose: false,
+    no_act: false,
+    all: true,
+    last: false,
+    no_overwrite: false,
+    interactive: false,
+    expression: "foo",
+    replacement: "bar",
+    files: [
+        "foofoo.txt",
+    ],
+}

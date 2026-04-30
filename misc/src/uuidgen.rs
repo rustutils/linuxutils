@@ -6,7 +6,7 @@ use clap::Parser;
 use std::process::ExitCode;
 use uuid::Uuid;
 
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "uuidgen", version, about = "Create a new UUID value")]
 pub struct Args {

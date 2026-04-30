@@ -9,7 +9,7 @@ use std::{
     process::ExitCode,
 };
 
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(
     name = "rename",

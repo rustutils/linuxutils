@@ -49,7 +49,7 @@ const LEVELS: &[(&str, u8)] = &[
     ("warn", 4),
 ];
 
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "logger", about = "Enter messages into the system log")]
 pub struct Args {
