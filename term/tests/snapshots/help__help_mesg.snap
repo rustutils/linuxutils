@@ -1,5 +1,5 @@
 ---
-source: term/tests/help_snapshots.rs
+source: term/tests/help.rs
 expression: "help_output(\"mesg\")"
 ---
 Display (or do not display) messages from other users

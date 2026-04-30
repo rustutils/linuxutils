@@ -1,0 +1,14 @@
+---
+source: term/tests/options.rs
+expression: "parse::<Args>(&[\"wall\", \"-n\", \"-t\", \"120\", \"-g\", \"wheel\", \"hi\",])"
+---
+Args {
+    nobanner: true,
+    timeout: 120,
+    group: Some(
+        "wheel",
+    ),
+    message: [
+        "hi",
+    ],
+}

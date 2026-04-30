@@ -1,0 +1,12 @@
+---
+source: term/tests/options.rs
+expression: "parse::<Args>(&[\"wall\", \"system going down at 5pm\",])"
+---
+Args {
+    nobanner: false,
+    timeout: 300,
+    group: None,
+    message: [
+        "system going down at 5pm",
+    ],
+}

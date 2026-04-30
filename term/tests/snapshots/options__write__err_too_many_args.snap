@@ -1,0 +1,10 @@
+---
+source: term/tests/options.rs
+expression: "parse::<Args>(&[\"write\", \"alice\", \"pts/1\", \"extra\",])"
+---
+ERROR:
+error: unexpected argument 'extra' found
+
+Usage: write <USER> [TTYNAME]
+
+For more information, try '--help'.

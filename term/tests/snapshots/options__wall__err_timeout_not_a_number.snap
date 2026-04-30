@@ -1,0 +1,8 @@
+---
+source: term/tests/options.rs
+expression: "parse::<Args>(&[\"wall\", \"-t\", \"abc\"])"
+---
+ERROR:
+error: invalid value 'abc' for '--timeout <TIMEOUT>': invalid digit found in string
+
+For more information, try '--help'.

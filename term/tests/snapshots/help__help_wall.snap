@@ -1,5 +1,5 @@
 ---
-source: term/tests/help_snapshots.rs
+source: term/tests/help.rs
 expression: "help_output(\"wall\")"
 ---
 Write a message to all users

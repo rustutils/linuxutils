@@ -15,7 +15,7 @@ const UTMP_RECORD_SIZE: usize = 384;
 const UT_USER_PROCESS: i16 = 7;
 const LINE_WIDTH: usize = 79;
 
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "wall", about = "Write a message to all users")]
 pub struct Args {

@@ -1,0 +1,10 @@
+---
+source: term/tests/options.rs
+expression: "parse::<Args>(&[\"mesg\", \"n\"])"
+---
+Args {
+    verbose: false,
+    action: Some(
+        false,
+    ),
+}

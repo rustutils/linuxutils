@@ -1,0 +1,11 @@
+---
+source: term/tests/options.rs
+expression: "parse::<Args>(&[\"write\"])"
+---
+ERROR:
+error: the following required arguments were not provided:
+  <USER>
+
+Usage: write <USER> [TTYNAME]
+
+For more information, try '--help'.

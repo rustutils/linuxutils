@@ -1,0 +1,8 @@
+---
+source: term/tests/options.rs
+expression: "parse::<Args>(&[\"write\", \"alice\"])"
+---
+Args {
+    user: "alice",
+    ttyname: None,
+}

@@ -1,0 +1,14 @@
+---
+source: term/tests/options.rs
+expression: "parse::<Args>(&[\"wall\", \"going\", \"down\", \"now\",])"
+---
+Args {
+    nobanner: false,
+    timeout: 300,
+    group: None,
+    message: [
+        "going",
+        "down",
+        "now",
+    ],
+}

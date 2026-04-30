@@ -1,0 +1,10 @@
+---
+source: term/tests/options.rs
+expression: "parse::<Args>(&[\"wall\"])"
+---
+Args {
+    nobanner: false,
+    timeout: 300,
+    group: None,
+    message: [],
+}

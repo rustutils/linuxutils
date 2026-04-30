@@ -16,7 +16,7 @@ const UTMP_PATH: &str = "/run/utmp";
 const UTMP_RECORD_SIZE: usize = 384;
 const UT_USER_PROCESS: i16 = 7;
 
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "write", about = "Send a message to another user")]
 pub struct Args {

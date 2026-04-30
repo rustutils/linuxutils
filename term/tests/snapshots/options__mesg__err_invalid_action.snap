@@ -1,0 +1,8 @@
+---
+source: term/tests/options.rs
+expression: "parse::<Args>(&[\"mesg\", \"yes\"])"
+---
+ERROR:
+error: invalid value 'yes' for '[ACTION]': invalid argument: 'yes' (expected 'y' or 'n')
+
+For more information, try '--help'.
