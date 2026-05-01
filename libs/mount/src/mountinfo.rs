@@ -17,11 +17,15 @@
 //! Reference: `Documentation/filesystems/proc.rst` in the kernel
 //! source, and `mnt_unmangle()` in upstream libmount.
 
-use crate::{MountEntry, MountTable, OptionList, Propagation, Spec, escape::unmangle};
-use std::ffi::OsString;
-use std::io::{self, BufRead};
-use std::os::unix::ffi::OsStringExt;
-use std::path::PathBuf;
+use crate::{
+    MountEntry, MountTable, OptionList, Propagation, Spec, escape::unmangle,
+};
+use std::{
+    ffi::OsString,
+    io::{self, BufRead},
+    os::unix::ffi::OsStringExt,
+    path::PathBuf,
+};
 
 impl MountTable {
     /// Parse a `/proc/<pid>/mountinfo`-style stream.
@@ -56,7 +60,10 @@ fn parse_line(line: &[u8]) -> Result<MountEntry, String> {
         .collect();
 
     if fields.len() < 10 {
-        return Err(format!("expected at least 10 fields, got {}", fields.len()));
+        return Err(format!(
+            "expected at least 10 fields, got {}",
+            fields.len()
+        ));
     }
 
     let mount_id = parse_i32(fields[0], "mount ID")?;
@@ -116,14 +123,18 @@ fn parse_i32(b: &[u8], what: &str) -> Result<i32, String> {
     std::str::from_utf8(b)
         .ok()
         .and_then(|s| s.parse().ok())
-        .ok_or_else(|| format!("invalid {what}: {}", String::from_utf8_lossy(b)))
+        .ok_or_else(|| {
+            format!("invalid {what}: {}", String::from_utf8_lossy(b))
+        })
 }
 
 fn parse_u64(b: &[u8], what: &str) -> Result<u64, String> {
     std::str::from_utf8(b)
         .ok()
         .and_then(|s| s.parse().ok())
-        .ok_or_else(|| format!("invalid {what}: {}", String::from_utf8_lossy(b)))
+        .ok_or_else(|| {
+            format!("invalid {what}: {}", String::from_utf8_lossy(b))
+        })
 }
 
 fn parse_devno(b: &[u8]) -> Result<(u32, u32), String> {
@@ -132,12 +143,8 @@ fn parse_devno(b: &[u8]) -> Result<(u32, u32), String> {
     let (maj, min) = s
         .split_once(':')
         .ok_or_else(|| format!("invalid device number: {s}"))?;
-    let maj: u32 = maj
-        .parse()
-        .map_err(|_| format!("invalid major: {maj}"))?;
-    let min: u32 = min
-        .parse()
-        .map_err(|_| format!("invalid minor: {min}"))?;
+    let maj: u32 = maj.parse().map_err(|_| format!("invalid major: {maj}"))?;
+    let min: u32 = min.parse().map_err(|_| format!("invalid minor: {min}"))?;
     Ok((maj, min))
 }
 
@@ -251,23 +258,14 @@ mod tests {
         assert_eq!(e.root, Some(PathBuf::from("/")));
         assert_eq!(e.target, PathBuf::from("/"));
         assert_eq!(e.fstype, "ext4");
-        assert_eq!(
-            e.source,
-            Spec::Path(PathBuf::from("/dev/sda1"))
-        );
+        assert_eq!(e.source, Spec::Path(PathBuf::from("/dev/sda1")));
         assert_eq!(e.propagation.shared, Some(1));
-        assert_eq!(
-            e.vfs_options.as_ref().unwrap().to_string(),
-            "rw,relatime"
-        );
+        assert_eq!(e.vfs_options.as_ref().unwrap().to_string(), "rw,relatime");
         assert_eq!(
             e.fs_options.as_ref().unwrap().to_string(),
             "rw,errors=remount-ro"
         );
-        assert_eq!(
-            e.options.to_string(),
-            "rw,relatime,rw,errors=remount-ro"
-        );
+        assert_eq!(e.options.to_string(), "rw,relatime,rw,errors=remount-ro");
         assert!(e.freq.is_none());
         assert!(e.passno.is_none());
     }
@@ -276,12 +274,10 @@ mod tests {
     fn unmangles_octal_escapes_in_paths() {
         // Mount point contains a space (\040), tab (\011), and
         // backslash (\134).
-        let line = "1 1 0:1 / /mnt/has\\040space\\011tab\\134bs rw - tmpfs tmpfs rw\n";
+        let line =
+            "1 1 0:1 / /mnt/has\\040space\\011tab\\134bs rw - tmpfs tmpfs rw\n";
         let e = parse_one(line);
-        assert_eq!(
-            e.target,
-            PathBuf::from("/mnt/has space\ttab\\bs")
-        );
+        assert_eq!(e.target, PathBuf::from("/mnt/has space\ttab\\bs"));
     }
 
     #[test]
@@ -340,10 +336,7 @@ mod tests {
     fn optional_fields_join_uses_single_space() {
         let line = "5 1 0:1 / /a rw shared:1 master:2 - tmpfs tmpfs rw\n";
         let e = parse_one(line);
-        assert_eq!(
-            e.optional_fields.as_deref(),
-            Some("shared:1 master:2")
-        );
+        assert_eq!(e.optional_fields.as_deref(), Some("shared:1 master:2"));
     }
 
     #[test]
@@ -385,10 +378,7 @@ mod tests {
         // exist.
         let line = "1 0 0:1 / / rw - ext4 LABEL=root rw\n";
         let e = parse_one(line);
-        assert_eq!(
-            e.source,
-            Spec::Path(PathBuf::from("LABEL=root"))
-        );
+        assert_eq!(e.source, Spec::Path(PathBuf::from("LABEL=root")));
         assert!(matches!(&e.source, Spec::Path(_)));
         let _ = TagKind::Label; // silence unused-import warning
     }

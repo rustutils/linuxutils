@@ -15,6 +15,7 @@
 //! by every filesystem in practice but the API doesn't promise that.
 
 use std::ffi::{OsStr, OsString};
+use std::str::FromStr;
 
 /// An unresolved block-device tag, e.g. `LABEL=root` or
 /// `UUID=12345678-...`.
@@ -61,19 +62,6 @@ impl TagKind {
         }
     }
 
-    /// Parse a prefix name into a [`TagKind`]. Returns `None` for
-    /// unknown prefixes.
-    pub fn from_str(s: &str) -> Option<Self> {
-        match s {
-            "LABEL" => Some(TagKind::Label),
-            "UUID" => Some(TagKind::Uuid),
-            "PARTLABEL" => Some(TagKind::PartLabel),
-            "PARTUUID" => Some(TagKind::PartUuid),
-            "ID" => Some(TagKind::Id),
-            _ => None,
-        }
-    }
-
     /// The udev symlink subdirectory name under `/dev/disk/`.
     pub fn udev_dir(self) -> &'static str {
         match self {
@@ -94,6 +82,36 @@ impl TagKind {
             TagKind::PartUuid,
             TagKind::Id,
         ]
+    }
+}
+
+/// Returned by [`TagKind`]'s [`FromStr`] impl when the prefix is not
+/// one of the recognised kinds.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct UnknownTagKind;
+
+impl std::fmt::Display for UnknownTagKind {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("unknown tag kind")
+    }
+}
+
+impl std::error::Error for UnknownTagKind {}
+
+impl FromStr for TagKind {
+    type Err = UnknownTagKind;
+
+    /// Match the upstream-recognised prefix names. Case-sensitive —
+    /// `mount(8)` rejects lowercased `label=foo`.
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "LABEL" => Ok(TagKind::Label),
+            "UUID" => Ok(TagKind::Uuid),
+            "PARTLABEL" => Ok(TagKind::PartLabel),
+            "PARTUUID" => Ok(TagKind::PartUuid),
+            "ID" => Ok(TagKind::Id),
+            _ => Err(UnknownTagKind),
+        }
     }
 }
 
@@ -123,7 +141,7 @@ impl Tag {
         let bytes = s.as_ref().as_bytes();
         let eq = bytes.iter().position(|&b| b == b'=')?;
         let prefix = std::str::from_utf8(&bytes[..eq]).ok()?;
-        let kind = TagKind::from_str(prefix)?;
+        let kind = prefix.parse().ok()?;
         let value = OsString::from_vec(bytes[eq + 1..].to_vec());
         Some(Tag { kind, value })
     }
@@ -137,7 +155,7 @@ mod tests {
     #[test]
     fn kinds_have_consistent_string_round_trip() {
         for &k in TagKind::all() {
-            assert_eq!(TagKind::from_str(k.as_str()), Some(k));
+            assert_eq!(k.as_str().parse::<TagKind>(), Ok(k));
         }
     }
 
@@ -152,13 +170,13 @@ mod tests {
 
     #[test]
     fn lowercased_prefix_is_unrecognised() {
-        assert_eq!(TagKind::from_str("label"), None);
+        assert_eq!("label".parse::<TagKind>(), Err(UnknownTagKind));
     }
 
     #[test]
     fn parse_and_render_round_trip() {
-        let t = Tag::parse("UUID=12345678-1234-1234-1234-123456789abc")
-            .unwrap();
+        let t =
+            Tag::parse("UUID=12345678-1234-1234-1234-123456789abc").unwrap();
         assert_eq!(t.kind, TagKind::Uuid);
         assert_eq!(
             t.to_os_string(),

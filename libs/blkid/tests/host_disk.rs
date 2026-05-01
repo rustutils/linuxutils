@@ -58,7 +58,8 @@ fn round_trip_uuid_via_resolve_then_reverse() {
     // Reverse: that device's tags include this UUID.
     let tags = cache.tags_for(&device);
     assert!(
-        tags.iter().any(|t| t.kind == TagKind::Uuid && t.value == tag.value),
+        tags.iter()
+            .any(|t| t.kind == TagKind::Uuid && t.value == tag.value),
         "reverse-lookup didn't surface the UUID we just resolved"
     );
 }

@@ -139,7 +139,7 @@ mod tests {
     fn reverse_unicode() {
         let input = "café\n".as_bytes();
         let mut output = Vec::new();
-        rev(&input[..], &mut output, false).unwrap();
+        rev(input, &mut output, false).unwrap();
         assert_eq!(output, "éfac\n".as_bytes());
     }
 }

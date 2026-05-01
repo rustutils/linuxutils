@@ -44,10 +44,7 @@ mod tests {
 
     #[test]
     fn decodes_space_tab_newline_backslash() {
-        assert_eq!(
-            unmangle(b"a\\040b\\011c\\012d\\134e"),
-            b"a b\tc\nd\\e"
-        );
+        assert_eq!(unmangle(b"a\\040b\\011c\\012d\\134e"), b"a b\tc\nd\\e");
     }
 
     #[test]

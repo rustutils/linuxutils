@@ -5,10 +5,11 @@
 //! point at a fake `/dev/disk/` tree under a tempdir.
 
 use linuxutils_common::{Tag, TagKind};
-use std::ffi::{OsStr, OsString};
-use std::fs;
-use std::io;
-use std::path::{Path, PathBuf};
+use std::{
+    ffi::{OsStr, OsString},
+    fs, io,
+    path::{Path, PathBuf},
+};
 
 const DEFAULT_DISK_ROOT: &str = "/dev/disk";
 
@@ -244,6 +245,7 @@ impl std::error::Error for ResolveError {
 mod tests {
     use super::*;
     use std::os::unix;
+    use std::os::unix::ffi::OsStrExt;
     use tempfile::TempDir;
 
     /// Build a fake `/dev/disk/`-style tree under a tempdir:
@@ -304,11 +306,7 @@ mod tests {
     fn resolves_uuid_via_resolve_str() {
         let f = Fixture::new();
         let dev = f.make_device("sda2");
-        f.link_tag(
-            TagKind::Uuid,
-            "12345678-1234-1234-1234-123456789abc",
-            &dev,
-        );
+        f.link_tag(TagKind::Uuid, "12345678-1234-1234-1234-123456789abc", &dev);
 
         let cache = Cache::with_root(&f.root);
         let r = cache
@@ -372,12 +370,9 @@ mod tests {
         let f = Fixture::new();
         let dir = f.root.join("by-uuid");
         fs::create_dir(&dir).unwrap();
-        unix::fs::symlink("/nonexistent/sda99", dir.join("dangling"))
-            .unwrap();
+        unix::fs::symlink("/nonexistent/sda99", dir.join("dangling")).unwrap();
         let cache = Cache::with_root(&f.root);
-        let r = cache
-            .resolve(&Tag::new(TagKind::Uuid, "dangling"))
-            .unwrap();
+        let r = cache.resolve(&Tag::new(TagKind::Uuid, "dangling")).unwrap();
         assert_eq!(r, PathBuf::from("/nonexistent/sda99"));
     }
 

@@ -94,9 +94,10 @@ fn resolve_target(arg: &str) -> Result<PathBuf, String> {
     //    up by source. There can be multiple instances; we pick the
     //    first (matches upstream's default behaviour without
     //    `--all-targets`).
-    if let Some(entry) = mountinfo.iter().find(|e| {
-        matches!(&e.source, Spec::Path(p) if p == &canonical)
-    }) {
+    if let Some(entry) = mountinfo
+        .iter()
+        .find(|e| matches!(&e.source, Spec::Path(p) if p == &canonical))
+    {
         return Ok(entry.target.clone());
     }
 

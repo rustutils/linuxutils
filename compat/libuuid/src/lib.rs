@@ -1,6 +1,9 @@
 #![allow(clippy::missing_safety_doc)]
 
-use std::{ffi::{c_char, CStr}, fmt::Write as _};
+use std::{
+    ffi::{CStr, c_char},
+    fmt::Write as _,
+};
 use uuid::Uuid;
 
 // uuid_t in C is unsigned char[16], so we work with *mut u8 / *const u8.

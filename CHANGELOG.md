@@ -58,6 +58,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Reorganised library layout: `libs/*` is reserved for Rust-native crates,
   with ABI-compat shims relocated to `compat/*` (e.g. `libs/libuuid` →
   `compat/libuuid`).
+- Bumped MSRV to **Rust 1.87** (was 1.85) to use `u*::is_multiple_of`.
 
 ## [0.1.0] - 2026-04-29
 

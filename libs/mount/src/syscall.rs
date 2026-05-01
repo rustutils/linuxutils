@@ -9,9 +9,7 @@
 use crate::MountFlags;
 use bitflags::bitflags;
 use rustix::mount as rustix_mount;
-use std::ffi::CString;
-use std::io;
-use std::path::Path;
+use std::{ffi::CString, io, path::Path};
 
 bitflags! {
     /// Flags accepted by `umount2(2)`.
@@ -43,9 +41,7 @@ fn to_rustix_mount_flags(f: MountFlags) -> rustix_mount::MountFlags {
     rustix_mount::MountFlags::from_bits_retain(bits as u32)
 }
 
-fn to_rustix_unmount_flags(
-    f: UnmountFlags,
-) -> rustix_mount::UnmountFlags {
+fn to_rustix_unmount_flags(f: UnmountFlags) -> rustix_mount::UnmountFlags {
     rustix_mount::UnmountFlags::from_bits_retain(f.bits())
 }
 
@@ -74,9 +70,8 @@ pub fn mount(
 ) -> io::Result<()> {
     let result = match data {
         Some(d) => {
-            let cd = CString::new(d).map_err(|e| {
-                io::Error::new(io::ErrorKind::InvalidInput, e)
-            })?;
+            let cd = CString::new(d)
+                .map_err(|e| io::Error::new(io::ErrorKind::InvalidInput, e))?;
             rustix_mount::mount(
                 source,
                 target,
@@ -105,22 +100,15 @@ pub fn remount(
 ) -> io::Result<()> {
     let cd = match data {
         Some(d) => Some(
-            CString::new(d).map_err(|e| {
-                io::Error::new(io::ErrorKind::InvalidInput, e)
-            })?,
+            CString::new(d)
+                .map_err(|e| io::Error::new(io::ErrorKind::InvalidInput, e))?,
         ),
         None => None,
     };
-    let data_arg: &str = cd
-        .as_deref()
-        .and_then(|c| c.to_str().ok())
-        .unwrap_or("");
-    rustix_mount::mount_remount(
-        target,
-        to_rustix_mount_flags(flags),
-        data_arg,
-    )
-    .map_err(io::Error::from)
+    let data_arg: &str =
+        cd.as_deref().and_then(|c| c.to_str().ok()).unwrap_or("");
+    rustix_mount::mount_remount(target, to_rustix_mount_flags(flags), data_arg)
+        .map_err(io::Error::from)
 }
 
 /// `mount(source, target, NULL, MS_BIND, NULL)` — bind-mount an
@@ -132,17 +120,13 @@ pub fn bind(source: &Path, target: &Path) -> io::Result<()> {
 /// `mount(source, target, NULL, MS_BIND | MS_REC, NULL)` — recursive
 /// bind, includes submounts.
 pub fn rbind(source: &Path, target: &Path) -> io::Result<()> {
-    rustix_mount::mount_bind_recursive(source, target)
-        .map_err(io::Error::from)
+    rustix_mount::mount_bind_recursive(source, target).map_err(io::Error::from)
 }
 
 /// `mount(NULL, target, NULL, prop_flags, NULL)` — change
 /// propagation type (`MS_SHARED` / `MS_SLAVE` / `MS_PRIVATE` /
 /// `MS_UNBINDABLE`, optionally combined with `MS_REC`).
-pub fn change_propagation(
-    target: &Path,
-    flags: MountFlags,
-) -> io::Result<()> {
+pub fn change_propagation(target: &Path, flags: MountFlags) -> io::Result<()> {
     rustix_mount::mount_change(target, to_rustix_propagation_flags(flags))
         .map_err(io::Error::from)
 }
@@ -178,9 +162,8 @@ mod tests {
         // No bits to translate above 31, so converting our
         // MountFlags down to rustix's u32-shaped bitflags should
         // preserve the bit pattern.
-        let ours = MountFlags::RDONLY
-            | MountFlags::NOSUID
-            | MountFlags::NOATIME;
+        let ours =
+            MountFlags::RDONLY | MountFlags::NOSUID | MountFlags::NOATIME;
         let translated = to_rustix_mount_flags(ours);
         assert_eq!(translated.bits() as u64, ours.bits());
     }

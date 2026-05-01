@@ -144,8 +144,7 @@ fn read_mountinfo() -> Result<MountTable, String> {
 }
 
 fn read_fstab(path: &Path) -> Result<MountTable, String> {
-    let f = File::open(path)
-        .map_err(|e| format!("{}: {e}", path.display()))?;
+    let f = File::open(path).map_err(|e| format!("{}: {e}", path.display()))?;
     MountTable::parse_fstab(BufReader::new(f))
         .map_err(|e| format!("{}: {e}", path.display()))
 }
@@ -155,9 +154,9 @@ fn read_fstab(path: &Path) -> Result<MountTable, String> {
 fn resolve_source(spec: &Spec) -> Result<PathBuf, String> {
     match spec {
         Spec::Path(p) => Ok(p.clone()),
-        Spec::Tag(t) => BlkidCache::new()
-            .resolve(t)
-            .map_err(|e| format!("can't resolve {}: {e}", t.to_os_string().to_string_lossy())),
+        Spec::Tag(t) => BlkidCache::new().resolve(t).map_err(|e| {
+            format!("can't resolve {}: {e}", t.to_os_string().to_string_lossy())
+        }),
     }
 }
 
@@ -166,9 +165,9 @@ fn resolve_source(spec: &Spec) -> Result<PathBuf, String> {
 /// our wrapper takes &str — for non-UTF-8 device paths the user can
 /// fall back to a direct numeric/canonical form.
 fn source_arg(p: &Path) -> Result<String, String> {
-    p.to_str()
-        .map(|s| s.to_string())
-        .ok_or_else(|| format!("source path is not valid UTF-8: {}", p.display()))
+    p.to_str().map(|s| s.to_string()).ok_or_else(|| {
+        format!("source path is not valid UTF-8: {}", p.display())
+    })
 }
 
 /// Apply -r/-w shortcuts and explicit -o options on top of any
@@ -266,7 +265,11 @@ fn mount_via_fstab(args: &Args, target: &Path) -> ExitCode {
     let entry = match fstab_lookup(&fstab, target) {
         Some(e) => e,
         None => {
-            eprintln!("mount: {}: not found in {}", target.display(), fstab_path.display());
+            eprintln!(
+                "mount: {}: not found in {}",
+                target.display(),
+                fstab_path.display()
+            );
             return ExitCode::FAILURE;
         }
     };
@@ -332,9 +335,10 @@ fn mount_direct(args: &Args, source_str: &str, target: &Path) -> ExitCode {
             // Bind / remount don't need a meaningful fstype — kernel
             // ignores it. Direct mount of an unknown fs type is a
             // user error.
-            if classified.flags.intersects(
-                MountFlags::BIND | MountFlags::REMOUNT,
-            ) {
+            if classified
+                .flags
+                .intersects(MountFlags::BIND | MountFlags::REMOUNT)
+            {
                 "none".to_string()
             } else {
                 eprintln!(
@@ -385,9 +389,7 @@ pub fn run(args: Args) -> ExitCode {
         }
 
         // Source + target both given.
-        (Some(spec), Some(target), None) => {
-            mount_direct(&args, spec, target)
-        }
+        (Some(spec), Some(target), None) => mount_direct(&args, spec, target),
 
         // -L / -U shortcut + target.
         (None, Some(target), Some(src_os)) => {

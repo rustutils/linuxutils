@@ -5,7 +5,10 @@ pub const MAN: ManContent = ManContent {
     extra_sections: &[
         ("EXAMPLES", include_str!("../man/nologin/examples.man")),
         ("FILES", include_str!("../man/nologin/files.man")),
-        ("EXIT STATUS", include_str!("../man/nologin/exit_status.man")),
+        (
+            "EXIT STATUS",
+            include_str!("../man/nologin/exit_status.man"),
+        ),
         ("SEE ALSO", include_str!("../man/nologin/see_also.man")),
     ],
 };

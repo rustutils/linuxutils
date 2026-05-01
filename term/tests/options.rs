@@ -78,7 +78,8 @@ mod wall {
     #[test]
     fn message_inline() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "wall", "system going down at 5pm",
+            "wall",
+            "system going down at 5pm",
         ]));
     }
 
@@ -96,16 +97,12 @@ mod wall {
 
     #[test]
     fn timeout_flag() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "wall", "-t", "60", "hi",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["wall", "-t", "60", "hi",]));
     }
 
     #[test]
     fn group_flag() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "wall", "-g", "wheel", "hi",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["wall", "-g", "wheel", "hi",]));
     }
 
     #[test]
@@ -141,9 +138,7 @@ mod write {
 
     #[test]
     fn user_and_tty() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "write", "alice", "pts/1",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["write", "alice", "pts/1",]));
     }
 
     // ---- Error cases

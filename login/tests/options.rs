@@ -34,9 +34,7 @@ mod nologin {
 
     #[test]
     fn shell_compat_command_flag() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "nologin", "-c", "echo hi",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["nologin", "-c", "echo hi",]));
     }
 
     #[test]
@@ -47,7 +45,9 @@ mod nologin {
     #[test]
     fn shell_compat_init_file() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "nologin", "--init-file", "/tmp/init",
+            "nologin",
+            "--init-file",
+            "/tmp/init",
         ]));
     }
 

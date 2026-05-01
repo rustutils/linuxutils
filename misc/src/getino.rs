@@ -115,15 +115,14 @@ fn lookup_inode(pid: i32, kind: Kind) -> Result<u64, String> {
             let fd = pidfd_open(p, PidfdFlags::empty()).map_err(|e| {
                 format!("pidfd_open({pid}): {}", std::io::Error::from(e))
             })?;
-            let st = fstat(&fd).map_err(|e| {
-                format!("fstat: {}", std::io::Error::from(e))
-            })?;
+            let st = fstat(&fd)
+                .map_err(|e| format!("fstat: {}", std::io::Error::from(e)))?;
             Ok(st.st_ino as u64)
         }
         Kind::Ns(ns) => {
             let path = format!("/proc/{pid}/ns/{ns}");
-            let meta = std::fs::metadata(&path)
-                .map_err(|e| format!("{path}: {e}"))?;
+            let meta =
+                std::fs::metadata(&path).map_err(|e| format!("{path}: {e}"))?;
             Ok(meta.ino())
         }
     }

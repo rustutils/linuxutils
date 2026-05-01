@@ -33,10 +33,12 @@
 //! libmount.
 
 use crate::{MountEntry, MountTable, OptionList, Spec, escape::unmangle};
-use std::ffi::OsString;
-use std::io::{self, BufRead};
-use std::os::unix::ffi::OsStringExt;
-use std::path::PathBuf;
+use std::{
+    ffi::OsString,
+    io::{self, BufRead},
+    os::unix::ffi::OsStringExt,
+    path::PathBuf,
+};
 
 impl MountTable {
     /// Parse an `/etc/fstab`-style stream.
@@ -87,10 +89,7 @@ fn parse_line(line: &[u8]) -> Result<MountEntry, String> {
         ));
     }
     if fields.len() > 6 {
-        return Err(format!(
-            "expected at most 6 fields, got {}",
-            fields.len()
-        ));
+        return Err(format!("expected at most 6 fields, got {}", fields.len()));
     }
 
     let source_os = OsString::from_vec(unmangle(fields[0]));
@@ -175,10 +174,7 @@ mod tests {
     fn full_six_field_line() {
         let line = "/dev/sda1 / ext4 defaults,errors=remount-ro 0 1\n";
         let e = parse_one(line);
-        assert_eq!(
-            e.source,
-            Spec::Path(PathBuf::from("/dev/sda1"))
-        );
+        assert_eq!(e.source, Spec::Path(PathBuf::from("/dev/sda1")));
         assert_eq!(e.target, PathBuf::from("/"));
         assert_eq!(e.fstype, "ext4");
         assert_eq!(e.options.to_string(), "defaults,errors=remount-ro");
@@ -219,10 +215,7 @@ mod tests {
     fn nfs_source_stays_path() {
         let line = "host:/export /mnt/nfs nfs defaults 0 0\n";
         let e = parse_one(line);
-        assert_eq!(
-            e.source,
-            Spec::Path(PathBuf::from("host:/export"))
-        );
+        assert_eq!(e.source, Spec::Path(PathBuf::from("host:/export")));
     }
 
     #[test]

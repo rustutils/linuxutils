@@ -52,7 +52,9 @@ fn json_default() {
     if skip_if_no_userns() {
         return;
     }
-    insta::assert_snapshot!(trim_trailing(lsirq("basic").args(["-J"]).run_ok()));
+    insta::assert_snapshot!(trim_trailing(
+        lsirq("basic").args(["-J"]).run_ok()
+    ));
 }
 
 #[test]

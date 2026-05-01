@@ -73,7 +73,7 @@ fn no_act_verbose() {
         .args(["-n", "-v", "old", "new", &file_path])
         .assert()
         .success()
-        .stdout(predicate::str::contains(&format!(
+        .stdout(predicate::str::contains(format!(
             "`{file_path}' -> `{expected_new}'"
         )));
 
@@ -95,7 +95,7 @@ fn verbose_output() {
         .args(["-v", "hello", "world", &file_path])
         .assert()
         .success()
-        .stdout(predicate::str::contains(&format!(
+        .stdout(predicate::str::contains(format!(
             "`{file_path}' -> `{expected_new}'"
         )));
 

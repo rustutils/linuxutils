@@ -10,10 +10,11 @@
 //! The [`Tag`] / [`TagKind`] types themselves live in
 //! `linuxutils-common` because libblkid wants the same vocabulary.
 
-use std::ffi::OsStr;
-use std::path::{Path, PathBuf};
-
 pub use linuxutils_common::{Tag, TagKind};
+use std::{
+    ffi::OsStr,
+    path::{Path, PathBuf},
+};
 
 /// A mount source: either a concrete device path or an unresolved tag.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -84,8 +85,7 @@ impl Spec {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::ffi::OsString;
-    use std::os::unix::ffi::OsStrExt;
+    use std::{ffi::OsString, os::unix::ffi::OsStrExt};
 
     #[test]
     fn parses_dev_path() {
@@ -115,10 +115,7 @@ mod tests {
 
     #[test]
     fn lowercased_label_is_path() {
-        assert_eq!(
-            Spec::parse("label=root"),
-            Spec::Path("label=root".into())
-        );
+        assert_eq!(Spec::parse("label=root"), Spec::Path("label=root".into()));
     }
 
     #[test]

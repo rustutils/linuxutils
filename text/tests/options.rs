@@ -26,9 +26,7 @@ mod bits {
 
     #[test]
     fn default_mode() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "bits", "0xeec2",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["bits", "0xeec2",]));
     }
 
     #[test]
@@ -40,29 +38,31 @@ mod bits {
 
     #[test]
     fn binary_mode() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "bits", "-b", "0x10",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["bits", "-b", "0x10",]));
     }
 
     #[test]
     fn grouped_mask_mode() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "bits", "--grouped-mask", "2,22,74,79",
+            "bits",
+            "--grouped-mask",
+            "2,22,74,79",
         ]));
     }
 
     #[test]
     fn explicit_mask_mode() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "bits", "-m", "0x1",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["bits", "-m", "0x1",]));
     }
 
     #[test]
     fn width_override() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "bits", "-w", "64", "--list", "2,22,74,79",
+            "bits",
+            "-w",
+            "64",
+            "--list",
+            "2,22,74,79",
         ]));
     }
 
@@ -75,16 +75,12 @@ mod bits {
 
     #[test]
     fn err_conflicting_modes() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "bits", "-l", "-b", "0x1",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["bits", "-l", "-b", "0x1",]));
     }
 
     #[test]
     fn err_width_not_a_number() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "bits", "-w", "abc",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["bits", "-w", "abc",]));
     }
 }
 
@@ -118,9 +114,7 @@ mod colrm {
 
     #[test]
     fn err_too_many_args() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "colrm", "1", "2", "3",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["colrm", "1", "2", "3",]));
     }
 }
 
@@ -137,9 +131,7 @@ mod column {
 
     #[test]
     fn input_files() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "column", "a.txt", "b.txt",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["column", "a.txt", "b.txt",]));
     }
 
     #[test]
@@ -149,9 +141,7 @@ mod column {
 
     #[test]
     fn output_width() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "column", "-c", "120",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["column", "-c", "120",]));
     }
 
     // ---- Table mode (-t)
@@ -164,15 +154,16 @@ mod column {
     #[test]
     fn table_with_columns() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "column", "-t", "-N", "NAME,SIZE,USE",
+            "column",
+            "-t",
+            "-N",
+            "NAME,SIZE,USE",
         ]));
     }
 
     #[test]
     fn table_with_separator() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "column", "-t", "-s", ":",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["column", "-t", "-s", ":",]));
     }
 
     #[test]
@@ -231,9 +222,7 @@ mod column {
 
     #[test]
     fn err_table_columns_limit_not_a_number() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "column", "-t", "-l", "abc",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["column", "-t", "-l", "abc",]));
     }
 }
 
@@ -245,30 +234,30 @@ mod hexdump {
 
     #[test]
     fn canonical() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "hexdump", "-C", "input.bin",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(
+            &["hexdump", "-C", "input.bin",]
+        ));
     }
 
     #[test]
     fn one_byte_octal() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "hexdump", "-b", "input.bin",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(
+            &["hexdump", "-b", "input.bin",]
+        ));
     }
 
     #[test]
     fn one_byte_hex() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "hexdump", "-X", "input.bin",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(
+            &["hexdump", "-X", "input.bin",]
+        ));
     }
 
     #[test]
     fn two_bytes_decimal() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "hexdump", "-d", "input.bin",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(
+            &["hexdump", "-d", "input.bin",]
+        ));
     }
 
     // ---- Length and skip
@@ -276,14 +265,22 @@ mod hexdump {
     #[test]
     fn length_and_skip() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "hexdump", "-n", "256", "-s", "1024", "input.bin",
+            "hexdump",
+            "-n",
+            "256",
+            "-s",
+            "1024",
+            "input.bin",
         ]));
     }
 
     #[test]
     fn no_squeezing() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "hexdump", "-v", "-C", "input.bin",
+            "hexdump",
+            "-v",
+            "-C",
+            "input.bin",
         ]));
     }
 
@@ -303,9 +300,7 @@ mod hexdump {
 
     #[test]
     fn err_length_not_a_number() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "hexdump", "-n", "abc",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["hexdump", "-n", "abc",]));
     }
 
     #[test]
@@ -354,9 +349,7 @@ mod rev {
 
     #[test]
     fn multiple_files() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "rev", "a.txt", "b.txt",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["rev", "a.txt", "b.txt",]));
     }
 
     #[test]

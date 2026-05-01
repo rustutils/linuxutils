@@ -19,10 +19,12 @@
 //! `mnt_table_parse_swaps()` in upstream libmount.
 
 use crate::{MountEntry, MountTable, Spec, escape::unmangle};
-use std::ffi::OsString;
-use std::io::{self, BufRead};
-use std::os::unix::ffi::OsStringExt;
-use std::path::PathBuf;
+use std::{
+    ffi::OsString,
+    io::{self, BufRead},
+    os::unix::ffi::OsStringExt,
+    path::PathBuf,
+};
 
 const HEADER_PREFIX: &[u8] = b"Filename";
 
@@ -144,10 +146,7 @@ mod tests {
         let input = "Filename\t\t\t\tType\t\tSize\t\tUsed\t\tPriority\n\
                      /dev/sda5                               partition\t2097148\t\t0\t\t-2\n";
         let e = parse_one(input);
-        assert_eq!(
-            e.source,
-            Spec::Path(PathBuf::from("/dev/sda5"))
-        );
+        assert_eq!(e.source, Spec::Path(PathBuf::from("/dev/sda5")));
         assert_eq!(e.fstype, "swap");
         assert_eq!(e.swap_type.as_deref(), Some("partition"));
         assert_eq!(e.swap_size, Some(2097148 * 1024));
@@ -164,10 +163,7 @@ mod tests {
         let input = "Filename\tType\tSize\tUsed\tPriority\n\
                      /swapfile\tfile\t1048572\t512\t-3\n";
         let e = parse_one(input);
-        assert_eq!(
-            e.source,
-            Spec::Path(PathBuf::from("/swapfile"))
-        );
+        assert_eq!(e.source, Spec::Path(PathBuf::from("/swapfile")));
         assert_eq!(e.swap_type.as_deref(), Some("file"));
         assert_eq!(e.swap_used, Some(512 * 1024));
     }
@@ -177,10 +173,7 @@ mod tests {
         let input = "Filename\tType\tSize\tUsed\tPriority\n\
                      /var/swap\\040file\tfile\t1024\t0\t-1\n";
         let e = parse_one(input);
-        assert_eq!(
-            e.source,
-            Spec::Path(PathBuf::from("/var/swap file"))
-        );
+        assert_eq!(e.source, Spec::Path(PathBuf::from("/var/swap file")));
     }
 
     #[test]

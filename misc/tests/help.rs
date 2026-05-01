@@ -118,4 +118,3 @@ fn help_waitpid() {
 fn help_whereis() {
     insta::assert_snapshot!(help_output("whereis"));
 }
-

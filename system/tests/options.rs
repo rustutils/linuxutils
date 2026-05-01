@@ -44,7 +44,9 @@ mod blkdiscard {
     #[test]
     fn secure_discard() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "blkdiscard", "-s", "/dev/sda",
+            "blkdiscard",
+            "-s",
+            "/dev/sda",
         ]));
     }
 
@@ -62,7 +64,11 @@ mod blkdiscard {
     #[test]
     fn force_quiet_verbose() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "blkdiscard", "-f", "-q", "-v", "/dev/sda",
+            "blkdiscard",
+            "-f",
+            "-q",
+            "-v",
+            "/dev/sda",
         ]));
     }
 
@@ -76,7 +82,10 @@ mod blkdiscard {
     #[test]
     fn err_offset_not_a_number() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "blkdiscard", "-o", "abc", "/dev/sda",
+            "blkdiscard",
+            "-o",
+            "abc",
+            "/dev/sda",
         ]));
     }
 }
@@ -214,10 +223,7 @@ mod dmesg {
     #[test]
     fn follow_with_color() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "dmesg",
-            "-w",
-            "--color",
-            "always",
+            "dmesg", "-w", "--color", "always",
         ]));
     }
 
@@ -286,10 +292,7 @@ mod eject {
     #[test]
     fn manualeject_on() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "eject",
-            "-i",
-            "on",
-            "/dev/sr0",
+            "eject", "-i", "on", "/dev/sr0",
         ]));
     }
 
@@ -326,14 +329,7 @@ mod fadvise {
     #[test]
     fn willneed_with_range() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "fadvise",
-            "-a",
-            "willneed",
-            "-o",
-            "0",
-            "-l",
-            "65536",
-            "data.bin",
+            "fadvise", "-a", "willneed", "-o", "0", "-l", "65536", "data.bin",
         ]));
     }
 
@@ -371,14 +367,22 @@ mod fallocate {
     #[test]
     fn length_and_filename() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "fallocate", "-l", "1M", "out.bin",
+            "fallocate",
+            "-l",
+            "1M",
+            "out.bin",
         ]));
     }
 
     #[test]
     fn length_with_offset() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "fallocate", "-l", "4K", "-o", "1024", "out.bin",
+            "fallocate",
+            "-l",
+            "4K",
+            "-o",
+            "1024",
+            "out.bin",
         ]));
     }
 
@@ -398,7 +402,9 @@ mod fallocate {
     #[test]
     fn dig_holes() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "fallocate", "-d", "data.bin",
+            "fallocate",
+            "-d",
+            "data.bin",
         ]));
     }
 
@@ -419,7 +425,11 @@ mod fallocate {
     #[test]
     fn posix_fallocate() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "fallocate", "-x", "-l", "1G", "out.bin",
+            "fallocate",
+            "-x",
+            "-l",
+            "1G",
+            "out.bin",
         ]));
     }
 
@@ -433,7 +443,12 @@ mod fallocate {
     #[test]
     fn err_conflicting_modes() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "fallocate", "-c", "-p", "-l", "4K", "data.bin",
+            "fallocate",
+            "-c",
+            "-p",
+            "-l",
+            "4K",
+            "data.bin",
         ]));
     }
 }
@@ -451,14 +466,19 @@ mod flock {
     #[test]
     fn file_command() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "flock", "/var/lock/myapp", "mycmd",
+            "flock",
+            "/var/lock/myapp",
+            "mycmd",
         ]));
     }
 
     #[test]
     fn shared_lock() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "flock", "-s", "/var/lock/myapp", "mycmd",
+            "flock",
+            "-s",
+            "/var/lock/myapp",
+            "mycmd",
         ]));
     }
 
@@ -610,11 +630,7 @@ mod fstrim {
     #[test]
     fn types_filter_verbose() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "fstrim",
-            "-t",
-            "ext4,xfs",
-            "-v",
-            "-a",
+            "fstrim", "-t", "ext4,xfs", "-v", "-a",
         ]));
     }
 
@@ -627,9 +643,7 @@ mod fstrim {
 
     #[test]
     fn err_minimum_not_a_number() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "fstrim", "-m", "abc", "/",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["fstrim", "-m", "abc", "/",]));
     }
 }
 
@@ -644,9 +658,7 @@ mod ipcmk {
 
     #[test]
     fn shared_memory() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "ipcmk", "-M", "65536",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["ipcmk", "-M", "65536",]));
     }
 
     #[test]
@@ -695,9 +707,7 @@ mod ipcrm {
 
     #[test]
     fn shmem_key_hex() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "ipcrm", "-M", "0x1234abcd",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["ipcrm", "-M", "0x1234abcd",]));
     }
 
     #[test]
@@ -720,7 +730,10 @@ mod ipcrm {
     #[test]
     fn verbose_with_targets() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "ipcrm", "-v", "-Q", "0xdeadbeef",
+            "ipcrm",
+            "-v",
+            "-Q",
+            "0xdeadbeef",
         ]));
     }
 }
@@ -796,7 +809,9 @@ mod losetup {
     #[test]
     fn detach() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "losetup", "-d", "/dev/loop0",
+            "losetup",
+            "-d",
+            "/dev/loop0",
         ]));
     }
 
@@ -821,15 +836,15 @@ mod losetup {
     #[test]
     fn associated_filter() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "losetup", "-j", "/path/to/file.img",
+            "losetup",
+            "-j",
+            "/path/to/file.img",
         ]));
     }
 
     #[test]
     fn list_table_format() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "losetup", "-l", "-n",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["losetup", "-l", "-n",]));
     }
 
     #[test]
@@ -950,16 +965,12 @@ mod lsirq {
 
     #[test]
     fn softirq_threshold() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "lsirq", "-S", "-t", "100",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["lsirq", "-S", "-t", "100",]));
     }
 
     #[test]
     fn cpu_list() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "lsirq", "-C", "0,1,2,3",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["lsirq", "-C", "0,1,2,3",]));
     }
 }
 
@@ -994,15 +1005,15 @@ mod lsmem {
     #[test]
     fn raw_output_all() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "lsmem", "-r", "--output-all",
+            "lsmem",
+            "-r",
+            "--output-all",
         ]));
     }
 
     #[test]
     fn split_columns() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "lsmem", "-S", "STATE,NODE",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["lsmem", "-S", "STATE,NODE",]));
     }
 
     #[test]
@@ -1021,7 +1032,9 @@ mod lsmem {
     #[test]
     fn err_invalid_summary() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "lsmem", "--summary", "bogus",
+            "lsmem",
+            "--summary",
+            "bogus",
         ]));
     }
 }
@@ -1047,9 +1060,9 @@ mod lsns {
 
     #[test]
     fn json_output_all() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "lsns", "-J", "--output-all",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(
+            &["lsns", "-J", "--output-all",]
+        ));
     }
 
     #[test]
@@ -1069,10 +1082,7 @@ mod lsns {
 
     #[test]
     fn namespace_inode() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "lsns",
-            "4026531840",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["lsns", "4026531840",]));
     }
 
     // ---- Error cases
@@ -1096,29 +1106,29 @@ mod mountpoint {
 
     #[test]
     fn quiet() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "mountpoint", "-q", "/mnt",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["mountpoint", "-q", "/mnt",]));
     }
 
     #[test]
     fn fs_devno() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "mountpoint", "-d", "/mnt",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["mountpoint", "-d", "/mnt",]));
     }
 
     #[test]
     fn devno_block_device() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "mountpoint", "-x", "/dev/sda1",
+            "mountpoint",
+            "-x",
+            "/dev/sda1",
         ]));
     }
 
     #[test]
     fn nofollow() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "mountpoint", "--nofollow", "/mnt/link",
+            "mountpoint",
+            "--nofollow",
+            "/mnt/link",
         ]));
     }
 
@@ -1132,14 +1142,20 @@ mod mountpoint {
     #[test]
     fn err_devno_conflicts_with_quiet() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "mountpoint", "-x", "-q", "/dev/sda1",
+            "mountpoint",
+            "-x",
+            "-q",
+            "/dev/sda1",
         ]));
     }
 
     #[test]
     fn err_devno_conflicts_with_fs_devno() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "mountpoint", "-d", "-x", "/dev/sda1",
+            "mountpoint",
+            "-d",
+            "-x",
+            "/dev/sda1",
         ]));
     }
 }
@@ -1193,18 +1209,8 @@ mod nsenter {
     #[test]
     fn root_workdir_setuid_setgid() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "nsenter",
-            "-t",
-            "1234",
-            "-r",
-            "/",
-            "-w",
-            "/tmp",
-            "-S",
-            "1000",
-            "-G",
-            "1000",
-            "ls",
+            "nsenter", "-t", "1234", "-r", "/", "-w", "/tmp", "-S", "1000",
+            "-G", "1000", "ls",
         ]));
     }
 
@@ -1212,9 +1218,7 @@ mod nsenter {
 
     #[test]
     fn err_target_not_a_number() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "nsenter", "-t", "abc",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["nsenter", "-t", "abc",]));
     }
 }
 
@@ -1252,9 +1256,7 @@ mod pipesz {
 
     #[test]
     fn stdout_stderr() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "pipesz", "-g", "-o", "-e",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["pipesz", "-g", "-o", "-e",]));
     }
 
     #[test]
@@ -1303,16 +1305,18 @@ mod pivot_root {
 
     #[test]
     fn err_missing_put_old() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "pivot_root",
-            "/mnt/newroot",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(
+            &["pivot_root", "/mnt/newroot",]
+        ));
     }
 
     #[test]
     fn err_too_many_args() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "pivot_root", "/a", "/b", "/c",
+            "pivot_root",
+            "/a",
+            "/b",
+            "/c",
         ]));
     }
 }
@@ -1388,9 +1392,7 @@ mod prlimit {
 
     #[test]
     fn err_pid_not_a_number() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "prlimit", "-p", "abc",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["prlimit", "-p", "abc",]));
     }
 
     #[test]
@@ -1417,9 +1419,7 @@ mod renice {
 
     #[test]
     fn priority_negative_pid() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "renice", "-5", "1234",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["renice", "-5", "1234",]));
     }
 
     #[test]
@@ -1432,7 +1432,11 @@ mod renice {
     #[test]
     fn relative_priority() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "renice", "-n", "5", "--relative", "1234",
+            "renice",
+            "-n",
+            "5",
+            "--relative",
+            "1234",
         ]));
     }
 
@@ -1514,9 +1518,7 @@ mod rfkill {
 
     #[test]
     fn list_with_type() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "rfkill", "list", "wlan",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["rfkill", "list", "wlan",]));
     }
 
     // ---- Subcommand: block
@@ -1529,7 +1531,9 @@ mod rfkill {
     #[test]
     fn block_by_type() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "rfkill", "block", "bluetooth",
+            "rfkill",
+            "block",
+            "bluetooth",
         ]));
     }
 
@@ -1537,18 +1541,14 @@ mod rfkill {
 
     #[test]
     fn unblock_all() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "rfkill", "unblock", "all",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["rfkill", "unblock", "all",]));
     }
 
     // ---- Subcommand: toggle
 
     #[test]
     fn toggle_wifi() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "rfkill", "toggle", "wifi",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["rfkill", "toggle", "wifi",]));
     }
 
     // ---- Error cases
@@ -1586,15 +1586,16 @@ mod setpgid {
 
     #[test]
     fn foreground() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "setpgid", "-f", "myprog",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["setpgid", "-f", "myprog",]));
     }
 
     #[test]
     fn foreground_long() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "setpgid", "--foreground", "myprog", "arg",
+            "setpgid",
+            "--foreground",
+            "myprog",
+            "arg",
         ]));
     }
 
@@ -1625,9 +1626,7 @@ mod setsid {
 
     #[test]
     fn ctty() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "setsid", "-c", "myprog",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["setsid", "-c", "myprog",]));
     }
 
     #[test]
@@ -1639,9 +1638,7 @@ mod setsid {
 
     #[test]
     fn wait() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "setsid", "-w", "myprog",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["setsid", "-w", "myprog",]));
     }
 
     #[test]
@@ -1680,15 +1677,15 @@ mod swapoff {
 
     #[test]
     fn single_device() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "swapoff", "/dev/sda2",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["swapoff", "/dev/sda2",]));
     }
 
     #[test]
     fn multiple_devices() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "swapoff", "/dev/sda2", "/swapfile",
+            "swapoff",
+            "/dev/sda2",
+            "/swapfile",
         ]));
     }
 
@@ -1721,9 +1718,7 @@ mod swapon {
 
     #[test]
     fn single_device() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "swapon", "/dev/sda2",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["swapon", "/dev/sda2",]));
     }
 
     #[test]
@@ -1740,9 +1735,7 @@ mod swapon {
 
     #[test]
     fn discard_no_value() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "swapon", "-d", "/swapfile",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["swapon", "-d", "/swapfile",]));
     }
 
     #[test]
@@ -1763,9 +1756,7 @@ mod swapon {
 
     #[test]
     fn ifexists_verbose() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "swapon", "-e", "-v", "-a",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["swapon", "-e", "-v", "-a",]));
     }
 
     // ---- Error cases
@@ -1773,7 +1764,10 @@ mod swapon {
     #[test]
     fn err_priority_not_a_number() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "swapon", "-p", "abc", "/swapfile",
+            "swapon",
+            "-p",
+            "abc",
+            "/swapfile",
         ]));
     }
 }
@@ -1789,9 +1783,7 @@ mod unshare {
 
     #[test]
     fn mount_uts_ipc() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "unshare", "-m", "-u", "-i",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["unshare", "-m", "-u", "-i",]));
     }
 
     #[test]
@@ -1803,9 +1795,7 @@ mod unshare {
 
     #[test]
     fn map_current_user() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "unshare", "-c", "bash",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["unshare", "-c", "bash",]));
     }
 
     #[test]
@@ -1844,17 +1834,8 @@ mod unshare {
     #[test]
     fn root_workdir_setuid() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "unshare",
-            "-m",
-            "-R",
-            "/newroot",
-            "-w",
-            "/tmp",
-            "-S",
-            "1000",
-            "-G",
-            "1000",
-            "bash",
+            "unshare", "-m", "-R", "/newroot", "-w", "/tmp", "-S", "1000",
+            "-G", "1000", "bash",
         ]));
     }
 
@@ -1873,8 +1854,6 @@ mod unshare {
 
     #[test]
     fn err_setuid_not_a_number() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "unshare", "-S", "abc",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["unshare", "-S", "abc",]));
     }
 }

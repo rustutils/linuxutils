@@ -4,7 +4,10 @@ use std::process::ExitCode;
 mod mangen;
 
 #[derive(Parser)]
-#[command(name = "xtask", about = "Developer-only tasks for the linuxutils workspace")]
+#[command(
+    name = "xtask",
+    about = "Developer-only tasks for the linuxutils workspace"
+)]
 enum Cmd {
     /// Generate man pages for every linuxutils tool.
     Mangen {

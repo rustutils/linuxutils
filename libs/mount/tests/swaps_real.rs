@@ -3,8 +3,7 @@
 //! just be a header line and no entries).
 
 use linuxutils_mount::{MountTable, Spec};
-use std::fs::File;
-use std::io::BufReader;
+use std::{fs::File, io::BufReader};
 
 #[test]
 fn parses_host_swaps() {

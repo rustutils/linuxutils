@@ -102,7 +102,11 @@ impl OptionList {
     /// semantics. Returns `Some(&None)` for a name that exists as a
     /// bare flag (`ro`), or `Some(&Some(value))` for `name=value`.
     pub fn last_value(&self, name: &str) -> Option<&Option<String>> {
-        self.0.iter().rev().find(|o| o.name == name).map(|o| &o.value)
+        self.0
+            .iter()
+            .rev()
+            .find(|o| o.name == name)
+            .map(|o| &o.value)
     }
 
     /// Whether the option name appears at least once.
@@ -194,10 +198,7 @@ mod tests {
     #[test]
     fn empty_value_is_kv_with_empty_string() {
         // `name=` is a kv pair with empty value, distinct from a bare flag.
-        assert_eq!(
-            OptionList::parse("foo=").as_slice(),
-            &[kv("foo", "")]
-        );
+        assert_eq!(OptionList::parse("foo=").as_slice(), &[kv("foo", "")]);
     }
 
     #[test]
@@ -217,10 +218,7 @@ mod tests {
         assert_eq!(l.last_value("ro"), Some(&None));
         // Mixed: `uid=0,uid=1000,uid=500` should yield 500.
         let l = OptionList::parse("uid=0,uid=1000,uid=500");
-        assert_eq!(
-            l.last_value("uid"),
-            Some(&Some("500".to_string()))
-        );
+        assert_eq!(l.last_value("uid"), Some(&Some("500".to_string())));
     }
 
     #[test]

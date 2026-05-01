@@ -2,9 +2,9 @@ use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
 pub const MAN: ManContent = ManContent::empty();
 
+use crate::sysfs::SysfsDevice;
 use clap::Parser;
 use cols::{OutputMode, Table, WidthHint, print_table};
-use crate::sysfs::SysfsDevice;
 use std::{
     path::{Path, PathBuf},
     process::ExitCode,

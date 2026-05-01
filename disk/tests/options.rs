@@ -51,7 +51,9 @@ mod blockdev {
     #[test]
     fn getsize64_device() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "blockdev", "--getsize64", "/dev/sda",
+            "blockdev",
+            "--getsize64",
+            "/dev/sda",
         ]));
     }
 
@@ -79,7 +81,10 @@ mod blockdev {
     #[test]
     fn multiple_commands_one_device() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "blockdev", "--getro", "--getsize64", "/dev/sda",
+            "blockdev",
+            "--getro",
+            "--getsize64",
+            "/dev/sda",
         ]));
     }
 
@@ -90,7 +95,11 @@ mod blockdev {
         // interpreted later. Pinned so any future change to make them
         // real flags is intentional.
         insta::assert_snapshot!(parse::<Args>(&[
-            "blockdev", "-q", "-v", "--getsize64", "/dev/sda",
+            "blockdev",
+            "-q",
+            "-v",
+            "--getsize64",
+            "/dev/sda",
         ]));
     }
 
@@ -120,15 +129,18 @@ mod isosize {
 
     #[test]
     fn sectors_flag() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "isosize", "-x", "image.iso",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(
+            &["isosize", "-x", "image.iso",]
+        ));
     }
 
     #[test]
     fn divisor_flag() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "isosize", "-d", "1024", "image.iso",
+            "isosize",
+            "-d",
+            "1024",
+            "image.iso",
         ]));
     }
 
@@ -158,7 +170,10 @@ mod isosize {
     #[test]
     fn err_divisor_not_a_number() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "isosize", "-d", "abc", "image.iso",
+            "isosize",
+            "-d",
+            "abc",
+            "image.iso",
         ]));
     }
 }
@@ -194,8 +209,13 @@ mod mount {
     #[test]
     fn direct_form_with_options() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "mount", "-t", "ext4", "-o", "ro,noatime",
-            "/dev/sda1", "/mnt",
+            "mount",
+            "-t",
+            "ext4",
+            "-o",
+            "ro,noatime",
+            "/dev/sda1",
+            "/mnt",
         ]));
     }
 
@@ -230,21 +250,33 @@ mod mount {
     #[test]
     fn remount_form() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "mount", "--remount", "-o", "ro", "/mnt",
+            "mount",
+            "--remount",
+            "-o",
+            "ro",
+            "/mnt",
         ]));
     }
 
     #[test]
     fn read_only_alias() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "mount", "-r", "-t", "ext4", "/dev/sda1", "/mnt",
+            "mount",
+            "-r",
+            "-t",
+            "ext4",
+            "/dev/sda1",
+            "/mnt",
         ]));
     }
 
     #[test]
     fn alternate_fstab_file() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "mount", "-T", "/etc/my-fstab", "/mnt",
+            "mount",
+            "-T",
+            "/etc/my-fstab",
+            "/mnt",
         ]));
     }
 
@@ -259,9 +291,7 @@ mod mount {
 
     #[test]
     fn err_unknown_flag() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "mount", "--bogus", "/mnt",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["mount", "--bogus", "/mnt",]));
     }
 }
 
@@ -278,30 +308,26 @@ mod umount {
 
     #[test]
     fn force_lazy_combined() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "umount", "-f", "-l", "/mnt",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(
+            &["umount", "-f", "-l", "/mnt",]
+        ));
     }
 
     #[test]
     fn read_only_fallback() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "umount", "-r", "/mnt",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["umount", "-r", "/mnt",]));
     }
 
     #[test]
     fn no_mtab_and_verbose() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "umount", "-n", "-v", "/mnt",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(
+            &["umount", "-n", "-v", "/mnt",]
+        ));
     }
 
     #[test]
     fn tag_target() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "umount", "LABEL=root",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["umount", "LABEL=root",]));
     }
 
     #[test]
@@ -320,8 +346,6 @@ mod umount {
 
     #[test]
     fn err_unknown_flag() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "umount", "--bogus", "/mnt",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(&["umount", "--bogus", "/mnt",]));
     }
 }

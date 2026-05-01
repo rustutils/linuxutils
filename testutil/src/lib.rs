@@ -83,14 +83,19 @@ impl Run {
     }
 
     /// Set an environment variable for the spawned binary.
-    pub fn env(mut self, key: impl Into<String>, value: impl Into<String>) -> Self {
+    pub fn env(
+        mut self,
+        key: impl Into<String>,
+        value: impl Into<String>,
+    ) -> Self {
         self.envs.push((key.into(), value.into()));
         self
     }
 
     /// Spawn the binary and capture its `Output`.
     pub fn output(self) -> std::io::Result<Output> {
-        let arg_refs: Vec<&str> = self.args.iter().map(String::as_str).collect();
+        let arg_refs: Vec<&str> =
+            self.args.iter().map(String::as_str).collect();
         let env_refs: Vec<(&str, &str)> = self
             .envs
             .iter()

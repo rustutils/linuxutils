@@ -6,8 +6,7 @@
 //! systems) so this can run anywhere without fixture setup.
 
 use linuxutils_mount::MountTable;
-use std::fs::File;
-use std::io::BufReader;
+use std::{fs::File, io::BufReader};
 
 #[test]
 fn parses_host_fstab_if_present() {
@@ -18,8 +17,8 @@ fn parses_host_fstab_if_present() {
             return;
         }
     };
-    let t = MountTable::parse_fstab(BufReader::new(f))
-        .expect("parse host fstab");
+    let t =
+        MountTable::parse_fstab(BufReader::new(f)).expect("parse host fstab");
 
     // Universal invariants for any fstab entry:
     //   - target is non-empty
@@ -39,7 +38,10 @@ fn parses_host_fstab_if_present() {
         assert!(e.mount_id.is_none(), "fstab entry has mount_id");
         assert!(e.parent_id.is_none(), "fstab entry has parent_id");
         assert!(e.devno.is_none(), "fstab entry has devno");
-        assert!(e.optional_fields.is_none(), "fstab entry has optional_fields");
+        assert!(
+            e.optional_fields.is_none(),
+            "fstab entry has optional_fields"
+        );
         assert!(e.vfs_options.is_none(), "fstab entry has vfs_options");
         assert!(e.fs_options.is_none(), "fstab entry has fs_options");
     }

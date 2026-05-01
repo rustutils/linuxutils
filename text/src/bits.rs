@@ -128,11 +128,7 @@ fn parse_grouped_hex(
     Ok(())
 }
 
-fn parse_list(
-    s: &str,
-    buf: &mut Vec<u32>,
-    width: usize,
-) -> Result<(), String> {
+fn parse_list(s: &str, buf: &mut Vec<u32>, width: usize) -> Result<(), String> {
     for part in s.split(',') {
         let part = part.trim();
         if part.is_empty() {
@@ -174,7 +170,9 @@ fn parse_group(s: &str, width: usize) -> Result<(Op, Vec<u32>), String> {
         return Err("empty group".into());
     }
     let mut buf = Vec::new();
-    if let Some(rest) = body.strip_prefix("0x").or_else(|| body.strip_prefix("0X")) {
+    if let Some(rest) =
+        body.strip_prefix("0x").or_else(|| body.strip_prefix("0X"))
+    {
         parse_hex(rest, &mut buf, width)?;
     } else if let Some(rest) = body.strip_prefix(',') {
         parse_grouped_hex(rest, &mut buf, width)?;
@@ -189,7 +187,7 @@ fn truncate_to_width(buf: &mut Vec<u32>, width: usize) {
     if buf.len() > max_words {
         buf.truncate(max_words);
     }
-    if width % 32 != 0 {
+    if !width.is_multiple_of(32) {
         if let Some(last) = buf.last_mut() {
             let keep = width % 32;
             *last &= (1u32 << keep) - 1;
@@ -200,13 +198,13 @@ fn truncate_to_width(buf: &mut Vec<u32>, width: usize) {
 fn combine(acc: &mut Vec<u32>, group: &[u32], op: Op, width: usize) {
     let n = acc.len().max(group.len());
     acc.resize(n, 0);
-    for i in 0..n {
+    for (i, slot) in acc.iter_mut().enumerate().take(n) {
         let g = group.get(i).copied().unwrap_or(0);
         match op {
-            Op::Or => acc[i] |= g,
-            Op::And => acc[i] &= g,
-            Op::Xor => acc[i] ^= g,
-            Op::AndNot => acc[i] &= !g,
+            Op::Or => *slot |= g,
+            Op::And => *slot &= g,
+            Op::Xor => *slot ^= g,
+            Op::AndNot => *slot &= !g,
         }
     }
     truncate_to_width(acc, width);

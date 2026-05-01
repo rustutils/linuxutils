@@ -126,7 +126,12 @@ mod chrt {
     #[test]
     fn err_sched_runtime_not_a_number() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "chrt", "-T", "notanumber", "-d", "0", "myprog",
+            "chrt",
+            "-T",
+            "notanumber",
+            "-d",
+            "0",
+            "myprog",
         ]));
     }
 }
@@ -166,7 +171,13 @@ mod ionice {
     #[test]
     fn set_pid_class_by_name() {
         insta::assert_snapshot!(parse::<Args>(&[
-            "ionice", "-c", "best-effort", "-n", "0", "-p", "1234",
+            "ionice",
+            "-c",
+            "best-effort",
+            "-n",
+            "0",
+            "-p",
+            "1234",
         ]));
     }
 
@@ -216,9 +227,9 @@ mod ionice {
 
     #[test]
     fn err_classdata_not_a_number() {
-        insta::assert_snapshot!(parse::<Args>(&[
-            "ionice", "-n", "notanumber",
-        ]));
+        insta::assert_snapshot!(parse::<Args>(
+            &["ionice", "-n", "notanumber",]
+        ));
     }
 }
 

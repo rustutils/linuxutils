@@ -273,10 +273,7 @@ mod tests {
         let r = classify_str("noauto,_netdev,nofail,uid=1000");
         assert_eq!(r.flags, MountFlags::empty());
         assert_eq!(r.fs_data, "uid=1000");
-        assert_eq!(
-            r.user_options.to_string(),
-            "noauto,_netdev,nofail"
-        );
+        assert_eq!(r.user_options.to_string(), "noauto,_netdev,nofail");
     }
 
     #[test]

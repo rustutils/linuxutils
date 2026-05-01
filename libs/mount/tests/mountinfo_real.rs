@@ -17,7 +17,7 @@ fn host_table() -> MountTable {
 #[test]
 fn parses_host_mountinfo() {
     let t = host_table();
-    assert!(t.len() > 0, "host mountinfo is empty?");
+    assert!(!t.is_empty(), "host mountinfo is empty?");
 }
 
 #[test]

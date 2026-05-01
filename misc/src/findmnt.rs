@@ -233,14 +233,8 @@ fn make_row(e: &MountEntry) -> Row {
         .as_ref()
         .map(|o| o.to_string())
         .unwrap_or_default();
-    let freq = e
-        .freq
-        .map(|n| n.to_string())
-        .unwrap_or_default();
-    let passno = e
-        .passno
-        .map(|n| n.to_string())
-        .unwrap_or_default();
+    let freq = e.freq.map(|n| n.to_string()).unwrap_or_default();
+    let passno = e.passno.map(|n| n.to_string()).unwrap_or_default();
     Row {
         target: e.target.to_string_lossy().into_owned(),
         source: render_source(&e.source),

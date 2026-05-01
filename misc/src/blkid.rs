@@ -99,11 +99,7 @@ fn print_one(device: &std::path::Path, tags: &[Tag], fmt: Format) {
         Format::Export => {
             println!("DEVNAME={}", device.display());
             for t in tags {
-                println!(
-                    "{}={}",
-                    t.kind.as_str(),
-                    t.value.to_string_lossy()
-                );
+                println!("{}={}", t.kind.as_str(), t.value.to_string_lossy());
             }
             println!();
         }
