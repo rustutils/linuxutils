@@ -54,9 +54,11 @@ udev symlinks alone. The probe layer is a v2+ target.
 
 ## Consumers
 
-- `misc/src/findfs.rs` — *planned*, the one-pager `findfs(8)`.
-- `misc/src/blkid.rs` — *planned*, the partial `blkid(8)` (lists the
-  by-* index, no probe).
-- `disk/src/mount.rs`, `disk/src/umount.rs` — *planned*, will use
-  `Cache::resolve_str` for fstab tag entries.
+- `misc/src/findfs.rs` — one-pager `findfs(8)`, calls
+  `Cache::resolve` once and prints the path.
+- `misc/src/blkid.rs` — partial `blkid(8)` that lists the by-* index
+  via `Cache::scan` and resolves `-L`/`-U` via `Cache::resolve`. No
+  probe layer.
+- `disk/src/mount.rs`, `disk/src/umount.rs` — call `Cache::resolve`
+  on `Spec::Tag` sources before invoking the kernel mount syscalls.
 - `compat/libblkid/` — *planned*, the cdylib shim.

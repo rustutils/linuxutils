@@ -46,10 +46,13 @@ wraps this crate, not the other way around.
 
 ## Consumers
 
-- `misc/src/findmnt.rs` — uses `MountTable::parse_mountinfo` /
-  `parse_fstab` / `parse_swaps`.
-- `disk/src/mount.rs` and `disk/src/umount.rs` — *planned*, will
-  exercise the syscall wrapper layer once it lands.
+- `misc/src/findmnt.rs` — uses the three parsers
+  (`MountTable::parse_mountinfo` / `parse_fstab` / `parse_swaps`).
+- `disk/src/mount.rs` — uses parsers + `classify` + the
+  `syscall::{mount,bind,rbind,remount}` wrappers; resolves
+  `LABEL=`/`UUID=` via `linuxutils-blkid`.
+- `disk/src/umount.rs` — uses `parse_mountinfo` to map a source or
+  tag to a mount-point path before calling `syscall::umount`.
 - `compat/libmount/` — *planned*, the cdylib facade.
 
 ## Sequencing
