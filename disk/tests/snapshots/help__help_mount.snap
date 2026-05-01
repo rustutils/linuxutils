@@ -4,13 +4,15 @@ expression: "help_output(\"mount\")"
 ---
 Mount a filesystem.
 
-Three forms: - `mount` (no args) — list active mounts (like `findmnt`). - `mount <target>` — look up
-the target in `/etc/fstab` and mount it as configured. - `mount <source> <target>` — direct mount.
-`<source>` may be a device path or a `LABEL=`/`UUID=` tag (resolved via blkid).
+Four forms: - `mount` (no args) — list active mounts (like `findmnt`). - `mount -a` — mount every
+entry from `/etc/fstab` not already mounted (skipping `noauto`, swap, and `ignore` entries). -
+`mount <target>` — look up the target in `/etc/fstab` and mount it as configured. - `mount <source>
+<target>` — direct mount. `<source>` may be a device path or a `LABEL=`/`UUID=` tag (resolved via
+blkid).
 
-Userspace-only and propagation features deferred to v1: `-a/--all`, `--move`,
+Userspace-only and propagation features deferred to v1: `--move`,
 `--make-{shared,slave,private,unbindable}`, `mount.<fstype>` helpers, loop devices, mtab/utab
-writing.
+writing, `-F/--fork`.
 
 Usage: mount [OPTIONS] [SPEC] [TARGET]
 
@@ -23,9 +25,19 @@ Arguments:
           Target mount point
 
 Options:
+  -a, --all
+          Mount every entry from fstab. Skips entries with `noauto`, fstype `swap`, fstype `ignore`,
+          or those whose target is already mounted. Filters via `-t` and `-O` apply
+
   -t, --types <TYPE>
           Filesystem type (e.g. ext4, tmpfs, proc). Required for direct mounts unless an option like
-          `--bind` is given
+          `--bind` is given. With `-a`, limits which fstab entries to mount: a comma-separated allow
+          list, or — if the first token starts with `no` — an exclude list (`-a -t nonfs,cifs` skips
+          nfs and cifs)
+
+  -O, --test-opts <LIST>
+          With `-a`, limit to entries matching the comma-separated option test list. Each token must
+          be present (`name`) or absent (`noname`); all conditions are ANDed
 
   -o, --options <LIST>
           Mount options (comma-separated). Combined with options from fstab when looking up a target

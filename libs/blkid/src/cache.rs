@@ -244,8 +244,7 @@ impl std::error::Error for ResolveError {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::os::unix;
-    use std::os::unix::ffi::OsStrExt;
+    use std::os::{unix, unix::ffi::OsStrExt};
     use tempfile::TempDir;
 
     /// Build a fake `/dev/disk/`-style tree under a tempdir:

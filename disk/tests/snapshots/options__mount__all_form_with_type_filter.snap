@@ -1,0 +1,24 @@
+---
+source: disk/tests/options.rs
+expression: "parse::<Args>(&[\"mount\", \"-a\", \"-t\", \"ext4,xfs\",])"
+---
+Args {
+    all: true,
+    fstype: Some(
+        "ext4,xfs",
+    ),
+    test_opts: None,
+    options: None,
+    read_only: false,
+    read_write: false,
+    bind: false,
+    rbind: false,
+    remount: false,
+    fstab_file: None,
+    label: None,
+    uuid: None,
+    no_mtab: false,
+    verbose: false,
+    spec: None,
+    target: None,
+}

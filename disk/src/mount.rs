@@ -18,24 +18,41 @@ use std::{
 
 /// Mount a filesystem.
 ///
-/// Three forms:
+/// Four forms:
 ///   - `mount` (no args) — list active mounts (like `findmnt`).
+///   - `mount -a` — mount every entry from `/etc/fstab` not already
+///     mounted (skipping `noauto`, swap, and `ignore` entries).
 ///   - `mount <target>` — look up the target in `/etc/fstab` and
 ///     mount it as configured.
 ///   - `mount <source> <target>` — direct mount. `<source>` may be a
 ///     device path or a `LABEL=`/`UUID=` tag (resolved via blkid).
 ///
-/// Userspace-only and propagation features deferred to v1: `-a/--all`,
-/// `--move`, `--make-{shared,slave,private,unbindable}`,
-/// `mount.<fstype>` helpers, loop devices, mtab/utab writing.
+/// Userspace-only and propagation features deferred to v1: `--move`,
+/// `--make-{shared,slave,private,unbindable}`, `mount.<fstype>`
+/// helpers, loop devices, mtab/utab writing, `-F/--fork`.
 #[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "mount", about = "Mount a filesystem")]
 pub struct Args {
+    /// Mount every entry from fstab. Skips entries with `noauto`,
+    /// fstype `swap`, fstype `ignore`, or those whose target is
+    /// already mounted. Filters via `-t` and `-O` apply.
+    #[arg(short = 'a', long = "all", action = ArgAction::SetTrue)]
+    all: bool,
+
     /// Filesystem type (e.g. ext4, tmpfs, proc). Required for direct
-    /// mounts unless an option like `--bind` is given.
+    /// mounts unless an option like `--bind` is given. With `-a`,
+    /// limits which fstab entries to mount: a comma-separated allow
+    /// list, or — if the first token starts with `no` — an exclude
+    /// list (`-a -t nonfs,cifs` skips nfs and cifs).
     #[arg(short = 't', long = "types", value_name = "TYPE")]
     fstype: Option<String>,
+
+    /// With `-a`, limit to entries matching the comma-separated
+    /// option test list. Each token must be present (`name`) or
+    /// absent (`noname`); all conditions are ANDed.
+    #[arg(short = 'O', long = "test-opts", value_name = "LIST")]
+    test_opts: Option<String>,
 
     /// Mount options (comma-separated). Combined with options from
     /// fstab when looking up a target.
@@ -249,6 +266,34 @@ fn do_direct_mount(
     }
 }
 
+/// Resolve and mount a single fstab entry. Used by both the
+/// single-target lookup form and `mount -a`.
+fn mount_one_entry(args: &Args, entry: &MountEntry) -> ExitCode {
+    let source = match resolve_source(&entry.source) {
+        Ok(p) => p,
+        Err(e) => {
+            eprintln!("mount: {e}");
+            return ExitCode::FAILURE;
+        }
+    };
+    let merged = merge_options(
+        Some(&entry.options),
+        args.options.as_deref(),
+        args.read_only,
+        args.read_write,
+    );
+    let classified = classify(&merged);
+    let fstype = args.fstype.clone().unwrap_or(entry.fstype.clone());
+    do_direct_mount(
+        &source,
+        &entry.target,
+        &fstype,
+        classified.flags,
+        classified.fs_data_arg(),
+        args,
+    )
+}
+
 /// `mount <target>` — fstab lookup form.
 fn mount_via_fstab(args: &Args, target: &Path) -> ExitCode {
     let fstab_path = args
@@ -273,29 +318,109 @@ fn mount_via_fstab(args: &Args, target: &Path) -> ExitCode {
             return ExitCode::FAILURE;
         }
     };
-    let source = match resolve_source(&entry.source) {
-        Ok(p) => p,
+    mount_one_entry(args, &entry)
+}
+
+/// Whether an entry should be skipped by `mount -a` regardless of
+/// any `-t`/`-O` filter.
+fn skip_for_mount_all(entry: &MountEntry, mounted: &MountTable) -> bool {
+    // Userspace marker: don't auto-mount.
+    if entry.options.contains("noauto") {
+        return true;
+    }
+    // Swap is for swapon(8); the deprecated `ignore` marker says
+    // "leave this alone".
+    if entry.fstype == "swap" || entry.fstype == "ignore" {
+        return true;
+    }
+    // Already mounted at this target — skip rather than error.
+    if mounted.iter().any(|m| m.target == entry.target) {
+        return true;
+    }
+    false
+}
+
+/// Apply a `-t TYPELIST` filter. With a leading `no`-prefixed first
+/// token the list is treated as an exclusion set.
+fn type_filter_matches(filter: &str, fstype: &str) -> bool {
+    let tokens: Vec<&str> =
+        filter.split(',').filter(|t| !t.is_empty()).collect();
+    if tokens.is_empty() {
+        return true;
+    }
+    let exclude = tokens[0].starts_with("no");
+    if exclude {
+        let bare: Vec<&str> = tokens
+            .iter()
+            .map(|t| t.strip_prefix("no").unwrap_or(t))
+            .collect();
+        !bare.contains(&fstype)
+    } else {
+        tokens.contains(&fstype)
+    }
+}
+
+/// Apply a `-O TESTOPTS` filter. Each token is `name` (must be
+/// present) or `noname` (must be absent); all ANDed.
+fn opts_filter_matches(filter: &str, opts: &OptionList) -> bool {
+    for tok in filter.split(',').filter(|t| !t.is_empty()) {
+        let (want_present, name) = match tok.strip_prefix("no") {
+            Some(rest) => (false, rest),
+            None => (true, tok),
+        };
+        if opts.contains(name) != want_present {
+            return false;
+        }
+    }
+    true
+}
+
+/// `mount -a` — walk fstab, skip the obvious non-applicable entries,
+/// apply -t/-O filters, mount the rest.
+fn mount_all(args: &Args) -> ExitCode {
+    let fstab_path = args
+        .fstab_file
+        .clone()
+        .unwrap_or_else(|| PathBuf::from("/etc/fstab"));
+    let fstab = match read_fstab(&fstab_path) {
+        Ok(t) => t,
         Err(e) => {
             eprintln!("mount: {e}");
             return ExitCode::FAILURE;
         }
     };
-    let merged = merge_options(
-        Some(&entry.options),
-        args.options.as_deref(),
-        args.read_only,
-        args.read_write,
-    );
-    let classified = classify(&merged);
-    let fstype = args.fstype.clone().unwrap_or(entry.fstype.clone());
-    do_direct_mount(
-        &source,
-        target,
-        &fstype,
-        classified.flags,
-        classified.fs_data_arg(),
-        args,
-    )
+    let mounted = match read_mountinfo() {
+        Ok(t) => t,
+        Err(e) => {
+            eprintln!("mount: {e}");
+            return ExitCode::FAILURE;
+        }
+    };
+
+    let mut failed = 0u32;
+    for entry in fstab.iter() {
+        if skip_for_mount_all(entry, &mounted) {
+            continue;
+        }
+        if let Some(f) = args.fstype.as_deref()
+            && !type_filter_matches(f, &entry.fstype)
+        {
+            continue;
+        }
+        if let Some(f) = args.test_opts.as_deref()
+            && !opts_filter_matches(f, &entry.options)
+        {
+            continue;
+        }
+        if mount_one_entry(args, entry) != ExitCode::SUCCESS {
+            failed += 1;
+        }
+    }
+    if failed > 0 {
+        ExitCode::FAILURE
+    } else {
+        ExitCode::SUCCESS
+    }
 }
 
 /// `mount <source> <target>` — direct form.
@@ -361,6 +486,20 @@ fn mount_direct(args: &Args, source_str: &str, target: &Path) -> ExitCode {
 }
 
 pub fn run(args: Args) -> ExitCode {
+    if args.all {
+        if args.spec.is_some()
+            || args.target.is_some()
+            || args.label.is_some()
+            || args.uuid.is_some()
+        {
+            eprintln!(
+                "mount: -a doesn't take a source/target argument or -L/-U"
+            );
+            return ExitCode::from(2);
+        }
+        return mount_all(&args);
+    }
+
     // -L / -U shortcut into the source slot, so callers can use
     // `mount -L foo /mnt`.
     let source_from_shortcut = args
@@ -416,5 +555,109 @@ pub fn run(args: Args) -> ExitCode {
             eprintln!("mount: missing source argument");
             ExitCode::from(2)
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn fstab_entry(target: &str, fstype: &str, opts: &str) -> MountEntry {
+        MountEntry {
+            source: Spec::Path(PathBuf::from("/dev/null")),
+            target: PathBuf::from(target),
+            fstype: fstype.to_string(),
+            options: OptionList::parse(opts),
+            ..Default::default()
+        }
+    }
+
+    fn empty_table() -> MountTable {
+        MountTable::new()
+    }
+
+    #[test]
+    fn skip_noauto() {
+        let e = fstab_entry("/mnt", "ext4", "defaults,noauto");
+        assert!(skip_for_mount_all(&e, &empty_table()));
+    }
+
+    #[test]
+    fn skip_swap_fstype() {
+        let e = fstab_entry("/swap", "swap", "defaults");
+        assert!(skip_for_mount_all(&e, &empty_table()));
+    }
+
+    #[test]
+    fn skip_ignore_fstype() {
+        let e = fstab_entry("/mnt", "ignore", "defaults");
+        assert!(skip_for_mount_all(&e, &empty_table()));
+    }
+
+    #[test]
+    fn skip_already_mounted() {
+        let e = fstab_entry("/mnt", "ext4", "defaults");
+        let mut mounted = MountTable::new();
+        mounted.push(MountEntry {
+            target: PathBuf::from("/mnt"),
+            ..Default::default()
+        });
+        assert!(skip_for_mount_all(&e, &mounted));
+    }
+
+    #[test]
+    fn keep_normal_entry() {
+        let e = fstab_entry("/mnt", "ext4", "defaults");
+        assert!(!skip_for_mount_all(&e, &empty_table()));
+    }
+
+    #[test]
+    fn type_filter_allow_list() {
+        assert!(type_filter_matches("ext4,xfs", "ext4"));
+        assert!(type_filter_matches("ext4,xfs", "xfs"));
+        assert!(!type_filter_matches("ext4,xfs", "tmpfs"));
+    }
+
+    #[test]
+    fn type_filter_exclude_list() {
+        // Leading `no` flips the whole list to an exclusion set.
+        assert!(!type_filter_matches("nonfs,cifs", "nfs"));
+        assert!(!type_filter_matches("nonfs,cifs", "cifs"));
+        assert!(type_filter_matches("nonfs,cifs", "ext4"));
+    }
+
+    #[test]
+    fn type_filter_empty_matches_all() {
+        assert!(type_filter_matches("", "ext4"));
+    }
+
+    #[test]
+    fn opts_filter_must_be_present() {
+        let opts = OptionList::parse("ro,nosuid");
+        assert!(opts_filter_matches("ro", &opts));
+        assert!(!opts_filter_matches("rw", &opts));
+    }
+
+    #[test]
+    fn opts_filter_must_be_absent() {
+        let opts = OptionList::parse("ro,nosuid");
+        // `noXXX` here means "XXX must be absent", *not*
+        // "literal option named noXXX must be present".
+        assert!(opts_filter_matches("norw", &opts));
+        assert!(!opts_filter_matches("noro", &opts));
+    }
+
+    #[test]
+    fn opts_filter_anded() {
+        let opts = OptionList::parse("ro,nosuid");
+        assert!(opts_filter_matches("ro,nosuid", &opts));
+        assert!(!opts_filter_matches("ro,rw", &opts));
+        assert!(opts_filter_matches("ro,norw", &opts));
+    }
+
+    #[test]
+    fn opts_filter_empty_matches_all() {
+        let opts = OptionList::parse("ro");
+        assert!(opts_filter_matches("", &opts));
     }
 }

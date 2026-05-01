@@ -1,0 +1,24 @@
+---
+source: disk/tests/options.rs
+expression: "parse::<Args>(&[\"mount\", \"-a\", \"-O\", \"noauto,nouser\",])"
+---
+Args {
+    all: true,
+    fstype: None,
+    test_opts: Some(
+        "noauto,nouser",
+    ),
+    options: None,
+    read_only: false,
+    read_write: false,
+    bind: false,
+    rbind: false,
+    remount: false,
+    fstab_file: None,
+    label: None,
+    uuid: None,
+    no_mtab: false,
+    verbose: false,
+    spec: None,
+    target: None,
+}

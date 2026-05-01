@@ -3,7 +3,9 @@ source: disk/tests/options.rs
 expression: "parse::<Args>(&[\"mount\", \"-R\", \"/src\", \"/dst\",])"
 ---
 Args {
+    all: false,
     fstype: None,
+    test_opts: None,
     options: None,
     read_only: false,
     read_write: false,

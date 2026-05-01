@@ -3,9 +3,11 @@ source: disk/tests/options.rs
 expression: "parse::<Args>(&[\"mount\", \"-t\", \"tmpfs\", \"tmpfs\", \"/tmp/mnt\",])"
 ---
 Args {
+    all: false,
     fstype: Some(
         "tmpfs",
     ),
+    test_opts: None,
     options: None,
     read_only: false,
     read_write: false,

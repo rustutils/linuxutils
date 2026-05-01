@@ -14,8 +14,10 @@
 //! particular can carry non-UTF-8 bytes; UUID-like tokens are ASCII
 //! by every filesystem in practice but the API doesn't promise that.
 
-use std::ffi::{OsStr, OsString};
-use std::str::FromStr;
+use std::{
+    ffi::{OsStr, OsString},
+    str::FromStr,
+};
 
 /// An unresolved block-device tag, e.g. `LABEL=root` or
 /// `UUID=12345678-...`.

@@ -26,7 +26,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Tools
 
 - `mount` (v0) — list / fstab-lookup / direct forms with `-L` and `-U`
-  shortcuts and bind / rbind / remount routing.
+  shortcuts and bind / rbind / remount routing. `-a/--all` walks fstab
+  (skipping `noauto`, swap, ignore, and already-mounted entries) with
+  `-t` and `-O` filters.
 - `umount` (v0) — target / source / tag resolution with `-f` / `-l` / `-r` /
   `-n` / `-v`.
 - `findmnt` (v0) — lists `mountinfo` / `fstab` / `/proc/swaps` with target,

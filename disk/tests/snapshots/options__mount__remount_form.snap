@@ -3,7 +3,9 @@ source: disk/tests/options.rs
 expression: "parse::<Args>(&[\"mount\", \"--remount\", \"-o\", \"ro\", \"/mnt\",])"
 ---
 Args {
+    all: false,
     fstype: None,
+    test_opts: None,
     options: Some(
         "ro",
     ),

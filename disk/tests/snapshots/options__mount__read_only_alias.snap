@@ -3,9 +3,11 @@ source: disk/tests/options.rs
 expression: "parse::<Args>(&[\"mount\", \"-r\", \"-t\", \"ext4\", \"/dev/sda1\", \"/mnt\",])"
 ---
 Args {
+    all: false,
     fstype: Some(
         "ext4",
     ),
+    test_opts: None,
     options: None,
     read_only: true,
     read_write: false,

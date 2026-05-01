@@ -22,7 +22,7 @@ mangen:
 # Pre-commit hook that checks formatting, tests, docs and clippy.
 pre-commit:
     @echo -e "\033[1;32mChecking\033[0m cargo fmt"
-    @out=$(cargo fmt --check 2>&1) || { printf '%s\n' "$out" >&2; exit 1; }
+    @out=$(cargo +nightly fmt --check 2>&1) || { printf '%s\n' "$out" >&2; exit 1; }
     @echo -e "\033[1;32mChecking\033[0m cargo test"
     @out=$(cargo test --quiet 2>&1) || { printf '%s\n' "$out" >&2; exit 1; }
     @echo -e "\033[1;32mChecking\033[0m cargo doc"

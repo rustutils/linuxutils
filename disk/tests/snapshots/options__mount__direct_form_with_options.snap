@@ -3,9 +3,11 @@ source: disk/tests/options.rs
 expression: "parse::<Args>(&[\"mount\", \"-t\", \"ext4\", \"-o\", \"ro,noatime\", \"/dev/sda1\",\n\"/mnt\",])"
 ---
 Args {
+    all: false,
     fstype: Some(
         "ext4",
     ),
+    test_opts: None,
     options: Some(
         "ro,noatime",
     ),

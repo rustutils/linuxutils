@@ -184,6 +184,7 @@ mod mount {
 
     // ---- SYNOPSIS forms:
     //   mount                                     — list
+    //   mount -a                                  — mount-all from fstab
     //   mount [opts] <target>                     — fstab lookup
     //   mount [opts] <source> <target>            — direct
     //   mount [opts] -L LABEL <target>            — shortcut
@@ -192,6 +193,28 @@ mod mount {
     #[test]
     fn no_args() {
         insta::assert_snapshot!(parse::<Args>(&["mount"]));
+    }
+
+    #[test]
+    fn all_form() {
+        insta::assert_snapshot!(parse::<Args>(&["mount", "-a"]));
+    }
+
+    #[test]
+    fn all_form_with_type_filter() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "mount", "-a", "-t", "ext4,xfs",
+        ]));
+    }
+
+    #[test]
+    fn all_form_with_test_opts() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "mount",
+            "-a",
+            "-O",
+            "noauto,nouser",
+        ]));
     }
 
     #[test]
