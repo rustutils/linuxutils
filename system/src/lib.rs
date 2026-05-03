@@ -96,3 +96,6 @@ pub mod swapon;
 
 #[cfg(feature = "unshare")]
 pub mod unshare;
+
+#[cfg(feature = "wdctl")]
+pub mod wdctl;

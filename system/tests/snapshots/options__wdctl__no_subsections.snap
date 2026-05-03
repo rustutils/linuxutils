@@ -1,0 +1,13 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"wdctl\", \"-I\", \"-T\", \"-F\", \"-n\",])"
+---
+Args {
+    device: None,
+    noident: true,
+    noflags: true,
+    notimeouts: true,
+    flags_only: false,
+    noheadings: true,
+    devices: [],
+}

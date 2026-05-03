@@ -54,6 +54,7 @@ fn tool_subcommands(cmd: Command) -> Command {
         .subcommand(linuxutils_system::swapoff::Args::command())
         .subcommand(linuxutils_system::swapon::Args::command())
         .subcommand(linuxutils_system::unshare::Args::command())
+        .subcommand(linuxutils_system::wdctl::Args::command())
         .subcommand(linuxutils_term::mesg::Args::command())
         .subcommand(linuxutils_term::wall::Args::command())
         .subcommand(linuxutils_term::write::Args::command())
@@ -221,6 +222,9 @@ fn dispatch(name: &str, m: &ArgMatches) -> ExitCode {
         ),
         "unshare" => linuxutils_system::unshare::run(
             linuxutils_system::unshare::Args::from_arg_matches(m).unwrap(),
+        ),
+        "wdctl" => linuxutils_system::wdctl::run(
+            linuxutils_system::wdctl::Args::from_arg_matches(m).unwrap(),
         ),
         "mesg" => linuxutils_term::mesg::run(
             linuxutils_term::mesg::Args::from_arg_matches(m).unwrap(),

@@ -55,6 +55,7 @@ full = [
     "swapoff",
     "swapon",
     "unshare",
+    "wdctl",
 ]
 blkdiscard = ["dep:libc"]
 choom = []
@@ -88,6 +89,7 @@ setsid = ["dep:libc", "dep:rustix"]
 swapoff = ["dep:libc"]
 swapon = ["dep:cols", "dep:libc"]
 unshare = ["dep:libc", "dep:rustix"]
+wdctl = ["dep:libc"]
 
 [dependencies]
 clap = { workspace = true }
@@ -265,3 +267,8 @@ required-features = ["swapon"]
 name = "unshare"
 path = "src/bin/unshare.rs"
 required-features = ["unshare"]
+
+[[bin]]
+name = "wdctl"
+path = "src/bin/wdctl.rs"
+required-features = ["wdctl"]

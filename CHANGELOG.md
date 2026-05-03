@@ -52,6 +52,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `exch` — atomic path exchange via `renameat2(RENAME_EXCHANGE)`.
 - `bits` — bitmask format converter (mask / list / binary).
 - `getino` — pidfd and namespace inode reporter.
+- `wdctl` — show hardware watchdog status (identity, timeouts,
+  feature/status flags, boot-status) via the `WDIOC_*` ioctls.
+  Honors the magic-close write on exit so the kernel doesn't fire
+  the watchdog when wdctl returns. Mutating options
+  (`--settimeout` / `--setpretimeout`) are deferred.
 - `setarch` — run a program with altered architecture / personality
   flags via `personality(2)` + `execvp`. Covers cross-host arch
   names (`linux32`/`linux64`) plus the common host-conditional

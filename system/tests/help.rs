@@ -178,3 +178,8 @@ fn help_swapon() {
 fn help_unshare() {
     insta::assert_snapshot!(help_output("unshare"));
 }
+
+#[test]
+fn help_wdctl() {
+    insta::assert_snapshot!(help_output("wdctl"));
+}

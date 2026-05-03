@@ -1837,6 +1837,55 @@ mod swapon {
     }
 }
 
+mod wdctl {
+    use super::parse;
+    use linuxutils_system::wdctl::Args;
+
+    // ---- SYNOPSIS form: wdctl [options] [device...]
+
+    #[test]
+    fn no_args() {
+        insta::assert_snapshot!(parse::<Args>(&["wdctl"]));
+    }
+
+    #[test]
+    fn explicit_device_via_d() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "wdctl",
+            "-d",
+            "/dev/watchdog1",
+        ]));
+    }
+
+    #[test]
+    fn positional_devices() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "wdctl",
+            "/dev/watchdog0",
+            "/dev/watchdog1",
+        ]));
+    }
+
+    #[test]
+    fn flags_only() {
+        insta::assert_snapshot!(parse::<Args>(&["wdctl", "-x"]));
+    }
+
+    #[test]
+    fn no_subsections() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "wdctl", "-I", "-T", "-F", "-n",
+        ]));
+    }
+
+    // ---- Error cases
+
+    #[test]
+    fn err_unknown_flag() {
+        insta::assert_snapshot!(parse::<Args>(&["wdctl", "--bogus"]));
+    }
+}
+
 mod unshare {
     use super::parse;
     use linuxutils_system::unshare::Args;

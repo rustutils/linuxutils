@@ -74,7 +74,7 @@
 | `tunelp` | Set various parameters for the lp device | Not started |
 | `umount` | Unmount filesystems | Partial (no -R / -A / -a) |
 | `unshare` | Run a program in new namespaces | Done |
-| `wdctl` | Show hardware watchdog status | Not started |
+| `wdctl` | Show hardware watchdog status | Done |
 | `zramctl` | Set up and control zram devices | Not started |
 
 ## Miscellaneous Utilities

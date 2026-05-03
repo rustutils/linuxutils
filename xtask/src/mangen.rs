@@ -273,6 +273,11 @@ pub fn run(output: &str) -> ExitCode {
             &linuxutils_system::unshare::MAN,
         ),
         (
+            "wdctl",
+            linuxutils_system::wdctl::Args::command,
+            &linuxutils_system::wdctl::MAN,
+        ),
+        (
             "mesg",
             linuxutils_term::mesg::Args::command,
             &linuxutils_term::mesg::MAN,

@@ -1,0 +1,16 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"wdctl\", \"/dev/watchdog0\", \"/dev/watchdog1\",])"
+---
+Args {
+    device: None,
+    noident: false,
+    noflags: false,
+    notimeouts: false,
+    flags_only: false,
+    noheadings: false,
+    devices: [
+        "/dev/watchdog0",
+        "/dev/watchdog1",
+    ],
+}
