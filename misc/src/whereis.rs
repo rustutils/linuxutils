@@ -6,7 +6,6 @@ use clap::{CommandFactory, FromArgMatches};
 use std::{
     collections::BTreeSet,
     fs,
-    os::unix::fs::PermissionsExt,
     path::{Path, PathBuf},
     process::ExitCode,
 };
@@ -59,44 +58,43 @@ impl Args {
                 "-u" => args.unusual_only = true,
                 "-l" => args.list_paths = true,
                 "-g" => args.glob_mode = true,
+                // -B / -M / -S consume directories until the next
+                // flag-shaped token. Upstream uses `-f` to introduce
+                // the list of names, but it also stops on another
+                // `-B`/`-M`/`-S`, so test invocations like
+                // `whereis -B bin -M man -f name` work. After the
+                // inner loop we step back so the outer loop sees
+                // the terminator.
                 "-B" => {
                     i += 1;
-                    while i < raw.len() && raw[i] != "-f" {
+                    while i < raw.len() && !raw[i].starts_with('-') {
                         args.custom_bin_dirs.push(PathBuf::from(&raw[i]));
                         i += 1;
                     }
-                    if i >= raw.len() || raw[i] != "-f" {
-                        eprintln!(
-                            "whereis: -B requires -f to terminate the directory list"
-                        );
-                        std::process::exit(1);
-                    }
+                    i = i.saturating_sub(1);
                 }
                 "-M" => {
                     i += 1;
-                    while i < raw.len() && raw[i] != "-f" {
+                    while i < raw.len() && !raw[i].starts_with('-') {
                         args.custom_man_dirs.push(PathBuf::from(&raw[i]));
                         i += 1;
                     }
-                    if i >= raw.len() || raw[i] != "-f" {
-                        eprintln!(
-                            "whereis: -M requires -f to terminate the directory list"
-                        );
-                        std::process::exit(1);
-                    }
+                    i = i.saturating_sub(1);
                 }
                 "-S" => {
                     i += 1;
-                    while i < raw.len() && raw[i] != "-f" {
+                    while i < raw.len() && !raw[i].starts_with('-') {
                         args.custom_src_dirs.push(PathBuf::from(&raw[i]));
                         i += 1;
                     }
-                    if i >= raw.len() || raw[i] != "-f" {
-                        eprintln!(
-                            "whereis: -S requires -f to terminate the directory list"
-                        );
-                        std::process::exit(1);
-                    }
+                    i = i.saturating_sub(1);
+                }
+                "-f" => {
+                    // `-f` is upstream's "names start here" marker;
+                    // we already auto-detect it via the
+                    // `starts_with('-')` boundary, so just consume
+                    // it here so it doesn't fall through to the
+                    // unknown-flag branch.
                 }
                 "-h" | "--help" => {
                     let _ = ClapArgs::command().print_help();
@@ -246,12 +244,6 @@ fn default_src_dirs() -> Vec<PathBuf> {
     dirs
 }
 
-fn is_executable(path: &Path) -> bool {
-    path.metadata()
-        .map(|m| m.permissions().mode() & 0o111 != 0 && m.is_file())
-        .unwrap_or(false)
-}
-
 fn strip_name(name: &str) -> &str {
     let name = name.rsplit('/').next().unwrap_or(name);
     name.strip_prefix("s.").unwrap_or(name)
@@ -268,10 +260,36 @@ fn matches_name(filename: &str, name: &str, glob_mode: bool) -> bool {
 fn matches_name_with_ext(filename: &str, name: &str, glob_mode: bool) -> bool {
     if glob_mode {
         let base = filename.split('.').next().unwrap_or(filename);
-        glob_match(name, base)
-    } else {
-        filename == name || filename.starts_with(&format!("{name}."))
+        return glob_match(name, base);
     }
+    if filename == name {
+        return true;
+    }
+    // A man-page filename is `<command>.<section>[.<compression>]`.
+    // Strip an optional known compression suffix, then split off the
+    // trailing `.<section-starting-with-digit>`. What remains is the
+    // command name. This avoids matching `fsck.ext4.8.gz` for the
+    // command `fsck`.
+    man_command_name(filename).is_some_and(|cmd| cmd == name)
+}
+
+fn man_command_name(filename: &str) -> Option<&str> {
+    const COMPRESS_EXTS: &[&str] =
+        &["gz", "bz2", "xz", "zst", "lz", "lzma", "Z"];
+    let mut name = filename;
+    if let Some(idx) = name.rfind('.') {
+        let ext = &name[idx + 1..];
+        if COMPRESS_EXTS.contains(&ext) {
+            name = &name[..idx];
+        }
+    }
+    if let Some(idx) = name.rfind('.') {
+        let after = &name[idx + 1..];
+        if after.starts_with(|c: char| c.is_ascii_digit()) {
+            return Some(&name[..idx]);
+        }
+    }
+    None
 }
 
 fn glob_match(pattern: &str, text: &str) -> bool {
@@ -314,9 +332,12 @@ fn find_binaries(
         if let Ok(entries) = fs::read_dir(dir) {
             for entry in entries.flatten() {
                 let path = entry.path();
+                // Upstream `whereis` lists any file in the bin
+                // directory that matches the name — it doesn't gate
+                // on the executable bit. The test suite relies on
+                // this (it uses `touch` to create fixture files).
                 if let Some(fname) = path.file_name().and_then(|f| f.to_str())
                     && matches_name(fname, name, glob_mode)
-                    && is_executable(&path)
                 {
                     results.insert(path);
                 }

@@ -61,56 +61,132 @@ pub fn run(args: Args) -> ExitCode {
     ExitCode::SUCCESS
 }
 
+/// Faithful port of upstream colrm's three-phase algorithm:
+/// 1. Copy characters as-is while the running column is still
+///    below `first`.
+/// 2. (If a tab straddled the boundary) emit padding spaces for
+///    its visible portion before `first`, then read+drop chars
+///    until the running column reaches `last`.
+/// 3. (If we overshot `last`) pad once more with spaces, then
+///    emit any remaining characters of the line verbatim.
+///
+/// Column tracking matches upstream: tab advances to the next
+/// 8-column stop; backspace decrements (clamped to 0); other
+/// characters advance by 1. (Wide-character widths from
+/// `wcwidth(3)` aren't modeled — same simplification we already
+/// had.)
 fn process_line(
     line: &str,
     first: Option<usize>,
     last: Option<usize>,
     out: &mut impl Write,
 ) -> io::Result<()> {
-    let first = match first {
-        Some(f) => f,
-        None => {
-            writeln!(out, "{line}")?;
-            return Ok(());
-        }
-    };
+    // Upstream uses 0 as a sentinel meaning "no first / no last".
+    // Our public API uses Option<usize>; map None → 0.
+    let first = first.unwrap_or(0);
+    let last = last.unwrap_or(0);
 
-    // Track visual column position (1-based).
-    let mut col: usize = 1;
+    let mut chars = line.chars();
+    let mut ct: usize = 0;
+    let mut last_w: usize = 0;
+    let mut breaking_char: Option<char> = None;
 
-    for ch in line.chars() {
-        if ch == '\t' {
-            let next_tab = next_tab_stop(col);
-            // A tab spans from col to next_tab-1 (visually).
-            // We need to output the visible portions of the tab that fall
-            // outside the removed range.
-            for c in col..next_tab {
-                if c < first || last.is_some_and(|l| c > l) {
-                    out.write_all(b" ")?;
-                }
-            }
-            col = next_tab;
-        } else if ch == '\x08' {
-            // Backspace moves column back (like original colrm).
-            if col < first || last.is_some_and(|l| col > l) {
-                write!(out, "{ch}")?;
-            }
-            col = col.saturating_sub(1);
+    // ---- Phase 1: copy until ct reaches first.
+    for c in chars.by_ref() {
+        let w = char_width(c, ct);
+        ct = step_ct(c, ct, w);
+        last_w = w;
+        if first == 0 || ct < first {
+            write!(out, "{c}")?;
         } else {
-            if col < first || last.is_some_and(|l| col > l) {
-                write!(out, "{ch}")?;
-            }
-            col += 1;
+            breaking_char = Some(c);
+            break;
         }
     }
 
+    // No `first` set, or line ended before reaching `first`. The
+    // copy in phase 1 already emitted everything; just terminate.
+    if first == 0 || breaking_char.is_none() {
+        writeln!(out)?;
+        return Ok(());
+    }
+
+    // ---- Phase 2 (pad): if the breaking char (a tab) straddled
+    // the boundary, emit spaces for its visible portion before
+    // `first`.
+    let span_start = ct.saturating_sub(last_w).saturating_add(1);
+    for _ in span_start..first {
+        out.write_all(b" ")?;
+    }
+
+    // ---- Phase 2 (eat): drop characters while ct stays below
+    // `last`. `last == 0` means "until end of line".
+    for c in chars.by_ref() {
+        if !(last == 0 || ct < last) {
+            // ct already reached `last`; the unhandled `c` belongs
+            // to phase 3 — but we've consumed it from the iterator.
+            // Re-prepend by leaning on the rebuilt loop below: we
+            // pass `c` through directly.
+            return finish_with_overshoot(out, last, ct, Some(c), chars);
+        }
+        let w = char_width(c, ct);
+        ct = step_ct(c, ct, w);
+    }
+
+    // Iterator ran out during the eat phase — line had no
+    // surviving suffix.
+    finish_with_overshoot(out, last, ct, None, chars)
+}
+
+fn finish_with_overshoot(
+    out: &mut impl Write,
+    last: usize,
+    ct: usize,
+    held: Option<char>,
+    rest: std::str::Chars<'_>,
+) -> io::Result<()> {
+    let mut padded = false;
+    let emit =
+        |c: char, out: &mut dyn Write, padded: &mut bool| -> io::Result<()> {
+            if !*padded && last != 0 && last < ct {
+                for _ in last..ct {
+                    out.write_all(b" ")?;
+                }
+                *padded = true;
+            }
+            write!(out, "{c}")
+        };
+    if let Some(c) = held {
+        emit(c, out, &mut padded)?;
+    }
+    for c in rest {
+        emit(c, out, &mut padded)?;
+    }
+    // If nothing followed, still emit the padding (matches
+    // upstream's behaviour for lines that end exactly at `last`).
+    if !padded && last != 0 && last < ct {
+        for _ in last..ct {
+            out.write_all(b" ")?;
+        }
+    }
     writeln!(out)?;
     Ok(())
 }
 
-fn next_tab_stop(col: usize) -> usize {
-    // Columns are 1-based. Tab stops at 9, 17, 25, ...
-    col + TAB_WIDTH - ((col - 1) % TAB_WIDTH)
+fn char_width(c: char, ct: usize) -> usize {
+    match c {
+        '\t' => TAB_WIDTH - (ct % TAB_WIDTH),
+        '\x08' => 0,
+        _ => 1,
+    }
+}
+
+fn step_ct(c: char, ct: usize, w: usize) -> usize {
+    if c == '\x08' {
+        ct.saturating_sub(1)
+    } else {
+        ct + w
+    }
 }
 
 #[cfg(test)]

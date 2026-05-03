@@ -166,7 +166,9 @@ fn print_entry(
     indent: usize,
     opts: &Options,
 ) {
-    let indent_str = " ".repeat(indent * 2);
+    // Upstream namei prefixes every entry with at least one space and
+    // adds one more per symlink-resolution level.
+    let indent_str = " ".repeat(indent + 1);
 
     if opts.modes || opts.owners {
         if let Some(st) = stat {
@@ -294,8 +296,7 @@ fn walk_path(
                                 };
 
                                 if visited.contains(&resolved) {
-                                    let warn_indent =
-                                        " ".repeat((indent + 1) * 2);
+                                    let warn_indent = " ".repeat(indent + 2);
                                     println!(
                                         "{warn_indent}  [loop detected at {}]",
                                         resolved.display()

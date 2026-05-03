@@ -39,13 +39,33 @@ fn class_name(class: i32) -> &'static str {
     }
 }
 
+/// `strerror(3)`-style description of an `io::Error`. Rust's
+/// default `Display` appends `(os error 22)`; upstream's tools
+/// just print the description on its own.
+fn strerror(e: &std::io::Error) -> String {
+    if let Some(errno) = e.raw_os_error() {
+        let p = unsafe { libc::strerror(errno) };
+        if !p.is_null() {
+            let cs = unsafe { std::ffi::CStr::from_ptr(p) };
+            return cs.to_string_lossy().into_owned();
+        }
+    }
+    e.to_string()
+}
+
+/// Parse a class argument. Upstream accepts any integer here and
+/// only rejects truly malformed input — values that don't map to a
+/// real class still go through to `ioprio_set(2)`, which is what
+/// emits the `EINVAL` the user sees.
 fn parse_class(s: &str) -> Result<i32, String> {
     match s {
-        "0" | "none" => Ok(0),
-        "1" | "realtime" | "rt" => Ok(1),
-        "2" | "best-effort" | "be" => Ok(2),
-        "3" | "idle" => Ok(3),
-        _ => Err(format!("unknown scheduling class: '{s}'")),
+        "none" => Ok(0),
+        "realtime" | "rt" => Ok(1),
+        "best-effort" | "be" => Ok(2),
+        "idle" => Ok(3),
+        _ => s
+            .parse::<i32>()
+            .map_err(|_| format!("unknown scheduling class: '{s}'")),
     }
 }
 
@@ -70,13 +90,18 @@ fn set_ioprio(
     class: i32,
     level: i32,
     ignore: bool,
-    label: &str,
+    _label: &str,
 ) -> bool {
+    // Upstream warns (but proceeds) for class numbers it doesn't
+    // recognise, then lets `ioprio_set(2)` reject them with EINVAL.
+    if !(0..=3).contains(&class) {
+        eprintln!("ionice: unknown prio class {class}");
+    }
     let ioprio = (class << IOPRIO_CLASS_SHIFT) | level;
     match ioprio_set(which, who, ioprio) {
         Ok(()) => false,
         Err(e) => {
-            eprintln!("ionice: ioprio_set failed for {label} {who}: {e}");
+            eprintln!("ionice: ioprio_set failed: {}", strerror(&e));
             !ignore
         }
     }
@@ -180,6 +205,13 @@ pub fn run(args: Args) -> ExitCode {
     }
 
     let class = parsed_class.unwrap_or(2);
+    // Upstream warns when the user provides classdata for class 0
+    // (none) or class 3 (idle), since those classes ignore the
+    // priority level entirely.
+    if (class == 0 || class == 3) && args.classdata.is_some() {
+        let label = if class == 0 { "none" } else { "idle" };
+        eprintln!("ionice: ignoring given class data for {label} class");
+    }
     let level = if class == 0 || class == 3 {
         0
     } else {

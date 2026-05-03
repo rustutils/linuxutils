@@ -100,11 +100,22 @@ fn parse_uuid_info(s: &str) -> UuidInfo {
     let (variant, type_name, time) = match Uuid::parse_str(s) {
         Ok(u) => {
             let variant = variant_name(&u);
-            let type_name = type_name(&u);
-            let time = format_time(&u);
+            // Upstream only populates TYPE and TIME for DCE / RFC4122
+            // variants. NCS, Microsoft, and "other" leave both
+            // columns blank.
+            let (type_name, time) =
+                if matches!(u.get_variant(), uuid::Variant::RFC4122) {
+                    (type_name(&u), format_time(&u))
+                } else {
+                    (String::new(), String::new())
+                };
             (variant, type_name, time)
         }
-        Err(_) => ("invalid".to_string(), "invalid".to_string(), String::new()),
+        Err(_) => (
+            "invalid".to_string(),
+            "invalid".to_string(),
+            "invalid".to_string(),
+        ),
     };
 
     UuidInfo {
@@ -137,6 +148,7 @@ fn type_name(u: &Uuid) -> String {
         Some(uuid::Version::Sha1) => "sha1-based".to_string(),
         Some(uuid::Version::SortMac) => "time-v6".to_string(),
         Some(uuid::Version::SortRand) => "time-v7".to_string(),
+        Some(uuid::Version::Custom) => "vendor".to_string(),
         _ => "unknown".to_string(),
     }
 }
@@ -147,10 +159,26 @@ fn format_time(u: &Uuid) -> String {
         None => return String::new(),
     };
 
-    let (secs, nanos) = ts.to_unix();
-    // Format as ISO-ish timestamp matching util-linux output.
-    let total_secs = secs as i64;
-    let micros = nanos / 1000;
+    // For v1 and v6, the timestamp's u64 Unix-seconds storage wraps
+    // around for pre-1970 UUIDs. Recover the original 60-bit
+    // Gregorian-tick field via `to_gregorian()` and compute Unix
+    // time as signed i64 so dates back to 1582 work.
+    //
+    // For v7 (Unix-millis-based), `to_unix()` is unambiguous.
+    const TICKS_BETWEEN_EPOCHS: i64 = 122_192_928_000_000_000;
+    let (total_secs, micros) = match u.get_version() {
+        Some(uuid::Version::Mac | uuid::Version::SortMac) => {
+            let (ticks, _) = ts.to_gregorian();
+            let diff = (ticks as i64) - TICKS_BETWEEN_EPOCHS;
+            let secs = diff.div_euclid(10_000_000);
+            let sub_100ns = diff.rem_euclid(10_000_000);
+            (secs, (sub_100ns * 100 / 1000) as u32)
+        }
+        _ => {
+            let (secs, nanos) = ts.to_unix();
+            (secs as i64, nanos / 1000)
+        }
+    };
 
     // Use libc to get local time.
     let mut tm: libc::tm = unsafe { std::mem::zeroed() };
@@ -302,8 +330,12 @@ mod tests {
 
     #[test]
     fn parse_nil() {
+        // The nil UUID is variant NCS — TYPE/TIME columns stay
+        // empty for non-DCE variants, matching upstream output.
         let info = parse_uuid_info("00000000-0000-0000-0000-000000000000");
-        assert_eq!(info.type_name, "nil");
+        assert_eq!(info.variant, "NCS");
+        assert_eq!(info.type_name, "");
+        assert_eq!(info.time, "");
     }
 
     #[test]
