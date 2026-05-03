@@ -16,6 +16,13 @@ check:
 test:
     cargo nextest run
 
+# Run the vendored util-linux behavioural test suite against our
+# binaries. Extra args are forwarded to upstream's `run.sh`,
+# e.g. `just test-util-linux --component findmnt` for one tool.
+test-util-linux *ARGS:
+    cargo build --workspace
+    bash tests/util-linux-runner.sh {{ARGS}}
+
 mangen:
     cargo xtask mangen target/man
 

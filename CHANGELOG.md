@@ -66,6 +66,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Tests and infrastructure
 
+- Vendored upstream util-linux test suite under `tests/util-linux/`
+  with a wrapper (`tests/util-linux-runner.sh`) and Justfile target
+  (`just test-util-linux`) that builds the workspace and runs the
+  upstream tests against our `target/debug/` binaries. Tests for
+  unimplemented tools auto-skip; failures form the v1 roadmap.
 - `testutil` crate with `/proc` and `/sys` fixture support.
 - Fixture-backed tests for `lslocks`, `lsmem`, `lsirq`, and `lsns`.
 - Parse-snapshot tests across every tool group (`disk`, `login`, `misc`,
