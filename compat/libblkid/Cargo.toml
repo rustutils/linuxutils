@@ -13,3 +13,8 @@ crate-type = ["cdylib"]
 
 [dependencies]
 libc = "0.2"
+linuxutils-blkid.workspace = true
+linuxutils-common.workspace = true
+
+[dev-dependencies]
+tempfile = "3"

@@ -24,6 +24,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `/proc/swaps` parsing and lookup (`mnt_table_*`, `mnt_fs_*`
   getters, iter). Context, cache, lock, monitor, and setters are
   deferred. See [compat/libmount/README.md](compat/libmount/README.md).
+- `compat/libblkid` — ABI-compatible `libblkid.so` shim backed by
+  `linuxutils-blkid`. v0 covers the udev-symlink resolution layer:
+  cache lifecycle, `blkid_evaluate_tag` / `blkid_evaluate_spec` /
+  `blkid_get_devname`, device queries (`blkid_get_dev`,
+  `blkid_dev_has_tag`, `blkid_find_dev_with_tag`,
+  `blkid_get_tag_value`), and device/tag iteration. The probe
+  layer (`blkid_probe_*`, partitions, topology) is out of scope.
+  See [compat/libblkid/README.md](compat/libblkid/README.md).
 - `Tag` and `TagKind` in `linuxutils-common`, shared between
   `linuxutils-mount` and `linuxutils-blkid`.
 - Placeholder `libkmod` crate for the upcoming kmod CLI tools.

@@ -645,6 +645,9 @@ name = "linuxutils-libblkid"
 version = "0.1.0"
 dependencies = [
  "libc",
+ "linuxutils-blkid",
+ "linuxutils-common",
+ "tempfile",
 ]
 
 [[package]]

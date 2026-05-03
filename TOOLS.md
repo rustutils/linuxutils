@@ -198,7 +198,7 @@ linuxutils tools consume them directly.
 
 | Library | Description | Status |
 |---------|-------------|--------|
-| `libblkid` | Block device identification library for identifying block devices by content, extracting filesystem information like labels and UUIDs, and managing block device caching | Stub |
+| `libblkid` | Block device identification library for identifying block devices by content, extracting filesystem information like labels and UUIDs, and managing block device caching | Partial — udev-symlink resolution layer. See [compat/libblkid/README.md](compat/libblkid/README.md) |
 | `libfdisk` | Library for manipulating partition tables and performing partitioning operations | Stub |
 | `liblastlog2` | Y2038-safe library for managing user login records using a SQLite3 database backend | Not started |
 | `libmount` | Library for parsing /etc/fstab, /etc/mtab and /proc/self/mountinfo, managing the mtab file, and evaluating mount options | Partial — read-only iteration / lookup. See [compat/libmount/README.md](compat/libmount/README.md) |
