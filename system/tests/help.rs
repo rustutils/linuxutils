@@ -150,6 +150,11 @@ fn help_rfkill() {
 }
 
 #[test]
+fn help_setarch() {
+    insta::assert_snapshot!(help_output("setarch"));
+}
+
+#[test]
 fn help_setpgid() {
     insta::assert_snapshot!(help_output("setpgid"));
 }

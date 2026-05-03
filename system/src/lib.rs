@@ -79,6 +79,9 @@ pub mod renice;
 #[cfg(feature = "rfkill")]
 pub mod rfkill;
 
+#[cfg(feature = "setarch")]
+pub mod setarch;
+
 #[cfg(feature = "setpgid")]
 pub mod setpgid;
 

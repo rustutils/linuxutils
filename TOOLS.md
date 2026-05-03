@@ -64,7 +64,7 @@
 | `renice` | Alter priority of running processes | Done |
 | `rfkill` | Enable and disable wireless devices | Done |
 | `rtcwake` | Enter a system sleep state until specified wakeup time | Not started |
-| `setarch` | Change reported architecture in new program environment and/or set personality flags | Not started |
+| `setarch` | Change reported architecture in new program environment and/or set personality flags | Done |
 | `setpgid` | Run a program in a new process group | Done |
 | `setpriv` | Run a program with different Linux privilege settings | Not started |
 | `setsid` | Run a program in a new session | Done |

@@ -1,0 +1,28 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"setarch\", \"--addr-no-randomize\", \"--uname-2.6\", \"linux64\",\n\"/bin/echo\", \"hi\",])"
+---
+Args {
+    list: false,
+    show: None,
+    verbose: false,
+    addr_no_randomize: true,
+    fdpic_funcptrs: false,
+    mmap_page_zero: false,
+    addr_compat_layout: false,
+    read_implies_exec: false,
+    bit32: false,
+    short_inode: false,
+    whole_seconds: false,
+    sticky_timeouts: false,
+    limit_3gb: false,
+    limit_4gb: false,
+    uname_26: true,
+    arch: Some(
+        "linux64",
+    ),
+    command: [
+        "/bin/echo",
+        "hi",
+    ],
+}

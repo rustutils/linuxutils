@@ -52,6 +52,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `exch` — atomic path exchange via `renameat2(RENAME_EXCHANGE)`.
 - `bits` — bitmask format converter (mask / list / binary).
 - `getino` — pidfd and namespace inode reporter.
+- `setarch` — run a program with altered architecture / personality
+  flags via `personality(2)` + `execvp`. Covers cross-host arch
+  names (`linux32`/`linux64`) plus the common host-conditional
+  ones, plus all the standard personality bit flags
+  (`--addr-no-randomize`, `--uname-2.6`, `--mmap-page-zero`, etc.).
+  `--list` and `--show` introspection modes are supported.
 
 #### Tests and infrastructure
 

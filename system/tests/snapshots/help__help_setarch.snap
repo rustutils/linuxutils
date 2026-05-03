@@ -1,0 +1,32 @@
+---
+source: system/tests/help.rs
+expression: "help_output(\"setarch\")"
+---
+Run a program with altered architecture or personality flags
+
+Usage: setarch [OPTIONS] [ARCH] [COMMAND]...
+
+Arguments:
+  [ARCH]        Architecture name (e.g. `linux32`, `linux64`, `i686`)
+  [COMMAND]...  Program and its arguments. Required unless `--list` / `--show` is given
+
+Options:
+      --list                  List the recognised architecture names and exit
+      --show [<PERSONALITY>]  Show personality flag bits and exit. Without an argument, shows the
+                              running process's current personality; with a value, shows what the
+                              named personality would be
+  -v, --verbose               Print what we're doing
+  -R, --addr-no-randomize     Disable address-space randomisation (ADDR_NO_RANDOMIZE)
+  -F, --fdpic-funcptrs        Turn on FDPIC_FUNCPTRS (function pointer-style returns)
+  -Z, --mmap-page-zero        Turn on MMAP_PAGE_ZERO (map page 0 read-only)
+  -L, --addr-compat-layout    Use the legacy bottom-up address layout (ADDR_COMPAT_LAYOUT)
+  -X, --read-implies-exec     READ_IMPLIES_EXEC — pages with PROT_READ also get PROT_EXEC
+  -B, --32bit                 32-bit base personality (PER_LINUX32) without picking an arch alias
+  -I, --short-inode           SHORT_INODE — return only 16-bit inode numbers from stat()
+  -S, --whole-seconds         WHOLE_SECONDS — round timeouts up to whole seconds
+  -T, --sticky-timeouts       STICKY_TIMEOUTS — system call timeouts don't decrement on EINTR
+  -3, --3gb                   Cap the address space to 3GB (ADDR_LIMIT_3GB)
+      --4gb                   Reset the 3GB cap; alias for the default 4GB layout
+      --uname-2.6             Make `uname()` report kernel 2.6.x (UNAME26)
+  -h, --help                  Print help
+  -V, --version               Print version

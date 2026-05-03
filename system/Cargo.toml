@@ -49,6 +49,7 @@ full = [
     "prlimit",
     "renice",
     "rfkill",
+    "setarch",
     "setpgid",
     "setsid",
     "swapoff",
@@ -81,6 +82,7 @@ pivot_root = ["dep:rustix"]
 prlimit = ["dep:cols", "dep:rustix"]
 renice = ["dep:libc", "dep:rustix"]
 rfkill = ["dep:cols"]
+setarch = ["dep:libc"]
 setpgid = ["dep:libc", "dep:rustix"]
 setsid = ["dep:libc", "dep:rustix"]
 swapoff = ["dep:libc"]
@@ -233,6 +235,11 @@ required-features = ["renice"]
 name = "rfkill"
 path = "src/bin/rfkill.rs"
 required-features = ["rfkill"]
+
+[[bin]]
+name = "setarch"
+path = "src/bin/setarch.rs"
+required-features = ["setarch"]
 
 [[bin]]
 name = "setpgid"

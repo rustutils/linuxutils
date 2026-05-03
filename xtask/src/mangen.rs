@@ -243,6 +243,11 @@ pub fn run(output: &str) -> ExitCode {
             &linuxutils_system::rfkill::MAN,
         ),
         (
+            "setarch",
+            linuxutils_system::setarch::Args::command,
+            &linuxutils_system::setarch::MAN,
+        ),
+        (
             "setpgid",
             linuxutils_system::setpgid::Args::command,
             &linuxutils_system::setpgid::MAN,

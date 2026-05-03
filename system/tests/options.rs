@@ -1564,6 +1564,71 @@ mod rfkill {
     }
 }
 
+mod setarch {
+    use super::parse;
+    use linuxutils_system::setarch::Args;
+
+    // ---- SYNOPSIS forms:
+    //   setarch [arch] [opts] [program [args]]
+    //   setarch --list
+    //   setarch --show[=<arch>]
+
+    #[test]
+    fn list_only() {
+        insta::assert_snapshot!(parse::<Args>(&["setarch", "--list"]));
+    }
+
+    #[test]
+    fn show_no_value() {
+        insta::assert_snapshot!(parse::<Args>(&["setarch", "--show"]));
+    }
+
+    #[test]
+    fn show_with_value() {
+        insta::assert_snapshot!(parse::<Args>(&["setarch", "--show=linux32",]));
+    }
+
+    #[test]
+    fn arch_and_command() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "setarch", "linux32", "uname", "-m",
+        ]));
+    }
+
+    #[test]
+    fn personality_flags() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "setarch",
+            "--addr-no-randomize",
+            "--uname-2.6",
+            "linux64",
+            "/bin/echo",
+            "hi",
+        ]));
+    }
+
+    #[test]
+    fn flag_aliases() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "setarch", "-R", "-S", "-3", "linux64", "prog",
+        ]));
+    }
+
+    #[test]
+    fn verbose() {
+        insta::assert_snapshot!(parse::<Args>(&[
+            "setarch", "-v", "linux64", "prog",
+        ]));
+    }
+
+    // ---- Error cases
+
+    #[test]
+    fn err_unknown_flag() {
+        insta::assert_snapshot!(parse::<Args>(&["setarch", "--bogus"]));
+    }
+}
+
 mod setpgid {
     use super::parse;
     use linuxutils_system::setpgid::Args;

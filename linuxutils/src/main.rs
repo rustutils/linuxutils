@@ -48,6 +48,7 @@ fn tool_subcommands(cmd: Command) -> Command {
         .subcommand(linuxutils_system::prlimit::Args::command())
         .subcommand(linuxutils_system::renice::Args::command())
         .subcommand(linuxutils_system::rfkill::Args::command())
+        .subcommand(linuxutils_system::setarch::Args::command())
         .subcommand(linuxutils_system::setpgid::Args::command())
         .subcommand(linuxutils_system::setsid::Args::command())
         .subcommand(linuxutils_system::swapoff::Args::command())
@@ -202,6 +203,9 @@ fn dispatch(name: &str, m: &ArgMatches) -> ExitCode {
         ),
         "rfkill" => linuxutils_system::rfkill::run(
             linuxutils_system::rfkill::Args::from_arg_matches(m).unwrap(),
+        ),
+        "setarch" => linuxutils_system::setarch::run(
+            linuxutils_system::setarch::Args::from_arg_matches(m).unwrap(),
         ),
         "setpgid" => linuxutils_system::setpgid::run(
             linuxutils_system::setpgid::Args::from_arg_matches(m).unwrap(),

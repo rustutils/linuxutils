@@ -1,0 +1,27 @@
+---
+source: system/tests/options.rs
+expression: "parse::<Args>(&[\"setarch\", \"-R\", \"-S\", \"-3\", \"linux64\", \"prog\",])"
+---
+Args {
+    list: false,
+    show: None,
+    verbose: false,
+    addr_no_randomize: true,
+    fdpic_funcptrs: false,
+    mmap_page_zero: false,
+    addr_compat_layout: false,
+    read_implies_exec: false,
+    bit32: false,
+    short_inode: false,
+    whole_seconds: true,
+    sticky_timeouts: false,
+    limit_3gb: true,
+    limit_4gb: false,
+    uname_26: false,
+    arch: Some(
+        "linux64",
+    ),
+    command: [
+        "prog",
+    ],
+}
