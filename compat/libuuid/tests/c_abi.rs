@@ -1,4 +1,23 @@
-use std::{path::PathBuf, process::Command};
+use std::{path::PathBuf, process::Command, sync::OnceLock};
+
+/// Build `linuxutils-libuuid` once per test process. The package is
+/// cdylib-only and the integration test doesn't reference its Rust
+/// API, so cargo skips building it as a test prerequisite — we have
+/// to ask for the artifact ourselves.
+fn ensure_libuuid_built() {
+    static BUILT: OnceLock<()> = OnceLock::new();
+    BUILT.get_or_init(|| {
+        let mut cmd = Command::new(env!("CARGO"));
+        cmd.args(["build", "-p", "linuxutils-libuuid"]);
+        // Match the profile the tests are running under so we look
+        // in the same target subdirectory afterwards.
+        if !cfg!(debug_assertions) {
+            cmd.arg("--release");
+        }
+        let status = cmd.status().expect("failed to invoke cargo build");
+        assert!(status.success(), "cargo build -p linuxutils-libuuid failed");
+    });
+}
 
 /// Build a C test program, link it against our libuuid.so, run it, and
 /// return its stdout.
@@ -52,20 +71,27 @@ fn run_c_test(c_source: &str) -> String {
 }
 
 fn find_lib_dir() -> PathBuf {
+    ensure_libuuid_built();
+
     // cargo sets OUT_DIR for build scripts but not integration tests.
     // The cdylib lands in target/<profile>/deps/ or target/<profile>/.
     let manifest = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     let workspace_root = manifest.parent().unwrap().parent().unwrap();
 
-    // Try debug first, then release.
-    for profile in ["debug", "release"] {
-        let dir = workspace_root.join("target").join(profile);
-        if dir.join("libuuid.so").exists() {
-            return dir;
-        }
+    // Match the profile our test binary was compiled under.
+    let profile = if cfg!(debug_assertions) {
+        "debug"
+    } else {
+        "release"
+    };
+    let dir = workspace_root.join("target").join(profile);
+    if dir.join("libuuid.so").exists() {
+        return dir;
     }
     panic!(
-        "libuuid.so not found — run `cargo build -p linuxutils-libuuid` first"
+        "libuuid.so not found in {} after cargo build — \
+         build of linuxutils-libuuid did not produce the expected artifact",
+        dir.display()
     );
 }
 
