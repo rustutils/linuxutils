@@ -19,6 +19,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `linuxutils-blkid` — Rust-native crate for tag resolution via the
   `/dev/disk/by-*` udev symlinks. No on-disk probe layer in v0. See
   [libs/blkid/README.md](libs/blkid/README.md).
+- `compat/libmount` — ABI-compatible `libmount.so` shim backed by
+  `linuxutils-mount`. v0 covers read-only fstab / mountinfo /
+  `/proc/swaps` parsing and lookup (`mnt_table_*`, `mnt_fs_*`
+  getters, iter). Context, cache, lock, monitor, and setters are
+  deferred. See [compat/libmount/README.md](compat/libmount/README.md).
 - `Tag` and `TagKind` in `linuxutils-common`, shared between
   `linuxutils-mount` and `linuxutils-blkid`.
 - Placeholder `libkmod` crate for the upcoming kmod CLI tools.

@@ -201,7 +201,7 @@ linuxutils tools consume them directly.
 | `libblkid` | Block device identification library for identifying block devices by content, extracting filesystem information like labels and UUIDs, and managing block device caching | Stub |
 | `libfdisk` | Library for manipulating partition tables and performing partitioning operations | Stub |
 | `liblastlog2` | Y2038-safe library for managing user login records using a SQLite3 database backend | Not started |
-| `libmount` | Library for parsing /etc/fstab, /etc/mtab and /proc/self/mountinfo, managing the mtab file, and evaluating mount options | Stub |
+| `libmount` | Library for parsing /etc/fstab, /etc/mtab and /proc/self/mountinfo, managing the mtab file, and evaluating mount options | Partial — read-only iteration / lookup. See [compat/libmount/README.md](compat/libmount/README.md) |
 | `libsmartcols` | Library for smart adaptive formatting of tabular data with support for filtering and various display options | Stub |
 | `libuuid` | DCE-compatible Universally Unique Identifier library for generating unique identifiers compatible with RFC-4122 | Done |
 

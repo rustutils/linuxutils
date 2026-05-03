@@ -666,6 +666,8 @@ name = "linuxutils-libmount"
 version = "0.1.0"
 dependencies = [
  "libc",
+ "linuxutils-mount",
+ "tempfile",
 ]
 
 [[package]]
