@@ -31,5 +31,14 @@ Options:
   -b, --bytes
           Show sizes in bytes
 
+  -t, --time
+          Show last-attach / last-detach / last-change times
+
+  -p, --pid
+          Show creator and last-operation PIDs
+
+  -c, --creator
+          Show creator and owner UIDs/GIDs
+
   -h, --help
           Print help (see a summary with '-h')

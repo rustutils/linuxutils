@@ -10,4 +10,7 @@ Args {
     limits: false,
     summary: true,
     bytes: true,
+    time: false,
+    pid: false,
+    creator: false,
 }
