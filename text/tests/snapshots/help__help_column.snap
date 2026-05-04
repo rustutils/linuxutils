@@ -18,7 +18,9 @@ Options:
                                       relations
   -p, --tree-parent <column>          Specify column containing parent IDs for tree parent-child
                                       relations
-  -s, --separator <separators>        Possible input item delimiters (default is whitespace)
+  -s, --separator <separators>        Possible input item delimiters (default is whitespace).
+                                      `--input-separator` is accepted as an alias to match upstream
+                                      `column(1)` [aliases: --input-separator]
   -o, --output-separator <string>     Column delimiter for table output (default is two spaces)
   -N, --table-columns <names>         Specify column names (comma-separated)
   -d, --table-noheadings              Omit printing the table header

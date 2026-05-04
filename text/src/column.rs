@@ -16,6 +16,7 @@ const TAB_WIDTH: usize = 8;
 #[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "column", version, about)]
+#[command(allow_negative_numbers = true)]
 pub struct Args {
     /// Create a table from delimited input.
     #[arg(short = 't', long = "table")]
@@ -42,7 +43,14 @@ pub struct Args {
     tree_parent: Option<String>,
 
     /// Possible input item delimiters (default is whitespace).
-    #[arg(short = 's', long = "separator", value_name = "separators")]
+    /// `--input-separator` is accepted as an alias to match
+    /// upstream `column(1)`.
+    #[arg(
+        short,
+        long,
+        visible_alias = "input-separator",
+        value_name = "separators"
+    )]
     separator: Option<String>,
 
     /// Column delimiter for table output (default is two spaces).
@@ -117,11 +125,15 @@ pub struct Args {
     files: Vec<PathBuf>,
 }
 
-fn terminal_width() -> usize {
+/// Terminal width for layout decisions, or `None` when stdout
+/// isn't a TTY. Upstream `column(1)` only constrains column widths
+/// to the terminal width when running interactively — piping to a
+/// file should let columns grow to fit their content.
+fn terminal_width() -> Option<usize> {
     let stdout = io::stdout();
     match rustix::termios::tcgetwinsize(&stdout) {
-        Ok(ws) if ws.ws_col > 0 => ws.ws_col as usize,
-        _ => 80,
+        Ok(ws) if ws.ws_col > 0 => Some(ws.ws_col as usize),
+        _ => None,
     }
 }
 
@@ -164,9 +176,9 @@ fn pad_with_spaces(
 }
 
 pub fn run(args: Args) -> ExitCode {
-    let width_limit = match &args.output_width {
+    let width_limit: Option<usize> = match &args.output_width {
         Some(s) => parse_output_width(s),
-        None => Some(terminal_width()),
+        None => terminal_width(),
     };
 
     let input = match read_input(&args.files) {
@@ -279,28 +291,81 @@ fn table_mode(
         table.headings_set(false);
     }
 
+    // Upstream `column --table` uses ASCII tree drawing
+    // (`|-`, `` `- ``) rather than the Unicode box characters.
+    table.ascii_set(true);
+
     if args.table_maxout {
         table.maxout_set(true);
     }
 
+    // Upstream `column --table` uses two spaces between columns.
+    // The cols crate's default is one space, so set the default
+    // here unless the user overrides with `-o`.
     if let Some(ref sep) = args.output_separator {
         table.column_separator_set(sep);
+    } else {
+        table.column_separator_set("  ");
     }
 
-    // If -C (per-column attributes) is given, use those for column definitions.
-    if !args.table_column.is_empty() {
-        for (i, attr_str) in args.table_column.iter().enumerate() {
+    // The cols crate uses each column's header text as a *minimum*
+    // width when computing layout, even when headings are turned
+    // off. That doesn't match upstream `column(1)`, where the
+    // synthesised `COL1, COL2, …` placeholders or
+    // `--table-noheadings` should leave layout driven purely by
+    // data widths. Pass empty names to cols in either case (JSON
+    // mode keeps the real names so its keys are still meaningful).
+    let suppress_header_widths =
+        !args.json && (args.table_noheadings || args.table_columns.is_none());
+    let layout_names: Vec<String> = if suppress_header_widths {
+        col_names.iter().map(|_| String::new()).collect()
+    } else {
+        col_names.clone()
+    };
+
+    // `--table-order` chooses the *display* order. Build a
+    // permutation `display_order[d] = orig` mapping each display
+    // position to the original column index, with any unlisted
+    // columns appended in their natural order. The cols crate
+    // doesn't reorder columns after creation, so we create them
+    // up-front in the desired order and remap data accordingly.
+    let display_order: Vec<usize> = if let Some(ref spec) = args.table_order {
+        let mut ordered = Vec::with_capacity(col_names.len());
+        let mut seen = vec![false; col_names.len()];
+        for idx in resolve_columns(spec, &col_names) {
+            if !seen[idx] {
+                ordered.push(idx);
+                seen[idx] = true;
+            }
+        }
+        for (i, &was_seen) in seen.iter().enumerate() {
+            if !was_seen {
+                ordered.push(i);
+            }
+        }
+        ordered
+    } else {
+        (0..col_names.len()).collect()
+    };
+    let mut orig_to_display = vec![None; col_names.len()];
+    for (d, &o) in display_order.iter().enumerate() {
+        orig_to_display[o] = Some(d);
+    }
+
+    // Create columns in display order. `-C` per-column attribute
+    // strings still apply by *original* index, so we look up the
+    // matching attribute set when creating each column.
+    for &orig in &display_order {
+        let name = layout_names.get(orig).map(|s| s.as_str()).unwrap_or("");
+        let idx = table.new_column(name);
+        if let Some(attr_str) = args.table_column.get(orig) {
             let attrs = parse_column_attrs(attr_str);
-            let name = attrs
-                .iter()
-                .find_map(
-                    |(k, v)| {
-                        if k == "name" { v.as_deref() } else { None }
-                    },
-                )
-                .or_else(|| col_names.get(i).map(|s| s.as_str()))
-                .unwrap_or("?");
-            let idx = table.new_column(name);
+            // `name=...` from `-C` overrides the default header.
+            if let Some(custom_name) = attrs.iter().find_map(|(k, v)| {
+                if k == "name" { v.as_deref() } else { None }
+            }) {
+                table.column_mut(idx).unwrap().name_set(custom_name);
+            }
             let col = table.column_mut(idx).unwrap();
             for (key, _val) in &attrs {
                 match key.as_str() {
@@ -326,60 +391,50 @@ fn table_mode(
                 }
             }
         }
-        // Add remaining columns if input has more than -C definitions.
-        for name in &col_names[args.table_column.len()..] {
-            table.new_column(name);
-        }
-    } else {
-        for name in &col_names {
-            table.new_column(name);
-        }
     }
 
-    // Apply column flags from -R, -T, -E, -W, -H options.
-    if let Some(ref spec) = args.table_right {
-        for idx in resolve_columns(spec, &col_names) {
-            if let Some(col) = table.column_mut(idx) {
-                col.right_set(true);
+    // Apply column flags. `resolve_columns` returns *original*
+    // indices; remap each to the display position before mutating
+    // the cols `Column`.
+    let apply_flag =
+        |table: &mut Table, spec: &str, f: &dyn Fn(&mut cols::Column)| {
+            for orig in resolve_columns(spec, &col_names) {
+                if let Some(d) = orig_to_display[orig]
+                    && let Some(col) = table.column_mut(d)
+                {
+                    f(col);
+                }
             }
-        }
+        };
+    if let Some(ref spec) = args.table_right {
+        apply_flag(&mut table, spec, &|c| {
+            c.right_set(true);
+        });
     }
     if let Some(ref spec) = args.table_truncate {
-        for idx in resolve_columns(spec, &col_names) {
-            if let Some(col) = table.column_mut(idx) {
-                col.truncate_set(true);
-            }
-        }
+        apply_flag(&mut table, spec, &|c| {
+            c.truncate_set(true);
+        });
     }
     if let Some(ref spec) = args.table_noextreme {
-        for idx in resolve_columns(spec, &col_names) {
-            if let Some(col) = table.column_mut(idx) {
-                col.no_extremes_set(true);
-            }
-        }
+        apply_flag(&mut table, spec, &|c| {
+            c.no_extremes_set(true);
+        });
     }
     if let Some(ref spec) = args.table_wrap {
-        for idx in resolve_columns(spec, &col_names) {
-            if let Some(col) = table.column_mut(idx) {
-                col.wrap_set(true);
-            }
-        }
+        apply_flag(&mut table, spec, &|c| {
+            c.wrap_set(true);
+        });
     }
     if let Some(ref spec) = args.table_hide {
-        for idx in resolve_columns(spec, &col_names) {
-            if let Some(col) = table.column_mut(idx) {
-                col.hidden_set(true);
-            }
-        }
+        apply_flag(&mut table, spec, &|c| {
+            c.hidden_set(true);
+        });
     }
 
     if args.table_header_repeat {
         table.header_repeat_set(true);
     }
-
-    // Handle -O (column order) by reordering columns.
-    // For now we don't reorder — cols doesn't support column reordering
-    // after creation. This would need to remap column indices.
 
     // JSON mode.
     if args.json {
@@ -391,7 +446,8 @@ fn table_mode(
         }
     }
 
-    // Resolve tree column indices.
+    // Resolve tree column indices. These are the *original* column
+    // indices; the tree-set call wants the display position.
     let tree_col = args
         .tree
         .as_ref()
@@ -405,14 +461,24 @@ fn table_mode(
         .as_ref()
         .and_then(|s| resolve_single_column(s, &col_names));
 
-    // Mark the tree column.
+    // Mark the tree column at its display position.
     if let Some(tc) = tree_col
-        && let Some(col) = table.column_mut(tc)
+        && let Some(d) = orig_to_display[tc]
+        && let Some(col) = table.column_mut(d)
     {
         col.tree_set(true);
     }
 
-    // Populate rows.
+    // Populate rows. Each cell is sourced by the *original* column
+    // index, then written at the matching *display* position.
+    let set_row = |line: &mut cols::Line, row: &[String]| {
+        for (d, &orig) in display_order.iter().enumerate() {
+            if let Some(cell) = row.get(orig) {
+                line.data_set(d, cell);
+            }
+        }
+    };
+
     if let (Some(id_col), Some(parent_col)) = (tree_id_col, tree_parent_col) {
         // Tree mode: build parent-child relationships from data.
         let mut id_to_line: HashMap<String, cols::LineId> = HashMap::new();
@@ -420,10 +486,7 @@ fn table_mode(
 
         for row in &rows {
             let line_id = table.new_line(None);
-            let line = table.line_mut(line_id);
-            for (ci, cell) in row.iter().enumerate() {
-                line.data_set(ci, cell);
-            }
+            set_row(table.line_mut(line_id), row);
             if let Some(id_val) = row.get(id_col) {
                 id_to_line.insert(id_val.clone(), line_id);
             }
@@ -444,10 +507,7 @@ fn table_mode(
     } else {
         for row in &rows {
             let line_id = table.new_line(None);
-            let line = table.line_mut(line_id);
-            for (ci, cell) in row.iter().enumerate() {
-                line.data_set(ci, cell);
-            }
+            set_row(table.line_mut(line_id), row);
         }
     }
 
@@ -478,32 +538,33 @@ fn resolve_columns(spec: &str, col_names: &[String]) -> Vec<usize> {
                     result.push(i);
                 }
             }
-        } else if part == "-1" {
-            if ncols > 0 {
-                result.push(ncols - 1);
-            }
-        } else if let Some(dash_pos) = part.find('-') {
-            // Could be a range "N-M" or a negative index "-1" (handled above).
-            if dash_pos == 0 {
-                // Negative number — already handled "-1" above.
-                continue;
-            }
-            if let (Ok(start), Ok(end)) = (
-                part[..dash_pos].parse::<usize>(),
-                part[dash_pos + 1..].parse::<usize>(),
-            ) && start >= 1
-                && end >= start
-            {
-                for i in start..=end.min(ncols) {
-                    result.push(i - 1);
-                }
-            }
+        } else if let Some(rest) = part.strip_prefix('-')
+            && let Ok(n) = rest.parse::<usize>()
+            && n >= 1
+            && n <= ncols
+        {
+            // Negative index: `-1` = last column, `-N` = N-from-last.
+            result.push(ncols - n);
         } else if let Ok(n) = part.parse::<usize>() {
             if n >= 1 && n <= ncols {
                 result.push(n - 1);
             }
+        } else if let Some(dash_pos) = part.find('-')
+            && dash_pos > 0
+            && let (Ok(start), Ok(end)) = (
+                part[..dash_pos].parse::<usize>(),
+                part[dash_pos + 1..].parse::<usize>(),
+            )
+            && start >= 1
+            && end >= start
+        {
+            for i in start..=end.min(ncols) {
+                result.push(i - 1);
+            }
         } else {
-            // Match by name.
+            // Match by name. Names with embedded `-` (e.g.
+            // `VFS-OPTS`) end up here because the integer-range
+            // attempt above fell through.
             for (i, name) in col_names.iter().enumerate() {
                 if name == part {
                     result.push(i);

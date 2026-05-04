@@ -173,6 +173,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `cal -w/--week` prints ISO week numbers (Monday-first) or
   Sunday-based US week numbers (Sunday-first) in a 2-char column
   to the left of each month, matching upstream's output exactly.
+- `column --table` defaults to a 2-space inter-column separator
+  (matches upstream); `--input-separator` is now accepted as an
+  alias for `--separator`; `--table-noheadings` (or the implicit
+  `COL1, COL2, …` header placeholders) no longer pads columns to
+  the header text width; `--table-hide` and friends now match
+  column names that contain `-` (e.g. `VFS-OPTS`); `--table-order`
+  reorders the output columns; negative indices like
+  `--table-right -1` resolve to the last column (and `-N` to the
+  Nth-from-last); tree output uses ASCII drawing characters
+  (`|-`, `` `- ``) instead of Unicode box chars.
 - `rename` gained `--copy/-C`: regular files are content-copied,
   symlinks are duplicated to point at the same target, and
   unsupported types (directories, FIFOs, sockets, devices) emit
