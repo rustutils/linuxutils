@@ -251,14 +251,25 @@ fn table_mode(
         input,
         args.separator.as_deref(),
         args.table_columns_limit,
+        args.keep_empty_lines,
     );
 
     if rows.is_empty() {
         return Ok(());
     }
 
-    // Determine column count from the widest row.
-    let ncols = rows.iter().map(|r| r.len()).max().unwrap_or(0);
+    // Determine column count from the widest row, but always
+    // honour `--table-columns` if it lists more names than the
+    // data rows actually have. Upstream renders the extra columns
+    // as empty so headers like ID, PARENT, … stay visible even
+    // when `--table-columns-limit` collapsed everything past the
+    // limit into the last data column.
+    let data_ncols = rows.iter().map(|r| r.len()).max().unwrap_or(0);
+    let user_name_ncols = args
+        .table_columns
+        .as_ref()
+        .map_or(0, |s| s.split(',').count());
+    let ncols = data_ncols.max(user_name_ncols);
     if ncols == 0 {
         return Ok(());
     }
@@ -287,7 +298,17 @@ fn table_mode(
         table.termforce_set(TermForce::Always);
     }
 
-    if args.table_noheadings || args.table_columns.is_none() {
+    // Hide headings when the user asked for it, or when they
+    // didn't provide column names via either `-N`/`--table-columns`
+    // or `-C`/`--table-column name=…` (in which case we'd be
+    // showing synthesised `COL1, COL2, …` placeholders).
+    let any_named_via_c = args
+        .table_column
+        .iter()
+        .any(|attr| parse_column_attrs(attr).iter().any(|(k, _)| k == "name"));
+    if args.table_noheadings
+        || (args.table_columns.is_none() && !any_named_via_c)
+    {
         table.headings_set(false);
     }
 
@@ -315,8 +336,9 @@ fn table_mode(
     // `--table-noheadings` should leave layout driven purely by
     // data widths. Pass empty names to cols in either case (JSON
     // mode keeps the real names so its keys are still meaningful).
-    let suppress_header_widths =
-        !args.json && (args.table_noheadings || args.table_columns.is_none());
+    let suppress_header_widths = !args.json
+        && (args.table_noheadings
+            || (args.table_columns.is_none() && !any_named_via_c));
     let layout_names: Vec<String> = if suppress_header_widths {
         col_names.iter().map(|_| String::new()).collect()
     } else {
@@ -367,7 +389,7 @@ fn table_mode(
                 table.column_mut(idx).unwrap().name_set(custom_name);
             }
             let col = table.column_mut(idx).unwrap();
-            for (key, _val) in &attrs {
+            for (key, val) in &attrs {
                 match key.as_str() {
                     "right" => {
                         col.right_set(true);
@@ -386,6 +408,13 @@ fn table_mode(
                     }
                     "strictwidth" => {
                         col.strict_width_set(true);
+                    }
+                    "width" => {
+                        if let Some(v) = val.as_deref()
+                            && let Ok(w) = v.parse::<usize>()
+                        {
+                            col.width_hint_set(cols::WidthHint::Fixed(w));
+                        }
                     }
                     _ => {}
                 }
@@ -599,11 +628,15 @@ fn parse_table_input(
     input: &str,
     separator: Option<&str>,
     columns_limit: Option<usize>,
+    keep_empty: bool,
 ) -> Vec<Vec<String>> {
     let mut rows = Vec::new();
 
     for line in input.lines() {
         if line.is_empty() {
+            if keep_empty {
+                rows.push(Vec::new());
+            }
             continue;
         }
 

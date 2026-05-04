@@ -385,9 +385,11 @@ fn table_column_attr_right() {
         .unwrap();
     let stdout = std::str::from_utf8(&output.stdout).unwrap();
     let lines: Vec<&str> = stdout.lines().collect();
-    // B column should be right-aligned.
-    let pos1 = lines[0].rfind('1').unwrap();
-    let pos3 = lines[2].rfind("333").unwrap() + 2;
+    // The first line is the `A B` header now that `-C name=…`
+    // counts as user-supplied column names; the data rows start at
+    // index 1. B column should be right-aligned.
+    let pos1 = lines[1].rfind('1').unwrap();
+    let pos3 = lines[3].rfind("333").unwrap() + 2;
     assert_eq!(pos1, pos3, "-C right should right-align");
 }
 
