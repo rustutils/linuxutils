@@ -11,7 +11,8 @@ Args {
     year: false,
     twelve: true,
     julian: false,
-    columns: 4,
+    week: false,
+    columns: "4",
     args: [
         "2025",
     ],

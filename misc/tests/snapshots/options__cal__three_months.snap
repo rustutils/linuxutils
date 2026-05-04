@@ -11,6 +11,7 @@ Args {
     year: false,
     twelve: false,
     julian: false,
-    columns: 3,
+    week: false,
+    columns: "auto",
     args: [],
 }

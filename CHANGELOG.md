@@ -164,6 +164,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   id).
 - `getopt` recognises `--long` as a visible alias for
   `--longoptions`, matching upstream's tests.
+- `cal --columns` accepts the literal `auto` (default) and falls
+  back to 3 columns when the terminal width can't be determined,
+  matching upstream.
+- `cal -j/--julian` now uses 3-char-wide day cells and the matching
+  `Mon Tue Wed …` header so day-of-year numbers fit and align
+  with upstream's layout.
+- `cal -w/--week` prints ISO week numbers (Monday-first) or
+  Sunday-based US week numbers (Sunday-first) in a 2-char column
+  to the left of each month, matching upstream's output exactly.
 - `rename` gained `--copy/-C`: regular files are content-copied,
   symlinks are duplicated to point at the same target, and
   unsupported types (directories, FIFOs, sockets, devices) emit

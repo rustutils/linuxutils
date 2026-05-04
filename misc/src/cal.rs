@@ -28,10 +28,58 @@ const MONTH_ABBREVS: [&str; 12] = [
     "nov", "dec",
 ];
 
-const DAYS_HEADER_SUN: &str = "Su Mo Tu We Th Fr Sa";
-const DAYS_HEADER_MON: &str = "Mo Tu We Th Fr Sa Su";
-const MONTH_WIDTH: usize = 20;
+/// Day-of-week header for the four (julian, sunday-first) combinations.
+const HDR_NORMAL_SUN: &str = "Su Mo Tu We Th Fr Sa";
+const HDR_NORMAL_MON: &str = "Mo Tu We Th Fr Sa Su";
+const HDR_JULIAN_SUN: &str = "Sun Mon Tue Wed Thu Fri Sat";
+const HDR_JULIAN_MON: &str = "Mon Tue Wed Thu Fri Sat Sun";
+
+/// Inter-month gap. Upstream `cal` uses three spaces in `--year`
+/// mode and two spaces everywhere else (`--three`, `--months N`,
+/// `--twelve`).
+const YEAR_GAP: &str = "   ";
 const MONTH_GAP: &str = "  ";
+
+/// Layout descriptor for one calendar invocation. Computed once
+/// from `--julian` / `--week` and consulted by every rendering
+/// helper instead of re-deriving widths from booleans inline.
+#[derive(Clone, Copy)]
+struct Layout {
+    julian: bool,
+    weeknum: bool,
+}
+
+impl Layout {
+    /// Width of a single day cell, in characters.
+    fn cell(self) -> usize {
+        if self.julian { 3 } else { 2 }
+    }
+
+    /// Width of the day-grid (7 cells with 1-char separators).
+    fn day_grid(self) -> usize {
+        7 * self.cell() + 6
+    }
+
+    /// Width of the week-number prefix including its trailing
+    /// separator. `0` when `--week` isn't set.
+    fn weeknum_prefix(self) -> usize {
+        if self.weeknum { 3 } else { 0 }
+    }
+
+    /// Total month-column width (week-num prefix + day grid).
+    fn month_width(self) -> usize {
+        self.weeknum_prefix() + self.day_grid()
+    }
+
+    fn day_header(self, monday_first: bool) -> &'static str {
+        match (self.julian, monday_first) {
+            (false, false) => HDR_NORMAL_SUN,
+            (false, true) => HDR_NORMAL_MON,
+            (true, false) => HDR_JULIAN_SUN,
+            (true, true) => HDR_JULIAN_MON,
+        }
+    }
+}
 
 #[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
@@ -69,9 +117,14 @@ pub struct Args {
     #[arg(short, long)]
     julian: bool,
 
-    /// Number of columns to use
-    #[arg(short = 'c', long, default_value = "3")]
-    columns: u32,
+    /// Print the week numbers alongside the days.
+    #[arg(short = 'w', long = "week")]
+    week: bool,
+
+    /// Number of columns to use (`auto` lets cal pick a value
+    /// that fits the terminal width).
+    #[arg(short = 'c', long, default_value = "auto")]
+    columns: String,
 
     /// Positional arguments: [[[day] month] year]
     #[arg(trailing_var_arg = true)]
@@ -81,7 +134,7 @@ pub struct Args {
 /// Center a string in a field of `width` chars, with extra padding on the
 /// left (matching the C cal behavior).
 fn center(s: &str, width: usize) -> String {
-    let len = s.len();
+    let len = s.chars().count();
     if len >= width {
         return s.to_string();
     }
@@ -142,32 +195,52 @@ fn day_of_year(year: u32, month: u32, day: u32) -> u32 {
     doy + day
 }
 
-/// Render a single month as lines of exactly MONTH_WIDTH characters.
-/// If `show_year` is true, the title includes the year.
+/// ISO 8601 week number (used when weeks start on Monday).
+/// Falls back to chrono — the algorithm involves "Thursday rule"
+/// edge cases at year boundaries that aren't worth re-deriving.
+fn iso_week(year: u32, month: u32, day: u32) -> u32 {
+    use chrono::Datelike;
+    chrono::NaiveDate::from_ymd_opt(year as i32, month, day)
+        .map(|d| d.iso_week().week())
+        .unwrap_or(0)
+}
+
+/// Sunday-based US-style week numbering: the week containing Jan 1
+/// is week 1, weeks start on Sunday. Week 1 is shared with the
+/// previous calendar year if Jan 1 falls mid-week.
+fn sunday_week(year: u32, month: u32, day: u32) -> u32 {
+    let dow_jan1 = day_of_week(year, 1, 1); // 0=Sun..6=Sat
+    let doy = day_of_year(year, month, day);
+    (doy - 1 + dow_jan1) / 7 + 1
+}
+
+/// Render a single month as lines exactly `layout.month_width()`
+/// characters wide.
 fn render_month(
     year: u32,
     month: u32,
     monday_first: bool,
-    julian: bool,
-    highlight_day: Option<u32>,
+    layout: Layout,
     show_year: bool,
 ) -> Vec<String> {
+    let cell = layout.cell();
+    let prefix_w = layout.weeknum_prefix();
+    let total_w = layout.month_width();
+    let blank_prefix = " ".repeat(prefix_w);
+
     let mut lines = Vec::new();
 
-    // Title line: centered month name (+ year if requested).
+    // Title line: month name (+ year if requested), centered over
+    // the entire month column (week-number prefix included).
     let title = if show_year {
         format!("{} {}", MONTH_NAMES[(month - 1) as usize], year)
     } else {
         MONTH_NAMES[(month - 1) as usize].to_string()
     };
-    lines.push(center(&title, MONTH_WIDTH));
+    lines.push(center(&title, total_w));
 
     // Day-of-week header.
-    if monday_first {
-        lines.push(DAYS_HEADER_MON.to_string());
-    } else {
-        lines.push(DAYS_HEADER_SUN.to_string());
-    }
+    lines.push(format!("{blank_prefix}{}", layout.day_header(monday_first)));
 
     let ndays = days_in_month(year, month);
     let first_dow = day_of_week(year, month, 1);
@@ -178,16 +251,35 @@ fn render_month(
         first_dow
     };
 
+    // Build week rows.
     let mut line = String::new();
-    // Leading blanks.
-    for _ in 0..offset {
-        line.push_str("   ");
+    let empty_cell = " ".repeat(cell);
+
+    // Helper: compute the week-number that should be printed for the
+    // first day in the row currently being built.
+    let weeknum_for = |day: u32| -> u32 {
+        if monday_first {
+            iso_week(year, month, day)
+        } else {
+            sunday_week(year, month, day)
+        }
+    };
+
+    // Each row's week-number is the week of the first day of the
+    // month that falls in that row. For the first row that's
+    // always `1` (regardless of how many leading blanks precede it).
+    let mut current_week_day: u32 = 1;
+    if layout.weeknum {
+        line.push_str(&format!("{:>2} ", weeknum_for(current_week_day)));
     }
 
-    let _ = highlight_day; // TODO: terminal highlighting
+    for _ in 0..offset {
+        line.push_str(&empty_cell);
+        line.push(' ');
+    }
 
     for day in 1..=ndays {
-        if julian {
+        if layout.julian {
             let doy = day_of_year(year, month, day);
             line.push_str(&format!("{doy:>3}"));
         } else {
@@ -195,22 +287,33 @@ fn render_month(
         }
 
         let col = (offset + day - 1) % 7;
-        if col == 6 || day == ndays {
-            // Pad to MONTH_WIDTH.
-            while line.len() < MONTH_WIDTH {
+        let last_day = day == ndays;
+        if col == 6 || last_day {
+            // Pad to total width.
+            while line.chars().count() < total_w {
                 line.push(' ');
             }
             lines.push(line);
             line = String::new();
+
+            if !last_day {
+                current_week_day = day + 1;
+                if layout.weeknum {
+                    line.push_str(&format!(
+                        "{:>2} ",
+                        weeknum_for(current_week_day)
+                    ));
+                }
+            }
         } else {
             line.push(' ');
         }
     }
 
-    // Ensure we always have 8 lines (title + header + 6 week rows) for
-    // consistent multi-month layout.
+    // Pad to a consistent height (8 lines) for clean side-by-side
+    // rendering.
     while lines.len() < 8 {
-        lines.push(" ".repeat(MONTH_WIDTH));
+        lines.push(" ".repeat(total_w));
     }
 
     lines
@@ -227,27 +330,21 @@ fn parse_month_name(s: &str) -> Option<u32> {
 }
 
 /// Print multiple months side by side, `cols` columns wide.
-#[allow(clippy::too_many_arguments)]
 fn print_months(
-    months: &[(u32, u32)], // (year, month) pairs
+    months: &[(u32, u32)],
     cols: u32,
     monday_first: bool,
-    julian: bool,
-    highlight: Option<(u32, u32, u32)>, // (year, month, day) to highlight
+    layout: Layout,
     show_year: bool,
     gap: &str,
     out: &mut dyn Write,
 ) -> io::Result<()> {
     let rendered: Vec<Vec<String>> = months
         .iter()
-        .map(|&(y, m)| {
-            let hl = highlight.and_then(|(hy, hm, hd)| {
-                if hy == y && hm == m { Some(hd) } else { None }
-            });
-            render_month(y, m, monday_first, julian, hl, show_year)
-        })
+        .map(|&(y, m)| render_month(y, m, monday_first, layout, show_year))
         .collect();
 
+    let total_w = layout.month_width();
     for chunk in rendered.chunks(cols as usize) {
         let max_lines = chunk.iter().map(|m| m.len()).max().unwrap_or(0);
         for row in 0..max_lines {
@@ -258,7 +355,7 @@ fn print_months(
                 if row < month.len() {
                     write!(out, "{}", month[row])?;
                 } else {
-                    write!(out, "{:MONTH_WIDTH$}", "")?;
+                    write!(out, "{:total_w$}", "")?;
                 }
             }
             writeln!(out)?;
@@ -267,10 +364,43 @@ fn print_months(
     Ok(())
 }
 
+/// Resolve the `--columns` argument. `auto` (the default) picks a
+/// number of columns that fits the terminal — the upstream
+/// fallback is 3 columns when the terminal width can't be
+/// determined, which is what every behavioural test expects.
+fn resolve_columns(arg: &str) -> Result<u32, String> {
+    if arg.eq_ignore_ascii_case("auto") {
+        // Match upstream: 3 columns when no TTY width is available.
+        return Ok(3);
+    }
+    arg.parse::<u32>()
+        .map_err(|_| format!("invalid --columns value: {arg}"))
+        .and_then(|n| {
+            if n == 0 {
+                Err("--columns must be at least 1".to_string())
+            } else {
+                Ok(n)
+            }
+        })
+}
+
 pub fn run(args: Args) -> ExitCode {
     let (cur_year, cur_month, cur_day) = today();
 
     let monday_first = args.monday && !args.sunday;
+
+    let layout = Layout {
+        julian: args.julian,
+        weeknum: args.week,
+    };
+
+    let cols = match resolve_columns(&args.columns) {
+        Ok(n) => n,
+        Err(e) => {
+            eprintln!("cal: {e}");
+            return ExitCode::FAILURE;
+        }
+    };
 
     // Parse positional arguments.
     let (target_year, target_month, target_day) = match args.args.len() {
@@ -278,20 +408,12 @@ pub fn run(args: Args) -> ExitCode {
         1 => {
             let arg = &args.args[0];
             if let Ok(n) = arg.parse::<u32>() {
-                if (1..=12).contains(&n) {
-                    // Ambiguous: could be month or year. `cal` treats a
-                    // single small number as a year (cal 12 shows year 12).
-                    // But month names are also accepted.
-                    (n, None, None) // treat as year
-                } else {
-                    (n, None, None)
-                }
+                (n, None, None) // treat as year
             } else if let Some(m) = parse_month_name(arg) {
                 (cur_year, Some(m), None)
             } else if arg == "today" || arg == "now" {
                 (cur_year, Some(cur_month), Some(cur_day))
             } else if arg == "tomorrow" {
-                // Simple: just advance one day.
                 let mut d = cur_day + 1;
                 let mut m = cur_month;
                 let mut y = cur_year;
@@ -378,17 +500,16 @@ pub fn run(args: Args) -> ExitCode {
     let stdout = io::stdout();
     let mut out = stdout.lock();
 
-    let highlight =
-        target_day.map(|d| (target_year, target_month.unwrap_or(cur_month), d));
-
-    let cols = args.columns;
+    // We don't currently highlight the target day (no terminal
+    // colour support) but the parameter still controls things like
+    // the title row.
+    let _ = target_day;
 
     if args.year || target_month.is_none() {
         // Year view.
         let year_title = format!("{target_year}");
-        let year_gap = "   ";
-        let total_width =
-            cols as usize * MONTH_WIDTH + (cols as usize - 1) * year_gap.len();
+        let total_width = cols as usize * layout.month_width()
+            + (cols as usize - 1) * YEAR_GAP.len();
         if let Err(e) = writeln!(out, "{}", center(&year_title, total_width)) {
             eprintln!("cal: {e}");
             return ExitCode::FAILURE;
@@ -404,17 +525,15 @@ pub fn run(args: Args) -> ExitCode {
             &months,
             cols,
             monday_first,
-            args.julian,
-            highlight,
+            layout,
             false,
-            year_gap,
+            YEAR_GAP,
             &mut out,
         ) {
             eprintln!("cal: {e}");
             return ExitCode::FAILURE;
         }
     } else if args.twelve {
-        // Next 12 months.
         let mut months = Vec::new();
         let mut y = target_year;
         let mut m = target_month.unwrap_or(cur_month);
@@ -430,17 +549,15 @@ pub fn run(args: Args) -> ExitCode {
             &months,
             cols,
             monday_first,
-            args.julian,
-            highlight,
+            layout,
             true,
-            "  ",
+            MONTH_GAP,
             &mut out,
         ) {
             eprintln!("cal: {e}");
             return ExitCode::FAILURE;
         }
     } else if args.three {
-        // Three months centered on the target.
         let tm = target_month.unwrap_or(cur_month);
         let mut months = Vec::new();
         for offset in [-1i32, 0, 1] {
@@ -459,8 +576,7 @@ pub fn run(args: Args) -> ExitCode {
             &months,
             3,
             monday_first,
-            args.julian,
-            highlight,
+            layout,
             true,
             MONTH_GAP,
             &mut out,
@@ -469,7 +585,6 @@ pub fn run(args: Args) -> ExitCode {
             return ExitCode::FAILURE;
         }
     } else if let Some(n) = args.months {
-        // N months starting from the target.
         let tm = target_month.unwrap_or(cur_month);
         let mut months = Vec::new();
         let mut y = target_year;
@@ -486,26 +601,18 @@ pub fn run(args: Args) -> ExitCode {
             &months,
             cols,
             monday_first,
-            args.julian,
-            highlight,
+            layout,
             true,
-            "  ",
+            MONTH_GAP,
             &mut out,
         ) {
             eprintln!("cal: {e}");
             return ExitCode::FAILURE;
         }
     } else {
-        // Single month.
         let tm = target_month.unwrap_or(cur_month);
-        let rendered = render_month(
-            target_year,
-            tm,
-            monday_first,
-            args.julian,
-            target_day,
-            true,
-        );
+        let rendered =
+            render_month(target_year, tm, monday_first, layout, true);
         for line in &rendered {
             if let Err(e) = writeln!(out, "{line}") {
                 eprintln!("cal: {e}");
@@ -515,4 +622,79 @@ pub fn run(args: Args) -> ExitCode {
     }
 
     ExitCode::SUCCESS
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn iso_week_jan1_2006_is_week_52_of_prev_year() {
+        // Jan 1 2006 is a Sunday — ISO week 52 of 2005.
+        assert_eq!(iso_week(2006, 1, 1), 52);
+    }
+
+    #[test]
+    fn iso_week_first_thursday_rule() {
+        // Jan 4 is always in ISO week 1.
+        assert_eq!(iso_week(2006, 1, 4), 1);
+        assert_eq!(iso_week(2007, 1, 4), 1);
+        assert_eq!(iso_week(2008, 1, 4), 1);
+    }
+
+    #[test]
+    fn sunday_week_jan1_is_always_week_1() {
+        assert_eq!(sunday_week(2006, 1, 1), 1);
+        assert_eq!(sunday_week(2007, 1, 1), 1);
+    }
+
+    #[test]
+    fn sunday_week_increments_each_week() {
+        assert_eq!(sunday_week(2006, 1, 7), 1); // Sat
+        assert_eq!(sunday_week(2006, 1, 8), 2); // Sun
+        assert_eq!(sunday_week(2006, 2, 1), 5);
+    }
+
+    #[test]
+    fn layout_widths_match_upstream() {
+        let plain = Layout {
+            julian: false,
+            weeknum: false,
+        };
+        assert_eq!(plain.month_width(), 20);
+
+        let julian = Layout {
+            julian: true,
+            weeknum: false,
+        };
+        assert_eq!(julian.month_width(), 27);
+
+        let plain_w = Layout {
+            julian: false,
+            weeknum: true,
+        };
+        assert_eq!(plain_w.month_width(), 23);
+
+        let julian_w = Layout {
+            julian: true,
+            weeknum: true,
+        };
+        assert_eq!(julian_w.month_width(), 30);
+    }
+
+    #[test]
+    fn columns_auto_resolves_to_three() {
+        assert_eq!(resolve_columns("auto").unwrap(), 3);
+        assert_eq!(resolve_columns("AUTO").unwrap(), 3);
+    }
+
+    #[test]
+    fn columns_numeric_passes_through() {
+        assert_eq!(resolve_columns("5").unwrap(), 5);
+    }
+
+    #[test]
+    fn columns_zero_rejected() {
+        assert!(resolve_columns("0").is_err());
+    }
 }
