@@ -3,5 +3,5 @@ source: system/tests/lsmem_fixtures.rs
 expression: "run_ok(\"basic\", &[\"--raw\", \"--noheadings\", \"--bytes\", \"--summary=never\"],)"
 ---
 0x0000000000000000-0x0000000017ffffff 402653184 online no 0-2
-0x0000000018000000-0x000000001fffffff 134217728 offline no 3
+0x0000000018000000-0x000000001fffffff 134217728 offline  3
 0x0000000020000000-0x0000000027ffffff 134217728 online yes 4

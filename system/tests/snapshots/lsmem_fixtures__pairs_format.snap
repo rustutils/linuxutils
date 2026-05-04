@@ -3,5 +3,5 @@ source: system/tests/lsmem_fixtures.rs
 expression: "run_ok(\"basic\", &[\"--pairs\", \"--bytes\", \"--summary=never\"],)"
 ---
 RANGE="0x0000000000000000-0x0000000017ffffff" SIZE="402653184" STATE="online" REMOVABLE="no" BLOCK="0-2"
-RANGE="0x0000000018000000-0x000000001fffffff" SIZE="134217728" STATE="offline" REMOVABLE="no" BLOCK="3"
+RANGE="0x0000000018000000-0x000000001fffffff" SIZE="134217728" STATE="offline" REMOVABLE="" BLOCK="3"
 RANGE="0x0000000020000000-0x0000000027ffffff" SIZE="134217728" STATE="online" REMOVABLE="yes" BLOCK="4"

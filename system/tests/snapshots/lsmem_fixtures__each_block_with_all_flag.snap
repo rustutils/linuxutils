@@ -8,46 +8,46 @@ expression: "run_ok(\"basic\", &[\"--all\", \"-J\", \"--output-all\"])"
          "range": "0x0000000000000000-0x0000000007ffffff",
          "size": "128M",
          "state": "online",
-         "removable": "no",
+         "removable": false,
          "block": "0",
-         "node": "0",
+         "node": 0,
          "zones": "Normal"
       },
       {
          "range": "0x0000000008000000-0x000000000fffffff",
          "size": "128M",
          "state": "online",
-         "removable": "no",
+         "removable": false,
          "block": "1",
-         "node": "0",
+         "node": 0,
          "zones": "Normal"
       },
       {
          "range": "0x0000000010000000-0x0000000017ffffff",
          "size": "128M",
          "state": "online",
-         "removable": "no",
+         "removable": false,
          "block": "2",
-         "node": "0",
+         "node": 0,
          "zones": "Normal"
       },
       {
          "range": "0x0000000018000000-0x000000001fffffff",
          "size": "128M",
          "state": "offline",
-         "removable": "no",
+         "removable": false,
          "block": "3",
-         "node": "0",
+         "node": 0,
          "zones": "Normal"
       },
       {
          "range": "0x0000000020000000-0x0000000027ffffff",
          "size": "128M",
          "state": "online",
-         "removable": "yes",
+         "removable": true,
          "block": "4",
-         "node": "0",
-         "zones": "Normal"
+         "node": 0,
+         "zones": "Normal/Movable"
       }
    ]
 }

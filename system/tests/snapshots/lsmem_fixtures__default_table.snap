@@ -2,10 +2,10 @@
 source: system/tests/lsmem_fixtures.rs
 expression: "run_ok(\"basic\", &[])"
 ---
-RANGE                                  SIZE STATE   REMOVABLE BLOCK
-0x0000000000000000-0x0000000017ffffff  384M online         no   0-2
-0x0000000018000000-0x000000001fffffff  128M offline        no     3
-0x0000000020000000-0x0000000027ffffff  128M online        yes     4
+RANGE                                 SIZE   STATE REMOVABLE BLOCK
+0x0000000000000000-0x0000000017ffffff 384M  online        no   0-2
+0x0000000018000000-0x000000001fffffff 128M offline               3
+0x0000000020000000-0x0000000027ffffff 128M  online       yes     4
 
 Memory block size:                128M
 Total online memory:              512M

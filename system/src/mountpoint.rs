@@ -10,6 +10,8 @@ use std::{
     process::ExitCode,
 };
 
+const EXIT_USAGE: u8 = 1;
+
 const EXIT_NOTMOUNT: u8 = 32;
 
 #[derive(Parser, Debug)]
@@ -33,7 +35,7 @@ pub struct Args {
     nofollow: bool,
 
     /// Show the major/minor numbers of the given block device
-    #[arg(short = 'x', long = "devno", conflicts_with_all = ["fs_devno", "quiet", "nofollow"])]
+    #[arg(short = 'x', long = "devno", conflicts_with_all = ["fs_devno", "quiet"])]
     devno: bool,
 
     /// Directory, file, or device to check
@@ -41,6 +43,15 @@ pub struct Args {
 }
 
 pub fn run(args: Args) -> ExitCode {
+    // Upstream rejects --devno with --nofollow before doing any
+    // I/O — the two options apply to opposite halves of the
+    // resolution chain (one needs a block device, the other forbids
+    // following symlinks to one).
+    if args.devno && args.nofollow {
+        eprintln!("mountpoint: --devno and --nofollow are mutually exclusive");
+        return ExitCode::from(EXIT_USAGE);
+    }
+
     if args.devno {
         return show_devno(&args);
     }
@@ -56,7 +67,7 @@ pub fn run(args: Args) -> ExitCode {
     };
 
     if args.fs_devno {
-        if let Some((maj, min)) = mountinfo_devno(&args.path) {
+        if let Some((maj, min)) = mountinfo_devno(&args.path, args.nofollow) {
             println!("{maj}:{min}");
         } else {
             println!("{}:{}", major(st.st_dev), minor(st.st_dev));
@@ -64,7 +75,7 @@ pub fn run(args: Args) -> ExitCode {
         return ExitCode::SUCCESS;
     }
 
-    let is_mount = is_mountpoint(&args.path);
+    let is_mount = is_mountpoint(&args.path, args.nofollow, &st);
 
     if !args.quiet {
         if is_mount {
@@ -114,22 +125,36 @@ fn show_devno(args: &Args) -> ExitCode {
     ExitCode::SUCCESS
 }
 
-/// Check if a path is a mountpoint by looking it up in /proc/self/mountinfo.
-fn is_mountpoint(path: &PathBuf) -> bool {
-    if find_in_mountinfo(path).is_some() {
+/// Check if a path is a mountpoint. Under `--nofollow`, a final
+/// component that is itself a symlink is *never* a mountpoint —
+/// mounts always live on the resolved target. Otherwise look the
+/// path up in `/proc/self/mountinfo` and fall back to the
+/// classic "different st_dev from parent" trick if the path
+/// hasn't been canonicalised.
+fn is_mountpoint(path: &Path, nofollow: bool, st: &rustix::fs::Stat) -> bool {
+    if nofollow && FileType::from_raw_mode(st.st_mode).is_symlink() {
+        return false;
+    }
+    if find_in_mountinfo(path, nofollow).is_some() {
         return true;
     }
-    // Fallback: compare device IDs of path and its parent.
     match stat(path) {
-        Ok(st) => is_mountpoint_by_stat(&st, path),
+        Ok(target_st) => is_mountpoint_by_stat(&target_st, path),
         Err(_) => false,
     }
 }
 
-/// Look up a path in /proc/self/mountinfo and return its major:minor if found.
-fn find_in_mountinfo(path: &PathBuf) -> Option<(u32, u32)> {
-    let canonical = std::fs::canonicalize(path).ok()?;
-    let canonical = canonical.to_string_lossy();
+/// Look up a path in `/proc/self/mountinfo` and return its
+/// major:minor if found. Under `--nofollow`, the path is matched
+/// without canonicalisation so a symlink isn't silently resolved
+/// to its mount target.
+fn find_in_mountinfo(path: &Path, nofollow: bool) -> Option<(u32, u32)> {
+    let resolved = if nofollow {
+        path.to_path_buf()
+    } else {
+        std::fs::canonicalize(path).ok()?
+    };
+    let resolved = resolved.to_string_lossy();
 
     let file = std::fs::File::open("/proc/self/mountinfo").ok()?;
     let reader = io::BufReader::new(file);
@@ -149,7 +174,7 @@ fn find_in_mountinfo(path: &PathBuf) -> Option<(u32, u32)> {
         };
 
         let decoded = unescape_mountinfo(mount_point);
-        if *canonical == decoded {
+        if *resolved == decoded {
             let (maj_s, min_s) = devno.split_once(':')?;
             let maj = maj_s.parse().ok()?;
             let min = min_s.parse().ok()?;
@@ -161,8 +186,8 @@ fn find_in_mountinfo(path: &PathBuf) -> Option<(u32, u32)> {
 }
 
 /// Look up the device number from mountinfo for a given path.
-fn mountinfo_devno(path: &PathBuf) -> Option<(u32, u32)> {
-    find_in_mountinfo(path)
+fn mountinfo_devno(path: &Path, nofollow: bool) -> Option<(u32, u32)> {
+    find_in_mountinfo(path, nofollow)
 }
 
 /// Fallback: a path is a mountpoint if its device ID differs from its parent's.
@@ -210,6 +235,7 @@ mod tests {
 
     #[test]
     fn root_is_mountpoint() {
-        assert!(is_mountpoint(&PathBuf::from("/")));
+        let st = stat("/").unwrap();
+        assert!(is_mountpoint(Path::new("/"), false, &st));
     }
 }

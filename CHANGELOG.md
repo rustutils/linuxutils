@@ -131,6 +131,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `BufReader` over-read that broke `(line && line) <pipe`),
   ignores trailing positional args, and on EOF without a `\n`
   appends the synthetic newline that POSIX requires.
+- `mountpoint --nofollow` no longer reports a symlink as a
+  mountpoint via canonicalisation (the canonicalize step was
+  resolving the symlink before the mountinfo lookup); rejects
+  `--devno` + `--nofollow` with the upstream
+  `mountpoint: --devno and --nofollow are mutually exclusive`
+  error.
+- `lsmem` table-column alignment matches upstream (SIZE / STATE /
+  NODE / ZONES are now right-aligned), the kernel's lower-case
+  `none` valid-zones sentinel is rendered as `None`, multi-zone
+  blocks join their zones with `/` (e.g. `DMA/Normal`), and the
+  `REMOVABLE` column is left blank for offline blocks. JSON output
+  emits `removable` as a boolean and `node` as a number.
 - `ipcs --limits` no longer panics with `attempt to multiply with
   overflow` when `/proc/sys/kernel/shmall` reports a near-`u64::MAX`
   "unlimited" sentinel; switched to saturating math.

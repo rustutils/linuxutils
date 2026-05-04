@@ -4,7 +4,7 @@ pub const MAN: ManContent = ManContent::empty();
 
 use crate::sysfs::SysfsDevice;
 use clap::Parser;
-use cols::{OutputMode, Table, WidthHint, print_table};
+use cols::{JsonType, OutputMode, Table, WidthHint, print_table};
 use std::{
     path::{Path, PathBuf},
     process::ExitCode,
@@ -108,7 +108,7 @@ impl Col {
     fn whint(self) -> WidthHint {
         match self {
             Col::Range => WidthHint::Auto,
-            Col::Size => WidthHint::Fixed(5),
+            Col::Size => WidthHint::Fixed(4),
             Col::State => WidthHint::Fixed(6),
             Col::Removable => WidthHint::Fixed(9),
             Col::Block => WidthHint::Auto,
@@ -118,7 +118,23 @@ impl Col {
     }
 
     fn is_right(self) -> bool {
-        matches!(self, Col::Size | Col::Removable | Col::Block)
+        matches!(
+            self,
+            Col::Size
+                | Col::State
+                | Col::Removable
+                | Col::Block
+                | Col::Node
+                | Col::Zones
+        )
+    }
+
+    fn json_type(self) -> JsonType {
+        match self {
+            Col::Removable => JsonType::Boolean,
+            Col::Node => JsonType::Number,
+            _ => JsonType::String,
+        }
     }
 
     fn from_name(name: &str) -> Option<Self> {
@@ -209,9 +225,24 @@ fn read_memory_blocks(sysroot: &Path) -> Result<(u64, Vec<MemBlock>), String> {
             .map_err(|e| format!("failed to read state: {e}"))?;
         let removable = child.read_attr_bool("removable").unwrap_or(false);
         let node = find_node(&child);
-        let zones = child.read_attr("valid_zones").unwrap_or_default();
-        // Only the first zone matters for display.
-        let zones = zones.split_whitespace().next().unwrap_or("").to_string();
+        let raw_zones = child.read_attr("valid_zones").unwrap_or_default();
+        // Multi-zone blocks come back as space-separated tokens
+        // (e.g. "DMA Normal"). Upstream joins them with `/` and
+        // title-cases the leading character so the kernel's
+        // lower-case "none" sentinel renders as "None".
+        let zones = raw_zones
+            .split_whitespace()
+            .map(|z| {
+                let mut chars = z.chars();
+                match chars.next() {
+                    Some(c) => {
+                        c.to_ascii_uppercase().to_string() + chars.as_str()
+                    }
+                    None => String::new(),
+                }
+            })
+            .collect::<Vec<_>>()
+            .join("/");
 
         blocks.push(MemBlock {
             index,
@@ -398,9 +429,11 @@ pub fn run(args: Args) -> ExitCode {
 
         for col in &columns {
             let idx = table.new_column(col.name());
-            table.column_mut(idx).unwrap().width_hint_set(col.whint());
+            let column = table.column_mut(idx).unwrap();
+            column.width_hint_set(col.whint());
+            column.json_type_set(col.json_type());
             if col.is_right() {
-                table.column_mut(idx).unwrap().right_set(true);
+                column.right_set(true);
             }
         }
 
@@ -417,7 +450,15 @@ pub fn run(args: Args) -> ExitCode {
                     Col::Size => format_size(range.size, human),
                     Col::State => range.state.clone(),
                     Col::Removable => {
-                        if range.removable { "yes" } else { "no" }.to_string()
+                        // Offline blocks have no meaningful removable
+                        // status — upstream leaves the column blank.
+                        if range.state == "offline" {
+                            String::new()
+                        } else if range.removable {
+                            "yes".to_string()
+                        } else {
+                            "no".to_string()
+                        }
                     }
                     Col::Block => {
                         if range.start_block == range.end_block {
