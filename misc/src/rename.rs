@@ -45,6 +45,12 @@ pub struct Args {
     #[arg(short = 'i', long = "interactive")]
     interactive: bool,
 
+    /// Don't move the file, copy it instead. Regular files get a
+    /// content copy, symlinks are duplicated to point at the same
+    /// target. Other file types are skipped.
+    #[arg(short = 'C', long = "copy")]
+    copy: bool,
+
     /// The expression to search for
     expression: String,
 
@@ -198,7 +204,9 @@ pub fn run(args: Args) -> ExitCode {
             continue;
         }
 
-        let outcome = if args.symlink {
+        let outcome = if args.copy {
+            do_copy(&file, &args)
+        } else if args.symlink {
             do_symlink(&file, &args)
         } else {
             do_file(&file, &args)
@@ -280,6 +288,101 @@ fn do_file(file: &str, args: &Args) -> Outcome {
         && matches!(outcome, Outcome::Renamed)
         && (args.no_act || !matches!(outcome, Outcome::Failed))
     {
+        println!("`{file}' -> `{new_name}'");
+    }
+    outcome
+}
+
+/// `--copy` mode: leave the source in place and write a duplicate
+/// at the substituted name. Regular files get a content copy,
+/// symlinks get a fresh symlink pointing at the same target,
+/// directories and other types are skipped silently.
+fn do_copy(file: &str, args: &Args) -> Outcome {
+    let path = Path::new(file);
+    let meta = match path.symlink_metadata() {
+        Ok(m) => m,
+        Err(e) => {
+            eprintln!("rename: stat of {file} failed: {}", strerror(&e));
+            return Outcome::Failed;
+        }
+    };
+
+    let new_name = match replace_string(
+        file,
+        &args.expression,
+        &args.replacement,
+        args.all,
+        args.last,
+    ) {
+        Some(n) if n != file => n,
+        _ => return Outcome::Skipped,
+    };
+
+    let new_path = Path::new(&new_name);
+    let target_exists = new_path.symlink_metadata().is_ok();
+    if target_exists
+        && (args.no_overwrite
+            || (args.interactive
+                && (args.no_act || !prompt_overwrite(&new_name))))
+    {
+        if args.verbose {
+            println!("Skipping existing file: `{new_name}'");
+        }
+        return Outcome::Skipped;
+    }
+
+    if args.no_act {
+        if args.verbose {
+            println!("`{file}' -> `{new_name}'");
+        }
+        return Outcome::Renamed;
+    }
+
+    let ftype = meta.file_type();
+    let outcome = if ftype.is_file() {
+        match std::fs::copy(file, &new_name) {
+            Ok(_) => Outcome::Renamed,
+            Err(e) => {
+                eprintln!(
+                    "rename: {file}: copy to {new_name} failed: {}",
+                    strerror(&e)
+                );
+                Outcome::Failed
+            }
+        }
+    } else if ftype.is_symlink() {
+        match std::fs::read_link(path) {
+            Ok(target) => {
+                // If the destination already exists and we got past
+                // the no-overwrite guard above, remove it first —
+                // `symlink(2)` doesn't replace existing entries.
+                if target_exists {
+                    let _ = std::fs::remove_file(new_path);
+                }
+                match std::os::unix::fs::symlink(&target, new_path) {
+                    Ok(()) => Outcome::Renamed,
+                    Err(e) => {
+                        eprintln!(
+                            "rename: {file}: symlink to {new_name} failed: {}",
+                            strerror(&e)
+                        );
+                        Outcome::Failed
+                    }
+                }
+            }
+            Err(e) => {
+                eprintln!("rename: {file}: read_link failed: {}", strerror(&e));
+                Outcome::Failed
+            }
+        }
+    } else {
+        // Directories, FIFOs, sockets, devices — upstream prints
+        // a warning to stderr and treats the entry as skipped.
+        eprintln!("rename: {file}: cannot copy (unsupported file type)");
+        Outcome::Skipped
+    };
+
+    if args.verbose && matches!(outcome, Outcome::Renamed) {
         println!("`{file}' -> `{new_name}'");
     }
     outcome

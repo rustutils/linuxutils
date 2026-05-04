@@ -19,8 +19,15 @@ pub struct Args {
     #[arg(short = 'a', long = "alternative")]
     alternative: bool,
 
-    /// Long options to recognize (comma-separated)
-    #[arg(short = 'l', long = "longoptions", value_delimiter = ',')]
+    /// Long options to recognize (comma-separated). The
+    /// shorter `--long` form is accepted as an alias to match
+    /// upstream `getopt(1)`.
+    #[arg(
+        short = 'l',
+        long = "longoptions",
+        visible_alias = "long",
+        value_delimiter = ','
+    )]
     longoptions: Vec<String>,
 
     /// Program name for error messages

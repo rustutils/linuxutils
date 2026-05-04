@@ -162,6 +162,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `bits` now accepts the explicit `|<group>` OR-prefix that
   upstream's tests rely on (it used to be parsed as an invalid bit
   id).
+- `getopt` recognises `--long` as a visible alias for
+  `--longoptions`, matching upstream's tests.
+- `rename` gained `--copy/-C`: regular files are content-copied,
+  symlinks are duplicated to point at the same target, and
+  unsupported types (directories, FIFOs, sockets, devices) emit
+  upstream's `cannot copy (unsupported file type)` warning.
+- `prlimit --pid` accepts the race-free `PID:INODE` form produced
+  by `getino -p` and verifies the pidfs inode hasn't been reused
+  before touching limits; suppresses the table when any limit is
+  being set with `--<res>=…` (matches upstream — show vs. set are
+  separate intents).
 - `whereis -B` / `-M` / `-S` now terminate at the next flag-shaped
   argument (e.g. `-B bin -M man -f name` works), match man-page
   filenames via section-digit detection rather than a naive

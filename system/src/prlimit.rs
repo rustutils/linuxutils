@@ -4,7 +4,13 @@ pub const MAN: ManContent = ManContent::empty();
 
 use clap::Parser;
 use cols::{OutputMode, Table, WidthHint, print_table};
-use rustix::process::{Pid, Resource, Rlimit, getrlimit, prlimit, setrlimit};
+use rustix::{
+    fs::fstat,
+    process::{
+        Pid, PidfdFlags, Resource, Rlimit, getrlimit, pidfd_open, prlimit,
+        setrlimit,
+    },
+};
 use std::{fs, os::unix::process::CommandExt, process, process::ExitCode};
 
 #[derive(Parser, Debug)]
@@ -16,9 +22,12 @@ use std::{fs, os::unix::process::CommandExt, process, process::ExitCode};
                       prlimit [options] [--<resource>=<limit>] COMMAND [args...]"
 )]
 pub struct Args {
-    /// Process ID
+    /// Process ID. May be a plain `PID` or the race-free
+    /// `PID:INODE` form produced by `getino -p` — when the inode
+    /// is given, the pidfs inode is verified before any limit is
+    /// touched so that a recycled PID can't be hit by accident.
     #[arg(short, long, value_name = "pid")]
-    pid: Option<u32>,
+    pid: Option<String>,
 
     /// Define which output columns to use
     #[arg(short = 'o', long, value_delimiter = ',')]
@@ -405,6 +414,38 @@ fn u64_to_rlimit_half(v: u64) -> Option<u64> {
     if v == u64::MAX { None } else { Some(v) }
 }
 
+/// Parse a `--pid` value: either bare `PID` or `PID:INODE`. The
+/// inode (if present) is checked against the pidfs inode of the
+/// resolved pidfd to detect PID reuse before we touch limits.
+fn resolve_pid(arg: &str) -> Result<u32, String> {
+    let (pid_str, expected_inode) = match arg.split_once(':') {
+        Some((p, i)) => {
+            let inode = i
+                .parse::<u64>()
+                .map_err(|_| format!("invalid PID:INODE inode: {arg}"))?;
+            (p, Some(inode))
+        }
+        None => (arg, None),
+    };
+    let pid: u32 =
+        pid_str.parse().map_err(|_| format!("invalid PID: {arg}"))?;
+    if pid == 0 {
+        return Err(format!("invalid PID: {arg}"));
+    }
+
+    if let Some(expected) = expected_inode {
+        let raw = Pid::from_raw(pid as i32)
+            .ok_or_else(|| format!("invalid PID: {arg}"))?;
+        let fd = pidfd_open(raw, PidfdFlags::empty())
+            .map_err(|e| format!("pidfd_open({pid}): {e}"))?;
+        let st = fstat(&fd).map_err(|e| format!("fstat: {e}"))?;
+        if st.st_ino != expected {
+            return Err(format!("PID {pid} has been recycled"));
+        }
+    }
+    Ok(pid)
+}
+
 pub fn run(args: Args) -> ExitCode {
     let selected = resource_spec(&args);
 
@@ -415,7 +456,16 @@ pub fn run(args: Args) -> ExitCode {
         selected.iter().map(|(ri, _)| *ri).collect()
     };
 
-    let target_pid = args.pid;
+    let target_pid: Option<u32> = match args.pid.as_deref() {
+        Some(s) => match resolve_pid(s) {
+            Ok(p) => Some(p),
+            Err(e) => {
+                eprintln!("prlimit: {e}");
+                return ExitCode::FAILURE;
+            }
+        },
+        None => None,
+    };
 
     // Apply any limit changes.
     for (ri, limit_str_opt) in &selected {
@@ -467,6 +517,14 @@ pub fn run(args: Args) -> ExitCode {
         let err = process::Command::new(prog).args(prog_args).exec();
         eprintln!("prlimit: {prog}: {err}");
         return ExitCode::FAILURE;
+    }
+
+    // Match upstream `prlimit(1)`: when *any* limit is being set
+    // (i.e. there's a `--<res>=…` value, not just a bare `--<res>`),
+    // suppress the table — the user asked us to set, not show.
+    let any_setting = selected.iter().any(|(_, v)| v.is_some());
+    if any_setting {
+        return ExitCode::SUCCESS;
     }
 
     // Display limits.

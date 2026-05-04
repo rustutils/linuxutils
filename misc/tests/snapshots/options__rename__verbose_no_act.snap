@@ -10,6 +10,7 @@ Args {
     last: false,
     no_overwrite: false,
     interactive: false,
+    copy: false,
     expression: ".bak",
     replacement: "",
     files: [

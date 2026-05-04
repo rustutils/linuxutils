@@ -10,6 +10,7 @@ Args {
     last: false,
     no_overwrite: false,
     interactive: false,
+    copy: false,
     expression: "foo",
     replacement: "bar",
     files: [

@@ -1390,10 +1390,9 @@ mod prlimit {
 
     // ---- Error cases
 
-    #[test]
-    fn err_pid_not_a_number() {
-        insta::assert_snapshot!(parse::<Args>(&["prlimit", "-p", "abc",]));
-    }
+    // PID is parsed as a string at the clap layer (so the
+    // race-free `PID:INODE` form can pass through); the runtime
+    // check happens in `run()`.
 
     #[test]
     fn unknown_flag_consumed_as_positional() {

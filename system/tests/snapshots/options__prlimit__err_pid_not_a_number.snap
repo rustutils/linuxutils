@@ -1,8 +1,0 @@
----
-source: system/tests/options.rs
-expression: "parse::<Args>(&[\"prlimit\", \"-p\", \"abc\",])"
----
-ERROR:
-error: invalid value 'abc' for '--pid <pid>': invalid digit found in string
-
-For more information, try '--help'.

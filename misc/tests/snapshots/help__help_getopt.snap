@@ -13,7 +13,9 @@ Arguments:
 
 Options:
   -a, --alternative                Allow long options to start with a single -
-  -l, --longoptions <LONGOPTIONS>  Long options to recognize (comma-separated)
+  -l, --longoptions <LONGOPTIONS>  Long options to recognize (comma-separated). The shorter `--long`
+                                   form is accepted as an alias to match upstream `getopt(1)`
+                                   [aliases: --long]
   -n, --name <NAME>                Program name for error messages
   -o, --options <OPTIONS>          Short options string to recognize
   -q, --quiet                      Disable error output from getopt

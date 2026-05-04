@@ -19,4 +19,7 @@ Options:
   -l, --last          Replace the last occurrence instead of the first
   -o, --no-overwrite  Don't overwrite existing files
   -i, --interactive   Ask before overwriting existing files
+  -C, --copy          Don't move the file, copy it instead. Regular files get a content copy,
+                      symlinks are duplicated to point at the same target. Other file types are
+                      skipped
   -h, --help          Print help

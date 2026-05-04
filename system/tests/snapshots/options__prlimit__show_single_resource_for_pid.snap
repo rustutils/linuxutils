@@ -4,7 +4,7 @@ expression: "parse::<Args>(&[\"prlimit\", \"-p\", \"1234\", \"--nofile\",])"
 ---
 Args {
     pid: Some(
-        1234,
+        "1234",
     ),
     output: None,
     noheadings: false,
