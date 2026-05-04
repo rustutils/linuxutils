@@ -10,6 +10,7 @@ Args {
     keep_size: true,
     collapse_range: true,
     dig_holes: false,
+    report_holes: false,
     insert_range: false,
     punch_hole: false,
     zero_range: false,

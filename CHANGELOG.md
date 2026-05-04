@@ -143,6 +143,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   blocks join their zones with `/` (e.g. `DMA/Normal`), and the
   `REMOVABLE` column is left blank for offline blocks. JSON output
   emits `removable` as a boolean and `node` as a number.
+- `fallocate` gained `--report-holes/-r`, which walks the file with
+  `lseek(SEEK_DATA/SEEK_HOLE)` to enumerate sparse holes and scans
+  the data sections for zero runs to report a separate "data holes"
+  tally; output matches upstream's `Summary:` block. `--dig-holes`
+  now emits the upstream
+  `<file>: N holes, X (M bytes, P% of the file) converted to sparse
+  holes.` summary instead of per-hole lines, and zero runs that
+  span 64 KiB read chunks are merged into one hole rather than one
+  per chunk.
 - `ipcs --limits` no longer panics with `attempt to multiply with
   overflow` when `/proc/sys/kernel/shmall` reports a near-`u64::MAX`
   "unlimited" sentinel; switched to saturating math.

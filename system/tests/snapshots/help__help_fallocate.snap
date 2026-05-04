@@ -15,6 +15,7 @@ Options:
   -n, --keep-size        Do not modify the apparent length of the file
   -c, --collapse-range   Remove a byte range from the file without leaving a hole
   -d, --dig-holes        Detect zeroes and replace with holes
+  -r, --report-holes     Report file (sparse) and data (zero-run) holes without modifying the file
   -i, --insert-range     Insert a hole at the specified offset, shifting existing data
   -p, --punch-hole       Deallocate space (punch a hole) in the byte range
   -z, --zero-range       Zero a byte range in the file

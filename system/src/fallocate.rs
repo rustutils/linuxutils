@@ -40,6 +40,11 @@ pub struct Args {
     #[arg(short = 'd', long, conflicts_with_all = ["collapse_range", "punch_hole", "zero_range", "insert_range", "posix"])]
     dig_holes: bool,
 
+    /// Report file (sparse) and data (zero-run) holes without
+    /// modifying the file.
+    #[arg(short = 'r', long, conflicts_with_all = ["collapse_range", "punch_hole", "zero_range", "dig_holes", "insert_range", "posix"])]
+    report_holes: bool,
+
     /// Insert a hole at the specified offset, shifting existing data
     #[arg(short = 'i', long, conflicts_with_all = ["collapse_range", "punch_hole", "zero_range", "dig_holes", "posix"])]
     insert_range: bool,
@@ -101,12 +106,19 @@ fn parse_size(s: &str) -> Result<u64, String> {
         .ok_or_else(|| format!("size overflow: {s}"))
 }
 
+/// Aggregate hole-tally returned by both `dig_holes` and the data-
+/// scan portion of `report_holes`.
+#[derive(Default, Clone, Copy)]
+struct HoleSummary {
+    holes: u64,
+    bytes: u64,
+}
+
 fn dig_holes(
     fd: &std::fs::File,
     offset: u64,
     length: u64,
-    verbose: bool,
-) -> Result<(), String> {
+) -> Result<HoleSummary, String> {
     let file_size = fd
         .metadata()
         .map_err(|e| format!("failed to get file metadata: {e}"))?
@@ -117,13 +129,28 @@ fn dig_holes(
         offset.saturating_add(length).min(file_size)
     };
     let mut pos = offset;
+    let mut summary = HoleSummary::default();
 
-    // Use a buffered reader approach: read chunks, find zero regions, punch them
     let mut buf = vec![0u8; 64 * 1024];
     let mut reader = std::io::BufReader::new(fd);
     reader
         .seek(SeekFrom::Start(pos))
         .map_err(|e| format!("seek failed: {e}"))?;
+
+    // Track zero runs across chunk boundaries so we punch one big
+    // hole per contiguous zero stretch, not one per 64 KiB chunk.
+    let mut run_start: Option<u64> = None;
+
+    let mut punch = |start: u64, len: u64| {
+        if len < 4096 {
+            return;
+        }
+        let flags = FallocateFlags::PUNCH_HOLE | FallocateFlags::KEEP_SIZE;
+        if rustix::fs::fallocate(fd.as_fd(), flags, start, len).is_ok() {
+            summary.holes += 1;
+            summary.bytes += len;
+        }
+    };
 
     while pos < end {
         let to_read = ((end - pos) as usize).min(buf.len());
@@ -134,47 +161,155 @@ fn dig_holes(
             break;
         }
 
-        // Find zero runs in this chunk and punch them
         let chunk = &buf[..n];
-        let mut i = 0;
-        while i < chunk.len() {
-            if chunk[i] == 0 {
-                let zero_start = i;
-                while i < chunk.len() && chunk[i] == 0 {
-                    i += 1;
+        for (i, &b) in chunk.iter().enumerate() {
+            let abs = pos + i as u64;
+            if b == 0 {
+                if run_start.is_none() {
+                    run_start = Some(abs);
                 }
-                let zero_len = i - zero_start;
-                // Only punch if the zero run is at least 4K (filesystem block aligned)
-                if zero_len >= 4096 {
-                    let hole_offset = pos + zero_start as u64;
-                    let hole_len = zero_len as u64;
-                    let flags =
-                        FallocateFlags::PUNCH_HOLE | FallocateFlags::KEEP_SIZE;
-                    if let Err(e) = rustix::fs::fallocate(
-                        fd.as_fd(),
-                        flags,
-                        hole_offset,
-                        hole_len,
-                    ) {
-                        if verbose {
-                            eprintln!(
-                                "fallocate: punch hole at offset {hole_offset}, length {hole_len}: {e}"
-                            );
-                        }
-                    } else if verbose {
-                        eprintln!(
-                            "fallocate: punched hole at offset {hole_offset}, length {hole_len}"
-                        );
-                    }
-                }
-            } else {
-                i += 1;
+            } else if let Some(s) = run_start.take() {
+                punch(s, abs - s);
             }
         }
 
         pos += n as u64;
     }
+    if let Some(s) = run_start {
+        punch(s, pos - s);
+    }
 
+    Ok(summary)
+}
+
+/// Produce binary-suffix human-readable size strings matching the
+/// upstream `report-holes` output format: `1048576` → `1 MiB`,
+/// `0` → `0 B`.
+fn human_size(bytes: u64) -> String {
+    const UNITS: &[&str] = &["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB"];
+    let mut size = bytes as f64;
+    let mut idx = 0;
+    while size >= 1024.0 && idx < UNITS.len() - 1 {
+        size /= 1024.0;
+        idx += 1;
+    }
+    // Whole-number values render without a decimal, fractional
+    // values get one decimal place.
+    if (size - size.round()).abs() < 0.05 {
+        format!("{} {}", size.round() as u64, UNITS[idx])
+    } else {
+        format!("{size:.1} {}", UNITS[idx])
+    }
+}
+
+fn pct(numer: u64, denom: u64) -> f64 {
+    if denom == 0 {
+        0.0
+    } else {
+        (numer as f64) / (denom as f64) * 100.0
+    }
+}
+
+fn format_summary_line(s: HoleSummary, file_size: u64) -> String {
+    format!(
+        "{} holes, {} ({} bytes, {:.2}% of the file)",
+        s.holes,
+        human_size(s.bytes),
+        s.bytes,
+        pct(s.bytes, file_size)
+    )
+}
+
+/// Walk the file with `lseek(SEEK_HOLE)` / `lseek(SEEK_DATA)` to
+/// locate sparse holes, and scan each data section for zero runs
+/// big enough to qualify as a candidate "data hole".
+fn report_holes(
+    fd: &std::fs::File,
+    file_size: u64,
+) -> Result<(HoleSummary, HoleSummary), String> {
+    use rustix::fs::{SeekFrom as RxSeek, seek};
+    let mut file_holes = HoleSummary::default();
+    let mut data_holes = HoleSummary::default();
+
+    let mut offset: u64 = 0;
+    while offset < file_size {
+        // Find the next data region.
+        let data_start = match seek(fd.as_fd(), RxSeek::Data(offset)) {
+            Ok(p) => p,
+            Err(e) if e == rustix::io::Errno::NXIO => {
+                // No more data — everything from here to EOF is hole.
+                let len = file_size - offset;
+                if len > 0 {
+                    file_holes.holes += 1;
+                    file_holes.bytes += len;
+                }
+                break;
+            }
+            Err(e) => return Err(format!("SEEK_DATA failed: {e}")),
+        };
+        if data_start > offset {
+            file_holes.holes += 1;
+            file_holes.bytes += data_start - offset;
+        }
+        // Find where this data region ends.
+        let data_end = match seek(fd.as_fd(), RxSeek::Hole(data_start)) {
+            Ok(p) => p,
+            Err(e) => return Err(format!("SEEK_HOLE failed: {e}")),
+        };
+        // Scan the data region for zero runs.
+        scan_data_for_zero_runs(fd, data_start, data_end, &mut data_holes)?;
+        offset = data_end;
+    }
+
+    Ok((file_holes, data_holes))
+}
+
+fn scan_data_for_zero_runs(
+    fd: &std::fs::File,
+    start: u64,
+    end: u64,
+    summary: &mut HoleSummary,
+) -> Result<(), String> {
+    let mut pos = start;
+    let mut buf = vec![0u8; 64 * 1024];
+    let mut reader = std::io::BufReader::new(fd);
+    reader
+        .seek(SeekFrom::Start(pos))
+        .map_err(|e| format!("seek failed: {e}"))?;
+
+    // Track zero runs across chunk boundaries so a single 1 MiB
+    // zero stretch counts as one hole, not 16.
+    let mut run_len: u64 = 0;
+
+    while pos < end {
+        let to_read = ((end - pos) as usize).min(buf.len());
+        let n = reader
+            .read(&mut buf[..to_read])
+            .map_err(|e| format!("read failed: {e}"))?;
+        if n == 0 {
+            break;
+        }
+        let chunk = &buf[..n];
+        let mut i = 0;
+        while i < chunk.len() {
+            if chunk[i] == 0 {
+                run_len += 1;
+                i += 1;
+            } else {
+                if run_len >= 4096 {
+                    summary.holes += 1;
+                    summary.bytes += run_len;
+                }
+                run_len = 0;
+                i += 1;
+            }
+        }
+        pos += n as u64;
+    }
+    if run_len >= 4096 {
+        summary.holes += 1;
+        summary.bytes += run_len;
+    }
     Ok(())
 }
 
@@ -187,7 +322,7 @@ pub fn run(args: Args) -> ExitCode {
         }
     };
 
-    let length = if args.dig_holes {
+    let length = if args.dig_holes || args.report_holes {
         match &args.length {
             Some(s) => match parse_size(s) {
                 Ok(v) => v,
@@ -196,7 +331,8 @@ pub fn run(args: Args) -> ExitCode {
                     return ExitCode::FAILURE;
                 }
             },
-            None => 0, // dig-holes can work without explicit length (uses file size)
+            // dig-holes / report-holes default to the full file
+            None => 0,
         }
     } else {
         match &args.length {
@@ -214,9 +350,12 @@ pub fn run(args: Args) -> ExitCode {
         }
     };
 
-    // Open the file
+    // Open the file. dig-holes / report-holes operate on an existing
+    // file; they don't auto-create one.
     let oflags = if args.dig_holes {
         OFlags::RDWR
+    } else if args.report_holes {
+        OFlags::RDONLY
     } else {
         OFlags::RDWR | OFlags::CREATE
     };
@@ -233,16 +372,61 @@ pub fn run(args: Args) -> ExitCode {
         }
     };
 
+    if args.report_holes {
+        let file = std::fs::File::from(fd);
+        let file_size = match file.metadata() {
+            Ok(m) => m.len(),
+            Err(e) => {
+                eprintln!("fallocate: stat: {e}");
+                return ExitCode::FAILURE;
+            }
+        };
+        match report_holes(&file, file_size) {
+            Ok((file_h, data_h)) => {
+                println!();
+                println!("Summary:");
+                println!(
+                    "file holes: {}",
+                    format_summary_line(file_h, file_size)
+                );
+                println!(
+                    "data holes: {}",
+                    format_summary_line(data_h, file_size)
+                );
+                return ExitCode::SUCCESS;
+            }
+            Err(e) => {
+                eprintln!("fallocate: {e}");
+                return ExitCode::FAILURE;
+            }
+        }
+    }
+
     if args.dig_holes {
         let file = std::fs::File::from(fd);
-        if let Err(e) = dig_holes(&file, offset, length, args.verbose) {
-            eprintln!("fallocate: {e}");
-            return ExitCode::FAILURE;
+        let file_size = match file.metadata() {
+            Ok(m) => m.len(),
+            Err(e) => {
+                eprintln!("fallocate: stat: {e}");
+                return ExitCode::FAILURE;
+            }
+        };
+        match dig_holes(&file, offset, length) {
+            Ok(summary) => {
+                if args.verbose {
+                    println!(
+                        "{}: {} converted to sparse holes.",
+                        args.filename,
+                        format_summary_line(summary, file_size)
+                    );
+                }
+                return ExitCode::SUCCESS;
+            }
+            Err(e) => {
+                eprintln!("fallocate: {e}");
+                return ExitCode::FAILURE;
+            }
         }
-        if args.verbose {
-            eprintln!("fallocate: {}: dig holes complete", args.filename);
-        }
-        return ExitCode::SUCCESS;
     }
 
     let flags = if args.punch_hole {
