@@ -50,7 +50,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `blkid` (v0) — listing mode and `-L` / `-U` lookup (no probe layer).
 - `fincore` — page-cache residency reporting via `mincore(2)`.
 - `exch` — atomic path exchange via `renameat2(RENAME_EXCHANGE)`.
-- `bits` — bitmask format converter (mask / list / binary).
+- `bits` — bitmask format converter (mask / grouped-mask / list /
+  binary / expand). `--list` compresses arithmetic progressions of
+  3+ bits into `start-end[:stride]` to match upstream's output.
 - `getino` — pidfd and namespace inode reporter.
 - `wdctl` — show hardware watchdog status (identity, timeouts,
   feature/status flags, boot-status) via the `WDIOC_*` ioctls.
@@ -90,6 +92,54 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   with ABI-compat shims relocated to `compat/*` (e.g. `libs/libuuid` →
   `compat/libuuid`).
 - Bumped MSRV to **Rust 1.87** (was 1.85) to use `u*::is_multiple_of`.
+- `ipcs` learned the upstream `-t/--time`, `-p/--pid`, and
+  `-c/--creator` display modes, and emits sections in upstream's
+  `msg → shm → sem` order across every mode.
+- `rename`'s output format and matching rules now mirror upstream
+  rename(1): symlink-mode prints `file: \`old' -> \`new'`,
+  `--no-overwrite` skips print `Skipping existing file: \`name'`
+  to stdout, the `\`old' -> \`new'` line is only emitted on
+  success, and search is restricted to the path basename when
+  neither side of the substitution contains `/`. Trailing slashes
+  on input paths are stripped before processing.
+- `bits --list` output is range-compressed (matches upstream); the
+  flat form moved to the new `-x/--expand` mode.
+
+### Fixed
+
+- `ipcs --limits` no longer panics with `attempt to multiply with
+  overflow` when `/proc/sys/kernel/shmall` reports a near-`u64::MAX`
+  "unlimited" sentinel; switched to saturating math.
+- `bits --width` now rejects values above 128 KB with
+  `bits: invalid --width: '<n>': ERANGE` and reports
+  `bits: invalid --width` for `--width 0`, matching upstream's
+  error shape.
+- `bits` now accepts the explicit `|<group>` OR-prefix that
+  upstream's tests rely on (it used to be parsed as an invalid bit
+  id).
+- `whereis -B` / `-M` / `-S` now terminate at the next flag-shaped
+  argument (e.g. `-B bin -M man -f name` works), match man-page
+  filenames via section-digit detection rather than a naive
+  `name.` prefix, and stop gating bin-dir results on the
+  executable bit.
+- `colrm` is a faithful port of upstream's three-phase algorithm:
+  tabs and backspaces are preserved verbatim instead of being
+  expanded to spaces.
+- `namei` prefixes each entry with at least one space and adds one
+  more per symlink-resolution level (matches upstream's flat
+  layout instead of doubling per depth).
+- `ionice` error messages match upstream phrasing
+  (`unknown prio class N`, `ignoring given class data for none
+  class`, plain `Invalid argument` without `(os error 22)` suffix);
+  numeric class arguments are no longer rejected at parse time —
+  they're forwarded so `ioprio_set(2)` can produce the expected
+  `EINVAL`.
+- `uuidparse` only populates the TYPE / TIME columns for the DCE
+  variant (matches upstream — NCS, Microsoft, "other" stay blank);
+  prints `vendor` for version 8 and `invalid` for unparseable
+  input; computes pre-1970 timestamps as signed `i64` from the
+  60-bit Gregorian-tick field so v1/v6 UUIDs back to 1582 render
+  correctly.
 
 ## [0.1.0] - 2026-04-29
 
