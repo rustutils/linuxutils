@@ -9,6 +9,8 @@ use std::{
 };
 
 const DEFAULT_WIDTH: usize = 8192;
+/// Upstream's bits caps `--width` at 128KB worth of bits.
+const MAX_WIDTH: usize = 128 * 1024;
 
 /// Convert bit masks from/to various formats.
 ///
@@ -34,9 +36,15 @@ pub struct Args {
     #[arg(short = 'b', long, action = ArgAction::SetTrue, group = "mode")]
     binary: bool,
 
-    /// Print result as a list of bit IDs (with ranges)
+    /// Print result as a list of bit IDs (with `start-end[:stride]`
+    /// range compression for arithmetic progressions of 3+ bits)
     #[arg(short = 'l', long, action = ArgAction::SetTrue, group = "mode")]
     list: bool,
+
+    /// Print result as a flat comma-separated bit list (no
+    /// range compression)
+    #[arg(short = 'x', long, action = ArgAction::SetTrue, group = "mode")]
+    expand: bool,
 
     /// Maximum number of bits handled; bits above this are truncated
     #[arg(short = 'w', long, default_value_t = DEFAULT_WIDTH)]
@@ -60,11 +68,14 @@ enum Mode {
     Grouped,
     Binary,
     List,
+    Expand,
 }
 
 fn select_mode(a: &Args) -> Mode {
     if a.list {
         Mode::List
+    } else if a.expand {
+        Mode::Expand
     } else if a.binary {
         Mode::Binary
     } else if a.grouped_mask {
@@ -164,6 +175,7 @@ fn parse_group(s: &str, width: usize) -> Result<(Op, Vec<u32>), String> {
         Some('&') => (Op::And, &s[1..]),
         Some('^') => (Op::Xor, &s[1..]),
         Some('~') => (Op::AndNot, &s[1..]),
+        Some('|') => (Op::Or, &s[1..]),
         _ => (Op::Or, s),
     };
     if body.is_empty() {
@@ -281,7 +293,7 @@ fn fmt_binary(buf: &[u32]) -> String {
     s
 }
 
-fn fmt_list(buf: &[u32]) -> String {
+fn collect_bits(buf: &[u32]) -> Vec<usize> {
     let mut bits: Vec<usize> = Vec::new();
     for (i, &w) in buf.iter().enumerate() {
         for b in 0..32 {
@@ -290,42 +302,59 @@ fn fmt_list(buf: &[u32]) -> String {
             }
         }
     }
-    if bits.is_empty() {
-        return String::new();
-    }
+    bits
+}
+
+/// Compressed list output. Three or more consecutive bits at a
+/// constant stride collapse to `start-end[:stride]`; the `:stride`
+/// suffix is omitted for stride 1. Matches upstream's behaviour
+/// for inputs like `0x0badcaca` →
+/// `1,3,6,7-11:2,14-16,18,19-23:2,24,25,27`.
+fn fmt_list(buf: &[u32]) -> String {
+    let bits = collect_bits(buf);
     let mut out = String::new();
-    let mut start = bits[0];
-    let mut prev = bits[0];
-    // Match upstream: only compress runs of 3 or more consecutive bits.
-    let push_run = |out: &mut String, start: usize, prev: usize| {
-        let push_one = |out: &mut String, n: usize| {
-            if !out.is_empty() {
-                out.push(',');
-            }
-            out.push_str(&n.to_string());
-        };
-        if prev - start >= 2 {
-            if !out.is_empty() {
-                out.push(',');
-            }
-            out.push_str(&format!("{start}-{prev}"));
-        } else {
-            for n in start..=prev {
-                push_one(out, n);
+    let mut i = 0;
+    while i < bits.len() {
+        let mut end = i;
+        let mut stride = 0usize;
+        if i + 2 < bits.len() {
+            let s = bits[i + 1].saturating_sub(bits[i]);
+            if s > 0 && bits[i + 2].saturating_sub(bits[i + 1]) == s {
+                // Found a 3-element progression. Extend it.
+                stride = s;
+                end = i + 2;
+                while end + 1 < bits.len()
+                    && bits[end + 1].saturating_sub(bits[end]) == s
+                {
+                    end += 1;
+                }
             }
         }
-    };
-    for &b in &bits[1..] {
-        if b == prev + 1 {
-            prev = b;
+        if !out.is_empty() {
+            out.push(',');
+        }
+        if end > i {
+            if stride == 1 {
+                out.push_str(&format!("{}-{}", bits[i], bits[end]));
+            } else {
+                out.push_str(&format!("{}-{}:{}", bits[i], bits[end], stride));
+            }
+            i = end + 1;
         } else {
-            push_run(&mut out, start, prev);
-            start = b;
-            prev = b;
+            out.push_str(&bits[i].to_string());
+            i += 1;
         }
     }
-    push_run(&mut out, start, prev);
     out
+}
+
+/// Flat comma-separated bit list (no range / stride compression).
+fn fmt_expand(buf: &[u32]) -> String {
+    let bits = collect_bits(buf);
+    bits.iter()
+        .map(usize::to_string)
+        .collect::<Vec<_>>()
+        .join(",")
 }
 
 fn render(buf: &[u32], mode: Mode) -> String {
@@ -334,6 +363,7 @@ fn render(buf: &[u32], mode: Mode) -> String {
         Mode::Grouped => fmt_grouped(buf),
         Mode::Binary => fmt_binary(buf),
         Mode::List => fmt_list(buf),
+        Mode::Expand => fmt_expand(buf),
     }
 }
 
@@ -355,7 +385,14 @@ fn collect_groups(args: &Args) -> Result<Vec<String>, String> {
 
 pub fn run(args: Args) -> ExitCode {
     if args.width == 0 {
-        eprintln!("bits: --width must be greater than 0");
+        eprintln!("bits: invalid --width");
+        return ExitCode::FAILURE;
+    }
+    if args.width > MAX_WIDTH {
+        // Upstream prints the strerror form of ERANGE here; the
+        // test runner sed-replaces that text with the literal
+        // `ERANGE`, so we just emit it directly.
+        eprintln!("bits: invalid --width: '{}': ERANGE", args.width);
         return ExitCode::FAILURE;
     }
     let mode = select_mode(&args);

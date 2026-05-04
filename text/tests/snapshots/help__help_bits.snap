@@ -26,7 +26,11 @@ Options:
           Print result as a binary mask
 
   -l, --list
-          Print result as a list of bit IDs (with ranges)
+          Print result as a list of bit IDs (with `start-end[:stride]` range compression for
+          arithmetic progressions of 3+ bits)
+
+  -x, --expand
+          Print result as a flat comma-separated bit list (no range compression)
 
   -w, --width <WIDTH>
           Maximum number of bits handled; bits above this are truncated

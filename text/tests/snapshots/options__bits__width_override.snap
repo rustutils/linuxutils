@@ -7,6 +7,7 @@ Args {
     grouped_mask: false,
     binary: false,
     list: true,
+    expand: false,
     width: 64,
     masks: [
         "2,22,74,79",
