@@ -5,6 +5,7 @@ expression: "parse::<Args>(&[\"setarch\", \"-v\", \"linux64\", \"prog\",])"
 Args {
     list: false,
     show: None,
+    pid: None,
     verbose: true,
     addr_no_randomize: false,
     fdpic_funcptrs: false,

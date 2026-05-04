@@ -5,6 +5,7 @@ expression: "parse::<Args>(&[\"setarch\", \"--addr-no-randomize\", \"--uname-2.6
 Args {
     list: false,
     show: None,
+    pid: None,
     verbose: false,
     addr_no_randomize: true,
     fdpic_funcptrs: false,

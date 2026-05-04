@@ -1103,10 +1103,8 @@ mod waitpid {
         insta::assert_snapshot!(parse::<Args>(&["waitpid"]));
     }
 
-    #[test]
-    fn err_pid_not_a_number() {
-        insta::assert_snapshot!(parse::<Args>(&["waitpid", "abc"]));
-    }
+    // PIDs accept either `PID` or `PID:INODE`, so clap parses them as
+    // strings; the numeric / format check happens at runtime in `run()`.
 }
 
 mod whereis {

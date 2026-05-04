@@ -13,15 +13,17 @@ Arguments:
 Options:
       --list                  List the recognised architecture names and exit
       --show [<PERSONALITY>]  Show personality flag bits and exit. Without an argument, shows the
-                              running process's current personality; with a value, shows what the
-                              named personality would be
+                              running process's current personality (or the one named by `--pid`);
+                              with a value, decodes that value
+  -p, --pid <PID>             Read the personality of process `PID` from `/proc/PID/personality`.
+                              Must be combined with `--show`
   -v, --verbose               Print what we're doing
   -R, --addr-no-randomize     Disable address-space randomisation (ADDR_NO_RANDOMIZE)
   -F, --fdpic-funcptrs        Turn on FDPIC_FUNCPTRS (function pointer-style returns)
   -Z, --mmap-page-zero        Turn on MMAP_PAGE_ZERO (map page 0 read-only)
   -L, --addr-compat-layout    Use the legacy bottom-up address layout (ADDR_COMPAT_LAYOUT)
   -X, --read-implies-exec     READ_IMPLIES_EXEC — pages with PROT_READ also get PROT_EXEC
-  -B, --32bit                 32-bit base personality (PER_LINUX32) without picking an arch alias
+  -B, --32bit                 Cap the address space to 32 bits (ADDR_LIMIT_32BIT)
   -I, --short-inode           SHORT_INODE — return only 16-bit inode numbers from stat()
   -S, --whole-seconds         WHOLE_SECONDS — round timeouts up to whole seconds
   -T, --sticky-timeouts       STICKY_TIMEOUTS — system call timeouts don't decrement on EINTR

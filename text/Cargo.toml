@@ -23,13 +23,14 @@ bits = []
 colrm = []
 column = ["dep:cols", "dep:rustix"]
 hexdump = []
-line = []
+line = ["dep:libc"]
 rev = []
 
 [dependencies]
 clap = { workspace = true }
 linuxutils-common = { workspace = true }
 cols = { workspace = true, optional = true }
+libc = { workspace = true, optional = true }
 rustix = { workspace = true, optional = true }
 
 [dev-dependencies]

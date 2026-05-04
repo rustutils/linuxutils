@@ -7,11 +7,12 @@ Wait for arbitrary processes to exit
 Usage: waitpid [OPTIONS] <PIDS>...
 
 Arguments:
-  <PIDS>...  PIDs to wait for
+  <PIDS>...  PIDs to wait for. Each may be a plain `PID` or the race-free `PID:INODE` form produced
+             by `getino -p`
 
 Options:
   -v, --verbose            Be more verbose
-  -t, --timeout <TIMEOUT>  Maximum number of seconds to wait
+  -t, --timeout <TIMEOUT>  Maximum number of seconds to wait (fractional values allowed)
   -e, --exited             Don't error on already-exited PIDs
   -c, --count <COUNT>      Number of process exits to wait for
   -h, --help               Print help

@@ -107,6 +107,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- `setarch --show=VAL` now decodes hex/decimal personality values
+  into the upstream `PER_*` + flag-list format
+  (e.g. `0x00880000` → `PER_LINUX (FDPIC_FUNCPTRS ADDR_LIMIT_32BIT)`)
+  instead of treating the value as an architecture name; gained
+  `--pid=PID` to read another process's personality from
+  `/proc/PID/personality`; verbose output now matches upstream
+  (`Switching on FLAG.` / `Execute command \`name'.`); error
+  messages aligned with upstream phrasing
+  (`Unrecognized architecture`, `failed to execute`).
+- `copyfilerange` accepts `--ranges` multiple times; verbose mode
+  emits `copy_file_range SRC to DST OFF:OFF:LEN` to stdout (was a
+  different format on stderr); refusing to copy from beyond the
+  source's size with the upstream `offset N is beyond file size of M`
+  error.
+- `waitpid` accepts the race-free `PID:INODE` form produced by
+  `getino -p` (verifies the pidfs inode hasn't been reused);
+  `--timeout` accepts fractional seconds; under `--verbose`
+  prints `Timeout expired` to stdout on timeout (was a different
+  message on stderr); the already-exited message reads
+  `PID N has exited, skipping` to match upstream.
+- `line` now reads byte-by-byte from FD 0 (bypassing the
+  `BufReader` over-read that broke `(line && line) <pipe`),
+  ignores trailing positional args, and on EOF without a `\n`
+  appends the synthetic newline that POSIX requires.
 - `ipcs --limits` no longer panics with `attempt to multiply with
   overflow` when `/proc/sys/kernel/shmall` reports a near-`u64::MAX`
   "unlimited" sentinel; switched to saturating math.

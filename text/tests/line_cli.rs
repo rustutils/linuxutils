@@ -29,9 +29,12 @@ fn empty_input_exits_with_failure() {
 
 #[test]
 fn line_without_trailing_newline() {
+    // POSIX: when EOF arrives without a `\n`, the line is still
+    // echoed (with a synthetic newline appended to keep output
+    // well-formed) but the exit status is 1.
     cmd()
         .write_stdin("no-newline")
         .assert()
-        .success()
+        .code(1)
         .stdout("no-newline\n");
 }

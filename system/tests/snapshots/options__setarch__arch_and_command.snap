@@ -5,6 +5,7 @@ expression: "parse::<Args>(&[\"setarch\", \"linux32\", \"uname\", \"-m\",])"
 Args {
     list: false,
     show: None,
+    pid: None,
     verbose: false,
     addr_no_randomize: false,
     fdpic_funcptrs: false,

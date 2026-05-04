@@ -22,6 +22,7 @@ pub const MAN: ManContent = ManContent::empty();
 // uapi values.
 const PER_LINUX: libc::c_ulong = 0x0000;
 const PER_LINUX32: libc::c_ulong = 0x0008;
+const PER_MASK: u32 = 0x00ff;
 
 /// Pseudo-value `personality(2)` accepts to *read* the current
 /// personality without changing it.
@@ -67,6 +68,64 @@ const ARCH_TABLE: &[(&str, libc::c_ulong)] = &[
     ("mips64", PER_LINUX),
 ];
 
+/// Personality flag bits, ordered ascending so verbose / `--show`
+/// output matches upstream.
+const FLAG_TABLE: &[(u32, &str)] = &[
+    (0x0020000, "UNAME26"),
+    (0x0040000, "ADDR_NO_RANDOMIZE"),
+    (0x0080000, "FDPIC_FUNCPTRS"),
+    (0x0100000, "MMAP_PAGE_ZERO"),
+    (0x0200000, "ADDR_COMPAT_LAYOUT"),
+    (0x0400000, "READ_IMPLIES_EXEC"),
+    (0x0800000, "ADDR_LIMIT_32BIT"),
+    (0x1000000, "SHORT_INODE"),
+    (0x2000000, "WHOLE_SECONDS"),
+    (0x4000000, "STICKY_TIMEOUTS"),
+    (0x8000000, "ADDR_LIMIT_3GB"),
+];
+
+/// Named personalities — entire value matches.
+const NAMED_TABLE: &[(u32, &str)] = &[
+    (0x00000000, "PER_LINUX"),
+    (0x00800000, "PER_LINUX_32BIT"),
+    (0x00080000, "PER_LINUX_FDPIC"),
+    (0x04100001, "PER_SVR4"),
+    (0x05000002, "PER_SVR3"),
+    (0x07000003, "PER_SCOSVR3"),
+    (0x06000003, "PER_OSR5"),
+    (0x05000004, "PER_WYSEV386"),
+    (0x04000005, "PER_ISCR4"),
+    (0x00000006, "PER_BSD"),
+    (0x04000006, "PER_SUNOS"),
+    (0x05000007, "PER_XENIX"),
+    (0x00000008, "PER_LINUX32"),
+    (0x08000008, "PER_LINUX32_3GB"),
+    (0x00000009, "PER_RISCOS"),
+    (0x0400000a, "PER_SOLARIS"),
+    (0x0410000b, "PER_UW7"),
+    (0x0000000c, "PER_OSF4"),
+    (0x0000000d, "PER_HPUX"),
+];
+
+/// Base-personality (low byte) names, used when the full value
+/// doesn't match `NAMED_TABLE`.
+const BASE_TABLE: &[(u32, &str)] = &[
+    (0x0, "PER_LINUX"),
+    (0x1, "PER_SVR4"),
+    (0x2, "PER_SVR3"),
+    (0x3, "PER_SCOSVR3"),
+    (0x4, "PER_WYSEV386"),
+    (0x5, "PER_ISCR4"),
+    (0x6, "PER_BSD"),
+    (0x7, "PER_XENIX"),
+    (0x8, "PER_LINUX32"),
+    (0x9, "PER_RISCOS"),
+    (0xa, "PER_SOLARIS"),
+    (0xb, "PER_UW7"),
+    (0xc, "PER_OSF4"),
+    (0xd, "PER_HPUX"),
+];
+
 #[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(
@@ -80,10 +139,15 @@ pub struct Args {
     pub list: bool,
 
     /// Show personality flag bits and exit. Without an argument,
-    /// shows the running process's current personality; with a
-    /// value, shows what the named personality would be.
+    /// shows the running process's current personality (or the one
+    /// named by `--pid`); with a value, decodes that value.
     #[arg(long, value_name = "PERSONALITY", num_args = 0..=1, default_missing_value = "")]
     pub show: Option<String>,
+
+    /// Read the personality of process `PID` from
+    /// `/proc/PID/personality`. Must be combined with `--show`.
+    #[arg(short = 'p', long = "pid", value_name = "PID")]
+    pub pid: Option<i32>,
 
     /// Print what we're doing
     #[arg(short, long, action = ArgAction::SetTrue)]
@@ -109,8 +173,7 @@ pub struct Args {
     #[arg(short = 'X', long = "read-implies-exec", action = ArgAction::SetTrue)]
     pub read_implies_exec: bool,
 
-    /// 32-bit base personality (PER_LINUX32) without picking an
-    /// arch alias
+    /// Cap the address space to 32 bits (ADDR_LIMIT_32BIT)
     #[arg(short = 'B', long = "32bit", action = ArgAction::SetTrue)]
     pub bit32: bool,
 
@@ -154,8 +217,13 @@ pub fn run(args: Args) -> ExitCode {
         return ExitCode::SUCCESS;
     }
 
+    if args.pid.is_some() && args.show.is_none() {
+        eprintln!("setarch: use -p/--pid option with --show option");
+        return ExitCode::from(1);
+    }
+
     if let Some(name) = args.show.as_deref() {
-        return show_personality(name);
+        return show_personality(name, args.pid);
     }
 
     let Some(arch) = args.arch.as_deref() else {
@@ -166,8 +234,8 @@ pub fn run(args: Args) -> ExitCode {
     let mut persona = match resolve_arch(arch) {
         Some(p) => p,
         None => {
-            eprintln!("setarch: unknown architecture: {arch}");
-            return ExitCode::from(2);
+            eprintln!("setarch: {arch}: Unrecognized architecture");
+            return ExitCode::from(1);
         }
     };
     persona = apply_flags(persona, &args);
@@ -178,7 +246,7 @@ pub fn run(args: Args) -> ExitCode {
     }
 
     if args.verbose {
-        eprintln!("setarch: personality = 0x{persona:08x}");
+        verbose_personality(persona);
     }
 
     let rc = unsafe { libc::personality(persona) };
@@ -190,6 +258,10 @@ pub fn run(args: Args) -> ExitCode {
         return ExitCode::FAILURE;
     }
 
+    if args.verbose {
+        println!("Execute command `{}'.", &args.command[0]);
+    }
+
     exec_program(&args.command[0], &args.command[1..])
 }
 
@@ -199,13 +271,13 @@ fn resolve_arch(name: &str) -> Option<libc::c_ulong> {
 
 fn apply_flags(mut p: libc::c_ulong, args: &Args) -> libc::c_ulong {
     if args.bit32 {
-        p |= PER_LINUX32;
+        p |= libc::ADDR_LIMIT_32BIT as libc::c_ulong;
     }
     if args.addr_no_randomize {
         p |= libc::ADDR_NO_RANDOMIZE as libc::c_ulong;
     }
     if args.fdpic_funcptrs {
-        p |= libc::FDPIC_FUNCPTRS as libc::c_ulong;
+        p |= 0x0080000; // FDPIC_FUNCPTRS
     }
     if args.mmap_page_zero {
         p |= libc::MMAP_PAGE_ZERO as libc::c_ulong;
@@ -232,7 +304,7 @@ fn apply_flags(mut p: libc::c_ulong, args: &Args) -> libc::c_ulong {
         p &= !(libc::ADDR_LIMIT_3GB as libc::c_ulong);
     }
     if args.uname_26 {
-        p |= libc::UNAME26 as libc::c_ulong;
+        p |= 0x0020000; // UNAME26
     }
     p
 }
@@ -243,8 +315,56 @@ fn list_archs() {
     }
 }
 
-fn show_personality(name: &str) -> ExitCode {
-    let value = if name.is_empty() {
+fn verbose_personality(pers: libc::c_ulong) {
+    let p = pers as u32;
+    for (bit, name) in FLAG_TABLE {
+        if p & bit != 0 {
+            println!("Switching on {name}.");
+        }
+    }
+}
+
+/// Parse the `--show=VALUE` argument or the contents of
+/// `/proc/PID/personality` — both are hex strings, optionally with a
+/// `0x` prefix.
+fn parse_personality(s: &str) -> Option<u32> {
+    let trimmed = s.trim();
+    let (s, radix) = if let Some(stripped) = trimmed
+        .strip_prefix("0x")
+        .or_else(|| trimmed.strip_prefix("0X"))
+    {
+        (stripped, 16)
+    } else {
+        (trimmed, 16)
+    };
+    u32::from_str_radix(s, radix).ok()
+}
+
+fn show_personality(arg: &str, pid: Option<i32>) -> ExitCode {
+    let value: u32 = if !arg.is_empty() {
+        match parse_personality(arg) {
+            Some(v) => v,
+            None => {
+                eprintln!("setarch: invalid personality: {arg}");
+                return ExitCode::from(1);
+            }
+        }
+    } else if let Some(pid) = pid {
+        let path = format!("/proc/{pid}/personality");
+        match std::fs::read_to_string(&path) {
+            Ok(s) => match parse_personality(&s) {
+                Some(v) => v,
+                None => {
+                    eprintln!("setarch: cannot parse {path}: {s:?}");
+                    return ExitCode::from(1);
+                }
+            },
+            Err(e) => {
+                eprintln!("setarch: cannot read {path}: {e}");
+                return ExitCode::from(1);
+            }
+        }
+    } else {
         let cur = unsafe { libc::personality(PERSONALITY_QUERY) };
         if cur < 0 {
             eprintln!(
@@ -253,18 +373,50 @@ fn show_personality(name: &str) -> ExitCode {
             );
             return ExitCode::FAILURE;
         }
-        cur as libc::c_ulong
-    } else {
-        match resolve_arch(name) {
-            Some(p) => p,
-            None => {
-                eprintln!("setarch: unknown architecture: {name}");
-                return ExitCode::from(2);
-            }
-        }
+        cur as u32
     };
-    println!("0x{value:08x}");
+    println!("{}", format_personality(value));
     ExitCode::SUCCESS
+}
+
+fn format_personality(pers: u32) -> String {
+    if let Some((_, name)) = NAMED_TABLE.iter().find(|(v, _)| *v == pers) {
+        return (*name).to_string();
+    }
+
+    let base = pers & PER_MASK;
+    let mut flags = pers & !PER_MASK;
+
+    let base_str = BASE_TABLE
+        .iter()
+        .find(|(v, _)| *v == base)
+        .map(|(_, n)| (*n).to_string())
+        .unwrap_or_else(|| format!("0x{base:x}"));
+
+    if flags == 0 {
+        return base_str;
+    }
+
+    let mut out = format!("{base_str} (");
+    let mut first = true;
+    for (bit, name) in FLAG_TABLE {
+        if flags & bit != 0 {
+            if !first {
+                out.push(' ');
+            }
+            out.push_str(name);
+            first = false;
+            flags &= !bit;
+        }
+    }
+    if flags != 0 {
+        if !first {
+            out.push(' ');
+        }
+        out.push_str(&format!("0x{flags:08x}"));
+    }
+    out.push(')');
+    out
 }
 
 fn exec_program(program: &str, arguments: &[String]) -> ExitCode {
@@ -296,11 +448,21 @@ fn exec_program(program: &str, arguments: &[String]) -> ExitCode {
     unsafe {
         libc::execvp(c_program.as_ptr(), c_ptrs.as_ptr());
     }
-    eprintln!(
-        "setarch: exec {program}: {}",
-        std::io::Error::last_os_error()
-    );
+    let err = std::io::Error::last_os_error();
+    eprintln!("setarch: failed to execute {program}: {}", strerror(&err));
     ExitCode::from(127)
+}
+
+/// `strerror(3)`-style description (no trailing `(os error N)`).
+fn strerror(e: &std::io::Error) -> String {
+    if let Some(errno) = e.raw_os_error() {
+        let p = unsafe { libc::strerror(errno) };
+        if !p.is_null() {
+            let cs = unsafe { std::ffi::CStr::from_ptr(p) };
+            return cs.to_string_lossy().into_owned();
+        }
+    }
+    e.to_string()
 }
 
 #[cfg(test)]
@@ -323,6 +485,7 @@ mod tests {
         let mut a = Args {
             list: false,
             show: None,
+            pid: None,
             verbose: false,
             addr_no_randomize: true,
             fdpic_funcptrs: false,
@@ -341,7 +504,7 @@ mod tests {
         };
         let p = apply_flags(PER_LINUX, &a);
         assert!(p & (libc::ADDR_NO_RANDOMIZE as libc::c_ulong) != 0);
-        assert!(p & PER_LINUX32 != 0);
+        assert!(p & (libc::ADDR_LIMIT_32BIT as libc::c_ulong) != 0);
 
         a.limit_3gb = true;
         let p = apply_flags(PER_LINUX, &a);
@@ -351,5 +514,34 @@ mod tests {
         let p = apply_flags(PER_LINUX, &a);
         // 4gb cancels 3gb
         assert!(p & (libc::ADDR_LIMIT_3GB as libc::c_ulong) == 0);
+    }
+
+    #[test]
+    fn show_named_personalities() {
+        assert_eq!(format_personality(0x00000000), "PER_LINUX");
+        assert_eq!(format_personality(0x00800000), "PER_LINUX_32BIT");
+        assert_eq!(format_personality(0x00000008), "PER_LINUX32");
+        assert_eq!(format_personality(0x08000008), "PER_LINUX32_3GB");
+    }
+
+    #[test]
+    fn show_base_with_flags() {
+        assert_eq!(
+            format_personality(0x00880000),
+            "PER_LINUX (FDPIC_FUNCPTRS ADDR_LIMIT_32BIT)"
+        );
+    }
+
+    #[test]
+    fn show_unknown_base_and_unknown_flag() {
+        assert_eq!(format_personality(0x000040ff), "0xff (0x00004000)");
+    }
+
+    #[test]
+    fn parses_personality_with_and_without_prefix() {
+        assert_eq!(parse_personality("0x00000000"), Some(0));
+        assert_eq!(parse_personality("0x08000008"), Some(0x08000008));
+        assert_eq!(parse_personality("00000000"), Some(0));
+        assert_eq!(parse_personality("08000008"), Some(0x08000008));
     }
 }

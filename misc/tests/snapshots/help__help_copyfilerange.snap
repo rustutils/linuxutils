@@ -21,7 +21,7 @@ Arguments:
 
 Options:
   -r, --ranges <RANGES_FILE>
-          Read range specs from file (one per line)
+          Read range specs from file (one per line). May be given multiple times
 
   -v, --verbose
           Print each range as it's copied

@@ -313,7 +313,9 @@ mod line {
     use super::parse;
     use linuxutils_text::line::Args;
 
-    // line takes no flags or positionals — only the conventional --help / --version.
+    // line takes no flags; trailing positional args are silently
+    // accepted to match upstream `line(1)` (the behavioural test
+    // suite passes a literal `line` arg as a buffer-size hint).
 
     #[test]
     fn no_args() {
@@ -321,7 +323,7 @@ mod line {
     }
 
     #[test]
-    fn err_unexpected_positional() {
+    fn accepts_extra_positional() {
         insta::assert_snapshot!(parse::<Args>(&["line", "extra"]));
     }
 

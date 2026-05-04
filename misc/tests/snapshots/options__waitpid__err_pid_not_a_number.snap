@@ -1,8 +1,0 @@
----
-source: misc/tests/options.rs
-expression: "parse::<Args>(&[\"waitpid\", \"abc\"])"
----
-ERROR:
-error: invalid value 'abc' for '<PIDS>...': invalid digit found in string
-
-For more information, try '--help'.

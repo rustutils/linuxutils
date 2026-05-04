@@ -2,4 +2,6 @@
 source: text/tests/options.rs
 expression: "parse::<Args>(&[\"line\"])"
 ---
-Args
+Args {
+    _ignored: [],
+}

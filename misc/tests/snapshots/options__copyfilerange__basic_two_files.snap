@@ -3,7 +3,7 @@ source: misc/tests/options.rs
 expression: "parse::<Args>(&[\"copyfilerange\", \"src\", \"dst\",])"
 ---
 Args {
-    ranges_file: None,
+    ranges_files: [],
     verbose: false,
     source: "src",
     destination: "dst",

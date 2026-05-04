@@ -2,7 +2,7 @@ use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
 pub const MAN: ManContent = ManContent::empty();
 
-use clap::Parser;
+use clap::{ArgAction, Parser};
 use std::{
     fs::{self, File},
     io::{self, BufRead},
@@ -18,9 +18,10 @@ use std::{
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "copyfilerange", about = "Copy byte ranges between files")]
 pub struct Args {
-    /// Read range specs from file (one per line)
-    #[arg(short = 'r', long = "ranges")]
-    ranges_file: Option<String>,
+    /// Read range specs from file (one per line). May be given
+    /// multiple times.
+    #[arg(short = 'r', long = "ranges", action = ArgAction::Append, value_name = "RANGES_FILE")]
+    ranges_files: Vec<String>,
 
     /// Print each range as it's copied
     #[arg(short = 'v', long)]
@@ -139,7 +140,7 @@ pub fn run(args: Args) -> ExitCode {
 
     // Collect ranges
     let mut range_specs: Vec<String> = args.ranges.clone();
-    if let Some(ref path) = args.ranges_file {
+    for path in &args.ranges_files {
         match File::open(path) {
             Ok(f) => {
                 for line in io::BufReader::new(f).lines().map_while(Result::ok)
@@ -174,11 +175,30 @@ pub fn run(args: Args) -> ExitCode {
             }
         };
 
+        if range.src_off > src_size {
+            eprintln!(
+                "copyfilerange: {} offset {} is beyond file size of {}",
+                args.source, range.src_off, src_size
+            );
+            return ExitCode::FAILURE;
+        }
+
         let copy_len = if range.length == 0 {
-            src_size.saturating_sub(range.src_off)
+            src_size - range.src_off
         } else {
             range.length
         };
+
+        if args.verbose {
+            println!(
+                "copy_file_range {} to {} {}:{}:{}",
+                args.source,
+                args.destination,
+                range.src_off,
+                range.dst_off,
+                copy_len
+            );
+        }
 
         let mut src_off = range.src_off as i64;
         let mut dst_off = range.dst_off as i64;
@@ -200,14 +220,6 @@ pub fn run(args: Args) -> ExitCode {
                     return ExitCode::FAILURE;
                 }
             }
-        }
-
-        if args.verbose {
-            let copied = copy_len as usize - remaining;
-            eprintln!(
-                "{}:{} -> {}:{} ({copied} bytes)",
-                args.source, range.src_off, args.destination, range.dst_off
-            );
         }
 
         last_src = src_off as u64;

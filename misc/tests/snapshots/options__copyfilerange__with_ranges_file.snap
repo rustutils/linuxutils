@@ -3,9 +3,9 @@ source: misc/tests/options.rs
 expression: "parse::<Args>(&[\"copyfilerange\", \"-r\", \"ranges.txt\", \"src\", \"dst\",])"
 ---
 Args {
-    ranges_file: Some(
+    ranges_files: [
         "ranges.txt",
-    ),
+    ],
     verbose: false,
     source: "src",
     destination: "dst",
