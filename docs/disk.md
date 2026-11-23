@@ -5,8 +5,10 @@ images.
 
 ## Implemented
 
-- [`blockdev`](disk/blockdev.md) — call block device ioctls from the command line
-- [`isosize`]() — output the length of an iso9660 filesystem
+- [`blockdev`](disk/blockdev.md): call block device ioctls from the command line
+- [`isosize`](): output the length of an iso9660 filesystem
+- [`mount`](): mount a filesystem (partial: no propagation flags or mount helpers)
+- [`umount`](): unmount filesystems (partial: no `-R`, `-A` or `-a`)
 
 ## Planned
 

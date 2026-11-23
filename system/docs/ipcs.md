@@ -55,7 +55,7 @@ System V IPC resources.
 ## Not yet implemented
 
 - `-i <id>` single resource detail view
-- `-c` creator/owner view
+- `-c` creator and owner view
 - `-p` PID view
 - `-t` time view
 - `--human` human-readable sizes

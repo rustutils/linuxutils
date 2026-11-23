@@ -34,7 +34,7 @@ Trims the specified mounted filesystem with the given offset, length, and minimu
 
 - stdout: With `--verbose`, prints bytes trimmed per filesystem (e.g. `/: 1.5 GiB (1610612736 bytes) trimmed`)
 
-## Syscalls / ioctls
+## Syscalls and ioctls
 
 | ioctl | Value | Description |
 |-------|-------|-------------|

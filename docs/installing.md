@@ -1,12 +1,12 @@
 # Installing
 
-`linuxutils` is currently distributed as source. Deb and Rpm packages are
-planned but not yet available; a Nix flake is provided.
+`linuxutils` is currently distributed as source, with a Nix flake. Deb and
+RPM packages are planned but not yet available.
 
 ## With Cargo
 
 You will need a recent Rust toolchain. The easiest way to install one is via
-[rustup](https://rustup.rs/); the repository pins a specific toolchain via
+[rustup](https://rustup.rs/). The repository pins a specific toolchain in
 `rust-toolchain.toml`, which `rustup` will pick up automatically.
 
 ### Install all tools in a category
@@ -19,8 +19,8 @@ cargo install linuxutils-system
 
 ### Install a single tool
 
-Each group crate exposes one cargo feature per tool. Disable defaults and
-pick the feature you want:
+Each group crate exposes one cargo feature per tool. Disable the default
+features and pick the ones you want:
 
 ```sh
 cargo install linuxutils-system --no-default-features --features lscpu
@@ -29,7 +29,7 @@ cargo install linuxutils-disk --no-default-features --features blockdev
 
 ### Multicall binary
 
-A single `linuxutils` binary that dispatches to any tool — useful for
+A single `linuxutils` binary that can run any tool. This is useful for
 container images and minimal installs:
 
 ```sh

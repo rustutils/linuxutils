@@ -49,7 +49,7 @@ or cache detail table (`--caches`).
 - CPU(s), On-line/Off-line CPU(s) list
 - Vendor ID, Model name, CPU family, Model, Stepping
 - Thread(s) per core, Core(s) per socket, Socket(s)
-- CPU max/min MHz, BogoMIPS
+- CPU maximum and minimum MHz, BogoMIPS
 - Flags, Virtualization
 - L1d/L1i/L2/L3 cache (with instance count)
 - NUMA node(s), NUMA node CPU mapping
@@ -72,6 +72,6 @@ or cache detail table (`--caches`).
 - `-x` hex masks
 - `-y` physical IDs
 - `--hierarchic` subsections
-- `-a/-b/-c` online/offline filtering
+- Filtering online and offline CPUs with `-a`, `-b` and `-c`
 - `--output-all`
 - `--raw`

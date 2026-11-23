@@ -1,9 +1,9 @@
-# libuuid
+# linuxutils-libuuid
 
 ABI-compatible implementation of `libuuid`, backed by the [`uuid`](https://crates.io/crates/uuid) crate.
 
-Unlike `libs/smartcols`, this crate exposes only a C FFI — there is no separate
-native Rust API. Other Rust crates in this workspace use the `uuid` crate
+Unlike `compat/libsmartcols`, this crate only exposes a C FFI. There is no
+separate native Rust API. Other Rust crates in this workspace use the `uuid` crate
 directly.
 
 ## API Coverage
@@ -16,21 +16,21 @@ directly.
 
 **Manipulation:** `uuid_clear`, `uuid_copy`, `uuid_compare`, `uuid_is_null`
 
-**Parsing / formatting:** `uuid_parse`, `uuid_parse_range`, `uuid_unparse`,
+**Parsing and formatting:** `uuid_parse`, `uuid_parse_range`, `uuid_unparse`,
 `uuid_unparse_lower`, `uuid_unparse_upper`
 
 **Introspection:** `uuid_type`, `uuid_variant`, `uuid_time`
 
-**Namespace templates:** `uuid_get_template` — supports `"dns"`, `"url"`,
+**Namespace templates:** `uuid_get_template`, which supports `"dns"`, `"url"`,
 `"oid"`, `"x500"`, `"nil"`
 
-### Not Implemented / Caveats
+### Missing features and caveats
 
-- `uuid_generate_time_safe` always returns `-1` (node ID is always random with
-  the multicast bit set, never a real MAC address — this matches the `uuid`
-  crate's behavior).
-- Node ID configuration is not supported; all time-based UUIDs use a random
-  node ID.
+- `uuid_generate_time_safe` always returns `-1`. The node ID is always random
+  with the multicast bit set, never a real MAC address. This matches the
+  behaviour of the `uuid` crate.
+- The node ID can't be configured. All time-based UUIDs use a random node
+  ID.
 
 ## Testing
 
@@ -46,6 +46,6 @@ cargo test -p linuxutils-libuuid
 
 ## License
 
-The standard project license applies to this crate, however the C header file
-(`include/uuid.h`, needed for API compatibility) is licensed separately, see
-the header file itself.
+The standard project license applies to this crate. The C header file
+(`include/uuid.h`), which is needed for API compatibility, has its own
+license. See the header file itself.

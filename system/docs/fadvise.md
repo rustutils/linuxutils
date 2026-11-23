@@ -17,8 +17,8 @@ the page cache.
 
 ## Inputs
 
-- `filename` — file to advise on
-- `-d fd` — file descriptor number (for already-open files in scripts)
+- `filename`: file to advise on
+- `-d fd`: file descriptor number (for files already open in scripts)
 
 ## Outputs
 
@@ -39,7 +39,7 @@ None (the syscall has no visible output).
 | `random` | Data will be accessed randomly |
 | `noreuse` | Data will be accessed once |
 | `willneed` | Data will be needed soon (prefetch) |
-| `dontneed` | Data will not be needed soon (drop from cache) — **default** |
+| `dontneed` | Data will not be needed soon (drop from cache). This is the **default**. |
 
 ## Command-line options
 

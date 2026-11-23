@@ -34,7 +34,7 @@ Reads `/proc/swaps` and displays a formatted table of active swap areas.
 
 | Source | Purpose |
 |--------|---------|
-| Device/file path | Target to enable as swap |
+| Device or file path | Target to enable as swap |
 | `/etc/fstab` | Enumerate swap entries for `--all` |
 | `/proc/swaps` | List active swap areas for `--show`/`-s` |
 
@@ -47,7 +47,7 @@ Reads `/proc/swaps` and displays a formatted table of active swap areas.
 
 | Syscall | Description |
 |---------|-------------|
-| `swapon(2)` | Enable swapping on a device/file |
+| `swapon(2)` | Enable swapping on a device or file |
 
 ### Flags for swapon(2)
 
@@ -99,4 +99,4 @@ Requires `CAP_SYS_ADMIN`.
 - `-T, --fstab` (alternative fstab)
 - `--output-all`, `--raw` output modes
 - Suspend data detection
-- Reading priority/discard from fstab options in `--all` mode
+- Reading the priority and discard settings from fstab options in `--all` mode

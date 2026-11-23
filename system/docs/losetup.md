@@ -17,7 +17,7 @@ losetup -c loopdev                          # resize (reread backing file size)
 
 ## Operation modes
 
-### List / query
+### List and query
 
 - **No arguments or `-a`**: Lists all active loop devices.
 - **`loopdev` only**: Shows info for a single device via `LOOP_GET_STATUS64`.
@@ -140,5 +140,5 @@ Listing via sysfs is available to any user.
 - `--output-all`
 - `--raw` output format
 - JSON output (`-J`)
-- Size suffix parsing for offset/sizelimit
+- Size suffix parsing for `--offset` and `--sizelimit`
 - `LOOP_CONFIGURE` atomic setup (Linux 5.8+)

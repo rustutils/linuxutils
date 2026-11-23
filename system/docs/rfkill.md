@@ -2,7 +2,7 @@
 
 Enable and disable wireless devices.
 
-Reads device state from `/sys/class/rfkill/` and sends block/unblock operations
+Reads device state from `/sys/class/rfkill/` and sends block and unblock operations
 to `/dev/rfkill` using the kernel's rfkill event interface.
 
 ## Commands
@@ -34,5 +34,5 @@ Default columns: `ID`, `TYPE`, `DEVICE`, `SOFT`, `HARD`.
 
 ## Not Implemented
 
-- Hard-block reasons (`rfkill_event_ext` / `RFKILL_IOCTL_MAX_SIZE`) are not
-  reported; only basic hard-block state (yes/no) is shown.
+- Hard-block reasons (`rfkill_event_ext`, `RFKILL_IOCTL_MAX_SIZE`) are not
+  reported. Only whether a device is hard-blocked is shown.

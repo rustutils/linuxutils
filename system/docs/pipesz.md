@@ -17,20 +17,20 @@ internal buffer sizes of pipes and FIFOs.
 ### Get mode (`--get`)
 
 Reports pipe buffer sizes as tab-separated columns: file descriptor name,
-buffer size in bytes, unread bytes (via `FIONREAD` ioctl). Defaults to stdin
-if no fd/file specified.
+buffer size in bytes, unread bytes (using the `FIONREAD` ioctl). Defaults to
+stdin if no file descriptor or file is given.
 
 ### Set mode (`--set`)
 
-Sets the buffer size for specified pipes/FIFOs. Defaults to stdout if no
-fd/file specified. Optionally executes a trailing command with the adjusted
+Sets the buffer size for the given pipes and FIFOs. Defaults to stdout if no
+file descriptor or file is given. Optionally executes a trailing command with the adjusted
 pipe sizes.
 
 ## Inputs
 
 | Source | Purpose |
 |--------|---------|
-| Pipe/FIFO file descriptors | Target for get/set operations |
+| Pipe and FIFO file descriptors | Targets to query or change |
 | `-f <path>` | FIFO path to operate on |
 | `/proc/sys/fs/pipe-max-size` | Default size if `--set` given without value |
 

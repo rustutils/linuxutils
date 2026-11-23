@@ -29,7 +29,7 @@ If a specific method is requested via flags, only that method is tried.
 - **`--traytoggle` (`-T`)**: Query status via `CDROM_DRIVE_STATUS` (`0x5326`),
   then close or open accordingly
 
-### Lock/unlock
+### Lock and unlock
 
 - **`--manualeject on`**: Lock hardware eject button via `CDROM_LOCKDOOR` (`0x5329`, arg=1)
 - **`--manualeject off`**: Unlock via `CDROM_LOCKDOOR` (arg=0)
@@ -53,8 +53,8 @@ If a specific method is requested via flags, only that method is tried.
 |-------|-------|-------------|
 | `CDROMEJECT` | `0x5309` | Eject CD-ROM media |
 | `CDROMCLOSETRAY` | `0x5319` | Close CD-ROM tray |
-| `CDROM_LOCKDOOR` | `0x5329` | Lock/unlock hardware eject button |
-| `CDROM_DRIVE_STATUS` | `0x5326` | Query tray open/closed status |
+| `CDROM_LOCKDOOR` | `0x5329` | Lock or unlock the hardware eject button |
+| `CDROM_DRIVE_STATUS` | `0x5326` | Query whether the tray is open or closed |
 | `SG_IO` | `0x2285` | Send SCSI commands (START_STOP for eject) |
 | `FDEJECT` | `0x025a` | Eject floppy disk |
 
@@ -63,7 +63,7 @@ If a specific method is requested via flags, only that method is tried.
 | Command | Opcode | Description |
 |---------|--------|-------------|
 | `ALLOW_MEDIUM_REMOVAL` | `0x1e` | Unlock media before eject |
-| `START_STOP` | `0x1b` | LoEj=1, Start=0 → eject media |
+| `START_STOP` | `0x1b` | LoEj=1, Start=0 ejects the media |
 
 ## Command-line options
 
@@ -74,7 +74,7 @@ If a specific method is requested via flags, only that method is tried.
 | `-d, --default` | Display default device name |
 | `-F, --force` | Force eject, skip device type check |
 | `-f, --floppy` | Use floppy eject method |
-| `-i, --manualeject <on\|off>` | Lock/unlock hardware eject button |
+| `-i, --manualeject <on\|off>` | Lock or unlock the hardware eject button |
 | `-M, --no-partitions-unmount` | Don't unmount other partitions |
 | `-m, --no-unmount` | Don't unmount at all |
 | `-n, --noop` | Show device but take no action |
@@ -82,7 +82,7 @@ If a specific method is requested via flags, only that method is tried.
 | `-q, --tape` | Use tape drive offline command |
 | `-r, --cdrom` | Use CD-ROM eject command |
 | `-s, --scsi` | Use SCSI eject commands |
-| `-T, --traytoggle` | Toggle tray open/close |
+| `-T, --traytoggle` | Open or close the tray |
 | `-t, --trayclose` | Close CD-ROM tray |
 | `-v, --verbose` | Verbose output |
 | `-h, --help` | Display help |
@@ -97,7 +97,7 @@ If a specific method is requested via flags, only that method is tried.
 
 ## Permissions
 
-Requires sufficient permissions to open the device (typically root or membership in `cdrom`/`disk` group).
+Requires sufficient permissions to open the device (typically root or membership in the `cdrom` or `disk` group).
 
 ## Not yet implemented
 

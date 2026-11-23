@@ -7,8 +7,8 @@ Terminal utilities from linuxutils.
 | Tool | Description | Docs |
 |------|-------------|------|
 | `mesg` | Display (or do not display) messages from other users | [docs/mesg.md](docs/mesg.md) |
-| `wall` | Write a message to all users | — |
-| `write` | Send a message to another user | — |
+| `wall` | Write a message to all users | |
+| `write` | Send a message to another user | |
 
 ## Installation
 
@@ -26,9 +26,5 @@ cargo install linuxutils-term --no-default-features --features wall
 
 ## Features
 
-| Feature | Tools |
-|---------|-------|
-| `full` (default) | all of the below |
-| `mesg` | `mesg` |
-| `wall` | `wall` |
-| `write` | `write` |
+`full` (default) enables every tool. Each tool also has its own feature flag
+matching the tool name.

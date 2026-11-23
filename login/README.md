@@ -24,7 +24,5 @@ cargo install linuxutils-login --no-default-features --features nologin
 
 ## Features
 
-| Feature | Tools |
-|---------|-------|
-| `full` (default) | all of the below |
-| `nologin` | `nologin` |
+`full` (default) enables every tool. Each tool also has its own feature flag
+matching the tool name.

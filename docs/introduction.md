@@ -4,7 +4,7 @@
 # Introduction
 
 `linuxutils` is a suite of Linux command-line utilities written from scratch
-in Rust as a clean-room, permissively-licensed reimplementation of the tools
+in Rust as a clean-room, permissively licensed reimplementation of the tools
 traditionally provided by [util-linux](https://github.com/util-linux/util-linux),
 plus the kernel-module tools from
 [kmod](https://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git).
@@ -15,8 +15,8 @@ existing use cases.
 
 The project also provides ABI-compatible reimplementations of the original C
 libraries (`libblkid`, `libfdisk`, `libmount`, `libsmartcols`, `libuuid`) as
-shared libraries (`cdylib`s), so existing C/C++ code that links against them
-continues to work.
+shared libraries (`cdylib`s), so existing C and C++ code that links against
+them continues to work.
 
 ## Project Structure
 
@@ -34,9 +34,9 @@ so you can install the full bundle or pick individual tools:
 | [`linuxutils-term`](term.md) | terminal-facing tools |
 | [`linuxutils-text`](text.md) | text processing |
 
-A multicall binary (`linuxutils`) is also published, dispatching to any tool
-by `argv[0]` or as a subcommand — useful for container images and minimal
-installs.
+A multicall binary (`linuxutils`) is also published. It runs any tool, either
+by `argv[0]` or as a subcommand, which is useful for container images and
+minimal installs.
 
 ## Source Code
 

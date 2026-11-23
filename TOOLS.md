@@ -55,7 +55,7 @@
 | `lsirq` | Display kernel interrupt information | Done |
 | `lsmem` | List the ranges of available memory with their online status | Done |
 | `lsns` | List namespaces | Done |
-| `mount` | Mount a filesystem | Partial (no propagation / helpers) |
+| `mount` | Mount a filesystem | Partial (no propagation flags or mount helpers) |
 | `mountpoint` | See if a directory or file is a mountpoint | Done |
 | `nsenter` | Run a program in different namespaces | Done |
 | `pivot_root` | Change the root filesystem | Done |
@@ -64,7 +64,7 @@
 | `renice` | Alter priority of running processes | Done |
 | `rfkill` | Enable and disable wireless devices | Done |
 | `rtcwake` | Enter a system sleep state until specified wakeup time | Not started |
-| `setarch` | Change reported architecture in new program environment and/or set personality flags | Done |
+| `setarch` | Change reported architecture in new program environment, set personality flags, or both | Done |
 | `setpgid` | Run a program in a new process group | Done |
 | `setpriv` | Run a program with different Linux privilege settings | Not started |
 | `setsid` | Run a program in a new session | Done |
@@ -72,7 +72,7 @@
 | `swapon` | Enable devices and files for paging and swapping | Done |
 | `switch_root` | Switch to another filesystem as the root of the mount tree | Not started |
 | `tunelp` | Set various parameters for the lp device | Not started |
-| `umount` | Unmount filesystems | Partial (no -R / -A / -a) |
+| `umount` | Unmount filesystems | Partial (no `-R`, `-A` or `-a`) |
 | `unshare` | Run a program in new namespaces | Done |
 | `wdctl` | Show hardware watchdog status | Done |
 | `zramctl` | Set up and control zram devices | Not started |
@@ -115,7 +115,7 @@
 
 | Tool | Description | Status |
 |------|-------------|--------|
-| `bits` | Convert bit masks or lists from/to various formats | Done |
+| `bits` | Convert bit masks and lists between formats | Done |
 | `col` | Filter reverse line feeds from input | Not started |
 | `colcrt` | Filter nroff output for CRT previewing | Not started |
 | `colrm` | Remove columns from a file | Done |
@@ -191,17 +191,17 @@ These tools come from the [kmod](https://git.kernel.org/pub/scm/utils/kernel/kmo
 The `compat/<name>/` shims aim for ABI-compatible drop-in
 replacements for upstream `lib<name>.so`, useful for external C
 codebases that link against them. The Rust-native libraries in
-`libs/<name>/` are our internal APIs — the shims wrap them, and
-linuxutils tools consume them directly.
+`libs/<name>/` are our internal APIs. The shims wrap them, and
+linuxutils tools use them directly.
 
 ### ABI-compat shims (`compat/`)
 
 | Library | Description | Status |
 |---------|-------------|--------|
-| `libblkid` | Block device identification library for identifying block devices by content, extracting filesystem information like labels and UUIDs, and managing block device caching | Partial — udev-symlink resolution layer. See [compat/libblkid/README.md](compat/libblkid/README.md) |
+| `libblkid` | Block device identification library for identifying block devices by content, extracting filesystem information like labels and UUIDs, and managing block device caching | Partial (udev symlink resolution only). See [compat/libblkid/README.md](compat/libblkid/README.md) |
 | `libfdisk` | Library for manipulating partition tables and performing partitioning operations | Stub |
 | `liblastlog2` | Y2038-safe library for managing user login records using a SQLite3 database backend | Not started |
-| `libmount` | Library for parsing /etc/fstab, /etc/mtab and /proc/self/mountinfo, managing the mtab file, and evaluating mount options | Partial — read-only iteration / lookup. See [compat/libmount/README.md](compat/libmount/README.md) |
+| `libmount` | Library for parsing `/etc/fstab`, `/etc/mtab` and `/proc/self/mountinfo`, managing the mtab file, and evaluating mount options | Partial (read-only iteration and lookup). See [compat/libmount/README.md](compat/libmount/README.md) |
 | `libsmartcols` | Library for smart adaptive formatting of tabular data with support for filtering and various display options | In progress |
 | `libuuid` | DCE-compatible Universally Unique Identifier library for generating unique identifiers compatible with RFC-4122 | Done |
 
@@ -209,5 +209,5 @@ linuxutils tools consume them directly.
 
 | Library | Description | Status |
 |---------|-------------|--------|
-| `linuxutils-blkid` | Block-device tag resolution via `/dev/disk/by-*` (no probe layer) | Partial — see [libs/blkid/README.md](libs/blkid/README.md) |
-| `linuxutils-mount` | Mount / fstab / mountinfo data model and parsers | Partial — see [libs/mount/README.md](libs/mount/README.md) |
+| `linuxutils-blkid` | Block-device tag resolution via `/dev/disk/by-*` (no probe layer) | Partial. See [libs/blkid/README.md](libs/blkid/README.md) |
+| `linuxutils-mount` | Data model and parsers for mounts, fstab and mountinfo | Partial. See [libs/mount/README.md](libs/mount/README.md) |

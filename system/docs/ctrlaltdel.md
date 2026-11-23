@@ -18,11 +18,11 @@ Equivalent to calling `reboot(2)` with `LINUX_REBOOT_CMD_CAD_ON` (hard) or `LINU
 
 ## Inputs
 
-- `/proc/sys/kernel/ctrl-alt-del` — read to query current state
+- `/proc/sys/kernel/ctrl-alt-del`: read to query the current state
 
 ## Outputs
 
-- `/proc/sys/kernel/ctrl-alt-del` — written to change state
+- `/proc/sys/kernel/ctrl-alt-del`: written to change the state
 - stdout: prints `hard` or `soft` when querying
 
 ## Command-line options

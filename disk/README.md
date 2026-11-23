@@ -7,7 +7,9 @@ Disk utilities from linuxutils.
 | Tool | Description | Docs |
 |------|-------------|------|
 | `blockdev` | Call block device ioctls from the command line | [docs/blockdev.md](docs/blockdev.md) |
-| `isosize` | Output the length of an iso9660 filesystem | — |
+| `isosize` | Output the length of an iso9660 filesystem | |
+| `mount` | Mount a filesystem | |
+| `umount` | Unmount filesystems | |
 
 ## Installation
 
@@ -25,8 +27,5 @@ cargo install linuxutils-disk --no-default-features --features blockdev
 
 ## Features
 
-| Feature | Tools |
-|---------|-------|
-| `full` (default) | all of the below |
-| `blockdev` | `blockdev` |
-| `isosize` | `isosize` |
+`full` (default) enables every tool. Each tool also has its own feature flag
+matching the tool name.

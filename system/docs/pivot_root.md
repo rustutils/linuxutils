@@ -22,8 +22,8 @@ exec chroot . command
 
 ## Inputs
 
-- `new_root` — path to the new root filesystem (must be a mount point)
-- `put_old` — path where the old root will be moved (must be under `new_root`)
+- `new_root`: path to the new root filesystem (must be a mount point)
+- `put_old`: path where the old root will be moved (must be under `new_root`)
 
 ## Outputs
 

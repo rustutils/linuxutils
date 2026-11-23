@@ -5,9 +5,9 @@ terminal access.
 
 ## Implemented
 
-- [`mesg`](term/mesg.md) — display (or do not display) messages from other users
-- [`wall`]() — write a message to all users
-- [`write`]() — send a message to another user
+- [`mesg`](term/mesg.md): control whether other users can write to your terminal
+- [`wall`](): write a message to all users
+- [`write`](): send a message to another user
 
 ## Planned
 

@@ -23,7 +23,7 @@ Reads `/proc/swaps` to find all active swap areas and disables each one.
 
 | Source | Purpose |
 |--------|---------|
-| Device/file path | Target to disable |
+| Device or file path | Target to disable |
 | `/proc/swaps` | Enumerate active swap areas for `--all` |
 
 ## Outputs
@@ -34,7 +34,7 @@ Reads `/proc/swaps` to find all active swap areas and disables each one.
 
 | Syscall | Description |
 |---------|-------------|
-| `swapoff(2)` | Disable swapping on a device/file |
+| `swapoff(2)` | Disable swapping on a device or file |
 
 ## Command-line options
 

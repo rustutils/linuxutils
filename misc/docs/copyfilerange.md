@@ -23,10 +23,10 @@ Each range is specified as `source_offset:destination_offset:length` (bytes).
 
 ## Inputs
 
-- `source` — source file path
-- `destination` — destination file path (created if needed)
-- `range...` — one or more range specs as positional arguments
-- `-r <file>` — read range specs from a file (one per line)
+- `source`: source file path
+- `destination`: destination file path (created if needed)
+- `range...`: one or more range specs as positional arguments
+- `-r <file>`: read range specs from a file (one per line)
 
 ## Outputs
 

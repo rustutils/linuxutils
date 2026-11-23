@@ -61,13 +61,13 @@ StartSec (start sector), Size (bytes), Device.
 
 | Command | Argument | ioctl | Value | Description |
 |---------|----------|-------|-------|-------------|
-| `--setro` | — | `BLKROSET` | `0x125d` | Set read-only (arg=1) |
-| `--setrw` | — | `BLKROSET` | `0x125d` | Set read-write (arg=0) |
+| `--setro` | | `BLKROSET` | `0x125d` | Set read-only (arg=1) |
+| `--setrw` | | `BLKROSET` | `0x125d` | Set read-write (arg=0) |
 | `--setbsz` | bytes | `BLKBSZSET` | `0x40081271` | Set block size |
 | `--setra` | sectors | `BLKRASET` | `0x1262` | Set readahead |
 | `--setfra` | sectors | `BLKFRASET` | `0x1264` | Set filesystem readahead |
-| `--flushbufs` | — | `BLKFLSBUF` | `0x1261` | Flush buffer cache |
-| `--rereadpt` | — | `BLKRRPART` | `0x125f` | Re-read partition table |
+| `--flushbufs` | | `BLKFLSBUF` | `0x1261` | Flush buffer cache |
+| `--rereadpt` | | `BLKRRPART` | `0x125f` | Re-read partition table |
 
 ## Command-line options
 
@@ -94,7 +94,7 @@ Get commands typically work without root. Set commands, `--flushbufs`, and
 ## Notes
 
 - `--setbsz` is ephemeral: the block size reverts when the fd is closed.
-- `--getsize` is deprecated; use `--getsz` instead.
+- `--getsize` is deprecated. Use `--getsz` instead.
 - `--getsz` computes `BLKGETSIZE64 / 512` for a 64-bit sector count.
 
 ## Not yet implemented

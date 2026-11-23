@@ -2,9 +2,9 @@
 
 This directory is a copy of upstream util-linux's `tests/` tree,
 imported as a behavioural oracle for our reimplementations. We run
-upstream's `run.sh` against our `target/debug/` binaries; tests
-that pass are regression coverage, tests that fail are a v1
-roadmap.
+upstream's `run.sh` against our `target/debug/` binaries. Tests
+that pass give us regression coverage, and tests that fail form
+the roadmap for a 1.0 release.
 
 ## Source
 
@@ -19,8 +19,8 @@ upstream test files are GPL-2.0+, with some pieces also LGPL. The
 canonical GPL-2.0 text is in `LICENSE-GPL-2.0`. Each individual
 test script also carries the upstream copyright header.
 
-This directory is **not published** as part of any of our crates —
-it lives outside the published Cargo manifest tree by design, so
+This directory is **not published** as part of any of our crates.
+It lives outside the published Cargo manifest tree by design, so
 we don't propagate the GPL boundary into anything downstream
 consumers link against.
 
@@ -28,16 +28,16 @@ consumers link against.
 
 ```
 tests/util-linux/
-├── LICENSE-GPL-2.0        — canonical license text
-├── README.md              — this file
-├── run.sh                 — upstream test orchestrator
-├── functions.sh           — `ts_*` helper library
-├── commands.sh            — `TS_CMD_*` defaults
-├── ts/<tool>/<test>       — individual test scripts
-├── ts/<tool>/files/       — test input fixtures
-├── expected/ts/<tool>/    — expected outputs to diff against
-└── helpers/test_*.c       — C helper programs (not built by us;
-                             tests that depend on them auto-skip)
+├── LICENSE-GPL-2.0          canonical license text
+├── README.md                this file
+├── run.sh                   upstream test orchestrator
+├── functions.sh             `ts_*` helper library
+├── commands.sh              `TS_CMD_*` defaults
+├── ts/<tool>/<test>         individual test scripts
+├── ts/<tool>/files/         test input fixtures
+├── expected/ts/<tool>/      expected outputs to diff against
+└── helpers/test_*.c         C helper programs (we don't build
+                             them, so tests that need them skip)
 ```
 
 ## Running

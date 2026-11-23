@@ -16,13 +16,13 @@ fsfreeze --unfreeze <mountpoint>
 
 ## Inputs
 
-- `<mountpoint>` — path to a mounted filesystem directory
+- `<mountpoint>`: path to a mounted filesystem directory
 
 ## Outputs
 
 None. The tool operates purely via ioctls on the mountpoint.
 
-## Syscalls / ioctls
+## Syscalls and ioctls
 
 | ioctl | Value | Description |
 |-------|-------|-------------|
@@ -60,5 +60,5 @@ btrfs, ext2/3/4, f2fs, jfs, nilfs2, reiserfs, xfs.
 ## Notes
 
 - The filesystem must be mounted.
-- Device-mapper (LVM) automatically freezes/thaws on snapshot creation; manual freeze is unnecessary.
+- Device-mapper (LVM) freezes and thaws automatically when it creates a snapshot, so a manual freeze is not needed.
 - Useful for creating consistent backups of the underlying block device.

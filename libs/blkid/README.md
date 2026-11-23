@@ -1,64 +1,62 @@
 # linuxutils-blkid
 
-Rust-native block-device tag resolution via the udev `/dev/disk/by-*`
-symlink layer — the data layer that `findfs`, `blkid`, `mount`, and
-`umount` build on for `LABEL=` / `UUID=` / `PARTLABEL=` / `PARTUUID=` /
-`ID=` lookups.
+Rust-native block device tag resolution, using the udev `/dev/disk/by-*`
+symlinks. This is the data layer that `findfs`, `blkid`, `mount` and `umount`
+use to look up `LABEL=`, `UUID=`, `PARTLABEL=`, `PARTUUID=` and `ID=` tags.
 
 This crate is **not** an ABI-compatible reimplementation of upstream
-libblkid; the API is Rust-shaped (no reference-counting helpers, no
-opaque cache pointers, no userdata void pointers). The shim in
-`compat/libblkid/` will wrap this crate, not the other way around.
+libblkid. Its API is designed for Rust, so it has no reference-counting
+helpers, no opaque cache pointers and no `void *` userdata. The shim in
+`compat/libblkid/` wraps this crate, not the other way around.
 
 ## Scope
 
-v0 covers the **resolution** half of libblkid: given a `Tag`, which
-device path does it map to, and given a device, which tags refer to
-it. It works by reading the `/dev/disk/by-{label,uuid,partlabel,
-partuuid,id}/` directories that udev populates at boot from upstream
-blkid's probe output.
+The first version covers the **resolution** half of libblkid: given a `Tag`,
+which device does it point to, and given a device, which tags point to it.
+It works by reading the `by-label`, `by-uuid`, `by-partlabel`, `by-partuuid`
+and `by-id` directories under `/dev/disk/`, which udev fills in at boot from
+upstream blkid's probe results.
 
-This explicitly **does not** include filesystem-signature probing
-(`blkid -p /dev/sda1`). Reimplementing the hundreds of fs / partition
-table / RAID detectors upstream supports is a multi-month effort, and
-~95% of real-world tag-resolution use cases (everything in fstab,
-everything `mount`/`umount`/`findmnt` ask about) work fine off the
-udev symlinks alone. The probe layer is a v2+ target.
+It **does not** probe for filesystem signatures (`blkid -p /dev/sda1`).
+Upstream supports hundreds of filesystem, partition table and RAID
+detectors, and reimplementing them would take months. About 95% of real tag
+lookups (everything in fstab, and everything `mount`, `umount` and `findmnt`
+ask about) work fine with the udev symlinks alone. The probe layer is planned
+for a later version.
 
-## Status vs. upstream libblkid
+## Status compared to upstream libblkid
 
 | Area                          | Status      | Upstream symbol                    | Notes |
 |-------------------------------|-------------|------------------------------------|-------|
-| `Tag` / `TagKind` types       | Done        | `blkid_tag_*`                      | Lives in `linuxutils-common`. |
-| `Cache` (udev-symlink-backed) | Done        | `blkid_cache`                      | Lazy-resolving, no on-disk cache file. |
-| Tag → device resolve          | Done        | `blkid_evaluate_tag`               | Reads `/dev/disk/by-<kind>/<value>`. |
-| Device → tags reverse-lookup  | Done        | `blkid_dev_*` enumeration          | Walks every `by-*/` and matches by canonical path. |
-| Eager scan of every kind      | Done        | `blkid_probe_all_*`                | `Cache::scan()` returns `(Tag, PathBuf)` pairs. |
-| Filesystem signature probing  | Not started | `blkid_do_probe`, `blkid_probe_*`  | Hundreds of fs/parttable/RAID detectors. v2+. |
-| Topology probes (alignment)   | Not started | `blkid_probe_get_topology`         | v2+. |
-| Cache file (`blkid.tab`)      | Not started | `blkid_cache` on-disk format       | v0 reads udev symlinks; cache file may not be needed at all. |
-| Partition table parsing       | Not started | `blkid_probe_get_partitions`       | v2+; ties into libfdisk too. |
-| Superblock read helpers       | Not started | `blkid_probe_read_*`               | v2+. |
-| Low-level IO (`blkid_io_t`)   | Not started | `blkid_io_*`                       | v2+. |
+| `Tag` and `TagKind` types     | Done        | `blkid_tag_*`                      | Lives in `linuxutils-common`. |
+| `Cache` (backed by udev symlinks) | Done    | `blkid_cache`                      | Resolves lazily, with no cache file on disk. |
+| Tag to device lookup          | Done        | `blkid_evaluate_tag`               | Reads `/dev/disk/by-<kind>/<value>`. |
+| Device to tags lookup         | Done        | `blkid_dev_*` enumeration          | Walks every `by-*/` directory and matches on the canonical path. |
+| Scan of every tag kind        | Done        | `blkid_probe_all_*`                | `Cache::scan()` returns `(Tag, PathBuf)` pairs. |
+| Filesystem signature probing  | Not started | `blkid_do_probe`, `blkid_probe_*`  | Hundreds of filesystem, partition table and RAID detectors. Later version. |
+| Topology probes (alignment)   | Not started | `blkid_probe_get_topology`         | Later version. |
+| Cache file (`blkid.tab`)      | Not started | `blkid_cache` on-disk format       | We read the udev symlinks instead, so the cache file may never be needed. |
+| Partition table parsing       | Not started | `blkid_probe_get_partitions`       | Later version. Overlaps with libfdisk. |
+| Superblock read helpers       | Not started | `blkid_probe_read_*`               | Later version. |
+| Low-level I/O (`blkid_io_t`)  | Not started | `blkid_io_*`                       | Later version. |
 
-## Deliberate non-goals (v0)
+## Deliberate non-goals for the first version
 
-- **ABI compatibility with `libblkid.so`** — that's `compat/libblkid/`'s
-  job, not this crate's.
-- **The probe layer.** Upstream blkid's value comes from being able to
-  identify *anything* on a raw block device, even unmounted. Our v0
-  builds a tag index from udev's symlinks and stops there.
-- **A persistent on-disk cache file.** udev re-creates `/dev/disk/`
-  on every boot from blkid's probe output, so we get a "cache" for
-  free without managing one ourselves.
+- **ABI compatibility with `libblkid.so`.** That is the job of
+  `compat/libblkid/`, not this crate.
+- **The probe layer.** Upstream blkid's strength is that it can identify
+  *anything* on a raw block device, even when it isn't mounted. We build a
+  tag index from udev's symlinks and stop there.
+- **A cache file on disk.** udev rebuilds `/dev/disk/` on every boot from
+  blkid's probe results, so we get a cache for free without managing one.
 
-## Consumers
+## Users
 
-- `misc/src/findfs.rs` — one-pager `findfs(8)`, calls
-  `Cache::resolve` once and prints the path.
-- `misc/src/blkid.rs` — partial `blkid(8)` that lists the by-* index
-  via `Cache::scan` and resolves `-L`/`-U` via `Cache::resolve`. No
+- `misc/src/findfs.rs`: a small `findfs(8)` that calls `Cache::resolve` once
+  and prints the path.
+- `misc/src/blkid.rs`: a partial `blkid(8)`. It lists the `by-*` index with
+  `Cache::scan` and resolves `-L` and `-U` with `Cache::resolve`. There is no
   probe layer.
-- `disk/src/mount.rs`, `disk/src/umount.rs` — call `Cache::resolve`
-  on `Spec::Tag` sources before invoking the kernel mount syscalls.
-- `compat/libblkid/` — *planned*, the cdylib shim.
+- `disk/src/mount.rs` and `disk/src/umount.rs`: call `Cache::resolve` on
+  `Spec::Tag` sources before calling the mount syscalls.
+- `compat/libblkid/`: the cdylib shim. See its README for what it covers.
