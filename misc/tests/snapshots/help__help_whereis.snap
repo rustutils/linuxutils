@@ -4,13 +4,20 @@ expression: "help_output(\"whereis\")"
 ---
 Locate the binary, source, and manual page files for a command
 
-Usage: whereis [OPTIONS]
+Usage: whereis [OPTIONS] [NAME]...
+
+Arguments:
+  [NAME]...  Command names to look up
 
 Options:
-  -b          Search for binaries only
-  -m          Search for manuals only
-  -s          Search for sources only
-  -u          Only show unusual entries
-  -l          List effective lookup paths
-  -g          Interpret names as glob patterns
-  -h, --help  Print help
+  -b            Search for binaries only
+  -m            Search for manuals only
+  -s            Search for sources only
+  -u            Only show unusual entries
+  -l            List effective lookup paths
+  -g            Interpret names as glob patterns
+  -B <DIRS>...  Define binary lookup path
+  -M <DIRS>...  Define manual lookup path
+  -S <DIRS>...  Define source lookup path
+  -f            Terminate the -B, -M and -S lists
+  -h, --help    Print help

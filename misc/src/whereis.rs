@@ -43,6 +43,16 @@ struct ClapArgs {
     list: bool,
     #[arg(short = 'g', help = "Interpret names as glob patterns")]
     glob: bool,
+    #[arg(short = 'B', value_name = "DIRS", num_args = 1.., help = "Define binary lookup path")]
+    bin_dirs: Vec<PathBuf>,
+    #[arg(short = 'M', value_name = "DIRS", num_args = 1.., help = "Define manual lookup path")]
+    man_dirs: Vec<PathBuf>,
+    #[arg(short = 'S', value_name = "DIRS", num_args = 1.., help = "Define source lookup path")]
+    src_dirs: Vec<PathBuf>,
+    #[arg(short = 'f', help = "Terminate the -B, -M and -S lists")]
+    terminate: bool,
+    #[arg(value_name = "NAME", help = "Command names to look up")]
+    names: Vec<String>,
 }
 
 impl Args {
@@ -152,10 +162,10 @@ impl Args {
             unusual_only: clap_args.unusual,
             list_paths: clap_args.list,
             glob_mode: clap_args.glob,
-            custom_bin_dirs: Vec::new(),
-            custom_man_dirs: Vec::new(),
-            custom_src_dirs: Vec::new(),
-            names: Vec::new(),
+            custom_bin_dirs: clap_args.bin_dirs,
+            custom_man_dirs: clap_args.man_dirs,
+            custom_src_dirs: clap_args.src_dirs,
+            names: clap_args.names,
         })
     }
 }
