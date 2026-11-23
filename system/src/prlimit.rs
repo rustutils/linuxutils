@@ -22,10 +22,9 @@ use std::{fs, os::unix::process::CommandExt, process, process::ExitCode};
                       prlimit [options] [--<resource>=<limit>] COMMAND [args...]"
 )]
 pub struct Args {
-    /// Process ID. May be a plain `PID` or the race-free
-    /// `PID:INODE` form produced by `getino -p` — when the inode
-    /// is given, the pidfs inode is verified before any limit is
-    /// touched so that a recycled PID can't be hit by accident.
+    /// Process ID. Can be a plain PID, or the race-free PID:INODE form
+    /// printed by getino -p. With an inode, it is checked before any limit
+    /// is changed, so a reused PID can't be changed by accident.
     #[arg(short, long, value_name = "pid")]
     pid: Option<String>,
 

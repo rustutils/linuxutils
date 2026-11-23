@@ -1,6 +1,6 @@
 [package]
 name = "linuxutils-kmod"
-description = "Kernel module utilities (lsmod, modinfo, modprobe, insmod, rmmod, depmod)"
+description = "Kernel module utilities from linuxutils (not implemented yet)"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true

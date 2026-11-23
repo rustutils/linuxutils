@@ -12,13 +12,13 @@ use std::{
     process::ExitCode,
 };
 
-/// List or find filesystems by parsing `/proc/self/mountinfo`,
-/// `/etc/fstab`, or `/proc/swaps`.
+/// List or find filesystems in /proc/self/mountinfo, /etc/fstab or
+/// /proc/swaps.
 ///
-/// Reads the kernel's mount table by default; switch with `--fstab`
-/// or `--swaps`. Filter by `--source`, `--target`, `--types`, and
-/// select columns with `-o`. Tree output (`--tree`) and statfs-derived
-/// columns (SIZE/AVAIL/USED/USE%) are not yet implemented.
+/// Reads the kernel's mount table by default. Use --fstab or --swaps to
+/// read the others. Filter with --source, --target and --types, and pick
+/// columns with -o. Tree output (--tree) and the columns that need statfs
+/// (SIZE, AVAIL, USED and USE%) are not implemented yet.
 #[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "findmnt", about = "List active mounts")]
@@ -31,7 +31,7 @@ pub struct Args {
     #[arg(long, action = ArgAction::SetTrue, group = "src")]
     swaps: bool,
 
-    /// Read /proc/self/mountinfo (default; matches `--kernel`)
+    /// Read /proc/self/mountinfo (the default)
     #[arg(short = 'k', long, action = ArgAction::SetTrue, group = "src")]
     kernel: bool,
 
@@ -47,8 +47,8 @@ pub struct Args {
     #[arg(short = 'T', long, value_name = "PATH")]
     target: Option<PathBuf>,
 
-    /// Comma-separated fstype filter; prefix `no` to invert
-    /// (`-t nofuse,nofusectl`)
+    /// Only show these filesystem types, separated by commas. Start the
+    /// list with "no" to hide them instead (-t nofuse,nofusectl)
     #[arg(short = 't', long, value_name = "LIST", value_delimiter = ',')]
     types: Option<Vec<String>>,
 
@@ -72,9 +72,8 @@ pub struct Args {
     #[arg(long, action = ArgAction::SetTrue)]
     output_all: bool,
 
-    /// Positional fallback: a target path or source spec, equivalent
-    /// to `--target` or `--source` respectively. Matches upstream
-    /// behaviour where a bare argument is interpreted as either.
+    /// A target path or a source. The same as --target or --source, as
+    /// in upstream findmnt.
     #[arg(value_name = "DEVICE-OR-MOUNTPOINT")]
     spec: Option<String>,
 }

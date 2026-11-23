@@ -1,6 +1,6 @@
 [package]
 name = "linuxutils-text"
-description = "Text utilities from linuxutils (colrm, column, hexdump, line, rev)"
+description = "Text processing utilities from linuxutils"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true

@@ -10,24 +10,21 @@ use std::{
 
 /// Read one line from standard input and write it to standard output.
 ///
-/// Reads byte-by-byte directly from FD 0 (no `BufReader`) so that
-/// chained invocations like `(line && line) <pipe` consume exactly
-/// one line each — a buffered reader would over-read and steal the
-/// rest from the next process.
-///
-/// Behaviour matches POSIX:
-///   - exit 0 if a `\n` is read and echoed
-///   - exit 1 if EOF is hit before a `\n`; a trailing `\n` is added
-///     to stdout in that case
-///
-/// Extra positional arguments are ignored to match upstream
-/// `line(1)` (the test harness sometimes passes the literal string
-/// `line` as a buffer-size hint).
+/// Exits with status 0 if a whole line was read. If the input ends before
+/// a newline, line still writes a newline and exits with status 1.
+//
+// Input is read one byte at a time straight from file descriptor 0, with
+// no BufReader, so that `(line && line) <pipe` reads exactly one line
+// each. A buffered reader would read too far and take input meant for
+// the next process.
+//
+// Extra arguments are ignored, as upstream line(1) does. Its test suite
+// sometimes passes the string "line" as a buffer size hint.
 #[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
-#[command(name = "line", version, about)]
+#[command(name = "line", version)]
 pub struct Args {
-    /// Ignored — accepted for compatibility with upstream `line(1)`.
+    /// Ignored. Accepted for compatibility with upstream line(1).
     #[arg(trailing_var_arg = true, hide = true)]
     pub _ignored: Vec<String>,
 }

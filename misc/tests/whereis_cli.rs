@@ -22,9 +22,20 @@ fn binaries_only() {
 
 #[test]
 fn manuals_only() {
-    whereis().args(["-m", "ls"]).assert().success().stdout(
-        predicate::str::contains("ls:").and(predicate::str::contains("man")),
-    );
+    // Use our own man directory, since the host (a Nix build sandbox, for
+    // example) may not have a man page for ls.
+    let dir = tempfile::tempdir().unwrap();
+    let man1 = dir.path().join("man1");
+    std::fs::create_dir(&man1).unwrap();
+    std::fs::write(man1.join("ls.1.gz"), b"").unwrap();
+
+    whereis()
+        .args(["-m", "-M"])
+        .arg(&man1)
+        .args(["-f", "ls"])
+        .assert()
+        .success()
+        .stdout(format!("ls: {}\n", man1.join("ls.1.gz").display()));
 }
 
 #[test]

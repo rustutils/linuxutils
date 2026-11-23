@@ -1,6 +1,6 @@
 [package]
 name = "linuxutils-disk"
-description = "Disk utilities from linuxutils (blockdev, isosize)"
+description = "Disk and filesystem utilities from linuxutils"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true

@@ -19,9 +19,8 @@ pub struct Args {
     #[arg(short = 'a', long = "alternative")]
     alternative: bool,
 
-    /// Long options to recognize (comma-separated). The
-    /// shorter `--long` form is accepted as an alias to match
-    /// upstream `getopt(1)`.
+    /// Long options to recognize, separated by commas. The shorter --long
+    /// is accepted as an alias, as in upstream getopt(1).
     #[arg(
         short = 'l',
         long = "longoptions",

@@ -8,8 +8,8 @@ use std::process::ExitCode;
 
 /// Atomically exchange two filesystem paths.
 ///
-/// Wraps `renameat2(2)` with the `RENAME_EXCHANGE` flag. Both paths
-/// must exist and live on the same filesystem.
+/// Uses renameat2(2) with the RENAME_EXCHANGE flag. Both paths must
+/// exist and be on the same filesystem.
 #[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "exch", about = "Atomically exchange two filesystem paths")]

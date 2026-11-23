@@ -20,7 +20,7 @@ Options:
   -q, --tape                       Use tape drive offline command
   -r, --cdrom                      Use CD-ROM eject command
   -s, --scsi                       Use SCSI eject commands
-  -T, --traytoggle                 Toggle tray open/close
+  -T, --traytoggle                 Open the tray if it is closed, or close it if it is open
   -t, --trayclose                  Close CD-ROM tray
   -v, --verbose                    Verbose output
   -h, --help                       Print help

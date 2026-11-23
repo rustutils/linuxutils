@@ -16,31 +16,29 @@ use std::{
 
 /// Unmount a filesystem.
 ///
-/// Each positional argument can be a mount point, a source device,
-/// or a `LABEL=`/`UUID=` tag. Tags are resolved via libblkid; sources
-/// are looked up in `/proc/self/mountinfo` to find the target mount
-/// point that's actually unmounted.
+/// Each argument can be a mount point, a source device, or a LABEL= or
+/// UUID= tag. Tags are resolved to devices first. Devices are looked up
+/// in /proc/self/mountinfo to find the mount point to unmount.
 #[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "umount", about = "Unmount filesystems")]
 pub struct Args {
-    /// Force the unmount even if the device is busy (`MNT_FORCE`)
+    /// Force the unmount even if the device is busy (MNT_FORCE)
     #[arg(short = 'f', long, action = ArgAction::SetTrue)]
     force: bool,
 
-    /// Lazy unmount — detach now, free when no longer busy
-    /// (`MNT_DETACH`)
+    /// Lazy unmount: detach now, and clean up once it is no longer busy
+    /// (MNT_DETACH)
     #[arg(short = 'l', long, action = ArgAction::SetTrue)]
     lazy: bool,
 
-    /// On failure, try a `mount -o remount,ro` fallback so the
-    /// data is still flushed and the fs is read-only afterwards
+    /// If unmounting fails, remount read-only instead (like
+    /// mount -o remount,ro), so the data is still flushed
     #[arg(short = 'r', long = "read-only", action = ArgAction::SetTrue)]
     read_only_fallback: bool,
 
-    /// Do not write to /etc/mtab on success (no-op for us — we
-    /// don't write mtab — but accepted for command-line
-    /// compatibility)
+    /// Don't write to /etc/mtab. This has no effect, since mtab is never
+    /// written, but is accepted for compatibility
     #[arg(short = 'n', long = "no-mtab", action = ArgAction::SetTrue)]
     no_mtab: bool,
 
@@ -48,8 +46,8 @@ pub struct Args {
     #[arg(short = 'v', long, action = ArgAction::SetTrue)]
     verbose: bool,
 
-    /// Targets to unmount: mount point, device path, or tag
-    /// (`LABEL=foo`, `UUID=...`)
+    /// What to unmount: a mount point, a device path, or a tag such as
+    /// LABEL=foo or UUID=...
     #[arg(required = true, value_name = "TARGET")]
     targets: Vec<String>,
 }

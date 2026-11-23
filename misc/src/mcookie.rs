@@ -16,7 +16,7 @@ use std::{
 /// system.
 #[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
-#[command(name = "mcookie", version, about)]
+#[command(name = "mcookie", version)]
 pub struct Args {
     /// Use this file as an additional source of randomness.
     /// When file is '-', characters are read from standard input.

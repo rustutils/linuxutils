@@ -1,6 +1,6 @@
 [package]
 name = "linuxutils-libsmartcols"
-description = "ABI-compatible libsmartcols FFI wrapper around the cols crate"
+description = "ABI-compatible libsmartcols implementation backed by the cols crate"
 version.workspace = true
 edition.workspace = true
 license.workspace = true

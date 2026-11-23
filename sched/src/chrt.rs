@@ -187,7 +187,7 @@ pub struct Args {
     #[arg(short = 'p', long = "pid")]
     pid: bool,
 
-    /// Show min/max valid priorities, then exit
+    /// Show the minimum and maximum valid priorities, then exit
     #[arg(short = 'm', long = "max")]
     max: bool,
 
@@ -239,7 +239,8 @@ pub struct Args {
     #[arg(short = 'D', long = "sched-deadline")]
     sched_deadline: Option<u64>,
 
-    /// Positional arguments: priority and/or PID/command
+    /// A priority and a command to run. With -p, a PID, optionally
+    /// preceded by a new priority
     #[arg(trailing_var_arg = true, allow_hyphen_values = true)]
     args: Vec<String>,
 }

@@ -1,6 +1,6 @@
 [package]
 name = "linuxutils-term"
-description = "Terminal utilities from linuxutils (mesg, wall, write)"
+description = "Terminal utilities from linuxutils"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true

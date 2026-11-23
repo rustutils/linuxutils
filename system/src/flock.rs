@@ -40,7 +40,7 @@ pub struct Args {
     #[arg(short, long, alias = "nb")]
     nonblock: bool,
 
-    /// Wait at most this many seconds; decimal fractions allowed
+    /// Wait at most this many seconds. Fractions are allowed
     #[arg(short = 'w', long, value_name = "secs", alias = "wait")]
     timeout: Option<f64>,
 

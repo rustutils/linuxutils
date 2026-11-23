@@ -11,8 +11,8 @@ use std::{
 
 /// Set or examine pipe and FIFO buffer sizes.
 ///
-/// Uses fcntl(2) with F_GETPIPE_SZ / F_SETPIPE_SZ to get or set the
-/// internal buffer sizes of pipes and FIFOs.
+/// Uses fcntl(2) with F_GETPIPE_SZ and F_SETPIPE_SZ to get or set the
+/// buffer sizes of pipes and FIFOs.
 #[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "pipesz", about = "Set or examine pipe and FIFO buffer sizes")]

@@ -11,7 +11,7 @@ Arguments:
 
 Options:
   -m, --mount                      Unshare mount namespace
-  -u, --uts                        Unshare UTS namespace (hostname/domainname)
+  -u, --uts                        Unshare the UTS namespace (host name and domain name)
   -i, --ipc                        Unshare IPC namespace
   -n, --net                        Unshare network namespace
   -p, --pid                        Unshare PID namespace

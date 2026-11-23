@@ -2,11 +2,10 @@
 source: misc/tests/help.rs
 expression: "help_output(\"findfs\")"
 ---
-Resolve a `LABEL=` / `UUID=` / `PARTLABEL=` / `PARTUUID=` / `ID=` tag to the device path it refers
-to.
+Find the device that a LABEL=, UUID=, PARTLABEL=, PARTUUID= or ID= tag refers to.
 
-Lookups go through the udev `/dev/disk/by-*` symlink layer. Filesystem-signature probing is not
-implemented; if the host's udev didn't populate the symlinks, no resolution happens.
+Lookups use the udev symlinks in /dev/disk/by-*. Probing for filesystem signatures is not
+implemented, so if udev hasn't created the symlinks, nothing is found.
 
 Exit status: 0 on success, 1 on not-found, 2 on usage error.
 
@@ -14,8 +13,8 @@ Usage: findfs <NAME=value>
 
 Arguments:
   <NAME=value>
-          Tag to resolve, e.g. `LABEL=root` or `UUID=12345...`. Anything not in `KIND=value` form is
-          echoed verbatim, matching upstream findfs(8)
+          Tag to look up, such as LABEL=root or UUID=12345... Anything not in KIND=value form is
+          printed back unchanged, as upstream findfs(8) does
 
 Options:
   -h, --help

@@ -23,7 +23,7 @@ pub struct Args {
     /// User to write to
     user: String,
 
-    /// Terminal to write to (e.g. pts/1)
+    /// Terminal to write to, such as pts/1
     ttyname: Option<String>,
 }
 

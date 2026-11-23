@@ -7,7 +7,7 @@ Set up and control loop devices
 Usage: losetup [OPTIONS] [POSITIONAL]...
 
 Arguments:
-  [POSITIONAL]...  Device and/or file arguments
+  [POSITIONAL]...  Loop devices, backing files, or both
 
 Options:
   -a, --all                      List all used devices

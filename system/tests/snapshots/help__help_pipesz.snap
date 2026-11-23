@@ -4,8 +4,7 @@ expression: "help_output(\"pipesz\")"
 ---
 Set or examine pipe and FIFO buffer sizes.
 
-Uses fcntl(2) with F_GETPIPE_SZ / F_SETPIPE_SZ to get or set the internal buffer sizes of pipes and
-FIFOs.
+Uses fcntl(2) with F_GETPIPE_SZ and F_SETPIPE_SZ to get or set the buffer sizes of pipes and FIFOs.
 
 Usage: pipesz [OPTIONS] [COMMAND]...
 

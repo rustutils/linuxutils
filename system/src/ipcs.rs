@@ -45,7 +45,7 @@ pub struct Args {
     #[arg(short = 'b', long)]
     bytes: bool,
 
-    /// Show last-attach / last-detach / last-change times
+    /// Show the times of the last attach, detach and change
     #[arg(short = 't', long)]
     time: bool,
 

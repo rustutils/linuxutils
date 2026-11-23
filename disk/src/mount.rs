@@ -18,60 +18,63 @@ use std::{
 
 /// Mount a filesystem.
 ///
-/// Four forms:
-///   - `mount` (no args) — list active mounts (like `findmnt`).
-///   - `mount -a` — mount every entry from `/etc/fstab` not already
-///     mounted (skipping `noauto`, swap, and `ignore` entries).
-///   - `mount <target>` — look up the target in `/etc/fstab` and
-///     mount it as configured.
-///   - `mount <source> <target>` — direct mount. `<source>` may be a
-///     device path or a `LABEL=`/`UUID=` tag (resolved via blkid).
+/// It can be used in four ways:
 ///
-/// Userspace-only and propagation features deferred to v1: `--move`,
-/// `--make-{shared,slave,private,unbindable}`, `mount.<fstype>`
-/// helpers, loop devices, mtab/utab writing, `-F/--fork`.
+///   mount                    List the mounted filesystems, like findmnt.
+///   mount -a                 Mount every entry in /etc/fstab that isn't
+///                            mounted yet, except noauto, swap and ignore
+///                            entries.
+///   mount TARGET             Look up TARGET in /etc/fstab and mount it as
+///                            configured there.
+///   mount SOURCE TARGET      Mount SOURCE on TARGET. SOURCE can be a device
+///                            path or a LABEL= or UUID= tag.
+///
+/// Not supported yet: --move, the --make-shared, --make-slave,
+/// --make-private and --make-unbindable options, mount.FSTYPE helpers,
+/// loop devices, writing mtab or utab, and -F (--fork).
 #[derive(Parser, Debug)]
-#[command(max_term_width = HELP_WIDTH_MAX)]
+#[command(max_term_width = HELP_WIDTH_MAX, verbatim_doc_comment)]
 #[command(name = "mount", about = "Mount a filesystem")]
 pub struct Args {
-    /// Mount every entry from fstab. Skips entries with `noauto`,
-    /// fstype `swap`, fstype `ignore`, or those whose target is
-    /// already mounted. Filters via `-t` and `-O` apply.
+    /// Mount every entry in fstab. Skips entries with the noauto option,
+    /// entries of type swap or ignore, and entries whose target is already
+    /// mounted. The -t and -O filters apply.
     #[arg(short = 'a', long = "all", action = ArgAction::SetTrue)]
     all: bool,
 
-    /// Filesystem type (e.g. ext4, tmpfs, proc). Required for direct
-    /// mounts unless an option like `--bind` is given. With `-a`,
-    /// limits which fstab entries to mount: a comma-separated allow
-    /// list, or — if the first token starts with `no` — an exclude
-    /// list (`-a -t nonfs,cifs` skips nfs and cifs).
+    /// Filesystem type, such as ext4, tmpfs or proc. Needed when mounting a
+    /// source directly, unless an option like --bind is given. With -a, it
+    /// limits which fstab entries are mounted. It takes a comma-separated
+    /// list of types to include. If the first type starts with "no", the
+    /// list is of types to skip instead (-a -t nonfs,cifs skips nfs and
+    /// cifs).
     #[arg(short = 't', long = "types", value_name = "TYPE")]
     fstype: Option<String>,
 
-    /// With `-a`, limit to entries matching the comma-separated
-    /// option test list. Each token must be present (`name`) or
-    /// absent (`noname`); all conditions are ANDed.
+    /// With -a, only mount entries that match this comma-separated list of
+    /// options. Each option must be present (name) or absent (noname), and
+    /// an entry must match all of them.
     #[arg(short = 'O', long = "test-opts", value_name = "LIST")]
     test_opts: Option<String>,
 
-    /// Mount options (comma-separated). Combined with options from
-    /// fstab when looking up a target.
+    /// Mount options, separated by commas. When the target is looked up in
+    /// fstab, these are combined with the options there.
     #[arg(short = 'o', long = "options", value_name = "LIST")]
     options: Option<String>,
 
-    /// Mount read-only (alias for `-o ro`)
+    /// Mount read-only (same as -o ro)
     #[arg(short = 'r', long = "read-only", action = ArgAction::SetTrue)]
     read_only: bool,
 
-    /// Mount read-write (alias for `-o rw`, the default)
+    /// Mount read-write (same as -o rw, and the default)
     #[arg(short = 'w', long = "rw", action = ArgAction::SetTrue)]
     read_write: bool,
 
-    /// Bind-mount (`MS_BIND`); two positional arguments are required
+    /// Bind mount (MS_BIND). Needs both a source and a target
     #[arg(short = 'B', long, action = ArgAction::SetTrue)]
     bind: bool,
 
-    /// Recursive bind (`MS_BIND | MS_REC`)
+    /// Recursive bind mount (MS_BIND and MS_REC)
     #[arg(short = 'R', long = "rbind", action = ArgAction::SetTrue)]
     rbind: bool,
 
@@ -79,32 +82,32 @@ pub struct Args {
     #[arg(long, action = ArgAction::SetTrue)]
     remount: bool,
 
-    /// Use `<file>` as the fstab instead of `/etc/fstab`
+    /// Use FILE as the fstab instead of /etc/fstab
     #[arg(short = 'T', long = "fstab", value_name = "FILE")]
     fstab_file: Option<PathBuf>,
 
-    /// Source by label (alias for `<source>` = `LABEL=<label>`)
+    /// Mount the filesystem with this label (same as a LABEL= source)
     #[arg(short = 'L', long, value_name = "LABEL")]
     label: Option<String>,
 
-    /// Source by UUID (alias for `<source>` = `UUID=<uuid>`)
+    /// Mount the filesystem with this UUID (same as a UUID= source)
     #[arg(short = 'U', long, value_name = "UUID")]
     uuid: Option<String>,
 
-    /// Don't write to /etc/mtab on success (no-op for us — we don't
-    /// write mtab — but accepted for command-line compatibility)
+    /// Don't write to /etc/mtab. This has no effect, since mtab is never
+    /// written, but is accepted for compatibility
     #[arg(short = 'n', long = "no-mtab", action = ArgAction::SetTrue)]
     no_mtab: bool,
 
-    /// Print what we're doing
+    /// Print what is being done
     #[arg(short = 'v', long, action = ArgAction::SetTrue)]
     verbose: bool,
 
-    /// Source (device, NFS export, tag, ...) — when only one
-    /// positional is given, it's interpreted as the target instead.
+    /// Source to mount, such as a device, an NFS export or a tag. When it
+    /// is the only argument, it is treated as the target instead.
     spec: Option<String>,
 
-    /// Target mount point.
+    /// Mount point.
     target: Option<PathBuf>,
 }
 

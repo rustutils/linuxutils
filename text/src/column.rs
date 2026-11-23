@@ -15,7 +15,7 @@ const TAB_WIDTH: usize = 8;
 /// Columnate lists.
 #[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
-#[command(name = "column", version, about)]
+#[command(name = "column", version)]
 #[command(allow_negative_numbers = true)]
 pub struct Args {
     /// Create a table from delimited input.
@@ -42,9 +42,9 @@ pub struct Args {
     #[arg(short = 'p', long = "tree-parent", value_name = "column")]
     tree_parent: Option<String>,
 
-    /// Possible input item delimiters (default is whitespace).
-    /// `--input-separator` is accepted as an alias to match
-    /// upstream `column(1)`.
+    /// Characters that separate input items (whitespace by default).
+    /// --input-separator is accepted as an alias, as in upstream
+    /// column(1).
     #[arg(
         short,
         long,

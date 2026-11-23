@@ -138,14 +138,14 @@ pub struct Args {
     #[arg(long, action = ArgAction::SetTrue)]
     pub list: bool,
 
-    /// Show personality flag bits and exit. Without an argument,
-    /// shows the running process's current personality (or the one
-    /// named by `--pid`); with a value, decodes that value.
+    /// Show personality flags and exit. Without a value, shows the
+    /// personality of the current process, or of the one given with
+    /// --pid. With a value, decodes that value instead.
     #[arg(long, value_name = "PERSONALITY", num_args = 0..=1, default_missing_value = "")]
     pub show: Option<String>,
 
-    /// Read the personality of process `PID` from
-    /// `/proc/PID/personality`. Must be combined with `--show`.
+    /// Read the personality of process PID from /proc/PID/personality.
+    /// Only works together with --show.
     #[arg(short = 'p', long = "pid", value_name = "PID")]
     pub pid: Option<i32>,
 
@@ -169,7 +169,7 @@ pub struct Args {
     #[arg(short = 'L', long = "addr-compat-layout", action = ArgAction::SetTrue)]
     pub addr_compat_layout: bool,
 
-    /// READ_IMPLIES_EXEC — pages with PROT_READ also get PROT_EXEC
+    /// Make readable pages executable too (READ_IMPLIES_EXEC)
     #[arg(short = 'X', long = "read-implies-exec", action = ArgAction::SetTrue)]
     pub read_implies_exec: bool,
 
@@ -177,16 +177,16 @@ pub struct Args {
     #[arg(short = 'B', long = "32bit", action = ArgAction::SetTrue)]
     pub bit32: bool,
 
-    /// SHORT_INODE — return only 16-bit inode numbers from stat()
+    /// Return only 16-bit inode numbers from stat() (SHORT_INODE)
     #[arg(short = 'I', long = "short-inode", action = ArgAction::SetTrue)]
     pub short_inode: bool,
 
-    /// WHOLE_SECONDS — round timeouts up to whole seconds
+    /// Round timeouts up to whole seconds (WHOLE_SECONDS)
     #[arg(short = 'S', long = "whole-seconds", action = ArgAction::SetTrue)]
     pub whole_seconds: bool,
 
-    /// STICKY_TIMEOUTS — system call timeouts don't decrement on
-    /// EINTR
+    /// Don't reduce system call timeouts when interrupted with EINTR
+    /// (STICKY_TIMEOUTS)
     #[arg(short = 'T', long = "sticky-timeouts", action = ArgAction::SetTrue)]
     pub sticky_timeouts: bool,
 
@@ -194,19 +194,19 @@ pub struct Args {
     #[arg(short = '3', long = "3gb", action = ArgAction::SetTrue)]
     pub limit_3gb: bool,
 
-    /// Reset the 3GB cap; alias for the default 4GB layout
+    /// Remove the 3GB cap, which gives the default 4GB layout
     #[arg(long = "4gb", action = ArgAction::SetTrue)]
     pub limit_4gb: bool,
 
-    /// Make `uname()` report kernel 2.6.x (UNAME26)
+    /// Make uname() report kernel 2.6.x (UNAME26)
     #[arg(long = "uname-2.6", action = ArgAction::SetTrue)]
     pub uname_26: bool,
 
-    /// Architecture name (e.g. `linux32`, `linux64`, `i686`)
+    /// Architecture name, such as linux32, linux64 or i686
     pub arch: Option<String>,
 
-    /// Program and its arguments. Required unless `--list` /
-    /// `--show` is given.
+    /// Program to run, with its arguments. Required unless --list or
+    /// --show is given.
     #[arg(trailing_var_arg = true, allow_hyphen_values = true)]
     pub command: Vec<String>,
 }

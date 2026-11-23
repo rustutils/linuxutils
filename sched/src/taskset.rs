@@ -30,7 +30,8 @@ pub struct Args {
     #[arg(short = 'a', long = "all-tasks")]
     all_tasks: bool,
 
-    /// Positional arguments: mask and/or PID/command
+    /// A CPU mask and a command to run. With -p, a PID, optionally
+    /// preceded by a new mask
     #[arg(trailing_var_arg = true, allow_hyphen_values = true)]
     args: Vec<String>,
 }

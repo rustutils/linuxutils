@@ -108,7 +108,8 @@ linuxutils lscpu
 ```
 
 You can also symlink it under a tool's name, for example to
-`/usr/local/bin/lscpu`, and call that directly.
+`/usr/local/bin/lscpu`, and call that directly. `linuxutils --list` prints the
+name of every tool it can run.
 
 ## Building from source
 

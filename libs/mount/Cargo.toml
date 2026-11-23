@@ -1,6 +1,6 @@
 [package]
 name = "linuxutils-mount"
-description = "Rust-native mount/fstab/mountinfo parsing and mount(2) syscall wrappers"
+description = "Parsers for mountinfo, fstab and swaps, and wrappers for the mount syscalls"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true

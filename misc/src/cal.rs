@@ -121,8 +121,8 @@ pub struct Args {
     #[arg(short = 'w', long = "week")]
     week: bool,
 
-    /// Number of columns to use (`auto` lets cal pick a value
-    /// that fits the terminal width).
+    /// Number of columns to use. With auto, cal picks a number that fits
+    /// the terminal width.
     #[arg(short = 'c', long, default_value = "auto")]
     columns: String,
 

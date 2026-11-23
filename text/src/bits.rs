@@ -12,17 +12,16 @@ const DEFAULT_WIDTH: usize = 8192;
 /// Upstream's bits caps `--width` at 128KB worth of bits.
 const MAX_WIDTH: usize = 128 * 1024;
 
-/// Convert bit masks from/to various formats.
+/// Convert bit masks between formats.
 ///
-/// Each positional argument is a "group" of bits in one of the
-/// recognised input formats (hex `0x...`, grouped hex `,xxxxxxxx,...`,
-/// or list `1,3,5-10`). Groups are combined left-to-right, OR'ing by
-/// default; a leading `&`, `^`, or `~` selects AND, XOR, or ANDN
-/// instead. With no positional arguments, groups are read from stdin
-/// one per line.
+/// Each argument is a group of bits in one of the input formats: hex
+/// (0x...), grouped hex (,xxxxxxxx,...) or a list (1,3,5-10). Groups are
+/// combined from left to right with OR, unless the group starts with &,
+/// ^ or ~, which select AND, XOR or AND NOT. With no arguments, groups
+/// are read from standard input, one per line.
 #[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
-#[command(name = "bits", about = "Convert bit masks from/to various formats")]
+#[command(name = "bits", about = "Convert bit masks between formats")]
 pub struct Args {
     /// Print result as a hexadecimal mask (default)
     #[arg(short = 'm', long, action = ArgAction::SetTrue, group = "mode")]
@@ -36,8 +35,8 @@ pub struct Args {
     #[arg(short = 'b', long, action = ArgAction::SetTrue, group = "mode")]
     binary: bool,
 
-    /// Print result as a list of bit IDs (with `start-end[:stride]`
-    /// range compression for arithmetic progressions of 3+ bits)
+    /// Print the result as a list of bit numbers. Runs of three or more
+    /// evenly spaced bits are shortened to start-end[:stride]
     #[arg(short = 'l', long, action = ArgAction::SetTrue, group = "mode")]
     list: bool,
 
@@ -46,7 +45,7 @@ pub struct Args {
     #[arg(short = 'x', long, action = ArgAction::SetTrue, group = "mode")]
     expand: bool,
 
-    /// Maximum number of bits handled; bits above this are truncated
+    /// Maximum number of bits to handle. Higher bits are dropped
     #[arg(short = 'w', long, default_value_t = DEFAULT_WIDTH)]
     width: usize,
 

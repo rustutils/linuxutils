@@ -12,8 +12,8 @@ use std::{
 
 /// Copy byte ranges between files using copy_file_range(2).
 ///
-/// Performs kernel-space file copies that can create reflinked files
-/// when the filesystem supports it. Range format: `src_off:dst_off:length`.
+/// The copy happens inside the kernel, and can create reflinks when the
+/// filesystem supports them. Ranges have the form SRC_OFF:DST_OFF:LENGTH.
 #[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "copyfilerange", about = "Copy byte ranges between files")]

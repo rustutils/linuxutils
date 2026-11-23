@@ -22,7 +22,7 @@ const EXIT_NOTMOUNT: u8 = 32;
     about = "See if a directory or file is a mountpoint"
 )]
 pub struct Args {
-    /// Show the major/minor numbers of the device mounted on the given directory
+    /// Show the major and minor numbers of the device mounted on the directory
     #[arg(short = 'd', long = "fs-devno", conflicts_with = "devno")]
     fs_devno: bool,
 
@@ -34,7 +34,7 @@ pub struct Args {
     #[arg(long = "nofollow")]
     nofollow: bool,
 
-    /// Show the major/minor numbers of the given block device
+    /// Show the major and minor numbers of the given block device
     #[arg(short = 'x', long = "devno", conflicts_with_all = ["fs_devno", "quiet"])]
     devno: bool,
 

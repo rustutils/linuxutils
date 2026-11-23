@@ -12,10 +12,10 @@ use std::{os::unix::fs::MetadataExt, process::ExitCode};
 /// Print the inode number of a process's pidfd or one of its
 /// namespaces, given a PID.
 ///
-/// The kernel guarantees that a pidfs inode is not reused during the
-/// current boot, so the `PID:inode` form (`-p`) is a race-free handle
-/// for that process — usable e.g. with `kill PID:inode`. Namespace
-/// inodes match those reported under `/proc/<pid>/ns/<type>`.
+/// The kernel never reuses a pidfs inode during the same boot, so the
+/// PID:INODE form (-p) refers to that process without races, for example
+/// with kill PID:INODE. Namespace inodes match the ones shown in
+/// /proc/PID/ns/TYPE.
 #[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "getino", about = "Print pidfd or namespace inode for a PID")]
@@ -60,7 +60,7 @@ pub struct Args {
     #[arg(short = 'p', long)]
     print_pid: bool,
 
-    /// Process IDs (each may have an optional `:inode` suffix that is ignored)
+    /// Process IDs. An optional :INODE suffix is accepted and ignored
     #[arg(required = true)]
     pids: Vec<String>,
 }

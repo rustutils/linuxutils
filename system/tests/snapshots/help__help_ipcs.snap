@@ -32,7 +32,7 @@ Options:
           Show sizes in bytes
 
   -t, --time
-          Show last-attach / last-detach / last-change times
+          Show the times of the last attach, detach and change
 
   -p, --pid
           Show creator and last-operation PIDs

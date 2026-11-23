@@ -9,11 +9,11 @@ Usage: chrt [options] <priority> <command> [<arg>...]
        chrt [options] --pid [-p] <pid>
 
 Arguments:
-  [ARGS]...  Positional arguments: priority and/or PID/command
+  [ARGS]...  A priority and a command to run. With -p, a PID, optionally preceded by a new priority
 
 Options:
   -p, --pid                              Operate on an existing PID
-  -m, --max                              Show min/max valid priorities, then exit
+  -m, --max                              Show the minimum and maximum valid priorities, then exit
   -v, --verbose                          Show status information
   -R, --reset-on-fork                    Set SCHED_RESET_ON_FORK flag
   -a, --all-tasks                        Operate on all tasks (threads) of a given PID

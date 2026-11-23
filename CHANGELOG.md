@@ -68,6 +68,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `linuxutils` multicall binary now includes every tool. `bits`, `blkid`,
   `exch`, `fincore`, `findfs`, `findmnt`, `getino`, `mount` and `umount` were
   missing before. A test now checks that no tool is left out.
+- `linuxutils --list` prints the name of every tool, one per line. The Nix
+  flake uses it to create the symlinks for the multicall package.
 
 #### Tests and infrastructure
 
@@ -113,6 +115,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- `cargo xtask mangen` now writes a man page for every tool. It used to skip
+  the same nine tools that were missing from the multicall binary, because it
+  kept its own list. It now uses the multicall binary's list.
+- `rev --help` and `column --help` described the whole `linuxutils-text`
+  crate instead of the tool.
+- The `--help` text of many tools is easier to read. Descriptions that were
+  written as Markdown lists no longer run together into one paragraph, notes
+  about the implementation are no longer shown to users, and Markdown
+  formatting such as backticks is gone.
+- The Nix flake builds again. Its source filter dropped files the build
+  needs (the hand-written man page sections and the test snapshots). It now
+  also installs every tool, and the C headers from `compat/`. Two kinds of
+  test that failed in its sandbox are fixed: the fixture tests now skip when
+  `unshare` can't run, and the `whereis -m` test no longer needs a man page
+  for `ls` on the host.
 - `setarch`:
   - `--show=VAL` now decodes hex and decimal personality values into
     upstream's format of `PER_*` plus a flag list (for example, `0x00880000`

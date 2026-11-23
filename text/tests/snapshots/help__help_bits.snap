@@ -2,12 +2,12 @@
 source: text/tests/help.rs
 expression: "help_output(\"bits\")"
 ---
-Convert bit masks from/to various formats.
+Convert bit masks between formats.
 
-Each positional argument is a "group" of bits in one of the recognised input formats (hex `0x...`,
-grouped hex `,xxxxxxxx,...`, or list `1,3,5-10`). Groups are combined left-to-right, OR'ing by
-default; a leading `&`, `^`, or `~` selects AND, XOR, or ANDN instead. With no positional arguments,
-groups are read from stdin one per line.
+Each argument is a group of bits in one of the input formats: hex (0x...), grouped hex
+(,xxxxxxxx,...) or a list (1,3,5-10). Groups are combined from left to right with OR, unless the
+group starts with &, ^ or ~, which select AND, XOR or AND NOT. With no arguments, groups are read
+from standard input, one per line.
 
 Usage: bits [OPTIONS] [MASKS]...
 
@@ -26,14 +26,14 @@ Options:
           Print result as a binary mask
 
   -l, --list
-          Print result as a list of bit IDs (with `start-end[:stride]` range compression for
-          arithmetic progressions of 3+ bits)
+          Print the result as a list of bit numbers. Runs of three or more evenly spaced bits are
+          shortened to start-end[:stride]
 
   -x, --expand
           Print result as a flat comma-separated bit list (no range compression)
 
   -w, --width <WIDTH>
-          Maximum number of bits handled; bits above this are truncated
+          Maximum number of bits to handle. Higher bits are dropped
           
           [default: 8192]
 

@@ -24,7 +24,7 @@ pub struct Args {
     #[arg(short = 'm', long)]
     mount: bool,
 
-    /// Unshare UTS namespace (hostname/domainname)
+    /// Unshare the UTS namespace (host name and domain name)
     #[arg(short = 'u', long)]
     uts: bool,
 

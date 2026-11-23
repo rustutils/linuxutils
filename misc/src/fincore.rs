@@ -6,11 +6,11 @@ use clap::Parser;
 use cols::{Cols, ColsHeader, OutputMode, print_table};
 use std::{fs::File, os::unix::io::AsRawFd, process::ExitCode};
 
-/// Count pages of file contents in core via the `mincore(2)` syscall.
+/// Count pages of file contents in core, using mincore(2).
 ///
-/// For each file, maps it `MAP_PRIVATE | MAP_NORESERVE`, queries which
-/// pages are currently resident in the page cache, and reports the
-/// resident byte count alongside the file's size.
+/// Each file is mapped into memory (MAP_PRIVATE and MAP_NORESERVE) to
+/// find which of its pages are in the page cache. The number of bytes
+/// in the cache is shown next to the file's size.
 #[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "fincore", about = "Count pages of file contents in core")]

@@ -10,11 +10,5 @@ publish = false
 [dependencies]
 clap = { workspace = true }
 clap_mangen = "0.2"
+linuxutils = { workspace = true }
 linuxutils-common = { workspace = true }
-linuxutils-disk.workspace = true
-linuxutils-login.workspace = true
-linuxutils-misc.workspace = true
-linuxutils-sched.workspace = true
-linuxutils-system.workspace = true
-linuxutils-term.workspace = true
-linuxutils-text.workspace = true

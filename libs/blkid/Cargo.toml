@@ -1,6 +1,6 @@
 [package]
 name = "linuxutils-blkid"
-description = "Rust-native block-device tag resolution via the udev /dev/disk/by-* symlink layer"
+description = "Block device tag lookup (LABEL=, UUID= and others) using the udev /dev/disk/by-* symlinks"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true

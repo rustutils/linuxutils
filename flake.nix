@@ -13,86 +13,20 @@
 
       pkgsFor = system: nixpkgs.legacyPackages.${system};
 
-      # Library names — used for installing .so files and headers.
-      # Keep in sync with libs/ workspace members.
+      # Library names, used for installing the .so files and headers from
+      # compat/lib<name>/. The tool names come from `linuxutils --list`.
       libs = [ "blkid" "fdisk" "mount" "smartcols" "uuid" ];
-
-      # Tool names — used for installing individual binaries and creating
-      # multicall symlinks. Keep in sync with workspace members.
-      tools = [
-        "blkdiscard"
-        "blockdev"
-        "cal"
-        "choom"
-        "chrt"
-        "colrm"
-        "copyfilerange"
-        "ctrlaltdel"
-        "dmesg"
-        "eject"
-        "fadvise"
-        "fsfreeze"
-        "fstrim"
-        "column"
-        "fallocate"
-        "flock"
-        "getopt"
-        "hexdump"
-        "ionice"
-        "ipcmk"
-        "ipcrm"
-        "ipcs"
-        "isosize"
-        "kill"
-        "line"
-        "logger"
-        "losetup"
-        "look"
-        "lscpu"
-        "lsipc"
-        "lsirq"
-        "lslocks"
-        "lsmem"
-        "lsns"
-        "mcookie"
-        "mesg"
-        "namei"
-        "mountpoint"
-        "nologin"
-        "nsenter"
-        "pipesz"
-        "pivot_root"
-        "prlimit"
-        "rename"
-        "renice"
-        "setpgid"
-        "setsid"
-        "taskset"
-        "rev"
-        "rfkill"
-        "swapoff"
-        "swapon"
-        "unshare"
-        "uuidgen"
-        "uuidparse"
-        "waitpid"
-        "wall"
-        "whereis"
-        "write"
-      ];
 
       craneLibFor = system: crane.mkLib (pkgsFor system);
 
-      # Source filter: keep Cargo/Rust files plus C headers for ABI compat.
+      # The whole source tree except build output. The build also needs
+      # files that a Cargo-only filter drops: C headers, the hand-written
+      # man page sections, and the snapshots and fixtures the tests read.
       srcFor = system:
-        let
-          craneLib = craneLibFor system;
-          headerFilter = path: _type: builtins.match ".*\\.h(\\.in)?$" path != null;
-          combinedFilter = path: type:
-            (headerFilter path type) || (craneLib.filterCargoSources path type);
-        in nixpkgs.lib.cleanSourceWith {
-          src = ./.;
-          filter = combinedFilter;
+        nixpkgs.lib.cleanSourceWith {
+          src = nixpkgs.lib.cleanSource ./.;
+          filter = path: type:
+            !(type == "directory" && baseNameOf path == "target");
         };
 
       # Common args shared between deps and full builds.
@@ -149,17 +83,17 @@
 
               mkdir -p $out/bin $out/lib $out/include $out/share/man/man1
 
-              ${nixpkgs.lib.concatMapStringsSep "\n" (tool:
-                "install -m755 target/release/${tool} $out/bin/"
-              ) tools}
+              for tool in $(target/release/linuxutils --list); do
+                install -m755 "target/release/$tool" $out/bin/
+              done
 
               ${nixpkgs.lib.concatMapStringsSep "\n" (lib:
                 "install -m755 target/release/lib${lib}.so $out/lib/ || true"
               ) libs}
 
-              for hdr in libs/*/include/*.h; do
-                install -m644 "$hdr" $out/include/ || true
-              done
+              ${nixpkgs.lib.concatMapStringsSep "\n" (lib:
+                "install -m644 compat/lib${lib}/include/*.h $out/include/ || true"
+              ) libs}
 
               install -m644 target/man/*.1 $out/share/man/man1/
 
@@ -178,17 +112,17 @@
 
                 install -m755 target/release/linuxutils $out/bin/
 
-                ${nixpkgs.lib.concatMapStringsSep "\n" (tool:
-                  "ln -s $out/bin/linuxutils $out/bin/${tool}"
-                ) tools}
+                for tool in $(target/release/linuxutils --list); do
+                  ln -s $out/bin/linuxutils "$out/bin/$tool"
+                done
 
                 ${nixpkgs.lib.concatMapStringsSep "\n" (lib:
                   "install -m755 target/release/lib${lib}.so $out/lib/ || true"
                 ) libs}
 
-                for hdr in libs/*/include/*.h; do
-                  install -m644 "$hdr" $out/include/ || true
-                done
+                ${nixpkgs.lib.concatMapStringsSep "\n" (lib:
+                  "install -m644 compat/lib${lib}/include/*.h $out/include/ || true"
+                ) libs}
 
                 install -m644 target/man/*.1 $out/share/man/man1/
 

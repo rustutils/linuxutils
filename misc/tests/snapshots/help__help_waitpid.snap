@@ -7,8 +7,8 @@ Wait for arbitrary processes to exit
 Usage: waitpid [OPTIONS] <PIDS>...
 
 Arguments:
-  <PIDS>...  PIDs to wait for. Each may be a plain `PID` or the race-free `PID:INODE` form produced
-             by `getino -p`
+  <PIDS>...  PIDs to wait for. Each can be a plain PID, or the race-free PID:INODE form printed by
+             getino -p
 
 Options:
   -v, --verbose            Be more verbose

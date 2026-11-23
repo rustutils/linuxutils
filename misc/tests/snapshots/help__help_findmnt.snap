@@ -2,18 +2,17 @@
 source: misc/tests/help.rs
 expression: "help_output(\"findmnt\")"
 ---
-List or find filesystems by parsing `/proc/self/mountinfo`, `/etc/fstab`, or `/proc/swaps`.
+List or find filesystems in /proc/self/mountinfo, /etc/fstab or /proc/swaps.
 
-Reads the kernel's mount table by default; switch with `--fstab` or `--swaps`. Filter by `--source`,
-`--target`, `--types`, and select columns with `-o`. Tree output (`--tree`) and statfs-derived
-columns (SIZE/AVAIL/USED/USE%) are not yet implemented.
+Reads the kernel's mount table by default. Use --fstab or --swaps to read the others. Filter with
+--source, --target and --types, and pick columns with -o. Tree output (--tree) and the columns that
+need statfs (SIZE, AVAIL, USED and USE%) are not implemented yet.
 
 Usage: findmnt [OPTIONS] [DEVICE-OR-MOUNTPOINT]
 
 Arguments:
   [DEVICE-OR-MOUNTPOINT]
-          Positional fallback: a target path or source spec, equivalent to `--target` or `--source`
-          respectively. Matches upstream behaviour where a bare argument is interpreted as either
+          A target path or a source. The same as --target or --source, as in upstream findmnt
 
 Options:
   -s, --fstab
@@ -23,7 +22,7 @@ Options:
           Read /proc/swaps instead of /proc/self/mountinfo
 
   -k, --kernel
-          Read /proc/self/mountinfo (default; matches `--kernel`)
+          Read /proc/self/mountinfo (the default)
 
   -F, --tab-file <FILE>
           Read mount table from this file instead of the source default
@@ -35,7 +34,8 @@ Options:
           Filter to entries with a matching target path
 
   -t, --types <LIST>
-          Comma-separated fstype filter; prefix `no` to invert (`-t nofuse,nofusectl`)
+          Only show these filesystem types, separated by commas. Start the list with "no" to hide
+          them instead (-t nofuse,nofusectl)
 
   -J, --json
           Use JSON output format

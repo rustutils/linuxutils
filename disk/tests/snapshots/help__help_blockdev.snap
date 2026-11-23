@@ -4,8 +4,8 @@ expression: "help_output(\"blockdev\")"
 ---
 Call block device ioctls from the command line.
 
-Each `--getXXX` or `--setXXX` command performs a single ioctl on the specified block device(s).
-Multiple commands and devices can be given in a single invocation.
+Each --getXXX or --setXXX command performs a single ioctl on the given block devices. Multiple
+commands and devices can be given in a single invocation.
 
 Usage: blockdev [-q] [-v] command [command...] device [device...]
        blockdev --report [device...]

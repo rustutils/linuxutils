@@ -2,10 +2,10 @@
 source: misc/tests/help.rs
 expression: "help_output(\"fincore\")"
 ---
-Count pages of file contents in core via the `mincore(2)` syscall.
+Count pages of file contents in core, using mincore(2).
 
-For each file, maps it `MAP_PRIVATE | MAP_NORESERVE`, queries which pages are currently resident in
-the page cache, and reports the resident byte count alongside the file's size.
+Each file is mapped into memory (MAP_PRIVATE and MAP_NORESERVE) to find which of its pages are in
+the page cache. The number of bytes in the cache is shown next to the file's size.
 
 Usage: fincore [OPTIONS] <FILES>...
 

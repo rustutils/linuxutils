@@ -91,15 +91,15 @@ const FLAG_TABLE: &[(u32, &str, &str)] = &[
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "wdctl", version, about = "Show hardware watchdog status")]
 pub struct Args {
-    /// Watchdog device path (default `/dev/watchdog0`)
+    /// Watchdog device path (default: /dev/watchdog0)
     #[arg(short = 'd', long = "device", value_name = "PATH")]
     pub device: Option<String>,
 
-    /// Don't print the identity / device line
+    /// Don't print the identity and device line
     #[arg(short = 'I', long = "noident", action = ArgAction::SetTrue)]
     pub noident: bool,
 
-    /// Don't print the feature/status flags table
+    /// Don't print the table of feature and status flags
     #[arg(short = 'F', long = "noflags", action = ArgAction::SetTrue)]
     pub noflags: bool,
 
@@ -115,7 +115,7 @@ pub struct Args {
     #[arg(short = 'n', long = "noheadings", action = ArgAction::SetTrue)]
     pub noheadings: bool,
 
-    /// Devices to query. If empty, `/dev/watchdog0` is used.
+    /// Devices to query. With none, /dev/watchdog0 is used.
     pub devices: Vec<String>,
 }
 

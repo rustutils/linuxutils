@@ -1,6 +1,6 @@
 [package]
 name = "linuxutils-sched"
-description = "Scheduling utilities from linuxutils (chrt, ionice, taskset)"
+description = "Process scheduling utilities from linuxutils"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true

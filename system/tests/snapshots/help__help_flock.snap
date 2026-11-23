@@ -18,7 +18,7 @@ Options:
   -u, --unlock                       Remove a lock
   -n, --nonblock                     Fail rather than wait if the lock cannot be immediately
                                      acquired
-  -w, --timeout <secs>               Wait at most this many seconds; decimal fractions allowed
+  -w, --timeout <secs>               Wait at most this many seconds. Fractions are allowed
   -E, --conflict-exit-code <number>  Exit code when the lock cannot be acquired (default: 1)
                                      [default: 1]
   -o, --close                        Close the file descriptor before executing the command

@@ -1,6 +1,6 @@
 [package]
 name = "linuxutils"
-description = "Multicall binary that dispatches to every linuxutils tool by argv[0]"
+description = "Multicall binary that runs every linuxutils tool, chosen by argv[0] or a subcommand"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -16,12 +16,16 @@ default-target = "x86_64-unknown-linux-gnu"
 targets = []
 all-features = true
 
+[lib]
+path = "src/lib.rs"
+
 [[bin]]
 name = "linuxutils"
 path = "src/main.rs"
 
 [dependencies]
 clap = { workspace = true }
+linuxutils-common.workspace = true
 linuxutils-disk.workspace = true
 linuxutils-login.workspace = true
 linuxutils-misc.workspace = true

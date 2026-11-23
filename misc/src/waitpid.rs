@@ -30,8 +30,8 @@ pub struct Args {
     #[arg(short, long)]
     count: Option<usize>,
 
-    /// PIDs to wait for. Each may be a plain `PID` or the
-    /// race-free `PID:INODE` form produced by `getino -p`.
+    /// PIDs to wait for. Each can be a plain PID, or the race-free
+    /// PID:INODE form printed by getino -p.
     #[arg(required = true)]
     pids: Vec<String>,
 }

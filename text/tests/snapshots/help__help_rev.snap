@@ -2,7 +2,7 @@
 source: text/tests/help.rs
 expression: "help_output(\"rev\")"
 ---
-Text utilities from linuxutils (colrm, column, hexdump, line, rev)
+Reverse lines characterwise
 
 Usage: rev [OPTIONS] [FILES]...
 

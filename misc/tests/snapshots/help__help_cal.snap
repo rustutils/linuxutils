@@ -19,6 +19,6 @@ Options:
   -Y, --twelve             Display a calendar for the next twelve months
   -j, --julian             Use day-of-year (ordinal) numbering
   -w, --week               Print the week numbers alongside the days
-  -c, --columns <COLUMNS>  Number of columns to use (`auto` lets cal pick a value that fits the
-                           terminal width) [default: auto]
+  -c, --columns <COLUMNS>  Number of columns to use. With auto, cal picks a number that fits the
+                           terminal width [default: auto]
   -h, --help               Print help

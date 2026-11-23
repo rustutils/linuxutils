@@ -34,8 +34,8 @@ const BLKDISCARDZEROES: libc::c_ulong = 0x127c;
 
 /// Call block device ioctls from the command line.
 ///
-/// Each `--getXXX` or `--setXXX` command performs a single ioctl on
-/// the specified block device(s). Multiple commands and devices can be
+/// Each --getXXX or --setXXX command performs a single ioctl on the
+/// given block devices. Multiple commands and devices can be
 /// given in a single invocation.
 #[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]

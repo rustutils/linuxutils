@@ -100,7 +100,7 @@ pub struct Args {
     #[arg(short = 'v', long)]
     verbose: bool,
 
-    /// Device and/or file arguments
+    /// Loop devices, backing files, or both
     #[arg(trailing_var_arg = true)]
     positional: Vec<String>,
 }

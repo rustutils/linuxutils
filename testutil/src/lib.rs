@@ -221,11 +221,21 @@ pub fn run_ok(
     String::from_utf8(out.stdout).expect("stdout was not valid UTF-8")
 }
 
-/// Returns true if the running kernel allows unprivileged user
-/// namespaces (which the harness requires). Tests should
-/// `#[ignore]`-skip when this returns false on a sandboxed CI runner.
+/// Returns true if the harness can run here: the `unshare` program is
+/// installed, and it can create an unprivileged user and mount namespace.
+/// Tests should skip themselves when this returns false, as it does in
+/// sandboxes such as Nix builds and some CI runners.
+///
+/// The check runs `unshare` once and the result is reused.
 pub fn unshare_supported() -> bool {
-    std::fs::read_to_string("/proc/sys/kernel/unprivileged_userns_clone")
-        .map(|s| s.trim() == "1")
-        .unwrap_or(true) // many distros omit the sysctl; default to "yes"
+    static SUPPORTED: std::sync::OnceLock<bool> = std::sync::OnceLock::new();
+    *SUPPORTED.get_or_init(|| {
+        Command::new("unshare")
+            .args(["--user", "--map-root-user", "--mount", "--", "true"])
+            .stdin(std::process::Stdio::null())
+            .stdout(std::process::Stdio::null())
+            .stderr(std::process::Stdio::null())
+            .status()
+            .is_ok_and(|s| s.success())
+    })
 }

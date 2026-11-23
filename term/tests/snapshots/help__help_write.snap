@@ -8,7 +8,7 @@ Usage: write <USER> [TTYNAME]
 
 Arguments:
   <USER>     User to write to
-  [TTYNAME]  Terminal to write to (e.g. pts/1)
+  [TTYNAME]  Terminal to write to, such as pts/1
 
 Options:
   -h, --help  Print help

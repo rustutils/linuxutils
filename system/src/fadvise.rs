@@ -11,8 +11,8 @@ use std::{fs::File, os::unix::io::AsRawFd, process::ExitCode};
 
 /// Advise the kernel about file access patterns via posix_fadvise(2).
 ///
-/// Most commonly used with `dontneed` to drop a file's pages from the
-/// page cache.
+/// Most often used with dontneed, to drop a file's pages from the page
+/// cache.
 #[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(

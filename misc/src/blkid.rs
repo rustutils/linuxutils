@@ -9,11 +9,10 @@ use std::{collections::BTreeMap, path::PathBuf, process::ExitCode};
 /// Locate or print block device attributes (LABEL, UUID, PARTLABEL,
 /// PARTUUID, ID).
 ///
-/// Resolution and listing go through the udev `/dev/disk/by-*`
-/// symlink layer. The on-disk filesystem-signature probe path
-/// (`-p, --probe`) is **not implemented** in this v0 — invocations
-/// that need it will exit with a clear error rather than silently
-/// returning incomplete data. Use upstream `blkid` for probing.
+/// Lookups and listings use the udev symlinks in /dev/disk/by-*.
+/// Probing devices for filesystem signatures (-p, --probe) is not
+/// implemented yet. Commands that need it exit with an error rather than
+/// return incomplete data. Use upstream blkid for probing.
 #[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
 #[command(name = "blkid", about = "Locate/print block device attributes")]
@@ -26,7 +25,7 @@ pub struct Args {
     #[arg(short = 'U', long, value_name = "UUID")]
     uuid: Option<String>,
 
-    /// Output format: `full` (default), `value`, `device`, `export`
+    /// Output format: full (the default), value, device or export
     #[arg(short = 'o', long, default_value = "full", value_name = "FORMAT")]
     output: String,
 
@@ -34,25 +33,25 @@ pub struct Args {
     #[arg(short = 'l', long, action = ArgAction::SetTrue)]
     list_one: bool,
 
-    /// Don't encode non-printing characters (no-op in v0; kept for
-    /// command-line compatibility)
+    /// Don't encode non-printing characters. This has no effect yet, but
+    /// is accepted for compatibility
     #[arg(short = 'd', long, action = ArgAction::SetTrue)]
     no_encoding: bool,
 
-    /// Cache file (ignored — v0 reads udev symlinks directly)
+    /// Cache file. Ignored, since the udev symlinks are read directly
     #[arg(short = 'c', long, value_name = "FILE")]
     cache_file: Option<PathBuf>,
 
-    /// Stub: probing isn't implemented in v0
+    /// Probe the device directly (not implemented yet)
     #[arg(short = 'p', long, action = ArgAction::SetTrue)]
     probe: bool,
 
-    /// Stub: probing-info isn't implemented in v0
+    /// Print information about probing (not implemented yet)
     #[arg(short = 'i', long, action = ArgAction::SetTrue)]
     info: bool,
 
-    /// Devices to print attributes for; empty means list every
-    /// device known to udev
+    /// Devices to print attributes for. With none, every device that
+    /// udev knows about is listed
     devices: Vec<PathBuf>,
 }
 

@@ -8,7 +8,7 @@ Usage: taskset [options] [mask] command [arg...]
        taskset [options] -p [mask] pid
 
 Arguments:
-  [ARGS]...  Positional arguments: mask and/or PID/command
+  [ARGS]...  A CPU mask and a command to run. With -p, a PID, optionally preceded by a new mask
 
 Options:
   -p, --pid        Operate on an existing PID

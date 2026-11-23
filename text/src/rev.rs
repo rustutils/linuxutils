@@ -13,7 +13,7 @@ use std::{
 /// Reverse lines characterwise.
 #[derive(Parser, Debug)]
 #[command(max_term_width = HELP_WIDTH_MAX)]
-#[command(name = "rev", version, about)]
+#[command(name = "rev", version)]
 pub struct Args {
     /// Use '\0' as the line separator instead of newline.
     #[arg(short = '0', long)]

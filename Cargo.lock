@@ -597,6 +597,7 @@ name = "linuxutils"
 version = "0.1.0"
 dependencies = [
  "clap",
+ "linuxutils-common",
  "linuxutils-disk",
  "linuxutils-login",
  "linuxutils-misc",
@@ -1459,14 +1460,8 @@ version = "0.1.0"
 dependencies = [
  "clap",
  "clap_mangen",
+ "linuxutils",
  "linuxutils-common",
- "linuxutils-disk",
- "linuxutils-login",
- "linuxutils-misc",
- "linuxutils-sched",
- "linuxutils-system",
- "linuxutils-term",
- "linuxutils-text",
 ]
 
 [[package]]

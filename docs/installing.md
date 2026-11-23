@@ -38,6 +38,8 @@ linuxutils lscpu
 # or symlink: ln -s $(which linuxutils) /usr/local/bin/lscpu && lscpu
 ```
 
+`linuxutils --list` prints the name of every tool it can run.
+
 ## Building from source
 
 ```sh

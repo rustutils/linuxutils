@@ -7,12 +7,12 @@ Show hardware watchdog status
 Usage: wdctl [OPTIONS] [DEVICES]...
 
 Arguments:
-  [DEVICES]...  Devices to query. If empty, `/dev/watchdog0` is used
+  [DEVICES]...  Devices to query. With none, /dev/watchdog0 is used
 
 Options:
-  -d, --device <PATH>  Watchdog device path (default `/dev/watchdog0`)
-  -I, --noident        Don't print the identity / device line
-  -F, --noflags        Don't print the feature/status flags table
+  -d, --device <PATH>  Watchdog device path (default: /dev/watchdog0)
+  -I, --noident        Don't print the identity and device line
+  -F, --noflags        Don't print the table of feature and status flags
   -T, --notimeouts     Don't print the timeout block
   -x, --flags-only     Print only the flags table (suppress identity and timeouts)
   -n, --noheadings     Don't print the flags-table header row

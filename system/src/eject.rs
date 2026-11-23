@@ -107,7 +107,7 @@ pub struct Args {
     #[arg(short = 's', long)]
     scsi: bool,
 
-    /// Toggle tray open/close
+    /// Open the tray if it is closed, or close it if it is open
     #[arg(short = 'T', long)]
     traytoggle: bool,
 
