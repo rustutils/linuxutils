@@ -40,4 +40,4 @@ minimal installs.
 
 ## Source Code
 
-The source is available on [GitHub](https://github.com/rustutils/linuxutils).
+The source is available on [GitLab](https://gitlab.com/rustutils/linuxutils), with a mirror on [GitHub](https://github.com/rustutils/linuxutils).

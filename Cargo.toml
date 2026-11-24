@@ -22,7 +22,8 @@ version = "0.1.0"
 edition = "2024"
 rust-version = "1.87"
 license = "MIT"
-repository = "https://github.com/rustutils/linuxutils"
+repository = "https://gitlab.com/rustutils/linuxutils"
+homepage = "https://rustutils.com/projects/linuxutils"
 authors = ["Patrick Elsen <pelsen@xfbs.net>"]
 
 [workspace.dependencies]

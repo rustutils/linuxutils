@@ -76,7 +76,7 @@ linuxutils lscpu
 ## Building from source
 
 ```sh
-git clone https://github.com/rustutils/linuxutils
+git clone https://gitlab.com/rustutils/linuxutils
 cd linuxutils
 cargo build --release
 ```
