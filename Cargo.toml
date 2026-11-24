@@ -18,7 +18,7 @@ members = [
 ]
 
 [workspace.package]
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 rust-version = "1.87"
 license = "MIT"
@@ -42,18 +42,18 @@ rustix = { version = "1", features = ["event", "fs", "mount", "process", "termio
 uuid = { version = "1", features = ["v1", "v3", "v4", "v5", "v6", "v7"] }
 
 # workspace crates
-linuxutils = { path = "linuxutils", version = "0.1.0" }
-linuxutils-common = { path = "common", version = "0.1.0" }
-linuxutils-disk = { path = "disk", version = "0.1.0" }
-linuxutils-kmod = { path = "kmod", version = "0.1.0" }
-linuxutils-login = { path = "login", version = "0.1.0" }
-linuxutils-blkid = { path = "libs/blkid", version = "0.1.0" }
-linuxutils-misc = { path = "misc", version = "0.1.0" }
-linuxutils-mount = { path = "libs/mount", version = "0.1.0" }
-linuxutils-sched = { path = "sched", version = "0.1.0" }
-linuxutils-system = { path = "system", version = "0.1.0" }
-linuxutils-term = { path = "term", version = "0.1.0" }
-linuxutils-text = { path = "text", version = "0.1.0" }
+linuxutils = { path = "linuxutils", version = "0.2.0" }
+linuxutils-common = { path = "common", version = "0.2.0" }
+linuxutils-disk = { path = "disk", version = "0.2.0" }
+linuxutils-kmod = { path = "kmod", version = "0.2.0" }
+linuxutils-login = { path = "login", version = "0.2.0" }
+linuxutils-blkid = { path = "libs/blkid", version = "0.2.0" }
+linuxutils-misc = { path = "misc", version = "0.2.0" }
+linuxutils-mount = { path = "libs/mount", version = "0.2.0" }
+linuxutils-sched = { path = "sched", version = "0.2.0" }
+linuxutils-system = { path = "system", version = "0.2.0" }
+linuxutils-term = { path = "term", version = "0.2.0" }
+linuxutils-text = { path = "text", version = "0.2.0" }
 testutil = { path = "testutil" }
 
 [workspace.metadata.crane]
