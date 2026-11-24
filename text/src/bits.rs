@@ -305,9 +305,9 @@ fn collect_bits(buf: &[u32]) -> Vec<usize> {
 }
 
 /// Compressed list output. Three or more consecutive bits at a
-/// constant stride collapse to `start-end[:stride]`; the `:stride`
+/// constant stride collapse to `start-end[:stride]`. The `:stride`
 /// suffix is omitted for stride 1. Matches upstream's behaviour
-/// for inputs like `0x0badcaca` →
+/// for inputs like `0x0badcaca`, which becomes
 /// `1,3,6,7-11:2,14-16,18,19-23:2,24,25,27`.
 fn fmt_list(buf: &[u32]) -> String {
     let bits = collect_bits(buf);
@@ -347,7 +347,7 @@ fn fmt_list(buf: &[u32]) -> String {
     out
 }
 
-/// Flat comma-separated bit list (no range / stride compression).
+/// Flat comma-separated bit list (no range or stride compression).
 fn fmt_expand(buf: &[u32]) -> String {
     let bits = collect_bits(buf);
     bits.iter()
@@ -388,7 +388,7 @@ pub fn run(args: Args) -> ExitCode {
         return ExitCode::FAILURE;
     }
     if args.width > MAX_WIDTH {
-        // Upstream prints the strerror form of ERANGE here; the
+        // Upstream prints the strerror form of ERANGE here. The
         // test runner sed-replaces that text with the literal
         // `ERANGE`, so we just emit it directly.
         eprintln!("bits: invalid --width: '{}': ERANGE", args.width);

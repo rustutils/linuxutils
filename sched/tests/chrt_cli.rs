@@ -55,7 +55,7 @@ fn verbose_output_includes_policy() {
 
 #[test]
 fn invalid_priority_for_other() {
-    // SCHED_OTHER only supports priority 0; non-zero should fail
+    // SCHED_OTHER only supports priority 0, so non-zero should fail
     let pid = std::process::id().to_string();
     cmd().args(["-o", "-p", "1", &pid]).assert().failure();
 }

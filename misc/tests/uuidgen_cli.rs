@@ -13,7 +13,7 @@ fn uuid_pattern() -> predicates::str::RegexPredicate {
     .unwrap()
 }
 
-// ── Default / v4 ────────────────────────────────────────────────────────────
+// ── Default and v4 ──────────────────────────────────────────────────────────
 
 #[test]
 fn default_outputs_valid_uuid() {

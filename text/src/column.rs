@@ -127,7 +127,7 @@ pub struct Args {
 
 /// Terminal width for layout decisions, or `None` when stdout
 /// isn't a TTY. Upstream `column(1)` only constrains column widths
-/// to the terminal width when running interactively — piping to a
+/// to the terminal width when running interactively. Piping to a
 /// file should let columns grow to fit their content.
 fn terminal_width() -> Option<usize> {
     let stdout = io::stdout();
@@ -423,7 +423,7 @@ fn table_mode(
     }
 
     // Apply column flags. `resolve_columns` returns *original*
-    // indices; remap each to the display position before mutating
+    // indices. Remap each to the display position before mutating
     // the cols `Column`.
     let apply_flag =
         |table: &mut Table, spec: &str, f: &dyn Fn(&mut cols::Column)| {
@@ -476,7 +476,7 @@ fn table_mode(
     }
 
     // Resolve tree column indices. These are the *original* column
-    // indices; the tree-set call wants the display position.
+    // indices, but the tree-set call wants the display position.
     let tree_col = args
         .tree
         .as_ref()
@@ -546,11 +546,11 @@ fn table_mode(
 /// Resolve a column specification string to 0-based column indices.
 ///
 /// The spec is a comma-separated list of:
-/// - `0` — all columns
-/// - `-1` — last column
-/// - `N` — 1-based index
-/// - `N-M` — range of 1-based indices
-/// - `name` — column name (matched against `col_names`)
+/// - `0`: all columns
+/// - `-1`: last column
+/// - `N`: 1-based index
+/// - `N-M`: range of 1-based indices
+/// - `name`: column name (matched against `col_names`)
 fn resolve_columns(spec: &str, col_names: &[String]) -> Vec<usize> {
     let ncols = col_names.len();
     let mut result = Vec::new();

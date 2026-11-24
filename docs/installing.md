@@ -1,7 +1,40 @@
 # Installing
 
-`linuxutils` is currently distributed as source, with a Nix flake. Deb and
-RPM packages are planned but not yet available.
+`linuxutils` is available as Debian and RPM packages, as a tarball, as source
+for Cargo, and as a Nix flake.
+
+## Packages
+
+Each release has `.deb` and `.rpm` packages, tarballs, and bare binaries for
+x86_64, aarch64 and riscv64. They are on the release pages on
+[GitLab](https://gitlab.com/rustutils/linuxutils/-/releases) and
+[GitHub](https://github.com/rustutils/linuxutils/releases). The binary is
+statically linked, so the same package works on any distribution with that
+package format.
+
+```sh
+sudo apt install ./linuxutils_<version>_amd64.deb
+sudo dnf install ./linuxutils-<version>.x86_64.rpm
+```
+
+The packages install next to util-linux and don't replace any of its files:
+
+| Path | Contents |
+|------|----------|
+| `/usr/bin/linuxutils` | The multicall binary |
+| `/usr/lib/linuxutils/bin/` | A symlink for each tool, such as `mount` and `rev` |
+| `/usr/share/linuxutils/man/` | Man pages, in `man1` and `man8` |
+
+Run a tool with `linuxutils <tool>`. To use the linuxutils tools in place of
+util-linux's by default, put them first in your `PATH` and `MANPATH`:
+
+```sh
+export PATH=/usr/lib/linuxutils/bin:$PATH
+export MANPATH=/usr/share/linuxutils/man:$(manpath)
+```
+
+The tarball has the same layout under `linuxutils-<arch>/`, with the
+symlinks in `libexec/`.
 
 ## With Cargo
 

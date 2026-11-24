@@ -3,7 +3,7 @@
 //! Captures each tool's parsed `Args` (via `Debug`) for valid invocations,
 //! and the rendered error message for invalid ones. Complements the
 //! help-text snapshots in `help.rs` by detecting drift in defaults, field
-//! types, and validation rules — things the help text doesn't always show.
+//! types, and validation rules, which the help text doesn't always show.
 //!
 //! Run `cargo insta review` after intentional CLI changes to accept the
 //! updated snapshots.
@@ -175,8 +175,8 @@ mod ctrlaltdel {
         insta::assert_snapshot!(parse::<Args>(&["ctrlaltdel", "soft"]));
     }
 
-    // Mode is a free-form String, so clap accepts anything here; validation
-    // happens at run time.
+    // Mode is a free-form String, so clap accepts anything here.
+    // Validation happens at run time.
     #[test]
     fn arbitrary_string_accepted_by_clap() {
         insta::assert_snapshot!(parse::<Args>(&["ctrlaltdel", "bogus"]));
@@ -1391,7 +1391,7 @@ mod prlimit {
     // ---- Error cases
 
     // PID is parsed as a string at the clap layer (so the
-    // race-free `PID:INODE` form can pass through); the runtime
+    // race-free `PID:INODE` form can pass through). The runtime
     // check happens in `run()`.
 
     #[test]

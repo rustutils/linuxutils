@@ -79,6 +79,15 @@ implementation status.
 
 ## Installation
 
+### Packages
+
+Each release has `.deb` and `.rpm` packages, tarballs, and static binaries for
+x86_64, aarch64 and riscv64, on the
+[GitLab](https://gitlab.com/rustutils/linuxutils/-/releases) and
+[GitHub](https://github.com/rustutils/linuxutils/releases) release pages. The
+packages install next to util-linux rather than replacing it. See
+[Installing](docs/installing.md) for the layout and how to use them.
+
 ### Full bundle (all tools in a group)
 
 ```sh

@@ -11,6 +11,7 @@ pub const MAN: ManContent = ManContent {
         ),
         ("SEE ALSO", include_str!("../man/nologin/see_also.man")),
     ],
+    section: 8,
 };
 
 use clap::Parser;

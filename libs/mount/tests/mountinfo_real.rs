@@ -1,6 +1,6 @@
 //! Smoke tests that parse the host's real `/proc/self/mountinfo`.
 //!
-//! These don't snapshot anything host-specific — they just assert the
+//! These don't snapshot anything host-specific. They just assert the
 //! parser swallows real-world data without errors and that a few
 //! universal invariants hold (root filesystem present, every entry
 //! has populated mountinfo-only fields, etc.).
@@ -42,7 +42,7 @@ fn root_mount_exists_with_mountinfo_fields_populated() {
 #[test]
 fn every_entry_has_combined_options_at_least_as_long_as_each_part() {
     // Sanity-check the merge: combined options length should equal
-    // vfs.len() + fs.len(). (We don't dedupe, by design.)
+    // vfs.len() plus fs.len(). (We don't dedupe, by design.)
     let t = host_table();
     for e in t.iter() {
         let vfs_len = e.vfs_options.as_ref().map(|o| o.len()).unwrap_or(0);

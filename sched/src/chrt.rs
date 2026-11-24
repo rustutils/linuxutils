@@ -38,18 +38,25 @@ fn policy_name(policy: i32) -> &'static str {
     }
 }
 
+// These call the kernel directly rather than through libc, because musl's
+// sched_getscheduler, sched_getparam and sched_setscheduler always fail
+// with ENOSYS. The kernel's sched_param holds only the priority, which is
+// also the first field of libc's sched_param on both glibc and musl.
+
 fn get_scheduler(pid: i32) -> Result<i32, std::io::Error> {
-    let ret = unsafe { libc::sched_getscheduler(pid) };
+    let ret = unsafe { libc::syscall(libc::SYS_sched_getscheduler, pid) };
     if ret < 0 {
         Err(std::io::Error::last_os_error())
     } else {
-        Ok(ret)
+        Ok(ret as i32)
     }
 }
 
 fn get_priority(pid: i32) -> Result<i32, std::io::Error> {
     let mut param: libc::sched_param = unsafe { std::mem::zeroed() };
-    let ret = unsafe { libc::sched_getparam(pid, &mut param) };
+    let ret = unsafe {
+        libc::syscall(libc::SYS_sched_getparam, pid, &mut param as *mut _)
+    };
     if ret < 0 {
         Err(std::io::Error::last_os_error())
     } else {
@@ -62,10 +69,17 @@ fn set_scheduler(
     policy: i32,
     priority: i32,
 ) -> Result<(), std::io::Error> {
-    let param = libc::sched_param {
-        sched_priority: priority,
+    // Zeroed and then filled in, since musl's sched_param has more fields.
+    let mut param: libc::sched_param = unsafe { std::mem::zeroed() };
+    param.sched_priority = priority;
+    let ret = unsafe {
+        libc::syscall(
+            libc::SYS_sched_setscheduler,
+            pid,
+            policy,
+            &param as *const _,
+        )
     };
-    let ret = unsafe { libc::sched_setscheduler(pid, policy, &param) };
     if ret < 0 {
         Err(std::io::Error::last_os_error())
     } else {

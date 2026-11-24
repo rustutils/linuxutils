@@ -1,6 +1,6 @@
 use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
-pub const MAN: ManContent = ManContent::empty();
+pub const MAN: ManContent = ManContent::empty().section(8);
 
 use clap::{ArgAction, Parser};
 use cols::{Cols, print_table};
@@ -169,7 +169,7 @@ fn read_fstab(path: &Path) -> Result<MountTable, String> {
         .map_err(|e| format!("{}: {e}", path.display()))
 }
 
-/// Resolve a source spec — Path, LABEL=, UUID=, etc. — to the device
+/// Resolve a source spec (Path, LABEL=, UUID=, etc.) to the device
 /// path the kernel will accept.
 fn resolve_source(spec: &Spec) -> Result<PathBuf, String> {
     match spec {
@@ -182,8 +182,8 @@ fn resolve_source(spec: &Spec) -> Result<PathBuf, String> {
 
 /// Pick the source string for the kernel: the resolved path turned
 /// back into a `&str`. mount(2) accepts arbitrary bytes here, but
-/// our wrapper takes &str — for non-UTF-8 device paths the user can
-/// fall back to a direct numeric/canonical form.
+/// our wrapper takes &str. For non-UTF-8 device paths the user can
+/// fall back to a direct numeric or canonical form.
 fn source_arg(p: &Path) -> Result<String, String> {
     p.to_str().map(|s| s.to_string()).ok_or_else(|| {
         format!("source path is not valid UTF-8: {}", p.display())
@@ -297,7 +297,7 @@ fn mount_one_entry(args: &Args, entry: &MountEntry) -> ExitCode {
     )
 }
 
-/// `mount <target>` — fstab lookup form.
+/// `mount <target>`: fstab lookup form.
 fn mount_via_fstab(args: &Args, target: &Path) -> ExitCode {
     let fstab_path = args
         .fstab_file
@@ -325,18 +325,18 @@ fn mount_via_fstab(args: &Args, target: &Path) -> ExitCode {
 }
 
 /// Whether an entry should be skipped by `mount -a` regardless of
-/// any `-t`/`-O` filter.
+/// any `-t` or `-O` filter.
 fn skip_for_mount_all(entry: &MountEntry, mounted: &MountTable) -> bool {
     // Userspace marker: don't auto-mount.
     if entry.options.contains("noauto") {
         return true;
     }
-    // Swap is for swapon(8); the deprecated `ignore` marker says
+    // Swap is for swapon(8), and the deprecated `ignore` marker says
     // "leave this alone".
     if entry.fstype == "swap" || entry.fstype == "ignore" {
         return true;
     }
-    // Already mounted at this target — skip rather than error.
+    // Already mounted at this target: skip rather than error.
     if mounted.iter().any(|m| m.target == entry.target) {
         return true;
     }
@@ -364,7 +364,7 @@ fn type_filter_matches(filter: &str, fstype: &str) -> bool {
 }
 
 /// Apply a `-O TESTOPTS` filter. Each token is `name` (must be
-/// present) or `noname` (must be absent); all ANDed.
+/// present) or `noname` (must be absent). All are ANDed.
 fn opts_filter_matches(filter: &str, opts: &OptionList) -> bool {
     for tok in filter.split(',').filter(|t| !t.is_empty()) {
         let (want_present, name) = match tok.strip_prefix("no") {
@@ -378,7 +378,7 @@ fn opts_filter_matches(filter: &str, opts: &OptionList) -> bool {
     true
 }
 
-/// `mount -a` — walk fstab, skip the obvious non-applicable entries,
+/// `mount -a`: walk fstab, skip the obvious non-applicable entries,
 /// apply -t/-O filters, mount the rest.
 fn mount_all(args: &Args) -> ExitCode {
     let fstab_path = args
@@ -426,7 +426,7 @@ fn mount_all(args: &Args) -> ExitCode {
     }
 }
 
-/// `mount <source> <target>` — direct form.
+/// `mount <source> <target>`: direct form.
 fn mount_direct(args: &Args, source_str: &str, target: &Path) -> ExitCode {
     let parsed_source = Spec::parse(source_str);
     let source = match resolve_source(&parsed_source) {
@@ -444,8 +444,8 @@ fn mount_direct(args: &Args, source_str: &str, target: &Path) -> ExitCode {
     );
     let mut classified = classify(&merged);
 
-    // Bind / rbind / remount can be expressed via -B/-R/--remount
-    // flags as well as via -o options; reflect those into the
+    // Bind, rbind and remount can be expressed via -B/-R/--remount
+    // flags as well as via -o options. Reflect those into the
     // classified.flags so do_direct_mount picks the right syscall.
     if args.bind {
         classified.flags |= MountFlags::BIND;
@@ -460,8 +460,8 @@ fn mount_direct(args: &Args, source_str: &str, target: &Path) -> ExitCode {
     let fstype = match args.fstype.as_deref() {
         Some(t) => t.to_string(),
         None => {
-            // Bind / remount don't need a meaningful fstype — kernel
-            // ignores it. Direct mount of an unknown fs type is a
+            // Bind and remount don't need a meaningful fstype (the
+            // kernel ignores it). Direct mount of an unknown fs type is a
             // user error.
             if classified
                 .flags
@@ -520,25 +520,25 @@ pub fn run(args: Args) -> ExitCode {
         args.target.as_deref(),
         source_from_shortcut.as_deref(),
     ) {
-        // No positionals at all + no shortcut → list mounts.
+        // No positionals at all and no shortcut: list mounts.
         (None, None, None) => list_mounts(args.verbose),
 
-        // Just a target → fstab lookup (`mount /mnt`).
+        // Just a target: fstab lookup (`mount /mnt`).
         (Some(spec), None, None) => {
-            // The lone positional is the target, not a source — an
-            // upstream-compatible quirk.
+            // The lone positional is the target, not a source. This is
+            // an upstream-compatible quirk.
             mount_via_fstab(&args, Path::new(spec))
         }
 
-        // Source + target both given.
+        // Source and target both given.
         (Some(spec), Some(target), None) => mount_direct(&args, spec, target),
 
-        // -L / -U shortcut + target.
+        // -L / -U shortcut and target.
         (None, Some(target), Some(src_os)) => {
             mount_direct(&args, &src_os.to_string_lossy(), target)
         }
 
-        // -L / -U shortcut alone is ambiguous — needs a target.
+        // -L / -U shortcut alone is ambiguous: it needs a target.
         (None, None, Some(_)) => {
             eprintln!("mount: -L/-U requires a target mount point");
             ExitCode::from(2)
@@ -552,7 +552,7 @@ pub fn run(args: Args) -> ExitCode {
             ExitCode::from(2)
         }
 
-        // Target only with no source — unreachable via clap's
+        // Target only with no source: unreachable via clap's
         // positional ordering, but the type system insists.
         (None, Some(_), None) => {
             eprintln!("mount: missing source argument");

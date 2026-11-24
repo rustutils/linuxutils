@@ -167,7 +167,7 @@ fn unmount(mountpoint: &str, verbose: bool) -> io::Result<()> {
 }
 
 fn eject_cdrom(fd: i32) -> io::Result<()> {
-    if unsafe { libc::ioctl(fd, CDROMEJECT) } < 0 {
+    if unsafe { libc::ioctl(fd, CDROMEJECT as libc::Ioctl) } < 0 {
         Err(io::Error::last_os_error())
     } else {
         Ok(())
@@ -188,7 +188,7 @@ fn eject_scsi(fd: i32) -> io::Result<()> {
     hdr.sbp = sense.as_mut_ptr();
     hdr.timeout = 10000;
 
-    if unsafe { libc::ioctl(fd, SG_IO, &mut hdr) } < 0 {
+    if unsafe { libc::ioctl(fd, SG_IO as libc::Ioctl, &mut hdr) } < 0 {
         return Err(io::Error::last_os_error());
     }
 
@@ -205,7 +205,7 @@ fn eject_scsi(fd: i32) -> io::Result<()> {
     hdr2.sbp = sense2.as_mut_ptr();
     hdr2.timeout = 10000;
 
-    if unsafe { libc::ioctl(fd, SG_IO, &mut hdr2) } < 0 {
+    if unsafe { libc::ioctl(fd, SG_IO as libc::Ioctl, &mut hdr2) } < 0 {
         Err(io::Error::last_os_error())
     } else {
         Ok(())
@@ -213,7 +213,7 @@ fn eject_scsi(fd: i32) -> io::Result<()> {
 }
 
 fn eject_floppy(fd: i32) -> io::Result<()> {
-    if unsafe { libc::ioctl(fd, FDEJECT) } < 0 {
+    if unsafe { libc::ioctl(fd, FDEJECT as libc::Ioctl) } < 0 {
         Err(io::Error::last_os_error())
     } else {
         Ok(())
@@ -225,7 +225,7 @@ fn eject_tape(fd: i32) -> io::Result<()> {
         mt_op: MTOFFL,
         mt_count: 0,
     };
-    if unsafe { libc::ioctl(fd, MTIOCTOP, &op) } < 0 {
+    if unsafe { libc::ioctl(fd, MTIOCTOP as libc::Ioctl, &op) } < 0 {
         Err(io::Error::last_os_error())
     } else {
         Ok(())
@@ -233,7 +233,7 @@ fn eject_tape(fd: i32) -> io::Result<()> {
 }
 
 fn close_tray(fd: i32) -> io::Result<()> {
-    if unsafe { libc::ioctl(fd, CDROMCLOSETRAY) } < 0 {
+    if unsafe { libc::ioctl(fd, CDROMCLOSETRAY as libc::Ioctl) } < 0 {
         Err(io::Error::last_os_error())
     } else {
         Ok(())
@@ -241,7 +241,8 @@ fn close_tray(fd: i32) -> io::Result<()> {
 }
 
 fn toggle_tray(fd: i32) -> io::Result<()> {
-    let status = unsafe { libc::ioctl(fd, CDROM_DRIVE_STATUS, 0) };
+    let status =
+        unsafe { libc::ioctl(fd, CDROM_DRIVE_STATUS as libc::Ioctl, 0) };
     if status < 0 {
         return Err(io::Error::last_os_error());
     }
@@ -254,7 +255,7 @@ fn toggle_tray(fd: i32) -> io::Result<()> {
 
 fn lock_door(fd: i32, lock: bool) -> io::Result<()> {
     let arg: i32 = if lock { 1 } else { 0 };
-    if unsafe { libc::ioctl(fd, CDROM_LOCKDOOR, arg) } < 0 {
+    if unsafe { libc::ioctl(fd, CDROM_LOCKDOOR as libc::Ioctl, arg) } < 0 {
         Err(io::Error::last_os_error())
     } else {
         Ok(())

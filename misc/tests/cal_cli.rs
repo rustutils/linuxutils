@@ -30,7 +30,7 @@ fn january_2024_day_layout() {
     let lines: Vec<&str> = stdout.lines().collect();
     // Find the first line with day numbers (after header lines)
     let first_week = lines.iter().find(|l| l.trim().starts_with('1')).unwrap();
-    // "   1" — 3 spaces (Sunday blank) then 1
+    // "   1": 3 spaces (Sunday blank) then 1
     assert!(
         first_week.starts_with("    1"),
         "Expected first week to start with blank Sunday then 1, got: '{first_week}'"
@@ -250,7 +250,7 @@ fn too_many_args_fails() {
 
 #[test]
 fn september_1752_renders() {
-    // This is the historical Julian/Gregorian gap month. Our implementation
+    // This is the historical Julian to Gregorian gap month. Our implementation
     // uses pure Gregorian, so it should still render without error. We just
     // verify it doesn't crash and contains the header.
     cal()

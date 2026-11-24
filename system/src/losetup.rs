@@ -1,6 +1,6 @@
 use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
-pub const MAN: ManContent = ManContent::empty();
+pub const MAN: ManContent = ManContent::empty().section(8);
 
 use clap::Parser;
 use cols::{Cols, print_table};
@@ -208,7 +208,9 @@ fn print_old_style(devices: &[LoopDeviceInfo]) {
 
 fn find_free_device() -> io::Result<String> {
     let ctl = File::open("/dev/loop-control")?;
-    let nr = unsafe { libc::ioctl(ctl.as_raw_fd(), LOOP_CTL_GET_FREE) };
+    let nr = unsafe {
+        libc::ioctl(ctl.as_raw_fd(), LOOP_CTL_GET_FREE as libc::Ioctl)
+    };
     if nr < 0 {
         return Err(io::Error::last_os_error());
     }
@@ -231,7 +233,11 @@ fn setup_loop(
     let loop_dev = File::options().read(true).write(true).open(device)?;
 
     let ret = unsafe {
-        libc::ioctl(loop_dev.as_raw_fd(), LOOP_SET_FD, backing.as_raw_fd())
+        libc::ioctl(
+            loop_dev.as_raw_fd(),
+            LOOP_SET_FD as libc::Ioctl,
+            backing.as_raw_fd(),
+        )
     };
     if ret < 0 {
         return Err(io::Error::last_os_error());
@@ -246,11 +252,18 @@ fn setup_loop(
     let copy_len = file_bytes.len().min(63);
     info.lo_file_name[..copy_len].copy_from_slice(&file_bytes[..copy_len]);
 
-    let ret =
-        unsafe { libc::ioctl(loop_dev.as_raw_fd(), LOOP_SET_STATUS64, &info) };
+    let ret = unsafe {
+        libc::ioctl(
+            loop_dev.as_raw_fd(),
+            LOOP_SET_STATUS64 as libc::Ioctl,
+            &info,
+        )
+    };
     if ret < 0 {
         let err = io::Error::last_os_error();
-        unsafe { libc::ioctl(loop_dev.as_raw_fd(), LOOP_CLR_FD, 0) };
+        unsafe {
+            libc::ioctl(loop_dev.as_raw_fd(), LOOP_CLR_FD as libc::Ioctl, 0)
+        };
         return Err(err);
     }
 
@@ -259,7 +272,8 @@ fn setup_loop(
 
 fn detach_loop(device: &str) -> io::Result<()> {
     let f = File::open(device)?;
-    let ret = unsafe { libc::ioctl(f.as_raw_fd(), LOOP_CLR_FD, 0) };
+    let ret =
+        unsafe { libc::ioctl(f.as_raw_fd(), LOOP_CLR_FD as libc::Ioctl, 0) };
     if ret < 0 {
         Err(io::Error::last_os_error())
     } else {
@@ -269,7 +283,9 @@ fn detach_loop(device: &str) -> io::Result<()> {
 
 fn set_capacity(device: &str) -> io::Result<()> {
     let f = File::open(device)?;
-    let ret = unsafe { libc::ioctl(f.as_raw_fd(), LOOP_SET_CAPACITY, 0) };
+    let ret = unsafe {
+        libc::ioctl(f.as_raw_fd(), LOOP_SET_CAPACITY as libc::Ioctl, 0)
+    };
     if ret < 0 {
         Err(io::Error::last_os_error())
     } else {
@@ -284,8 +300,9 @@ fn show_device(device: &str) -> ExitCode {
     };
 
     let mut info = unsafe { std::mem::zeroed::<LoopInfo64>() };
-    let ret =
-        unsafe { libc::ioctl(f.as_raw_fd(), LOOP_GET_STATUS64, &mut info) };
+    let ret = unsafe {
+        libc::ioctl(f.as_raw_fd(), LOOP_GET_STATUS64 as libc::Ioctl, &mut info)
+    };
     if ret < 0 {
         let e = io::Error::last_os_error();
         if e.raw_os_error() == Some(libc::ENXIO) {

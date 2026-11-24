@@ -21,8 +21,8 @@
 //! What's deliberately **not** here:
 //!
 //! - Filesystem-signature probing (`blkid -p /dev/sda1`).
-//!   Reimplementing the hundreds of fs/partition/RAID detectors
-//!   upstream supports is a multi-month effort; deferred to a later
+//!   Reimplementing the hundreds of fs, partition and RAID detectors
+//!   upstream supports is a multi-month effort, so it is deferred to a later
 //!   crate slice.
 //! - Cache files (`/run/blkid/blkid.tab`).  Our index is the udev
 //!   symlink tree itself, queried on demand or eagerly cached in

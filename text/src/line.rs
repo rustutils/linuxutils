@@ -59,7 +59,7 @@ fn copy_one_line(writer: &mut impl Write) -> io::Result<bool> {
             return Err(e);
         }
         if n == 0 {
-            // EOF before newline — POSIX line(1) writes one anyway.
+            // EOF before newline. POSIX line(1) writes one anyway.
             writer.write_all(b"\n")?;
             writer.flush()?;
             return Ok(false);
@@ -74,8 +74,8 @@ fn copy_one_line(writer: &mut impl Write) -> io::Result<bool> {
 
 #[cfg(test)]
 mod tests {
-    // The behavioural tests live in `tests/util-linux/ts/line/line` —
-    // they exercise the FD-0 read loop end-to-end. Unit-testing the
+    // The behavioural tests live in `tests/util-linux/ts/line/line`.
+    // They exercise the FD-0 read loop end-to-end. Unit-testing the
     // helper here would require redirecting FD 0, which isn't worth
     // the ceremony for a 20-line function.
 }

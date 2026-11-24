@@ -1,6 +1,6 @@
 use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
-pub const MAN: ManContent = ManContent::empty();
+pub const MAN: ManContent = ManContent::empty().section(8);
 
 use clap::{ArgAction, Parser};
 use linuxutils_blkid::Cache as BlkidCache;
@@ -88,9 +88,9 @@ fn resolve_target(arg: &str) -> Result<PathBuf, String> {
         return Ok(canonical);
     }
 
-    // 3) Otherwise, the canonical form must be a source — look it
-    //    up by source. There can be multiple instances; we pick the
-    //    first (matches upstream's default behaviour without
+    // 3) Otherwise, the canonical form must be a source, so look it
+    //    up by source. There can be multiple instances, and we pick
+    //    the first (matches upstream's default behaviour without
     //    `--all-targets`).
     if let Some(entry) = mountinfo
         .iter()

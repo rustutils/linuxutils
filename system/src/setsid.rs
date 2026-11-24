@@ -45,7 +45,7 @@ pub fn run(args: Args) -> ExitCode {
                 return ExitCode::FAILURE;
             }
             0 => {
-                // Child: fall through to setsid + exec.
+                // Child: fall through to setsid and exec.
             }
             child_pid => {
                 // Parent.
@@ -101,7 +101,7 @@ fn wait_for_child(pid: i32) -> ExitCode {
                 if status.terminating_signal().is_some() {
                     return ExitCode::FAILURE;
                 }
-                // Stopped/continued — keep waiting.
+                // Stopped or continued, so keep waiting.
             }
             Ok(None) => continue,
             Err(e) => {

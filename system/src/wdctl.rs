@@ -1,6 +1,6 @@
 //! Show hardware watchdog status.
 //!
-//! Reads identity, timeouts, and feature/status flags from one or
+//! Reads identity, timeouts, and feature and status flags from one or
 //! more `/dev/watchdog*` devices via the `WDIOC_*` ioctls and
 //! prints them. Closes the device with a magic-close write so the
 //! kernel doesn't fire the watchdog when wdctl exits.
@@ -16,11 +16,11 @@ use std::{
     process::ExitCode,
 };
 
-pub const MAN: ManContent = ManContent::empty();
+pub const MAN: ManContent = ManContent::empty().section(8);
 
 const DEFAULT_DEVICE: &str = "/dev/watchdog0";
 
-// `<linux/watchdog.h>` — uapi, not in libc.
+// `<linux/watchdog.h>` is uapi, not in libc.
 
 #[repr(C)]
 #[derive(Default, Clone, Copy)]
@@ -202,7 +202,7 @@ fn show_device(args: &Args, path: &str) -> bool {
 }
 
 /// Open the watchdog device. Some drivers arm the timer just from
-/// the open(); the magic-close write on drop is what tells the
+/// the open(). The magic-close write on drop is what tells the
 /// kernel not to fire when wdctl exits.
 fn open_watchdog(path: &str) -> std::io::Result<OwnedFd> {
     let cpath = CString::new(path).map_err(std::io::Error::other)?;
@@ -216,7 +216,9 @@ fn open_watchdog(path: &str) -> std::io::Result<OwnedFd> {
 
 fn read_info(fd: i32) -> std::io::Result<WatchdogInfo> {
     let mut info = MaybeUninit::<WatchdogInfo>::uninit();
-    let rc = unsafe { libc::ioctl(fd, WDIOC_GETSUPPORT, info.as_mut_ptr()) };
+    let rc = unsafe {
+        libc::ioctl(fd, WDIOC_GETSUPPORT as libc::Ioctl, info.as_mut_ptr())
+    };
     if rc < 0 {
         return Err(std::io::Error::last_os_error());
     }
@@ -225,7 +227,7 @@ fn read_info(fd: i32) -> std::io::Result<WatchdogInfo> {
 
 fn read_int(fd: i32, op: libc::c_ulong) -> std::io::Result<i32> {
     let mut v: i32 = 0;
-    let rc = unsafe { libc::ioctl(fd, op, &mut v as *mut i32) };
+    let rc = unsafe { libc::ioctl(fd, op as libc::Ioctl, &mut v as *mut i32) };
     if rc < 0 {
         return Err(std::io::Error::last_os_error());
     }
@@ -235,7 +237,7 @@ fn read_int(fd: i32, op: libc::c_ulong) -> std::io::Result<i32> {
 /// The watchdog uapi lets a userspace process release the device
 /// without firing the timer by writing the magic 'V' character
 /// before close. Drivers that don't honor magic-close will fire
-/// anyway; not much we can do about those.
+/// anyway. Not much we can do about those.
 fn write_magic_close(fd: OwnedFd) {
     let mut f = File::from(fd);
     let _ = f.write_all(b"V");
@@ -253,9 +255,9 @@ fn print_flag_table(
     no_headings: bool,
 ) {
     if !no_headings {
-        // Column widths: name 18 + space, desc 32 + space, status 6
-        // + space, then boot. The trailing strings are short enough
-        // to write as a literal.
+        // Column widths: name 18 and a space, desc 32 and a space,
+        // status 6 and a space, then boot. The trailing strings are
+        // short enough to write as a literal.
         println!(
             "FLAG               DESCRIPTION                      STATUS BOOT-STATUS"
         );
@@ -290,7 +292,7 @@ mod tests {
         let mut buf = [0u8; 32];
         let label = b"Software Watchdog";
         buf[..label.len()].copy_from_slice(label);
-        // Bytes after label are NUL — `identity_str` should stop at
+        // Bytes after label are NUL, and `identity_str` should stop at
         // the first NUL.
         assert_eq!(identity_str(&buf), "Software Watchdog");
     }

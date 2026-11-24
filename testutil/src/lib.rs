@@ -1,9 +1,9 @@
 //! Test harness for running linuxutils binaries against fake `/proc`,
 //! `/sys`, or other system paths.
 //!
-//! Uses Linux user + mount namespaces (`unshare -rUm`) to bind-mount
+//! Uses Linux user and mount namespaces (`unshare -rUm`) to bind-mount
 //! one or more fixture directories over their target paths, then execs
-//! the binary under test. No host root required; the namespace tears
+//! the binary under test. No host root required. The namespace tears
 //! itself down when the child exits.
 //!
 //! Tools whose CLI is featured-gated should access their bin via cargo's
@@ -38,7 +38,7 @@ pub struct Mount {
     pub target: &'static str,
 }
 
-/// Builder for spawning a binary inside an unshared user + mount
+/// Builder for spawning a binary inside an unshared user and mount
 /// namespace with bind-mounted fixtures and an optional env overlay.
 pub struct Run {
     binary: PathBuf,
@@ -122,7 +122,7 @@ impl Run {
     }
 }
 
-/// Spawn `binary args...` inside an unshared user + mount namespace,
+/// Spawn `binary args...` inside an unshared user and mount namespace,
 /// with each entry of `mounts` bind-mounted into place. Returns the
 /// captured `Output` on completion.
 pub fn run(

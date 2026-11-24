@@ -1,6 +1,6 @@
 use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
-pub const MAN: ManContent = ManContent::empty();
+pub const MAN: ManContent = ManContent::empty().section(8);
 
 use clap::Parser;
 use cols::{OutputMode, Table, WidthHint, print_table};
@@ -179,7 +179,7 @@ fn parse_device_inode(s: &str) -> Option<(u64, u64, u64)> {
     Some((major, minor, inode))
 }
 
-// Build a map from (pid, inode) → path by scanning /proc/<pid>/fd/.
+// Build a map from (pid, inode) to path by scanning /proc/<pid>/fd/.
 // We key by (pid, inode) rather than (dev, inode) because the block device
 // reported in /proc/locks may differ from st_dev (e.g. btrfs subvolumes).
 fn build_path_cache(pids: &[u32]) -> HashMap<(u32, u64), String> {
@@ -334,7 +334,7 @@ pub fn run(args: Args) -> ExitCode {
         locks.retain(|l| l.pid == filter_pid);
     }
 
-    // Collect unique PIDs for path + command resolution.
+    // Collect unique PIDs for path and command resolution.
     let pids: Vec<u32> = {
         let mut v: Vec<u32> = locks.iter().map(|l| l.pid).collect();
         v.sort_unstable();

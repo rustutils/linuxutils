@@ -1,9 +1,9 @@
 //! ABI-compatible libblkid cdylib backed by `linuxutils-blkid`.
 //!
-//! v0 surface: tag / spec resolution and reverse-lookup over the
+//! v0 surface: tag and spec resolution and reverse-lookup over the
 //! `/dev/disk/by-*` udev symlinks. The probe layer (filesystem
 //! signature detection, partition tables, topology) is not
-//! implemented — see `compat/libblkid/README.md`.
+//! implemented. See `compat/libblkid/README.md`.
 
 #![allow(clippy::missing_safety_doc)]
 
@@ -18,12 +18,12 @@ mod tag;
 /// `blkid_cache` on the C side. Pointers handed out from this
 /// crate point at the internal `CacheHandle` type.
 pub type BlkidCache = c_void;
-/// `blkid_dev` on the C side; backed by the internal `DevHandle`.
+/// `blkid_dev` on the C side, backed by the internal `DevHandle`.
 pub type BlkidDev = c_void;
-/// `blkid_dev_iterate` on the C side; backed by the internal
+/// `blkid_dev_iterate` on the C side, backed by the internal
 /// `DevIterHandle`.
 pub type BlkidDevIterate = c_void;
-/// `blkid_tag_iterate` on the C side; backed by the internal
+/// `blkid_tag_iterate` on the C side, backed by the internal
 /// `TagIterHandle`.
 pub type BlkidTagIterate = c_void;
 

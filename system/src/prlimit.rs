@@ -40,8 +40,8 @@ pub struct Args {
     #[arg(long)]
     raw: bool,
 
-    // Resource limits — absent = not selected, bare flag = show only,
-    // flag=limit = set and show.
+    // Resource limits: absent means not selected, a bare flag means
+    // show only, and flag=limit means set and show.
     /// Max size of core files (bytes)
     #[arg(short = 'c', long, value_name = "limit", require_equals = true, num_args = 0..=1, default_missing_value = "")]
     core: Option<String>,
@@ -220,7 +220,7 @@ const ALL_RESOURCES: &[ResourceInfo] = &[
 
 fn resource_spec(args: &Args) -> Vec<(ResourceInfo, Option<&str>)> {
     // Build a list of (resource, optional_limit_str) for selected resources.
-    // None limit = query only; Some(s) = set then query.
+    // A None limit means query only, and Some(s) means set then query.
     macro_rules! entry {
         ($field:expr, $name:expr) => {
             if let Some(ref val) = $field {
@@ -520,7 +520,7 @@ pub fn run(args: Args) -> ExitCode {
 
     // Match upstream `prlimit(1)`: when *any* limit is being set
     // (i.e. there's a `--<res>=…` value, not just a bare `--<res>`),
-    // suppress the table — the user asked us to set, not show.
+    // suppress the table. The user asked us to set, not show.
     let any_setting = selected.iter().any(|(_, v)| v.is_some());
     if any_setting {
         return ExitCode::SUCCESS;

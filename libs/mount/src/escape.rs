@@ -49,20 +49,20 @@ mod tests {
 
     #[test]
     fn lone_backslash_passes_through() {
-        // No three octal digits following → keep verbatim.
+        // No three octal digits following, so keep verbatim.
         assert_eq!(unmangle(b"a\\b"), b"a\\b");
         assert_eq!(unmangle(b"a\\"), b"a\\");
     }
 
     #[test]
     fn non_octal_after_backslash_passes_through() {
-        // \999 is not octal — emit the bytes literally.
+        // \999 is not octal, so emit the bytes literally.
         assert_eq!(unmangle(b"a\\999b"), b"a\\999b");
     }
 
     #[test]
     fn truncated_escape_at_end_passes_through() {
-        // Need exactly three digits; two-digit run is not enough.
+        // Need exactly three digits. A two-digit run is not enough.
         assert_eq!(unmangle(b"x\\04"), b"x\\04");
     }
 

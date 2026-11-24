@@ -82,7 +82,7 @@ fn parse_line(line: &[u8]) -> Result<MountEntry, String> {
     let propagation = parse_propagation(&fields[6..dash_idx])?;
     // Preserve the raw optional-fields string so unknown future
     // tags survive a round-trip even when the decoder doesn't know
-    // about them. Joined with single spaces — the kernel uses a
+    // about them. Joined with single spaces. The kernel uses a
     // single space separator in mountinfo, no tabs.
     let optional_fields_raw = join_optional_fields(&fields[6..dash_idx])?;
 
@@ -200,7 +200,7 @@ fn parse_propagation(fields: &[&[u8]]) -> Result<Propagation, String> {
             "master" => p.master = Some(n),
             "propagate_from" => p.propagate_from = Some(n),
             // Skip unknown keys forward-compatibly. The kernel may add
-            // new optional-field tags in future versions; treating them
+            // new optional-field tags in future versions, and treating them
             // as a hard error would force lockstep updates.
             _ => {}
         }
@@ -325,7 +325,7 @@ mod tests {
 
     #[test]
     fn empty_optional_fields_round_trip() {
-        // No optional fields → raw string is empty (not None) for a
+        // No optional fields means the raw string is empty (not None) for a
         // mountinfo source.
         let line = "1 0 0:1 / / rw - tmpfs tmpfs rw\n";
         let e = parse_one(line);
@@ -372,7 +372,7 @@ mod tests {
     #[test]
     fn source_in_mountinfo_is_always_a_path() {
         // Sanity-check the assumption: mountinfo source is wrapped in
-        // `Spec::Path(...)` unconditionally — `Spec::parse` is *not*
+        // `Spec::Path(...)` unconditionally, and `Spec::parse` is *not*
         // invoked. Even a string that *looks* like a tag stays a Path,
         // because the kernel had to resolve it before the mount could
         // exist.

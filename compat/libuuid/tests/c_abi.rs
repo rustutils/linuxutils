@@ -2,7 +2,7 @@ use std::{path::PathBuf, process::Command, sync::OnceLock};
 
 /// Build `linuxutils-libuuid` once per test process. The package is
 /// cdylib-only and the integration test doesn't reference its Rust
-/// API, so cargo skips building it as a test prerequisite — we have
+/// API, so cargo skips building it as a test prerequisite. We have
 /// to ask for the artifact ourselves.
 fn ensure_libuuid_built() {
     static BUILT: OnceLock<()> = OnceLock::new();

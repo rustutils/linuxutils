@@ -1,4 +1,4 @@
-//! `mnt_table_*` and `mnt_*_table` lifecycle / parsing / lookup
+//! `mnt_table_*` and `mnt_*_table` lifecycle, parsing and lookup
 //! functions.
 
 use crate::{
@@ -53,7 +53,7 @@ unsafe fn borrow<'a>(tb: *mut LibmntTable) -> Option<&'a TableHandle> {
 }
 
 /// Borrow a `&mut TableHandle` for parser operations. Caller
-/// guarantees no concurrent access — same constraint upstream
+/// guarantees no concurrent access, the same constraint upstream
 /// libmount imposes.
 unsafe fn borrow_mut<'a>(tb: *mut LibmntTable) -> Option<&'a mut TableHandle> {
     if tb.is_null() {
@@ -142,8 +142,8 @@ pub unsafe extern "C" fn mnt_table_get_nents(tb: *mut LibmntTable) -> c_int {
 }
 
 /// Write the first entry to `*fs`. Returns 0 on success, 1 if the
-/// table is empty. The returned `*fs` is borrowed — owned by the
-/// table; consumer should `mnt_ref_fs` to outlive the table.
+/// table is empty. The returned `*fs` is borrowed (owned by the
+/// table). Consumer should `mnt_ref_fs` to outlive the table.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn mnt_table_first_fs(
     tb: *mut LibmntTable,
@@ -207,7 +207,7 @@ fn source_matches(entry: &FsHandle, needle: &str) -> bool {
 
 /// Find the first entry whose target matches `path`. The
 /// `direction` argument is accepted for upstream compatibility but
-/// only affects search order — the result is the same since
+/// only affects search order. The result is the same since
 /// targets are unique in a well-formed table.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn mnt_table_find_target(

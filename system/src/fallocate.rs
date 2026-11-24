@@ -183,8 +183,8 @@ fn dig_holes(
 }
 
 /// Produce binary-suffix human-readable size strings matching the
-/// upstream `report-holes` output format: `1048576` → `1 MiB`,
-/// `0` → `0 B`.
+/// upstream `report-holes` output format: `1048576` becomes `1 MiB`,
+/// `0` becomes `0 B`.
 fn human_size(bytes: u64) -> String {
     const UNITS: &[&str] = &["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB"];
     let mut size = bytes as f64;
@@ -237,7 +237,7 @@ fn report_holes(
         let data_start = match seek(fd.as_fd(), RxSeek::Data(offset)) {
             Ok(p) => p,
             Err(e) if e == rustix::io::Errno::NXIO => {
-                // No more data — everything from here to EOF is hole.
+                // No more data. Everything from here to EOF is hole.
                 let len = file_size - offset;
                 if len > 0 {
                     file_holes.holes += 1;
@@ -331,7 +331,7 @@ pub fn run(args: Args) -> ExitCode {
                     return ExitCode::FAILURE;
                 }
             },
-            // dig-holes / report-holes default to the full file
+            // dig-holes and report-holes default to the full file
             None => 0,
         }
     } else {
@@ -350,8 +350,8 @@ pub fn run(args: Args) -> ExitCode {
         }
     };
 
-    // Open the file. dig-holes / report-holes operate on an existing
-    // file; they don't auto-create one.
+    // Open the file. dig-holes and report-holes operate on an existing
+    // file. They don't auto-create one.
     let oflags = if args.dig_holes {
         OFlags::RDWR
     } else if args.report_holes {

@@ -100,7 +100,7 @@ fn parse_uuid_info(s: &str) -> UuidInfo {
     let (variant, type_name, time) = match Uuid::parse_str(s) {
         Ok(u) => {
             let variant = variant_name(&u);
-            // Upstream only populates TYPE and TIME for DCE / RFC4122
+            // Upstream only populates TYPE and TIME for DCE (RFC4122)
             // variants. NCS, Microsoft, and "other" leave both
             // columns blank.
             let (type_name, time) =
@@ -330,7 +330,7 @@ mod tests {
 
     #[test]
     fn parse_nil() {
-        // The nil UUID is variant NCS — TYPE/TIME columns stay
+        // The nil UUID is variant NCS. TYPE and TIME columns stay
         // empty for non-DCE variants, matching upstream output.
         let info = parse_uuid_info("00000000-0000-0000-0000-000000000000");
         assert_eq!(info.variant, "NCS");

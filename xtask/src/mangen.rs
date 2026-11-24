@@ -2,16 +2,19 @@ use clap_mangen::Man;
 use linuxutils_common::man::ManContent;
 use std::{fs, io::Write, process::ExitCode};
 
+/// Writes `<output>/man<N>/<tool>.<N>` for every tool, where N is the
+/// tool's manual section.
 pub fn run(output: &str) -> ExitCode {
-    if let Err(e) = fs::create_dir_all(output) {
-        eprintln!("xtask mangen: failed to create output directory: {e}");
-        return ExitCode::FAILURE;
-    }
-
     for tool in linuxutils::TOOLS {
         let cmd = (tool.command)();
         let name = cmd.get_name().to_string();
-        let path = format!("{output}/{name}.1");
+        let section = tool.man.section;
+        let dir = format!("{output}/man{section}");
+        if let Err(e) = fs::create_dir_all(&dir) {
+            eprintln!("xtask mangen: failed to create {dir}: {e}");
+            return ExitCode::FAILURE;
+        }
+        let path = format!("{dir}/{name}.{section}");
         let mut f = match fs::File::create(&path) {
             Ok(f) => f,
             Err(e) => {
@@ -36,13 +39,13 @@ fn render_man(
     cmd: clap::Command,
     extras: &ManContent,
 ) -> std::io::Result<()> {
-    // clap_mangen panics on render_version_section / render_authors_section
-    // when these aren't set; mirror Man::render's internal gating.
+    // clap_mangen panics on render_version_section or render_authors_section
+    // when these aren't set, so mirror Man::render's internal gating.
     let has_version =
         cmd.get_long_version().is_some() || cmd.get_version().is_some();
     let has_author = cmd.get_author().is_some();
 
-    let man = Man::new(cmd);
+    let man = Man::new(cmd).section(extras.section.to_string());
 
     man.render_title(out)?;
     man.render_name_section(out)?;

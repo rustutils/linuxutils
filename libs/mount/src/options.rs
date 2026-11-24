@@ -2,8 +2,8 @@
 //!
 //! Mount options live as comma-separated `name` or `name=value` pairs
 //! in fstab, mountinfo, and on the `mount(8)` command line. This
-//! module models them as an ordered list of [`MountOption`] entries —
-//! ordered, because semantics depend on the position (`ro,rw` and
+//! module models them as an ordered list of [`MountOption`] entries,
+//! ordered because semantics depend on the position (`ro,rw` and
 //! `rw,ro` mean different things), and entries can repeat.
 //!
 //! The classification of each option (kernel `MS_*` flag, fs-specific
@@ -45,9 +45,9 @@ impl fmt::Display for MountOption {
 
 /// An ordered list of [`MountOption`] entries.
 ///
-/// Preserves insertion order and allows duplicate names — matches
-/// kernel/`mount(8)` behaviour where later occurrences override
-/// earlier ones (`ro,rw` ⇒ effectively `rw`).
+/// Preserves insertion order and allows duplicate names. This matches
+/// kernel and `mount(8)` behaviour where later occurrences override
+/// earlier ones (`ro,rw` is effectively `rw`).
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct OptionList(Vec<MountOption>);
 
@@ -59,9 +59,9 @@ impl OptionList {
 
     /// Parse a comma-separated mount option string.
     ///
-    /// Empty entries (from `,,` or leading/trailing commas) are
+    /// Empty entries (from `,,` or leading or trailing commas) are
     /// dropped. The empty string parses to an empty list. Quoting and
-    /// escaping are *not* handled here — callers writing mountinfo
+    /// escaping are *not* handled here. Callers writing mountinfo
     /// content already work in the `mnt_unmangle`'d form.
     pub fn parse(s: &str) -> Self {
         let mut list = Vec::new();
@@ -204,7 +204,7 @@ mod tests {
     #[test]
     fn value_can_contain_equals() {
         // Only the first `=` separates name from value, matching
-        // mount(8). `foo=a=b` ⇒ `foo` = `"a=b"`.
+        // mount(8). `foo=a=b` becomes `foo` = `"a=b"`.
         assert_eq!(
             OptionList::parse("foo=a=b").as_slice(),
             &[kv("foo", "a=b")]

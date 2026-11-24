@@ -1,6 +1,6 @@
 use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
-pub const MAN: ManContent = ManContent::empty();
+pub const MAN: ManContent = ManContent::empty().section(8);
 
 use clap::Parser;
 use std::{fs::File, io, os::unix::io::AsRawFd, process::ExitCode};
@@ -30,7 +30,8 @@ pub struct Args {
 fn fsfreeze_ioctl(path: &str, ioctl_nr: libc::c_ulong) -> io::Result<()> {
     let f = File::open(path)?;
     let arg: libc::c_int = 0;
-    let ret = unsafe { libc::ioctl(f.as_raw_fd(), ioctl_nr, &arg) };
+    let ret =
+        unsafe { libc::ioctl(f.as_raw_fd(), ioctl_nr as libc::Ioctl, &arg) };
     if ret < 0 {
         Err(io::Error::last_os_error())
     } else {

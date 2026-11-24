@@ -1,5 +1,5 @@
 //! Smoke test against the host's `/proc/swaps`. Always present on a
-//! Linux system (even on hosts with no swap configured — there'll
+//! Linux system (even on hosts with no swap configured, there'll
 //! just be a header line and no entries).
 
 use linuxutils_mount::{MountTable, Spec};
@@ -22,7 +22,7 @@ fn parses_host_swaps() {
         // (kernel never emits LABEL=/UUID= here).
         assert_eq!(e.fstype, "swap");
         assert!(matches!(e.source, Spec::Path(_)));
-        // Swap-specific fields populated; non-swap fields stay None.
+        // Swap-specific fields populated, and non-swap fields stay None.
         assert!(e.swap_type.is_some());
         assert!(e.swap_size.is_some());
         assert!(e.swap_used.is_some());

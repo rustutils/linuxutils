@@ -343,7 +343,7 @@ fn find_binaries(
             for entry in entries.flatten() {
                 let path = entry.path();
                 // Upstream `whereis` lists any file in the bin
-                // directory that matches the name — it doesn't gate
+                // directory that matches the name. It doesn't gate
                 // on the executable bit. The test suite relies on
                 // this (it uses `touch` to create fixture files).
                 if let Some(fname) = path.file_name().and_then(|f| f.to_str())

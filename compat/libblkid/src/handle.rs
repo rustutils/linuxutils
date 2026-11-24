@@ -1,9 +1,9 @@
 //! Internal handle types backing the opaque `blkid_*` typedefs.
 //!
-//! `blkid_cache` → `Arc<CacheHandle>`
-//! `blkid_dev` → `Arc<DevHandle>` (owned by the parent cache)
-//! `blkid_dev_iterate` → `Box<DevIterHandle>`
-//! `blkid_tag_iterate` → `Box<TagIterHandle>`
+//! `blkid_cache` maps to `Arc<CacheHandle>`
+//! `blkid_dev` maps to `Arc<DevHandle>` (owned by the parent cache)
+//! `blkid_dev_iterate` maps to `Box<DevIterHandle>`
+//! `blkid_tag_iterate` maps to `Box<TagIterHandle>`
 //!
 //! Devices and their tags are populated lazily on first request
 //! (cache scan walks `/dev/disk/by-*` once and caches the result).
@@ -37,7 +37,7 @@ pub struct TagPair {
 pub struct CacheHandle {
     pub backing: Cache,
     /// Devices keyed by canonical path. Lazily populated on first
-    /// scan; subsequent calls reuse the cache.
+    /// scan. Subsequent calls reuse the cache.
     pub scan: OnceLock<HashMap<PathBuf, Arc<DevHandle>>>,
 }
 
@@ -49,7 +49,7 @@ impl CacheHandle {
         }
     }
 
-    /// Build (or reuse) the device → tags index.
+    /// Build (or reuse) the device-to-tags index.
     pub fn devices(&self) -> &HashMap<PathBuf, Arc<DevHandle>> {
         self.scan.get_or_init(|| build_index(&self.backing))
     }
@@ -91,7 +91,7 @@ fn tag_to_pair(tag: &Tag) -> Option<TagPair> {
 
 pub struct DevIterHandle {
     /// Held to keep the parent cache alive while the iterator is
-    /// in use; not otherwise read.
+    /// in use. Not otherwise read.
     pub _cache: Arc<CacheHandle>,
     pub devices: Vec<Arc<DevHandle>>,
     pub pos: usize,

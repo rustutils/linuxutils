@@ -1,6 +1,6 @@
 use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
-pub const MAN: ManContent = ManContent::empty();
+pub const MAN: ManContent = ManContent::empty().section(8);
 
 use clap::Parser;
 use std::{fs::File, io, os::unix::io::AsRawFd, process::ExitCode};
@@ -57,7 +57,7 @@ pub struct Args {
 
 fn get_device_size(fd: i32) -> io::Result<u64> {
     let mut size: u64 = 0;
-    if unsafe { libc::ioctl(fd, BLKGETSIZE64, &mut size) } < 0 {
+    if unsafe { libc::ioctl(fd, BLKGETSIZE64 as libc::Ioctl, &mut size) } < 0 {
         Err(io::Error::last_os_error())
     } else {
         Ok(size)
@@ -66,7 +66,7 @@ fn get_device_size(fd: i32) -> io::Result<u64> {
 
 fn get_sector_size(fd: i32) -> io::Result<u32> {
     let mut ss: libc::c_int = 0;
-    if unsafe { libc::ioctl(fd, BLKSSZGET, &mut ss) } < 0 {
+    if unsafe { libc::ioctl(fd, BLKSSZGET as libc::Ioctl, &mut ss) } < 0 {
         Err(io::Error::last_os_error())
     } else {
         Ok(ss as u32)
@@ -80,7 +80,7 @@ fn do_discard(
     length: u64,
 ) -> io::Result<()> {
     let range: [u64; 2] = [offset, length];
-    if unsafe { libc::ioctl(fd, ioctl_nr, &range) } < 0 {
+    if unsafe { libc::ioctl(fd, ioctl_nr as libc::Ioctl, &range) } < 0 {
         Err(io::Error::last_os_error())
     } else {
         Ok(())

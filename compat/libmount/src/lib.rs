@@ -16,10 +16,10 @@ mod table;
 /// `*mut libmnt_fs` on the C side. Pointers handed out from this
 /// crate actually point at the internal `FsHandle` type.
 pub type LibmntFs = c_void;
-/// `*mut libmnt_table` on the C side; backed by the internal
+/// `*mut libmnt_table` on the C side, backed by the internal
 /// `TableHandle` type.
 pub type LibmntTable = c_void;
-/// `*mut libmnt_iter` on the C side; backed by the internal
+/// `*mut libmnt_iter` on the C side, backed by the internal
 /// `IterHandle` type.
 pub type LibmntIter = c_void;
 

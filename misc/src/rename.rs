@@ -85,7 +85,7 @@ fn find_initial_replace(from: &str, to: &str, orig: &str) -> Option<usize> {
     orig[search_start..].find(from).map(|i| i + search_start)
 }
 
-/// Apply a single (or all / last) replacement to `orig`. Returns
+/// Apply a single (or all, or last) replacement to `orig`. Returns
 /// `None` if no replacement was made (caller treats that as
 /// "skip"). Mirrors upstream's `string_replace` but written in
 /// terms of slice indexes.
@@ -99,7 +99,7 @@ fn replace_string(
     let initial = find_initial_replace(from, to, orig)?;
 
     if from.is_empty() {
-        // Empty `from` means "insert `to`" — same edge cases as
+        // Empty `from` means "insert `to`", with the same edge cases as
         // upstream: single-shot inserts at the basename boundary,
         // `--last` inserts at end, `--all` between every char of
         // the search region.
@@ -196,10 +196,10 @@ pub fn run(args: Args) -> ExitCode {
 
     for file in &args.files {
         // Upstream's `ul_basename` strips trailing slashes from
-        // the input path before processing; replicate that.
+        // the input path before processing. Replicate that.
         let file = file.trim_end_matches('/').to_string();
         if file.is_empty() {
-            // All slashes — rename root, nonsensical.
+            // All slashes: rename root, nonsensical.
             failed += 1;
             continue;
         }
@@ -354,7 +354,7 @@ fn do_copy(file: &str, args: &Args) -> Outcome {
         match std::fs::read_link(path) {
             Ok(target) => {
                 // If the destination already exists and we got past
-                // the no-overwrite guard above, remove it first —
+                // the no-overwrite guard above, remove it first, since
                 // `symlink(2)` doesn't replace existing entries.
                 if target_exists {
                     let _ = std::fs::remove_file(new_path);
@@ -376,7 +376,7 @@ fn do_copy(file: &str, args: &Args) -> Outcome {
             }
         }
     } else {
-        // Directories, FIFOs, sockets, devices — upstream prints
+        // Directories, FIFOs, sockets, devices: upstream prints
         // a warning to stderr and treats the entry as skipped.
         eprintln!("rename: {file}: cannot copy (unsupported file type)");
         Outcome::Skipped
@@ -508,9 +508,9 @@ mod tests {
 
     #[test]
     fn search_restricted_to_basename_when_no_slashes() {
-        // Path-shaped input: `from`/`to` lack slashes, so we should
+        // Path-shaped input: `from` and `to` lack slashes, so we should
         // only replace inside the trailing component. `rename/aa`
-        // → "rename/xa", not "renxme/aa".
+        // becomes `rename/xa`, not `renxme/aa`.
         assert_eq!(
             replace("rename/aa", "a", "x"),
             Some("rename/xa".to_string())
@@ -520,7 +520,7 @@ mod tests {
     #[test]
     fn slashy_expression_searches_whole_path() {
         // Once `from` contains a `/`, the basename rule no longer
-        // applies — match anywhere.
+        // applies. Match anywhere.
         assert_eq!(
             replace("rename/aa", "rename/aa", "rename/xa"),
             Some("rename/xa".to_string())

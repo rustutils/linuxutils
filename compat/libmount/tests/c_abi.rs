@@ -6,8 +6,8 @@ use std::{path::PathBuf, process::Command, sync::OnceLock};
 
 /// Build `linuxutils-libmount` once per test process. The package
 /// is cdylib-only and the integration test doesn't reference its
-/// Rust API, so cargo skips building it as a test prerequisite —
-/// we have to ask for the artifact ourselves.
+/// Rust API, so cargo skips building it as a test prerequisite.
+/// We have to ask for the artifact ourselves.
 fn ensure_libmount_built() {
     static BUILT: OnceLock<()> = OnceLock::new();
     BUILT.get_or_init(|| {
@@ -31,7 +31,7 @@ fn run_c_test(c_source: &str) -> String {
 }
 
 /// Same as `run_c_test` but writes additional fixture files into
-/// the test's tempdir first; their absolute paths are substituted
+/// the test's tempdir first. Their absolute paths are substituted
 /// into the C source via simple text replacement (`/*F0*/`,
 /// `/*F1*/`, ...) so the C program can hardcode paths.
 fn run_c_test_with_extra(c_source: &str, fixtures: &[(&str, &str)]) -> String {

@@ -1,6 +1,6 @@
 use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
-pub const MAN: ManContent = ManContent::empty();
+pub const MAN: ManContent = ManContent::empty().section(8);
 
 use clap::Parser;
 use cols::{OutputMode, Table, WidthHint, print_table};
@@ -159,7 +159,7 @@ fn read_proc_pid(pid: u32) -> Option<(u32, u32, String)> {
         .unwrap_or_default();
 
     let command = if cmdline.is_empty() {
-        // Kernel thread — use comm.
+        // Kernel thread, so use comm.
         let comm_start = stat.find('(')? + 1;
         format!("[{}]", &stat[comm_start..comm_end])
     } else {

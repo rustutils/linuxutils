@@ -77,7 +77,7 @@ fn show_shm_limits() {
         "max seg size (kbytes) = {}",
         shmmax.parse::<u64>().unwrap_or(0) / 1024
     );
-    // `shmall` is in pages; the kernel reports a near-`u64::MAX`
+    // `shmall` is in pages. The kernel reports a near-`u64::MAX`
     // value when there's no cap, so use saturating math to avoid an
     // overflow panic.
     let shmall_pages = shmall.parse::<u64>().unwrap_or(0);
@@ -153,7 +153,7 @@ fn show_shm_list() {
     println!();
     println!("------ Shared Memory Segments --------");
     // Header string is matched verbatim by the upstream regression
-    // tests; column widths are tuned to reproduce it.
+    // tests. Column widths are tuned to reproduce it.
     println!(
         "key        shmid      owner      perms      bytes      nattch     status      "
     );
@@ -256,7 +256,7 @@ pub fn run(args: Args) -> ExitCode {
     let show_msg = args.queues || args.all || none_specified;
     let show_sem = args.semaphores || args.all || none_specified;
 
-    // Upstream prints sections in msg → shm → sem order regardless
+    // Upstream prints sections in msg, shm, sem order regardless
     // of which mode is active.
     if args.limits {
         if show_msg {
@@ -295,7 +295,7 @@ pub fn run(args: Args) -> ExitCode {
         if show_shm {
             show_shm_pids();
         }
-        // Upstream's ipcs prints no PID block for semaphores —
+        // Upstream's ipcs prints no PID block for semaphores, since
         // /proc/sysvipc/sem doesn't expose a last-op PID.
     } else if args.creator {
         if show_msg {

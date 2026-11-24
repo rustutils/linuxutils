@@ -451,7 +451,7 @@ pub fn run(args: Args) -> ExitCode {
                     Col::State => range.state.clone(),
                     Col::Removable => {
                         // Offline blocks have no meaningful removable
-                        // status — upstream leaves the column blank.
+                        // status, so upstream leaves the column blank.
                         if range.state == "offline" {
                             String::new()
                         } else if range.removable {

@@ -1,6 +1,6 @@
 use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
-pub const MAN: ManContent = ManContent::empty();
+pub const MAN: ManContent = ManContent::empty().section(8);
 
 use clap::Parser;
 use cols::{Cols, print_table};
@@ -64,7 +64,7 @@ enum Cmd {
 
 fn ioctl_get_int(fd: i32, nr: libc::c_ulong) -> io::Result<i64> {
     let mut val: libc::c_int = 0;
-    if unsafe { libc::ioctl(fd, nr, &mut val) } < 0 {
+    if unsafe { libc::ioctl(fd, nr as libc::Ioctl, &mut val) } < 0 {
         Err(io::Error::last_os_error())
     } else {
         Ok(val as i64)
@@ -73,7 +73,7 @@ fn ioctl_get_int(fd: i32, nr: libc::c_ulong) -> io::Result<i64> {
 
 fn ioctl_get_uint(fd: i32, nr: libc::c_ulong) -> io::Result<i64> {
     let mut val: libc::c_uint = 0;
-    if unsafe { libc::ioctl(fd, nr, &mut val) } < 0 {
+    if unsafe { libc::ioctl(fd, nr as libc::Ioctl, &mut val) } < 0 {
         Err(io::Error::last_os_error())
     } else {
         Ok(val as i64)
@@ -82,7 +82,7 @@ fn ioctl_get_uint(fd: i32, nr: libc::c_ulong) -> io::Result<i64> {
 
 fn ioctl_get_u64(fd: i32, nr: libc::c_ulong) -> io::Result<u64> {
     let mut val: u64 = 0;
-    if unsafe { libc::ioctl(fd, nr, &mut val) } < 0 {
+    if unsafe { libc::ioctl(fd, nr as libc::Ioctl, &mut val) } < 0 {
         Err(io::Error::last_os_error())
     } else {
         Ok(val)
@@ -91,7 +91,7 @@ fn ioctl_get_u64(fd: i32, nr: libc::c_ulong) -> io::Result<u64> {
 
 fn ioctl_get_ulong(fd: i32, nr: libc::c_ulong) -> io::Result<i64> {
     let mut val: libc::c_ulong = 0;
-    if unsafe { libc::ioctl(fd, nr, &mut val) } < 0 {
+    if unsafe { libc::ioctl(fd, nr as libc::Ioctl, &mut val) } < 0 {
         Err(io::Error::last_os_error())
     } else {
         Ok(val as i64)
@@ -103,7 +103,7 @@ fn ioctl_set_int(
     nr: libc::c_ulong,
     val: libc::c_int,
 ) -> io::Result<()> {
-    if unsafe { libc::ioctl(fd, nr, &val) } < 0 {
+    if unsafe { libc::ioctl(fd, nr as libc::Ioctl, &val) } < 0 {
         Err(io::Error::last_os_error())
     } else {
         Ok(())
@@ -115,7 +115,7 @@ fn ioctl_set_ulong(
     nr: libc::c_ulong,
     val: libc::c_ulong,
 ) -> io::Result<()> {
-    if unsafe { libc::ioctl(fd, nr, val) } < 0 {
+    if unsafe { libc::ioctl(fd, nr as libc::Ioctl, val) } < 0 {
         Err(io::Error::last_os_error())
     } else {
         Ok(())
@@ -123,7 +123,7 @@ fn ioctl_set_ulong(
 }
 
 fn ioctl_action(fd: i32, nr: libc::c_ulong) -> io::Result<()> {
-    if unsafe { libc::ioctl(fd, nr, 0) } < 0 {
+    if unsafe { libc::ioctl(fd, nr as libc::Ioctl, 0) } < 0 {
         Err(io::Error::last_os_error())
     } else {
         Ok(())

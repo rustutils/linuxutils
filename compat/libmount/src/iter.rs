@@ -1,4 +1,4 @@
-//! `mnt_*_iter` lifecycle / direction functions.
+//! `mnt_*_iter` lifecycle and direction functions.
 
 use crate::{
     LibmntIter, MNT_ITER_BACKWARD, MNT_ITER_FORWARD, handle::IterHandle,

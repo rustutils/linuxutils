@@ -1,4 +1,4 @@
-//! Tag / spec resolution functions:
+//! Tag and spec resolution functions:
 //!
 //! - `blkid_evaluate_tag(token, value, cache)`
 //! - `blkid_evaluate_spec(spec, cache)`
@@ -40,10 +40,10 @@ fn devname_cstring(p: &Path) -> Option<CString> {
 /// Resolve `TYPE=value` against the cache, returning a malloc'd
 /// device path or NULL.
 ///
-/// The `cache` argument is `blkid_cache *` upstream — a
+/// The `cache` argument is `blkid_cache *` upstream, a
 /// double-pointer used so libblkid can lazily allocate one if the
 /// caller passes `&NULL`. We honor that: if `*cache` is null,
-/// allocate a fresh cache and store it back; otherwise reuse.
+/// allocate a fresh cache and store it back. Otherwise reuse.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn blkid_evaluate_tag(
     token: *const c_char,
@@ -80,7 +80,7 @@ pub unsafe extern "C" fn blkid_evaluate_spec(
     let Some(s) = cstr_to_str(spec) else {
         return std::ptr::null_mut();
     };
-    // If it parses as a tag, route to evaluate_tag; else echo the
+    // If it parses as a tag, route to evaluate_tag, else echo the
     // path verbatim (matching upstream semantics).
     if let Some(tag) = Tag::parse(s) {
         let cache_ref = unsafe { ensure_cache(cache) };
@@ -89,7 +89,7 @@ pub unsafe extern "C" fn blkid_evaluate_spec(
         };
         return resolve_tag(&cache.backing, &tag);
     }
-    // Verbatim path; copy into malloc'd buffer.
+    // Verbatim path. Copy into malloc'd buffer.
     match CString::new(s) {
         Ok(cs) => malloc_strdup(&cs),
         Err(_) => std::ptr::null_mut(),
@@ -112,7 +112,7 @@ pub unsafe extern "C" fn blkid_get_devname(
     };
 
     // Upstream allows passing the full `LABEL=foo` form as `token`
-    // with `value` NULL; honor that.
+    // with `value` NULL. Honor that.
     let tag = if value.is_null() {
         match Tag::parse(tok) {
             Some(t) => t,
@@ -132,7 +132,7 @@ pub unsafe extern "C" fn blkid_get_devname(
 }
 
 /// Look up the value of a single tag on a device. The device must
-/// be known to the cache; returns NULL if not found.
+/// be known to the cache. Returns NULL if not found.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn blkid_get_tag_value(
     cache: *mut BlkidCache,

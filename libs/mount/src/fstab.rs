@@ -2,7 +2,7 @@
 //!
 //! fstab is a static description of the filesystems the system
 //! intends to mount. Format: one entry per line, fields separated by
-//! arbitrary runs of spaces/tabs, with comment lines (starting with
+//! arbitrary runs of spaces or tabs, with comment lines (starting with
 //! `#`) and blank lines tolerated.
 //!
 //! ```text
@@ -20,14 +20,14 @@
 //!   or `auto` for autodetect.
 //! - `<options>` is the comma-separated mount option string.
 //! - `<freq>` and `<passno>` are dump frequency and fsck pass
-//!   number; both default to 0 if absent. We keep `None` for
+//!   number. Both default to 0 if absent. We keep `None` for
 //!   absent and `Some(n)` for present so a writer can round-trip
 //!   the fstab format back out.
 //!
-//! Comments only run for whole lines beginning with `#`; mid-line
+//! Comments only run for whole lines beginning with `#`. A mid-line
 //! `#` is part of the preceding field. Octal `\NNN` escapes apply
 //! to source and target the same way they do in mountinfo (rare in
-//! fstab but legal — matches `getmntent_r(3)` behaviour).
+//! fstab but legal, matching `getmntent_r(3)` behaviour).
 //!
 //! Reference: `fstab(5)` and `mnt_table_parse_fstab()` in upstream
 //! libmount.
@@ -121,7 +121,7 @@ fn parse_line(line: &[u8]) -> Result<MountEntry, String> {
         options,
         freq,
         passno,
-        // mountinfo-only fields stay at their default (None / private)
+        // mountinfo-only fields stay at their default (None or private)
         ..Default::default()
     })
 }
@@ -220,12 +220,12 @@ mod tests {
 
     #[test]
     fn freq_and_passno_optional() {
-        // Only 4 fields → freq and passno absent (None).
+        // Only 4 fields, so freq and passno absent (None).
         let e = parse_one("tmpfs /tmp tmpfs defaults\n");
         assert_eq!(e.freq, None);
         assert_eq!(e.passno, None);
 
-        // 5 fields → only passno absent.
+        // 5 fields, so only passno absent.
         let e = parse_one("tmpfs /tmp tmpfs defaults 0\n");
         assert_eq!(e.freq, Some(0));
         assert_eq!(e.passno, None);
@@ -281,7 +281,7 @@ mod tests {
 
     #[test]
     fn preserves_non_utf8_label_via_spec_parse() {
-        // Label values can be non-UTF-8 — Spec keeps them as OsString.
+        // Label values can be non-UTF-8. Spec keeps them as OsString.
         // Construct a synthetic line with a label containing a bare
         // 0xff byte. (Real fstabs would escape it, but the parser
         // shouldn't *require* the escape.)

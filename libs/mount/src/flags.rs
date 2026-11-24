@@ -1,7 +1,7 @@
 //! Kernel `MS_*` mount flags.
 //!
 //! These are the bits accepted by the `mount(2)` syscall's `flags`
-//! argument. They model the *VFS-level* options — generic things the
+//! argument. They model the *VFS-level* options: generic things the
 //! kernel knows about regardless of filesystem type. Filesystem-specific
 //! options (e.g. ext4's `barrier=1`) travel via the `data` argument
 //! and aren't represented here.
@@ -16,51 +16,51 @@ bitflags! {
     #[repr(transparent)]
     #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Default)]
     pub struct MountFlags: u64 {
-        /// `MS_RDONLY` — mount read-only.
+        /// `MS_RDONLY`: mount read-only.
         const RDONLY        = 1;
-        /// `MS_NOSUID` — ignore suid and sgid bits.
+        /// `MS_NOSUID`: ignore suid and sgid bits.
         const NOSUID        = 1 << 1;
-        /// `MS_NODEV` — disallow access to device special files.
+        /// `MS_NODEV`: disallow access to device special files.
         const NODEV         = 1 << 2;
-        /// `MS_NOEXEC` — disallow program execution.
+        /// `MS_NOEXEC`: disallow program execution.
         const NOEXEC        = 1 << 3;
-        /// `MS_SYNCHRONOUS` — writes are synced at once.
+        /// `MS_SYNCHRONOUS`: writes are synced at once.
         const SYNCHRONOUS   = 1 << 4;
-        /// `MS_REMOUNT` — alter flags of a mounted filesystem.
+        /// `MS_REMOUNT`: alter flags of a mounted filesystem.
         const REMOUNT       = 1 << 5;
-        /// `MS_MANDLOCK` — allow mandatory locks.
+        /// `MS_MANDLOCK`: allow mandatory locks.
         const MANDLOCK      = 1 << 6;
-        /// `MS_DIRSYNC` — directory modifications are synchronous.
+        /// `MS_DIRSYNC`: directory modifications are synchronous.
         const DIRSYNC       = 1 << 7;
-        /// `MS_NOSYMFOLLOW` — don't follow symlinks.
+        /// `MS_NOSYMFOLLOW`: don't follow symlinks.
         const NOSYMFOLLOW   = 1 << 8;
-        /// `MS_NOATIME` — do not update access times.
+        /// `MS_NOATIME`: do not update access times.
         const NOATIME       = 1 << 10;
-        /// `MS_NODIRATIME` — don't update directory access times.
+        /// `MS_NODIRATIME`: don't update directory access times.
         const NODIRATIME    = 1 << 11;
-        /// `MS_BIND` — mount existing tree elsewhere as well.
+        /// `MS_BIND`: mount existing tree elsewhere as well.
         const BIND          = 1 << 12;
-        /// `MS_MOVE` — atomically move the tree.
+        /// `MS_MOVE`: atomically move the tree.
         const MOVE          = 1 << 13;
-        /// `MS_REC` — recursive (combine with BIND/propagation flags).
+        /// `MS_REC`: recursive (combine with BIND/propagation flags).
         const REC           = 1 << 14;
-        /// `MS_SILENT` — don't emit certain kernel messages.
+        /// `MS_SILENT`: don't emit certain kernel messages.
         const SILENT        = 1 << 15;
-        /// `MS_UNBINDABLE` — make unbindable.
+        /// `MS_UNBINDABLE`: make unbindable.
         const UNBINDABLE    = 1 << 17;
-        /// `MS_PRIVATE` — make private.
+        /// `MS_PRIVATE`: make private.
         const PRIVATE       = 1 << 18;
-        /// `MS_SLAVE` — make slave.
+        /// `MS_SLAVE`: make slave.
         const SLAVE         = 1 << 19;
-        /// `MS_SHARED` — make shared.
+        /// `MS_SHARED`: make shared.
         const SHARED        = 1 << 20;
-        /// `MS_RELATIME` — update atime relative to mtime/ctime.
+        /// `MS_RELATIME`: update atime relative to mtime or ctime.
         const RELATIME      = 1 << 21;
-        /// `MS_I_VERSION` — update the inode I_version field.
+        /// `MS_I_VERSION`: update the inode I_version field.
         const I_VERSION     = 1 << 23;
-        /// `MS_STRICTATIME` — always perform atime updates.
+        /// `MS_STRICTATIME`: always perform atime updates.
         const STRICTATIME   = 1 << 24;
-        /// `MS_LAZYTIME` — update on-disk [acm]times lazily.
+        /// `MS_LAZYTIME`: update on-disk [acm]times lazily.
         const LAZYTIME      = 1 << 25;
 
         /// Convenience: the propagation flag set

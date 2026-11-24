@@ -1,6 +1,6 @@
 use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
-pub const MAN: ManContent = ManContent::empty();
+pub const MAN: ManContent = ManContent::empty().section(8);
 
 use clap::{ArgAction, Parser};
 use linuxutils_blkid::{Cache, Tag, TagKind};
@@ -69,7 +69,7 @@ fn parse_format(s: &str) -> Result<Format, String> {
         "value" => Ok(Format::Value),
         "device" => Ok(Format::Device),
         "export" => Ok(Format::Export),
-        // upstream supports `udev`, `list`, `json` too; flag those
+        // upstream supports `udev`, `list`, `json` too. Flag those
         // as not-yet-implemented so scripts get a clear failure
         // rather than misleading default-format output.
         "udev" | "list" | "json" => {

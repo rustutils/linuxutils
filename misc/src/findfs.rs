@@ -1,6 +1,6 @@
 use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
-pub const MAN: ManContent = ManContent::empty();
+pub const MAN: ManContent = ManContent::empty().section(8);
 
 use clap::Parser;
 use linuxutils_blkid::{Cache, ResolveError, Tag};
@@ -26,7 +26,7 @@ pub struct Args {
 }
 
 pub fn run(args: Args) -> ExitCode {
-    // If the input isn't a tag, print it verbatim — matches upstream:
+    // If the input isn't a tag, print it verbatim. This matches upstream:
     // "If the input is not in the format of NAME=value, then the input
     //  will be copied to the output without any modification."
     let Some(tag) = Tag::parse(&args.spec) else {
@@ -45,7 +45,7 @@ pub fn run(args: Args) -> ExitCode {
             ExitCode::FAILURE
         }
         Err(ResolveError::NotATag) => {
-            // Unreachable — Tag::parse already returned Some.
+            // Unreachable: Tag::parse already returned Some.
             eprintln!("findfs: not a recognised tag: {}", args.spec);
             ExitCode::from(2)
         }

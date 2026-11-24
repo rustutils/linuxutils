@@ -71,18 +71,18 @@ pub fn run(args: Args) -> ExitCode {
 ///    emit any remaining characters of the line verbatim.
 ///
 /// Column tracking matches upstream: tab advances to the next
-/// 8-column stop; backspace decrements (clamped to 0); other
+/// 8-column stop, backspace decrements (clamped to 0), and other
 /// characters advance by 1. (Wide-character widths from
-/// `wcwidth(3)` aren't modeled — same simplification we already
-/// had.)
+/// `wcwidth(3)` aren't modeled. This is the same simplification we
+/// already had.)
 fn process_line(
     line: &str,
     first: Option<usize>,
     last: Option<usize>,
     out: &mut impl Write,
 ) -> io::Result<()> {
-    // Upstream uses 0 as a sentinel meaning "no first / no last".
-    // Our public API uses Option<usize>; map None → 0.
+    // Upstream uses 0 as a sentinel meaning "no first or no last".
+    // Our public API uses Option<usize>, so map None to 0.
     let first = first.unwrap_or(0);
     let last = last.unwrap_or(0);
 
@@ -105,7 +105,7 @@ fn process_line(
     }
 
     // No `first` set, or line ended before reaching `first`. The
-    // copy in phase 1 already emitted everything; just terminate.
+    // copy in phase 1 already emitted everything, so just terminate.
     if first == 0 || breaking_char.is_none() {
         writeln!(out)?;
         return Ok(());
@@ -123,8 +123,8 @@ fn process_line(
     // `last`. `last == 0` means "until end of line".
     for c in chars.by_ref() {
         if !(last == 0 || ct < last) {
-            // ct already reached `last`; the unhandled `c` belongs
-            // to phase 3 — but we've consumed it from the iterator.
+            // ct already reached `last`. The unhandled `c` belongs
+            // to phase 3, but we've consumed it from the iterator.
             // Re-prepend by leaning on the rebuilt loop below: we
             // pass `c` through directly.
             return finish_with_overshoot(out, last, ct, Some(c), chars);
@@ -133,7 +133,7 @@ fn process_line(
         ct = step_ct(c, ct, w);
     }
 
-    // Iterator ran out during the eat phase — line had no
+    // Iterator ran out during the eat phase, so the line had no
     // surviving suffix.
     finish_with_overshoot(out, last, ct, None, chars)
 }

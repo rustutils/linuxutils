@@ -1,6 +1,6 @@
 use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
-pub const MAN: ManContent = ManContent::empty();
+pub const MAN: ManContent = ManContent::empty().section(8);
 
 use clap::Parser;
 use std::{
@@ -80,7 +80,9 @@ fn do_fstrim(
         return Ok(0);
     }
 
-    let ret = unsafe { libc::ioctl(f.as_raw_fd(), FITRIM, &mut range) };
+    let ret = unsafe {
+        libc::ioctl(f.as_raw_fd(), FITRIM as libc::Ioctl, &mut range)
+    };
     if ret < 0 {
         Err(io::Error::last_os_error())
     } else {
@@ -227,7 +229,8 @@ pub fn run(args: Args) -> ExitCode {
                 }
                 Err(e) => {
                     let errno = e.raw_os_error().unwrap_or(0);
-                    // Silently skip unsupported/read-only (EOPNOTSUPP, EROFS, EACCES)
+                    // Silently skip unsupported or read-only (EOPNOTSUPP,
+                    // EROFS, EACCES)
                     if errno == libc::EOPNOTSUPP
                         || errno == libc::EROFS
                         || errno == libc::EACCES

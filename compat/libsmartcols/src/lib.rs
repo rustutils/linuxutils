@@ -1,4 +1,4 @@
-//! C FFI layer — `extern "C"` functions matching the `libsmartcols` ABI.
+//! C FFI layer: `extern "C"` functions matching the `libsmartcols` ABI.
 //!
 //! This module provides the ABI-compatible C interface so that programs
 //! linked against `libsmartcols.so` (such as `lsblk`, `findmnt`, `lsns`)
@@ -6,7 +6,7 @@
 //! `LD_PRELOAD` or direct linking.
 //!
 //! All types are represented as opaque pointers to the caller. The table
-//! owns all data; column, line, and cell handles hold a back-pointer to
+//! owns all data. Column, line, and cell handles hold a back-pointer to
 //! the table plus an index.
 //!
 //! # Safety
@@ -229,27 +229,27 @@ unsafe fn cstr_to_str<'a>(s: *const c_char) -> Option<&'a str> {
     }
 }
 
-/// FFI iterator — wraps an index into a collection.
+/// FFI iterator. Wraps an index into a collection.
 struct ScolsIter {
     direction: c_int,
     pos: usize,
     started: bool,
 }
 
-/// An FFI line handle stores the table pointer + line id, since lines are
+/// An FFI line handle stores the table pointer and line id, since lines are
 /// owned by the table.
 struct FfiLine {
     table: *mut Table,
     id: LineId,
 }
 
-/// An FFI column handle stores the table pointer + column index.
+/// An FFI column handle stores the table pointer and column index.
 struct FfiColumn {
     table: *mut Table,
     idx: usize,
 }
 
-/// An FFI cell handle stores the table pointer + line id + cell index.
+/// An FFI cell handle stores the table pointer, line id and cell index.
 struct FfiCell {
     table: *mut Table,
     line_id: LineId,
@@ -262,7 +262,7 @@ pub unsafe extern "C" fn scols_new_table() -> *mut Table {
     Box::into_raw(Box::new(Table::new()))
 }
 
-/// Increment the table's reference count. Currently a no-op — the caller
+/// Increment the table's reference count. Currently a no-op. The caller
 /// must ensure exactly one [`scols_unref_table`] per allocation.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_ref_table(_tb: *mut Table) {}
@@ -613,7 +613,7 @@ pub unsafe extern "C" fn scols_table_get_name(
 ) -> *const c_char {
     // We need to return a pointer that lives as long as the table.
     // Since Table stores a String, we can't easily return a *const c_char
-    // without leaking. For now, return null — lsblk doesn't call this.
+    // without leaking. For now, return null. lsblk doesn't call this.
     let _ = tb;
     ptr::null()
 }
@@ -931,7 +931,7 @@ pub unsafe extern "C" fn scols_column_set_cmpfunc(
     _data: *mut c_void,
 ) -> c_int {
     // Stubbed: custom C comparison functions can't easily be bridged to our
-    // Rust comparator. For lsblk this is fine — it uses default string sort.
+    // Rust comparator. For lsblk this is fine: it uses default string sort.
     0
 }
 
@@ -1071,7 +1071,7 @@ pub unsafe extern "C" fn scols_line_refer_data(
     unsafe { scols_line_set_data(ln, n, data) }
 }
 
-// scols_line_sprintf / scols_line_vprintf: available only with the
+// scols_line_sprintf and scols_line_vprintf: available only with the
 // "nightly" feature because Rust stable doesn't support C-variadic
 // function definitions.
 
@@ -1274,7 +1274,7 @@ pub unsafe extern "C" fn scols_cell_get_data(
     match line.data_get(fc.col_idx) {
         Some(_) => {
             // We can't return a pointer to a Rust String safely without
-            // a stable address. Return null for now — lsblk doesn't read
+            // a stable address. Return null for now. lsblk doesn't read
             // cell data back via this function.
             ptr::null()
         }
@@ -1350,7 +1350,7 @@ pub unsafe extern "C" fn scols_table_set_default_symbols(
 }
 
 // ---------------------------------------------------------------------------
-// Ref-counting stubs (no-op — Rust manages lifetimes)
+// Ref-counting stubs (no-op: Rust manages lifetimes)
 // ---------------------------------------------------------------------------
 
 /// No-op reference count increment for column.
@@ -1382,7 +1382,7 @@ pub unsafe extern "C" fn scols_unref_line(_ln: *mut FfiLine) {}
 pub unsafe extern "C" fn scols_unref_symbols(_sy: *mut c_void) {}
 
 // ---------------------------------------------------------------------------
-// Cell getters / setters
+// Cell getters and setters
 // ---------------------------------------------------------------------------
 
 /// Return the length of the cell's data string, or 0.
@@ -1473,7 +1473,7 @@ pub unsafe extern "C" fn scols_cell_set_uri(
     0
 }
 
-/// Stub — URI disable is not implemented. Returns 0.
+/// Stub: URI disable is not implemented. Returns 0.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_cell_disable_uri(
     _ce: *mut FfiCell,
@@ -1869,7 +1869,7 @@ pub unsafe extern "C" fn scols_line_alloc_cells(
     0
 }
 
-/// Stub — Rust manages cell memory. Returns 0.
+/// Stub: Rust manages cell memory. Returns 0.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_line_free_cells(_ln: *mut FfiLine) -> c_int {
     0
@@ -2038,7 +2038,7 @@ pub unsafe extern "C" fn scols_table_is_shellvar(tb: *const Table) -> c_int {
 // Table mutations (stubs)
 // ---------------------------------------------------------------------------
 
-/// Stub — columns are added via scols_table_new_column in our impl. Returns 0.
+/// Stub: columns are added via scols_table_new_column in our impl. Returns 0.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_add_column(
     _tb: *mut Table,
@@ -2047,7 +2047,7 @@ pub unsafe extern "C" fn scols_table_add_column(
     0
 }
 
-/// Stub — lines are added via scols_table_new_line in our impl. Returns 0.
+/// Stub: lines are added via scols_table_new_line in our impl. Returns 0.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_add_line(
     _tb: *mut Table,
@@ -2056,7 +2056,7 @@ pub unsafe extern "C" fn scols_table_add_line(
     0
 }
 
-/// Stub — column removal not yet implemented. Returns 0.
+/// Stub: column removal not yet implemented. Returns 0.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_remove_column(
     _tb: *mut Table,
@@ -2065,13 +2065,13 @@ pub unsafe extern "C" fn scols_table_remove_column(
     0
 }
 
-/// Stub — column removal not yet implemented. Returns 0.
+/// Stub: column removal not yet implemented. Returns 0.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_remove_columns(_tb: *mut Table) -> c_int {
     0
 }
 
-/// Stub — line removal not yet implemented. Returns 0.
+/// Stub: line removal not yet implemented. Returns 0.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_remove_line(
     _tb: *mut Table,
@@ -2080,13 +2080,13 @@ pub unsafe extern "C" fn scols_table_remove_line(
     0
 }
 
-/// Stub — line removal not yet implemented. Returns 0.
+/// Stub: line removal not yet implemented. Returns 0.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_remove_lines(_tb: *mut Table) -> c_int {
     0
 }
 
-/// Stub — symbols object not exposed. Returns 0.
+/// Stub: symbols object not exposed. Returns 0.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_set_symbols(
     _tb: *mut Table,
@@ -2095,7 +2095,7 @@ pub unsafe extern "C" fn scols_table_set_symbols(
     0
 }
 
-/// Stub — cursor not implemented. Returns -1.
+/// Stub: cursor not implemented. Returns -1.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_table_get_cursor(
     _tb: *mut Table,
@@ -2204,7 +2204,7 @@ pub unsafe extern "C" fn scols_parse_version_string(
     major * 10000 + minor * 100 + patch
 }
 
-/// Stub — shell variable name conversion not implemented. Returns -1.
+/// Stub: shell variable name conversion not implemented. Returns -1.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn scols_shellvar_name(
     _name: *const c_char,

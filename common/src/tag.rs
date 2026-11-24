@@ -3,15 +3,15 @@
 //! A `Tag` is one of the canonical key-value forms used to refer to
 //! a block device or filesystem without naming its current device
 //! path: `LABEL=root`, `UUID=12345678-...`, `PARTLABEL=esp`, etc.
-//! libblkid resolves them; libmount accepts them as a `mount(8)`
+//! libblkid resolves them and libmount accepts them as a `mount(8)`
 //! source. Both crates need the same vocabulary, so the type lives
 //! here in `linuxutils-common` rather than in either consumer.
 //!
 //! Values are stored as [`OsString`] because libblkid and libmount
-//! treat them as **opaque blobs** — exact-match string compare
+//! treat them as **opaque blobs**: exact-match string compare
 //! against the `/dev/disk/by-<kind>/<value>` symlink layer, no
 //! normalisation, no character-set assumption. Filesystem labels in
-//! particular can carry non-UTF-8 bytes; UUID-like tokens are ASCII
+//! particular can carry non-UTF-8 bytes. UUID-like tokens are ASCII
 //! by every filesystem in practice but the API doesn't promise that.
 
 use std::{
@@ -22,8 +22,8 @@ use std::{
 /// An unresolved block-device tag, e.g. `LABEL=root` or
 /// `UUID=12345678-...`.
 ///
-/// `value` is opaque from this crate's perspective — preserved
-/// verbatim through parse/render so resolution against the
+/// `value` is opaque from this crate's perspective. It is preserved
+/// verbatim through parsing and rendering so resolution against the
 /// `/dev/disk/by-<kind>/` symlinks works exactly as `mount(8)` does.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Tag {
@@ -37,14 +37,14 @@ pub enum TagKind {
     /// Filesystem label (`LABEL=`).
     Label,
     /// Filesystem UUID (`UUID=`). Note that "UUID" here is libblkid's
-    /// loose definition — RFC 4122 form for ext/xfs/btrfs/swap/...,
-    /// FAT volume serial (`XXXX-XXXX`) for vfat/exfat, ISO 9660
-    /// creation date for iso9660/udf, etc. All treated identically as
-    /// opaque tokens.
+    /// loose definition: RFC 4122 form for ext, xfs, btrfs, swap and
+    /// so on, FAT volume serial (`XXXX-XXXX`) for vfat and exfat,
+    /// ISO 9660 creation date for iso9660 and udf, etc. All treated
+    /// identically as opaque tokens.
     Uuid,
     /// Partition label (`PARTLABEL=`). GPT only.
     PartLabel,
-    /// Partition UUID (`PARTUUID=`). GPT only; always RFC 4122 form
+    /// Partition UUID (`PARTUUID=`). GPT only. Always RFC 4122 form
     /// in practice (mandated by the GPT spec) but stored opaquely.
     PartUuid,
     /// Stable device identifier (`ID=`, the `/dev/disk/by-id/` form).
@@ -52,7 +52,7 @@ pub enum TagKind {
 }
 
 impl TagKind {
-    /// Match the upstream-recognised prefix names. Case-sensitive —
+    /// Match the upstream-recognised prefix names. Case-sensitive:
     /// `mount(8)` rejects lowercased `label=foo`.
     pub fn as_str(self) -> &'static str {
         match self {
@@ -103,7 +103,7 @@ impl std::error::Error for UnknownTagKind {}
 impl FromStr for TagKind {
     type Err = UnknownTagKind;
 
-    /// Match the upstream-recognised prefix names. Case-sensitive —
+    /// Match the upstream-recognised prefix names. Case-sensitive:
     /// `mount(8)` rejects lowercased `label=foo`.
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {

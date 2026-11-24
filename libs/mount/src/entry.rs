@@ -1,4 +1,4 @@
-//! Per-mount data — one row of a mount table.
+//! Per-mount data: one row of a mount table.
 
 use crate::{OptionList, Spec};
 use std::path::PathBuf;
@@ -6,14 +6,14 @@ use std::path::PathBuf;
 /// A single mount table entry.
 ///
 /// Same shape regardless of whether the source is `/proc/self/mountinfo`,
-/// `/etc/fstab`, `/proc/swaps`, or `/run/mount/utab` — fields not
+/// `/etc/fstab`, `/proc/swaps`, or `/run/mount/utab`. Fields not
 /// applicable to a given source remain at their default (typically
 /// `None` or empty).
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct MountEntry {
     /// Mount source: device path, NFS export, bind source, or
     /// unresolved tag. Mountinfo only produces [`Spec::Path`] (the
-    /// kernel resolved tags at mount time); fstab can produce either.
+    /// kernel resolved tags at mount time), but fstab can produce either.
     pub source: Spec,
 
     /// Mount point.
@@ -26,12 +26,12 @@ pub struct MountEntry {
     ///
     /// For mountinfo entries this is `vfs_options` and `fs_options`
     /// merged (in that order), matching upstream's
-    /// `mnt_fs_get_options()`. For fstab/swaps it's the raw fourth
+    /// `mnt_fs_get_options()`. For fstab and swaps it's the raw fourth
     /// column, undifferentiated.
     pub options: OptionList,
 
     /// VFS-level options as the kernel reports them in mountinfo
-    /// field 6. `None` for fstab/swaps where no split exists at this
+    /// field 6. `None` for fstab and swaps where no split exists at this
     /// layer.
     pub vfs_options: Option<OptionList>,
 
@@ -53,7 +53,7 @@ pub struct MountEntry {
     /// (typically `/`, but can differ for bind mounts).
     pub root: Option<PathBuf>,
 
-    /// Propagation state — shared/slave/unbindable, with peer group
+    /// Propagation state (shared, slave or unbindable), with peer group
     /// IDs where applicable. Decoded view of [`Self::optional_fields`].
     pub propagation: Propagation,
 
@@ -63,7 +63,7 @@ pub struct MountEntry {
     /// libmount and feeds findmnt's `OPT-FIELDS` column.
     ///
     /// Future kernel versions may add propagation tags this crate's
-    /// [`Propagation`] type doesn't yet decode; storing the raw form
+    /// [`Propagation`] type doesn't yet decode. Storing the raw form
     /// lets us round-trip them losslessly even when the structured
     /// view is incomplete. `None` for non-mountinfo sources, and
     /// `Some(String::new())` for mountinfo entries that had no
@@ -83,7 +83,7 @@ pub struct MountEntry {
     pub swap_type: Option<String>,
 
     /// Swap area size in bytes. `None` outside `/proc/swaps`. Mirrors
-    /// `mnt_fs_get_size()` — kernel reports in 1 KiB units, we
+    /// `mnt_fs_get_size()`. The kernel reports in 1 KiB units, and we
     /// convert to bytes at parse time.
     pub swap_size: Option<u64>,
 
@@ -98,9 +98,9 @@ pub struct MountEntry {
 
 /// Mount propagation state.
 ///
-/// A mount can be private (the default; all fields here zeroed),
+/// A mount can be private (the default, with all fields here zeroed),
 /// shared, slave, or unbindable. Note that *shared and slave can
-/// co-exist* — a mount that is `shared:N master:M` is both — so this
+/// co-exist* (a mount that is `shared:N master:M` is both), so this
 /// is modelled as a struct rather than an enum.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct Propagation {
@@ -111,16 +111,16 @@ pub struct Propagation {
     pub master: Option<u64>,
 
     /// Peer group ID this mount received its propagation from
-    /// (`propagate_from:N`); only meaningful alongside `master`.
+    /// (`propagate_from:N`). Only meaningful alongside `master`.
     pub propagate_from: Option<u64>,
 
-    /// `unbindable` flag — mutually exclusive with shared/slave in
+    /// `unbindable` flag. Mutually exclusive with shared and slave in
     /// practice (the kernel won't emit them together).
     pub unbindable: bool,
 }
 
 impl Propagation {
-    /// True iff no propagation field is set — i.e. the default
+    /// True iff no propagation field is set, i.e. the default
     /// `MS_PRIVATE` state.
     pub fn is_private(&self) -> bool {
         self.shared.is_none()

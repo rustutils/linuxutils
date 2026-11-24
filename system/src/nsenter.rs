@@ -234,7 +234,7 @@ pub fn run(args: Args) -> ExitCode {
         }
     }
 
-    // Set root/working directory
+    // Set root and working directory
     if let Some(ref dir) = args.root_dir {
         let dir = if dir.is_empty() {
             pid.map(|p| format!("/proc/{p}/root"))

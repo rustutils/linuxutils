@@ -1,6 +1,6 @@
 //! Wrappers around `mount(2)` and `umount2(2)`.
 //!
-//! Built on top of [`rustix::mount`]; this module just translates
+//! Built on top of [`rustix::mount`]. This module just translates
 //! between our [`MountFlags`] and rustix's, picks the right flavour
 //! of `mount` syscall (regular, remount, bind, move, propagation
 //! change), and surfaces a `std::io::Error` so callers don't need
@@ -16,14 +16,14 @@ bitflags! {
     #[repr(transparent)]
     #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
     pub struct UnmountFlags: u32 {
-        /// `MNT_FORCE` — abort pending I/O on dying filesystems.
+        /// `MNT_FORCE`: abort pending I/O on dying filesystems.
         const FORCE    = 1;
-        /// `MNT_DETACH` — lazy unmount; detach now, free when idle.
+        /// `MNT_DETACH`: lazy unmount. Detach now, free when idle.
         const DETACH   = 2;
-        /// `MNT_EXPIRE` — mark for next-call expiry; for inactive
+        /// `MNT_EXPIRE`: mark for next-call expiry, for inactive
         /// filesystems.
         const EXPIRE   = 4;
-        /// `UMOUNT_NOFOLLOW` — don't follow a symlink at the target.
+        /// `UMOUNT_NOFOLLOW`: don't follow a symlink at the target.
         const NOFOLLOW = 8;
     }
 }
@@ -48,15 +48,15 @@ fn to_rustix_unmount_flags(f: UnmountFlags) -> rustix_mount::UnmountFlags {
 fn to_rustix_propagation_flags(
     f: MountFlags,
 ) -> rustix_mount::MountPropagationFlags {
-    // The propagation bits we use (SHARED/SLAVE/PRIVATE/UNBINDABLE +
-    // optional REC) live in MountFlags for this crate; rustix
+    // The propagation bits we use (SHARED, SLAVE, PRIVATE, UNBINDABLE and
+    // optional REC) live in MountFlags for this crate, but rustix
     // separates them into MountPropagationFlags. Same uapi values, so
     // a mask-and-cast works.
     let bits = f.bits() as u32;
     rustix_mount::MountPropagationFlags::from_bits_retain(bits)
 }
 
-/// `mount(source, target, fstype, flags, data)` — fresh mount.
+/// `mount(source, target, fstype, flags, data)`: fresh mount.
 ///
 /// `data` is the filesystem-specific options string the kernel
 /// passes to the fs driver verbatim (e.g. `uid=1000,fmask=0022`).
@@ -91,8 +91,8 @@ pub fn mount(
     result.map_err(io::Error::from)
 }
 
-/// `mount(NULL, target, NULL, MS_REMOUNT | flags, data)` — alter the
-/// flags and/or fs-data of an already-mounted filesystem.
+/// `mount(NULL, target, NULL, MS_REMOUNT | flags, data)`: alter the
+/// flags or fs-data (or both) of an already-mounted filesystem.
 pub fn remount(
     target: &Path,
     flags: MountFlags,
@@ -111,33 +111,33 @@ pub fn remount(
         .map_err(io::Error::from)
 }
 
-/// `mount(source, target, NULL, MS_BIND, NULL)` — bind-mount an
+/// `mount(source, target, NULL, MS_BIND, NULL)`: bind-mount an
 /// existing tree.
 pub fn bind(source: &Path, target: &Path) -> io::Result<()> {
     rustix_mount::mount_bind(source, target).map_err(io::Error::from)
 }
 
-/// `mount(source, target, NULL, MS_BIND | MS_REC, NULL)` — recursive
+/// `mount(source, target, NULL, MS_BIND | MS_REC, NULL)`: recursive
 /// bind, includes submounts.
 pub fn rbind(source: &Path, target: &Path) -> io::Result<()> {
     rustix_mount::mount_bind_recursive(source, target).map_err(io::Error::from)
 }
 
-/// `mount(NULL, target, NULL, prop_flags, NULL)` — change
-/// propagation type (`MS_SHARED` / `MS_SLAVE` / `MS_PRIVATE` /
+/// `mount(NULL, target, NULL, prop_flags, NULL)`: change
+/// propagation type (`MS_SHARED`, `MS_SLAVE`, `MS_PRIVATE` or
 /// `MS_UNBINDABLE`, optionally combined with `MS_REC`).
 pub fn change_propagation(target: &Path, flags: MountFlags) -> io::Result<()> {
     rustix_mount::mount_change(target, to_rustix_propagation_flags(flags))
         .map_err(io::Error::from)
 }
 
-/// `mount(source, target, NULL, MS_MOVE, NULL)` — atomically move a
+/// `mount(source, target, NULL, MS_MOVE, NULL)`: atomically move a
 /// mount tree.
 pub fn move_mount(source: &Path, target: &Path) -> io::Result<()> {
     rustix_mount::mount_move(source, target).map_err(io::Error::from)
 }
 
-/// `umount2(target, flags)` — unmount.
+/// `umount2(target, flags)`: unmount.
 pub fn umount(target: &Path, flags: UnmountFlags) -> io::Result<()> {
     rustix_mount::unmount(target, to_rustix_unmount_flags(flags))
         .map_err(io::Error::from)

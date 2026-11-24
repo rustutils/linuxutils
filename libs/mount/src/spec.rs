@@ -20,7 +20,7 @@ use std::{
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Spec {
     /// A literal filesystem path. Typically a device node like
-    /// `/dev/sda1`, but any path is allowed — bind mounts use
+    /// `/dev/sda1`, but any path is allowed. Bind mounts use
     /// directories, NFS uses `host:/export`, and the literal `none`
     /// is used for some pseudo-filesystems.
     Path(PathBuf),
@@ -42,8 +42,8 @@ impl Spec {
     ///
     /// Recognised forms:
     /// - `LABEL=...`, `UUID=...`, `PARTLABEL=...`, `PARTUUID=...`,
-    ///   `ID=...` → [`Spec::Tag`].
-    /// - Anything else → [`Spec::Path`], including `host:/export`,
+    ///   `ID=...` become [`Spec::Tag`].
+    /// - Anything else becomes [`Spec::Path`], including `host:/export`,
     ///   bind-mount sources, and the literal string `none`.
     ///
     /// An unrecognised `WORD=value` (e.g. `FOO=bar`) is treated as a

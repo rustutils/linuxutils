@@ -33,3 +33,58 @@ linuxutils-sched.workspace = true
 linuxutils-system.workspace = true
 linuxutils-term.workspace = true
 linuxutils-text.workspace = true
+
+# Packages install next to util-linux rather than replacing it. The
+# multicall binary goes in /usr/bin, the per-tool symlinks in
+# /usr/lib/linuxutils/bin and the man pages in /usr/share/linuxutils/man,
+# so nothing clashes with files that util-linux installs. `just package`
+# builds both formats.
+[package.metadata.deb]
+name = "linuxutils"
+maintainer = "Patrick Elsen <pelsen@xfbs.net>"
+section = "utils"
+priority = "optional"
+depends = ""
+extended-description = """
+A clean-room reimplementation of util-linux in Rust, as a single static
+multicall binary. It installs next to util-linux without replacing it.
+To use the linuxutils version of a tool, run `linuxutils <tool>`, or add
+/usr/lib/linuxutils/bin to PATH and /usr/share/linuxutils/man to
+MANPATH.
+"""
+assets = [
+  ["target/release/linuxutils", "usr/bin/linuxutils", "0755"],
+  ["target/release/../symlinks/*", "usr/lib/linuxutils/bin/", "0755"],
+  ["target/release/../gen/man/man1/*", "usr/share/linuxutils/man/man1/", "0644"],
+  ["target/release/../gen/man/man8/*", "usr/share/linuxutils/man/man8/", "0644"],
+  ["../README.md", "usr/share/doc/linuxutils/README", "0644"],
+  ["../LICENSE.md", "usr/share/doc/linuxutils/LICENSE", "0644"],
+  ["../CHANGELOG.md", "usr/share/doc/linuxutils/CHANGELOG", "0644"],
+]
+
+# cargo-generate-rpm can't package symlinks, so the post-install script
+# creates them from `linuxutils --list` instead.
+[package.metadata.generate-rpm]
+name = "linuxutils"
+summary = "Rust reimplementation of util-linux, installed next to it"
+auto-req = "no"
+assets = [
+  { source = "target/release/linuxutils", dest = "/usr/bin/linuxutils", mode = "755" },
+  { source = "target/release/../gen/man/man1/*", dest = "/usr/share/linuxutils/man/man1/", mode = "644", doc = true },
+  { source = "target/release/../gen/man/man8/*", dest = "/usr/share/linuxutils/man/man8/", mode = "644", doc = true },
+  { source = "../README.md", dest = "/usr/share/doc/linuxutils/README", mode = "644", doc = true },
+  { source = "../LICENSE.md", dest = "/usr/share/doc/linuxutils/LICENSE", mode = "644", doc = true },
+  { source = "../CHANGELOG.md", dest = "/usr/share/doc/linuxutils/CHANGELOG", mode = "644", doc = true },
+]
+post_install_script = """
+rm -rf /usr/lib/linuxutils/bin
+mkdir -p /usr/lib/linuxutils/bin
+for tool in $(/usr/bin/linuxutils --list); do
+    ln -s ../../../bin/linuxutils "/usr/lib/linuxutils/bin/$tool"
+done
+"""
+post_uninstall_script = """
+if [ "$1" = 0 ]; then
+    rm -rf /usr/lib/linuxutils
+fi
+"""

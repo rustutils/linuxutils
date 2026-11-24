@@ -1,5 +1,5 @@
 //! Smoke test that parses the host's `/etc/fstab` if it exists and
-//! is readable. Asserts only universal invariants — no host-specific
+//! is readable. Asserts only universal invariants, with no host-specific
 //! snapshots.
 //!
 //! Skipped silently when no fstab is present (containers, minimal

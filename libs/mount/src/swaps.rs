@@ -11,7 +11,7 @@
 //! ```
 //!
 //! The `Filename` field is a path (may contain `\NNN` octal escapes
-//! for spaces and similar — same convention as fstab/mountinfo).
+//! for spaces and similar, the same convention as fstab and mountinfo).
 //! `Type` is either `partition` or `file`. `Size` and `Used` are in
 //! 1 KiB units (we convert to bytes). `Priority` is a signed integer.
 //!
@@ -32,8 +32,8 @@ impl MountTable {
     /// Parse a `/proc/swaps`-style stream.
     ///
     /// The first non-empty line must be the kernel-emitted header
-    /// (starting with `Filename`); subsequent lines are entries.
-    /// Empty input yields an empty table. Strict mode — errors on
+    /// (starting with `Filename`), and subsequent lines are entries.
+    /// Empty input yields an empty table. Strict mode: errors on
     /// the first malformed line, with 1-based line number context.
     pub fn parse_swaps<R: BufRead>(reader: R) -> io::Result<Self> {
         let mut table = MountTable::new();
@@ -237,8 +237,8 @@ mod tests {
 
     #[test]
     fn fstype_is_always_swap() {
-        // Regardless of swap_type ("partition" / "file"), fstype is
-        // "swap" — that's the mount-semantics-level filesystem.
+        // Regardless of swap_type ("partition" or "file"), fstype is
+        // "swap". That's the mount-semantics-level filesystem.
         let input = "Filename\tType\tSize\tUsed\tPriority\n\
                      /dev/sda5\tpartition\t100\t0\t-2\n\
                      /swap\tfile\t200\t0\t-3\n";

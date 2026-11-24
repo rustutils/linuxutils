@@ -26,7 +26,7 @@ fn sha1_based_v5_uuid() {
 
 #[test]
 fn nil_uuid() {
-    // The nil UUID is variant NCS — TYPE/TIME columns stay empty
+    // The nil UUID is variant NCS. TYPE and TIME columns stay empty
     // for non-DCE variants (matches upstream uuidparse).
     cmd()
         .arg("00000000-0000-0000-0000-000000000000")
@@ -54,7 +54,7 @@ fn multiple_uuids() {
         .assert()
         .success()
         .stdout(predicate::str::contains("random"))
-        // Nil UUID is NCS variant; identified by VARIANT column,
+        // Nil UUID is NCS variant, identified by VARIANT column,
         // not TYPE.
         .stdout(predicate::str::contains("NCS"));
 }

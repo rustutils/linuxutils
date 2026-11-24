@@ -66,7 +66,7 @@ impl Layout {
         if self.weeknum { 3 } else { 0 }
     }
 
-    /// Total month-column width (week-num prefix + day grid).
+    /// Total month-column width (week-num prefix and day grid).
     fn month_width(self) -> usize {
         self.weeknum_prefix() + self.day_grid()
     }
@@ -182,7 +182,7 @@ fn day_of_week(year: u32, month: u32, day: u32) -> u32 {
     let k = y % 100;
     let j = y / 100;
     let h = (q + (13 * (m + 1)) / 5 + k + k / 4 + j / 4 + 5 * j) % 7;
-    // h: 0=Saturday, 1=Sunday, ..., 6=Friday → convert to 0=Sunday
+    // h: 0=Saturday, 1=Sunday, ..., 6=Friday. Convert to 0=Sunday.
     ((h + 6) % 7) as u32
 }
 
@@ -196,7 +196,7 @@ fn day_of_year(year: u32, month: u32, day: u32) -> u32 {
 }
 
 /// ISO 8601 week number (used when weeks start on Monday).
-/// Falls back to chrono — the algorithm involves "Thursday rule"
+/// Falls back to chrono. The algorithm involves "Thursday rule"
 /// edge cases at year boundaries that aren't worth re-deriving.
 fn iso_week(year: u32, month: u32, day: u32) -> u32 {
     use chrono::Datelike;
@@ -365,7 +365,7 @@ fn print_months(
 }
 
 /// Resolve the `--columns` argument. `auto` (the default) picks a
-/// number of columns that fits the terminal — the upstream
+/// number of columns that fits the terminal. The upstream
 /// fallback is 3 columns when the terminal width can't be
 /// determined, which is what every behavioural test expects.
 fn resolve_columns(arg: &str) -> Result<u32, String> {
@@ -630,7 +630,7 @@ mod tests {
 
     #[test]
     fn iso_week_jan1_2006_is_week_52_of_prev_year() {
-        // Jan 1 2006 is a Sunday — ISO week 52 of 2005.
+        // Jan 1 2006 is a Sunday, ISO week 52 of 2005.
         assert_eq!(iso_week(2006, 1, 1), 52);
     }
 

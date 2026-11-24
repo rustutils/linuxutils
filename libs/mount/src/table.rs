@@ -1,8 +1,8 @@
-//! Collections of [`MountEntry`] — the parsed form of mountinfo,
+//! Collections of [`MountEntry`]: the parsed form of mountinfo,
 //! fstab, swaps, or utab.
 //!
 //! Storage is a flat `Vec` for v0. Tree views (`findmnt --tree`) are
-//! constructed on top via mount IDs when needed; we don't pre-build
+//! constructed on top via mount IDs when needed. We don't pre-build
 //! the structure here.
 
 use crate::MountEntry;

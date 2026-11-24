@@ -1,5 +1,5 @@
-//! Run a program with a different reported architecture and / or
-//! personality flags.
+//! Run a program with a different reported architecture or
+//! personality flags, or both.
 //!
 //! `setarch <arch> [options] <program> [args]` calls `personality(2)`
 //! with the computed value, then `execvp`s `<program>`. The kernel
@@ -10,15 +10,16 @@
 //! v0 covers the cross-host arch names (`linux32`, `linux64`) plus
 //! the host-architecture-conditional ones used by upstream
 //! `setarch`. The `argv[0]`-symlink form (`linux32 program`) is
-//! deferred — for v0 use the explicit positional.
+//! deferred. For v0 use the explicit positional.
 
 use clap::{ArgAction, Parser};
 use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 use std::{ffi::CString, process::ExitCode};
 
-pub const MAN: ManContent = ManContent::empty();
+pub const MAN: ManContent = ManContent::empty().section(8);
 
-// `<sys/personality.h>` — not in libc, defined here as the kernel
+// `<sys/personality.h>` is not in libc, so it is defined here as the
+// kernel
 // uapi values.
 const PER_LINUX: libc::c_ulong = 0x0000;
 const PER_LINUX32: libc::c_ulong = 0x0008;
@@ -28,9 +29,9 @@ const PER_MASK: u32 = 0x00ff;
 /// personality without changing it.
 const PERSONALITY_QUERY: libc::c_ulong = 0xffffffff;
 
-/// Architecture-name → base personality table. Upstream
+/// Table mapping architecture names to base personalities. Upstream
 /// `setarch.c` filters this list per host so unsupported names are
-/// rejected at parse time; our v0 keeps the full list and lets the
+/// rejected at parse time. Our v0 keeps the full list and lets the
 /// kernel reject the call if the personality doesn't make sense on
 /// the running host.
 const ARCH_TABLE: &[(&str, libc::c_ulong)] = &[
@@ -84,7 +85,7 @@ const FLAG_TABLE: &[(u32, &str)] = &[
     (0x8000000, "ADDR_LIMIT_3GB"),
 ];
 
-/// Named personalities — entire value matches.
+/// Named personalities, where the entire value matches.
 const NAMED_TABLE: &[(u32, &str)] = &[
     (0x00000000, "PER_LINUX"),
     (0x00800000, "PER_LINUX_32BIT"),
@@ -325,7 +326,7 @@ fn verbose_personality(pers: libc::c_ulong) {
 }
 
 /// Parse the `--show=VALUE` argument or the contents of
-/// `/proc/PID/personality` — both are hex strings, optionally with a
+/// `/proc/PID/personality`. Both are hex strings, optionally with a
 /// `0x` prefix.
 fn parse_personality(s: &str) -> Option<u32> {
     let trimmed = s.trim();

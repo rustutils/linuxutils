@@ -182,7 +182,7 @@ fn parse_kmsg_record(data: &[u8]) -> Option<KmsgRecord> {
     let timestamp_us: u64 = parts.next()?.parse().ok()?;
     let _flags = parts.next()?;
 
-    // Take first line only (skip continuation/metadata lines)
+    // Take first line only (skip continuation and metadata lines)
     let message = message.lines().next().unwrap_or("").to_string();
 
     Some(KmsgRecord {

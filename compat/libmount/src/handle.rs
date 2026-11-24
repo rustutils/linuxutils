@@ -10,7 +10,7 @@
 use linuxutils_mount::MountEntry;
 use std::{ffi::CString, sync::Arc};
 
-/// Backing storage for `struct libmnt_fs`. One per fstab/mountinfo
+/// Backing storage for `struct libmnt_fs`. One per fstab or mountinfo
 /// entry. Per-getter `OnceLock<CString>` caches let getters return
 /// `*const c_char` pointers stable for the handle's lifetime.
 pub struct FsHandle {
@@ -39,7 +39,7 @@ impl FsHandle {
 
 /// Backing storage for `struct libmnt_table`. The entries are held
 /// in `Arc`s so handing out raw `*mut libmnt_fs` pointers via
-/// iteration / lookup gives stable addresses for the FsHandle's
+/// iteration or lookup gives stable addresses for the FsHandle's
 /// lifetime, even after the table is dropped (provided the consumer
 /// took an additional ref via `mnt_ref_fs`).
 pub struct TableHandle {
@@ -55,9 +55,9 @@ impl TableHandle {
 }
 
 /// Backing storage for `struct libmnt_iter`. Holds direction and
-/// the next position for forward iteration; for backward iteration
-/// the position counts from the end. Boxed by itself, not Arc'd —
-/// upstream libmount iterators are not refcounted.
+/// the next position for forward iteration. For backward iteration
+/// the position counts from the end. Boxed by itself, not Arc'd.
+/// Upstream libmount iterators are not refcounted.
 pub struct IterHandle {
     pub direction: i32,
     pub pos: usize,

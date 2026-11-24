@@ -1,6 +1,6 @@
 //! Smoke test against the host's real `/dev/disk/by-*` tree.
 //!
-//! Asserts only universal invariants — no host-specific snapshots —
+//! Asserts only universal invariants (no host-specific snapshots)
 //! and silently skips on systems where the directory isn't present
 //! (containers without udev, etc.).
 
@@ -25,7 +25,7 @@ fn host_scan_resolves_to_existing_paths() {
             path.display()
         );
     }
-    // Whatever errors come up should not be NotFound — our scan
+    // Whatever errors come up should not be NotFound. Our scan
     // routine treats NotFound on the directory as "no entries"
     // and skips, so any errors here are real I/O issues.
     for (name, err) in &result.errors {

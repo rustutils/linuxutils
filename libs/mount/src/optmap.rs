@@ -2,14 +2,14 @@
 //! data, and userspace-only options.
 //!
 //! `mount(2)` takes three pieces of option-shaped state:
-//!   - **VFS flags** — `MS_*` bits passed in the `flags` argument.
+//!   - **VFS flags**: `MS_*` bits passed in the `flags` argument.
 //!     Names like `ro`, `nosuid`, `noatime`. Toggleable: `rw`
 //!     clears `MS_RDONLY`, `suid` clears `MS_NOSUID`, etc.
-//!   - **fs-specific data** — a comma-separated string passed as
+//!   - **fs-specific data**: a comma-separated string passed as
 //!     the `data` argument and interpreted by the filesystem
 //!     driver. Things like `uid=1000`, `fmask=0022`,
 //!     `subvol=/home`.
-//!   - **userspace-only options** — recognised by `mount(8)` and
+//!   - **userspace-only options**: recognised by `mount(8)` and
 //!     friends but never seen by the kernel. `noauto`, `_netdev`,
 //!     `user`, `nofail`, anything in the `x-*` namespace.
 //!
@@ -17,10 +17,10 @@
 //! single pass, applying the toggle rules in order so `ro,rw`
 //! correctly resolves to "no `MS_RDONLY`".
 //!
-//! The optmap below is **not** an exhaustive port of upstream's —
-//! it covers the universally-recognised VFS names plus the common
+//! The optmap below is **not** an exhaustive port of upstream's.
+//! It covers the universally-recognised VFS names plus the common
 //! userspace options. Anything unknown is bucketed as fs-specific
-//! data; the filesystem driver decides what to do with it.
+//! data, and the filesystem driver decides what to do with it.
 
 use crate::{MountFlags, OptionList};
 
@@ -36,14 +36,14 @@ pub struct Classified {
     pub fs_data: String,
 
     /// Options recognised as userspace-only (`noauto`, `_netdev`,
-    /// `x-*`, ...) — these never go to the kernel, but tools may
+    /// `x-*`, ...). These never go to the kernel, but tools may
     /// want them for orchestration (auto-mounting, fail policy,
     /// systemd unit ordering).
     pub user_options: OptionList,
 }
 
 impl Classified {
-    /// `data` argument formatted for [`crate::syscall::mount`] — `None`
+    /// `data` argument formatted for [`crate::syscall::mount`], or `None`
     /// when there's nothing fs-specific to send.
     pub fn fs_data_arg(&self) -> Option<&str> {
         if self.fs_data.is_empty() {
@@ -54,9 +54,9 @@ impl Classified {
     }
 }
 
-/// Split an option list into VFS flags / fs data / userspace bag.
+/// Split an option list into VFS flags, fs data and userspace bag.
 ///
-/// Order matters: `ro,rw` ⇒ no `MS_RDONLY`, matching the kernel's
+/// Order matters: `ro,rw` gives no `MS_RDONLY`, matching the kernel's
 /// "later-wins" rule. Unknown option names become fs-specific data.
 pub fn classify(opts: &OptionList) -> Classified {
     let mut out = Classified::default();
@@ -67,7 +67,7 @@ pub fn classify(opts: &OptionList) -> Classified {
             // POSIX-ish "default mount" pseudo-option: rw, suid, dev,
             // exec, async, nouser. All of those are the *cleared*
             // state in MountFlags terms (no MS_* bit set), so for our
-            // purposes `defaults` is effectively a no-op — represent
+            // purposes `defaults` is effectively a no-op. Represent
             // it by *not* touching out.flags.
             continue;
         }
@@ -105,19 +105,19 @@ fn apply_vfs(flags: &mut MountFlags, op: Vfs) {
 fn lookup_vfs(name: &str) -> Option<Vfs> {
     use MountFlags as F;
     Some(match name {
-        // Read-only / read-write
+        // Read-only and read-write
         "ro" => Vfs::Set(F::RDONLY),
         "rw" => Vfs::Clear(F::RDONLY),
 
-        // suid / nosuid
+        // suid and nosuid
         "nosuid" => Vfs::Set(F::NOSUID),
         "suid" => Vfs::Clear(F::NOSUID),
 
-        // dev / nodev
+        // dev and nodev
         "nodev" => Vfs::Set(F::NODEV),
         "dev" => Vfs::Clear(F::NODEV),
 
-        // exec / noexec
+        // exec and noexec
         "noexec" => Vfs::Set(F::NOEXEC),
         "exec" => Vfs::Clear(F::NOEXEC),
 
@@ -150,7 +150,7 @@ fn lookup_vfs(name: &str) -> Option<Vfs> {
         "nosymfollow" => Vfs::Set(F::NOSYMFOLLOW),
         "symfollow" => Vfs::Clear(F::NOSYMFOLLOW),
 
-        // Operation selectors (set-only — not toggled by an inverse)
+        // Operation selectors (set-only, not toggled by an inverse)
         "remount" => Vfs::Set(F::REMOUNT),
         "bind" => Vfs::Set(F::BIND),
         "rbind" => Vfs::Set(F::BIND | F::REC),
@@ -170,8 +170,8 @@ fn lookup_vfs(name: &str) -> Option<Vfs> {
 }
 
 fn is_userspace_only(name: &str) -> bool {
-    // The `x-` / `X-` prefix is the userspace-options namespace by
-    // convention; everything in there is for the mount tool, never
+    // The `x-` and `X-` prefix is the userspace-options namespace by
+    // convention. Everything in there is for the mount tool, never
     // for the kernel.
     if name.starts_with("x-") || name.starts_with("X-") {
         return true;
@@ -322,8 +322,8 @@ mod tests {
 
     #[test]
     fn unknown_no_flag_is_fs_data_not_userspace() {
-        // `unknownopt` isn't in our VFS map nor userspace list →
-        // bucketed as fs-specific data, the filesystem driver
+        // `unknownopt` isn't in our VFS map nor userspace list, so
+        // it is bucketed as fs-specific data and the filesystem driver
         // decides what to do.
         let r = classify_str("unknownopt=value");
         assert_eq!(r.flags, MountFlags::empty());

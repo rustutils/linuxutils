@@ -44,7 +44,7 @@ pub struct Args {
 
 pub fn run(args: Args) -> ExitCode {
     // Upstream rejects --devno with --nofollow before doing any
-    // I/O — the two options apply to opposite halves of the
+    // I/O. The two options apply to opposite halves of the
     // resolution chain (one needs a block device, the other forbids
     // following symlinks to one).
     if args.devno && args.nofollow {
@@ -126,7 +126,7 @@ fn show_devno(args: &Args) -> ExitCode {
 }
 
 /// Check if a path is a mountpoint. Under `--nofollow`, a final
-/// component that is itself a symlink is *never* a mountpoint —
+/// component that is itself a symlink is *never* a mountpoint, since
 /// mounts always live on the resolved target. Otherwise look the
 /// path up in `/proc/self/mountinfo` and fall back to the
 /// classic "different st_dev from parent" trick if the path

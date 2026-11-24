@@ -40,7 +40,7 @@ fn class_name(class: i32) -> &'static str {
 }
 
 /// `strerror(3)`-style description of an `io::Error`. Rust's
-/// default `Display` appends `(os error 22)`; upstream's tools
+/// default `Display` appends `(os error 22)`, but upstream's tools
 /// just print the description on its own.
 fn strerror(e: &std::io::Error) -> String {
     if let Some(errno) = e.raw_os_error() {
@@ -54,7 +54,7 @@ fn strerror(e: &std::io::Error) -> String {
 }
 
 /// Parse a class argument. Upstream accepts any integer here and
-/// only rejects truly malformed input — values that don't map to a
+/// only rejects truly malformed input. Values that don't map to a
 /// real class still go through to `ioprio_set(2)`, which is what
 /// emits the `EINVAL` the user sees.
 fn parse_class(s: &str) -> Result<i32, String> {

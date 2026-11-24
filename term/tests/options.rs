@@ -3,7 +3,7 @@
 //! Captures each tool's parsed `Args` (via `Debug`) for valid invocations,
 //! and the rendered error message for invalid ones. Complements the
 //! help-text snapshots in `help.rs` by detecting drift in defaults, field
-//! types, and validation rules — things the help text doesn't always show.
+//! types, and validation rules: things the help text doesn't always show.
 //!
 //! Run `cargo insta review` after intentional CLI changes to accept the
 //! updated snapshots.

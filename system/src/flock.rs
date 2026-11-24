@@ -165,7 +165,8 @@ pub fn run(args: Args) -> ExitCode {
             | rustix::fs::Mode::ROTH
             | rustix::fs::Mode::WOTH;
 
-        // Try RDWR first; fall back to RDONLY for read-only files/dirs.
+        // Try RDWR first, then fall back to RDONLY for read-only files and
+        // directories.
         let fd = rustix::fs::open(&args.file, flags, perms)
             .or_else(|_| {
                 rustix::fs::open(
@@ -220,7 +221,7 @@ pub fn run(args: Args) -> ExitCode {
     } else if !args.args.is_empty() {
         args.args.clone()
     } else {
-        // No command — just hold the lock until this process exits.
+        // No command, so just hold the lock until this process exits.
         return ExitCode::SUCCESS;
     };
 

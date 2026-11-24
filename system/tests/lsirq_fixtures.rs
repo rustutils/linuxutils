@@ -2,9 +2,9 @@
 //!
 //! The fixture under `tests/fixtures/lsirq/<scenario>/proc/` provides:
 //!
-//!   - `/proc/interrupts` — kernel-formatted IRQ counters (one row per
+//!   - `/proc/interrupts`: kernel-formatted IRQ counters (one row per
 //!     IRQ, columns for each CPU, then descriptive text)
-//!   - `/proc/softirqs`   — same shape for softirq counters
+//!   - `/proc/softirqs`: same shape for softirq counters
 //!
 //! `lsirq` hardcodes those paths, so we use `testutil` to bind-mount
 //! the fixture's `/proc` over the real one inside an unshared mount
@@ -92,7 +92,7 @@ fn cpu_list_filter() {
     if skip_if_no_userns() {
         return;
     }
-    // Only count CPUs 0,1 — totals shrink accordingly.
+    // Only count CPUs 0,1. Totals shrink accordingly.
     insta::assert_snapshot!(trim_trailing(
         lsirq("basic").args(["-J", "-C", "0,1"]).run_ok(),
     ));

@@ -324,7 +324,7 @@ pub fn run(_args: Args) -> ExitCode {
         rows.push(Row::new(2, "Off-line CPU(s) list:", &offline));
     }
 
-    // Vendor / Model
+    // Vendor and model
     rows.push(Row::new(0, "Vendor ID:", &vendor));
     rows.push(Row::new(2, "Model name:", &model_name));
     rows.push(Row::new(4, "CPU family:", &cpu_family));

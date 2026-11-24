@@ -155,7 +155,7 @@ fn read_interrupts(
     let reader = io::BufReader::new(file);
     let mut lines = reader.lines();
 
-    // First line is the CPU header — parse to get CPU count.
+    // First line is the CPU header. Parse it to get the CPU count.
     let header = lines.next().ok_or_else(|| {
         io::Error::new(io::ErrorKind::InvalidData, "empty interrupts file")
     })??;

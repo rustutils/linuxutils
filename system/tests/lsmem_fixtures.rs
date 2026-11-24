@@ -3,22 +3,23 @@
 //! The fixture under `tests/fixtures/lsmem/<scenario>/sys/devices/system/memory/`
 //! mirrors the layout `lsmem` reads at runtime:
 //!
-//!   - `block_size_bytes`        — block size as hex
-//!   - `memory<N>/phys_index`    — block index as hex
-//!   - `memory<N>/state`         — `online` / `offline`
-//!   - `memory<N>/removable`     — `0` / `1`
-//!   - `memory<N>/valid_zones`   — first whitespace-delimited zone is used
-//!   - `memory<N>/node<N>`       — empty file as NUMA node marker
+//!   - `block_size_bytes`: block size as hex
+//!   - `memory<N>/phys_index`: block index as hex
+//!   - `memory<N>/state`: `online` or `offline`
+//!   - `memory<N>/removable`: `0` or `1`
+//!   - `memory<N>/valid_zones`: first whitespace-delimited zone is used
+//!   - `memory<N>/node<N>`: empty file as NUMA node marker
 //!
 //! `lsmem` accepts a `--sysroot` flag so we don't need the unshare/
-//! bind-mount harness — we just point it at the fixture directory.
+//! bind-mount harness. We just point it at the fixture directory.
 //!
 //! The `basic/` scenario lays out 5 blocks designed to exercise range
 //! merging:
 //!
-//!   - blocks 0,1,2: online, not removable, node 0     → one merged range
-//!   - block 3:      offline                           → state-changed split
-//!   - block 4:      online, removable, Movable zone   → removable-changed split
+//!   - blocks 0,1,2 (online, not removable, node 0) give one merged range
+//!   - block 3 (offline) gives a state-changed split
+//!   - block 4 (online, removable, Movable zone) gives a removable-changed
+//!     split
 
 use std::path::PathBuf;
 

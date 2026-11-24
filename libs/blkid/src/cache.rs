@@ -15,7 +15,7 @@ const DEFAULT_DISK_ROOT: &str = "/dev/disk";
 
 /// Lazy-resolving cache keyed against a `/dev/disk/by-*` root.
 ///
-/// Cheap to construct — does no I/O. Each [`Cache::resolve`] call
+/// Cheap to construct, and does no I/O. Each [`Cache::resolve`] call
 /// reads at most one symlink. For workloads that want every tag
 /// up-front, [`Cache::scan`] eagerly walks all the `by-*` directories
 /// and returns a fully-populated `(Tag → device path)` map.
@@ -66,12 +66,12 @@ impl Cache {
     /// Resolve a tag to a device path.
     ///
     /// Errors:
-    /// - [`ResolveError::NotFound`] — no matching symlink.
-    /// - [`ResolveError::Io`] — readlink/canonicalize failed for a
+    /// - [`ResolveError::NotFound`]: no matching symlink.
+    /// - [`ResolveError::Io`]: readlink or canonicalize failed for a
     ///   reason other than ENOENT.
     pub fn resolve(&self, tag: &Tag) -> Result<PathBuf, ResolveError> {
         let link = self.symlink_path(tag);
-        // `read_link` returns the target verbatim — relative
+        // `read_link` returns the target verbatim, which is relative
         // (`../../sda1`). We canonicalize to normalise to an absolute
         // path that matches what blkid(8) would print.
         let target = match fs::read_link(&link) {
@@ -92,9 +92,9 @@ impl Cache {
 
         match fs::canonicalize(&absolute) {
             Ok(c) => Ok(c),
-            // canonicalize fails if the target doesn't exist — fall
+            // canonicalize fails if the target doesn't exist. Fall
             // back to the unresolved-but-cleaned path so callers
-            // still get something useful for fixture/test trees.
+            // still get something useful for fixture and test trees.
             Err(_) => Ok(absolute),
         }
     }
@@ -137,7 +137,7 @@ impl Cache {
                         }
                         // NotFound during a directory scan means the
                         // entry was deleted between read_dir and
-                        // read_link — race, drop silently.
+                        // read_link. This is a race, so drop silently.
                         Err(ResolveError::NotFound) => {}
                         // NotATag is impossible here (we built the
                         // Tag ourselves).
@@ -215,7 +215,7 @@ pub enum ResolveError {
     NotFound,
     /// The input string wasn't a recognised `KIND=value` form.
     NotATag,
-    /// readlink / canonicalize failed for a reason other than
+    /// readlink or canonicalize failed for a reason other than
     /// ENOENT.
     Io(io::Error),
 }
@@ -349,7 +349,7 @@ mod tests {
     fn relative_target_resolves_against_symlink_dir() {
         let f = Fixture::new();
         let dev = f.make_device("sda3");
-        // Make the symlink target relative — like real udev does
+        // Make the symlink target relative, like real udev does
         // (e.g. `../../sda1`).
         let dir = f.root.join("by-label");
         fs::create_dir(&dir).unwrap();
@@ -363,9 +363,9 @@ mod tests {
 
     #[test]
     fn dangling_symlink_returns_unresolved_path() {
-        // Symlink points at a nonexistent target — canonicalize
+        // Symlink points at a nonexistent target, so canonicalize
         // fails, but resolve falls back to the cleaned path so
-        // fixture/test trees still produce a useful result.
+        // fixture and test trees still produce a useful result.
         let f = Fixture::new();
         let dir = f.root.join("by-uuid");
         fs::create_dir(&dir).unwrap();
@@ -428,8 +428,8 @@ mod tests {
 
     #[test]
     fn preserves_non_utf8_label_bytes() {
-        // Tag values can carry non-UTF-8 bytes; the symlink filename
-        // is just bytes on Linux. Verify that scan/resolve preserve
+        // Tag values can carry non-UTF-8 bytes, and the symlink filename
+        // is just bytes on Linux. Verify that scan and resolve preserve
         // them without lossy conversion.
         let f = Fixture::new();
         let dev = f.make_device("sda1");

@@ -3,20 +3,20 @@
 //! The fixture under `tests/fixtures/lslocks/<scenario>/proc/` mirrors
 //! the layout that `lslocks` reads at runtime:
 //!
-//!   - `/proc/locks`       — the lock table (kernel-formatted text)
-//!   - `/proc/<pid>/comm`  — process command names (for the COMMAND column)
+//!   - `/proc/locks`: the lock table (kernel-formatted text)
+//!   - `/proc/<pid>/comm`: process command names (for the COMMAND column)
 //!
 //! `/proc/<pid>/fd/` is intentionally omitted: matching its symlink
 //! targets back to `/proc/locks`'s inode column requires choosing
 //! inodes the host filesystem assigned, which can't be done
 //! deterministically. As a result the PATH column is empty in these
-//! snapshots — that matches what `lslocks` shows in practice for any
+//! snapshots. That matches what `lslocks` shows in practice for any
 //! lock whose holder's fds aren't readable by the current user.
 
 use std::path::PathBuf;
 use testutil::Run;
 
-/// `cols` decides table widths from `$COLUMNS`; pin it so wrapped
+/// `cols` decides table widths from `$COLUMNS`. Pin it so wrapped
 /// snapshots don't drift with the CI host's terminal size.
 const TABLE_COLUMNS: &str = "100";
 

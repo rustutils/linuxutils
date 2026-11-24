@@ -3,7 +3,7 @@
 //! Captures each tool's parsed `Args` (via `Debug`) for valid invocations,
 //! and the rendered error message for invalid ones. Complements the
 //! help-text snapshots in `help.rs` by detecting drift in defaults, field
-//! types, and validation rules — things the help text doesn't always show.
+//! types, and validation rules: things the help text doesn't always show.
 //!
 //! Run `cargo insta review` after intentional CLI changes to accept the
 //! updated snapshots.
@@ -25,7 +25,7 @@ mod blockdev {
     // blockdev exposes a single `args: Vec<String>` with
     // `trailing_var_arg = true, allow_hyphen_values = true`. All command
     // dispatch happens at run time, so the snapshots here mostly verify
-    // the trailing-args round-trip — clap should never reject input.
+    // the trailing-args round-trip. Clap should never reject input.
 
     // ---- SYNOPSIS form 1: blockdev [-q] [-v] command [command...] device...
 
@@ -91,7 +91,7 @@ mod blockdev {
     #[test]
     fn quiet_and_verbose_passthrough() {
         // -q and -v are documented in the SYNOPSIS but blockdev's clap
-        // surface treats them as just more positional tokens; they're
+        // surface treats them as just more positional tokens. They're
         // interpreted later. Pinned so any future change to make them
         // real flags is intentional.
         insta::assert_snapshot!(parse::<Args>(&[
@@ -183,12 +183,12 @@ mod mount {
     use linuxutils_disk::mount::Args;
 
     // ---- SYNOPSIS forms:
-    //   mount                                     — list
-    //   mount -a                                  — mount-all from fstab
-    //   mount [opts] <target>                     — fstab lookup
-    //   mount [opts] <source> <target>            — direct
-    //   mount [opts] -L LABEL <target>            — shortcut
-    //   mount [opts] -U UUID  <target>            — shortcut
+    //   mount                                     (list)
+    //   mount -a                                  (mount-all from fstab)
+    //   mount [opts] <target>                     (fstab lookup)
+    //   mount [opts] <source> <target>            (direct)
+    //   mount [opts] -L LABEL <target>            (shortcut)
+    //   mount [opts] -U UUID  <target>            (shortcut)
 
     #[test]
     fn no_args() {

@@ -71,6 +71,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `linuxutils --list` prints the name of every tool, one per line. The Nix
   flake uses it to create the symlinks for the multicall package.
 
+#### Packaging and CI
+
+- Release packages: `.deb` and `.rpm` packages, tarballs and static binaries
+  for x86_64, aarch64 and riscv64, built with `just package`. They install
+  next to util-linux rather than replacing it, with the multicall binary in
+  `/usr/bin`, a symlink for each tool in `/usr/lib/linuxutils/bin` and the
+  man pages in `/usr/share/linuxutils/man`.
+- GitLab CI runs formatting, clippy, rustdoc and `cargo deny` checks and the
+  test suite on every push. Version tags build the packages and publish a
+  release on GitLab and GitHub.
+- `deny.toml` for `cargo deny`.
+
 #### Tests and infrastructure
 
 - Vendored the upstream util-linux test suite under `tests/util-linux/`, with
@@ -94,6 +106,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Man pages for system administration tools are now in section 8, as
+  upstream has them, and `cargo xtask mangen` writes them into `man1` and
+  `man8` directories.
+- Release builds use LTO, a single codegen unit, `panic = "abort"`, and are
+  stripped.
+- Updated rustix to 1.1.6, which fixes RUSTSEC-2026-0486.
 - Reorganised the library layout. `libs/*` is now for Rust-native crates, and
   the ABI-compatible shims moved to `compat/*` (for example, `libs/libuuid`
   moved to `compat/libuuid`).
@@ -115,6 +133,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- The tools now build for musl. `chrt` calls the scheduler system calls
+  directly, since musl's wrappers for them always fail with `ENOSYS`, and
+  the ioctl calls in `blockdev`, `blkdiscard`, `eject`, `fsfreeze`, `fstrim`,
+  `losetup` and `wdctl` pass their request numbers in the type that musl
+  expects.
 - `cargo xtask mangen` now writes a man page for every tool. It used to skip
   the same nine tools that were missing from the multicall binary, because it
   kept its own list. It now uses the multicall binary's list.

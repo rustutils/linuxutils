@@ -81,7 +81,7 @@
             installPhase = ''
               runHook preInstall
 
-              mkdir -p $out/bin $out/lib $out/include $out/share/man/man1
+              mkdir -p $out/bin $out/lib $out/include $out/share/man
 
               for tool in $(target/release/linuxutils --list); do
                 install -m755 "target/release/$tool" $out/bin/
@@ -95,7 +95,7 @@
                 "install -m644 compat/lib${lib}/include/*.h $out/include/ || true"
               ) libs}
 
-              install -m644 target/man/*.1 $out/share/man/man1/
+              cp -r target/man/man1 target/man/man8 $out/share/man/
 
               runHook postInstall
             '';
@@ -108,7 +108,7 @@
             installPhase = ''
                 runHook preInstall
 
-                mkdir -p $out/bin $out/lib $out/include $out/share/man/man1
+                mkdir -p $out/bin $out/lib $out/include $out/share/man
 
                 install -m755 target/release/linuxutils $out/bin/
 
@@ -124,7 +124,7 @@
                   "install -m644 compat/lib${lib}/include/*.h $out/include/ || true"
                 ) libs}
 
-                install -m644 target/man/*.1 $out/share/man/man1/
+                cp -r target/man/man1 target/man/man8 $out/share/man/
 
                 runHook postInstall
               '';

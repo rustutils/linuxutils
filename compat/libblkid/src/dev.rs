@@ -12,10 +12,10 @@ use std::{
 };
 
 /// Look up a device handle by canonical path. Flags are accepted
-/// for upstream compatibility but ignored — we don't have a
+/// for upstream compatibility but ignored. We don't have a
 /// concept of "create" or "verify" without the probe layer.
 ///
-/// The returned pointer is owned by the cache; do not free.
+/// The returned pointer is owned by the cache. Do not free.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn blkid_get_dev(
     cache: *mut BlkidCache,

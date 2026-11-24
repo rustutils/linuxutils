@@ -3,7 +3,7 @@
 //! Captures each tool's parsed `Args` (via `Debug`) for valid invocations,
 //! and the rendered error message for invalid ones. Complements the
 //! help-text snapshots in `help.rs` by detecting drift in defaults, field
-//! types, and validation rules — things the help text doesn't always show.
+//! types, and validation rules: things the help text doesn't always show.
 //!
 //! Test cases mirror the SYNOPSIS forms documented in each tool's man
 //! page, with extra cases for non-trivial parsing (size suffixes, mask
@@ -295,8 +295,8 @@ mod taskset {
 
     // ---- Error cases
 
-    // Same `allow_hyphen_values` behaviour as chrt — see comment there.
-    // taskset has no clap-level required args; mask parsing happens at
+    // Same `allow_hyphen_values` behaviour as chrt (see comment there).
+    // taskset has no clap-level required args. Mask parsing happens at
     // run time, not during clap parsing, so this is the only error-shape
     // worth pinning here.
     #[test]

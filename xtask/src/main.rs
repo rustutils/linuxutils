@@ -11,7 +11,8 @@ mod mangen;
 enum Cmd {
     /// Generate man pages for every linuxutils tool.
     Mangen {
-        /// Directory to write `<tool>.1` files into.
+        /// Directory to write the man pages into, in man1 and man8
+        /// subdirectories.
         #[arg(default_value = "target/man")]
         output: String,
     },

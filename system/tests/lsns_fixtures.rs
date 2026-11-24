@@ -2,20 +2,20 @@
 //!
 //! `lsns` reads several things, all of which need fixtures:
 //!
-//!   - `/proc/[pid]/ns/<type>` — symlinks whose target is `type:[inode]`
-//!   - `/proc/[pid]/stat`      — for ppid + comm (parsed from canonical
+//!   - `/proc/[pid]/ns/<type>`: symlinks whose target is `type:[inode]`
+//!   - `/proc/[pid]/stat`: for ppid and comm (parsed from canonical
 //!     `pid (comm) state ppid ...` form)
-//!   - `/proc/[pid]/cmdline`   — NUL-separated argv (or empty for kernel
+//!   - `/proc/[pid]/cmdline`: NUL-separated argv (or empty for kernel
 //!     threads, in which case `[comm]` is shown)
-//!   - `/proc/[pid]/status`    — for the `Uid:` line
-//!   - `/etc/passwd`           — for UID → username resolution
+//!   - `/proc/[pid]/status`: for the `Uid:` line
+//!   - `/etc/passwd`: for resolving UIDs to usernames
 //!
 //! The fixture under `tests/fixtures/lsns/basic/` lays out 4 processes:
 //!
-//!   - pid 1    (systemd, uid 0)   — all init namespaces
-//!   - pid 100  (kthreadd, uid 0)  — same as pid 1 (kernel thread)
-//!   - pid 1234 (vim, uid 1000)    — own mnt + net (containerized)
-//!   - pid 5678 (sshd, uid 0)      — own ipc
+//!   - pid 1    (systemd, uid 0):   all init namespaces
+//!   - pid 100  (kthreadd, uid 0):  same as pid 1 (kernel thread)
+//!   - pid 1234 (vim, uid 1000):    own mnt and net (containerized)
+//!   - pid 5678 (sshd, uid 0):      own ipc
 //!
 //! Resulting unique namespaces (sorted by inode):
 //!
@@ -31,11 +31,11 @@
 //!   - ipc:[4026532002]    (1 proc:  5678)
 //!   - time:[4026531842]   (4 procs)
 //!
-//! `/etc` is also bind-mounted so `Uid:` → `USER` lookups consult our
+//! `/etc` is also bind-mounted so `Uid:` to `USER` lookups consult our
 //! fixture passwd rather than the host's.
 //!
 //! Note: the `ns/<type>` entries are *dangling* symlinks (their targets
-//! don't resolve to real files — and don't need to, since lsns only
+//! don't resolve to real files, and don't need to, since lsns only
 //! reads the link string itself). `cargo publish` chokes on dangling
 //! symlinks, hence the `exclude = ["tests/fixtures/**"]` in
 //! `system/Cargo.toml`.
@@ -114,8 +114,8 @@ fn task_filter_pid_1234() {
     if skip_if_no_userns() {
         return;
     }
-    // Filter to vim's namespaces only; should see all 8 ns types
-    // (1 mnt + 1 net unique to vim, 6 shared with init).
+    // Filter to vim's namespaces only. Should see all 8 ns types
+    // (1 mnt and 1 net unique to vim, 6 shared with init).
     insta::assert_snapshot!(trim_trailing(
         lsns("basic")
             .args(["-J", "--task", "1234", "--output-all"])
@@ -150,7 +150,8 @@ fn kernel_thread_command_in_brackets() {
     if skip_if_no_userns() {
         return;
     }
-    // pid 100 has empty cmdline → command should render as "[kthreadd]".
+    // pid 100 has empty cmdline, so command should render as
+    // "[kthreadd]".
     // Filter to its (init) namespaces and pick a column set that
     // surfaces it. Since pid 1 holds the same ns and comes first,
     // we filter by --task 100.

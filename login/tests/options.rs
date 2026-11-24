@@ -3,7 +3,7 @@
 //! Captures each tool's parsed `Args` (via `Debug`) for valid invocations,
 //! and the rendered error message for invalid ones. Complements the
 //! help-text snapshots in `help.rs` by detecting drift in defaults, field
-//! types, and validation rules — things the help text doesn't always show.
+//! types, and validation rules: things the help text doesn't always show.
 //!
 //! Run `cargo insta review` after intentional CLI changes to accept the
 //! updated snapshots.
@@ -24,7 +24,7 @@ mod nologin {
 
     // nologin's flags are all `hide = true` shell-compatibility shims
     // that the runtime ignores. The snapshots pin them so the
-    // accept-and-ignore behaviour stays load-bearing — invocations from
+    // accept-and-ignore behaviour stays load-bearing. Invocations from
     // /etc/passwd-style shell entries must keep parsing.
 
     #[test]

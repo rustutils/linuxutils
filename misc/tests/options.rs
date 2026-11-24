@@ -3,7 +3,7 @@
 //! Captures each tool's parsed `Args` (via `Debug`) for valid invocations,
 //! and the rendered error message for invalid ones. Complements the
 //! help-text snapshots in `help.rs` by detecting drift in defaults, field
-//! types, and validation rules — things the help text doesn't always show.
+//! types, and validation rules: things the help text doesn't always show.
 //!
 //! Run `cargo insta review` after intentional CLI changes to accept the
 //! updated snapshots.
@@ -562,7 +562,7 @@ mod kill {
     // kill uses `args: Vec<String>` with `trailing_var_arg = true,
     // allow_hyphen_values = true` so EVERYTHING is accepted by clap and
     // dispatched at run time. Like chrt and taskset, an "unknown flag"
-    // can't be caught by clap; it's just consumed as a positional.
+    // can't be caught by clap. It's just consumed as a positional.
 
     // ---- SYNOPSIS form 1: kill [-s signal | -signal] pid...
 
@@ -1104,13 +1104,13 @@ mod waitpid {
     }
 
     // PIDs accept either `PID` or `PID:INODE`, so clap parses them as
-    // strings; the numeric / format check happens at runtime in `run()`.
+    // strings. The numeric and format check happens at runtime in `run()`.
 }
 
 mod whereis {
     // whereis hand-rolls its own parser (not clap), so we can't snapshot
     // a Result<Args, Error>. Instead we snapshot the parsed `Args` Debug
-    // directly — it implements Debug + Default, and `parse_from(&[..])`
+    // directly. It implements Debug and Default, and `parse_from(&[..])`
     // is infallible (it std::process::exit(1) on syntax errors, which
     // can't easily be tested in-process).
 

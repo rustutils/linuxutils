@@ -3,7 +3,7 @@
 //! Captures each tool's parsed `Args` (via `Debug`) for valid invocations,
 //! and the rendered error message for invalid ones. Complements the
 //! help-text snapshots in `help.rs` by detecting drift in defaults, field
-//! types, and validation rules — things the help text doesn't always show.
+//! types, and validation rules, which the help text doesn't always show.
 //!
 //! Run `cargo insta review` after intentional CLI changes to accept the
 //! updated snapshots.
@@ -313,7 +313,7 @@ mod line {
     use super::parse;
     use linuxutils_text::line::Args;
 
-    // line takes no flags; trailing positional args are silently
+    // line takes no flags. Trailing positional args are silently
     // accepted to match upstream `line(1)` (the behavioural test
     // suite passes a literal `line` arg as a buffer-size hint).
 

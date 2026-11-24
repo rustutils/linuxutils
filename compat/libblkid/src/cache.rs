@@ -17,7 +17,7 @@ pub(crate) fn make_cache() -> Cache {
 }
 
 /// Allocate a fresh cache. The `filename` argument is accepted for
-/// upstream compatibility but ignored — we resolve via the udev
+/// upstream compatibility but ignored. We resolve via the udev
 /// symlink layer, not an on-disk cache file. Returns 0 on success
 /// (always, in v0).
 #[unsafe(no_mangle)]
@@ -58,9 +58,9 @@ pub(crate) unsafe fn borrow_cache<'a>(
 }
 
 /// Like [`borrow_cache`] but returns the `Arc` (cheaply cloned)
-/// for callers that need to share ownership — primarily iteration
+/// for callers that need to share ownership (primarily iteration
 /// state, which can outlive the original pointer if the consumer
-/// somehow re-uses it.
+/// somehow re-uses it).
 pub(crate) unsafe fn share_cache(
     cache: *mut BlkidCache,
 ) -> Option<Arc<CacheHandle>> {

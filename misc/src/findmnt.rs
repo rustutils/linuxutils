@@ -1,6 +1,6 @@
 use linuxutils_common::{HELP_WIDTH_MAX, man::ManContent};
 
-pub const MAN: ManContent = ManContent::empty();
+pub const MAN: ManContent = ManContent::empty().section(8);
 
 use clap::{ArgAction, Parser};
 use cols::{Cols, ColsHeader, OutputMode, print_table};
@@ -171,7 +171,7 @@ fn matches_filters(e: &MountEntry, args: &Args) -> bool {
         }
     }
     // Positional argument: when it starts with `/`, treat as target
-    // path; otherwise treat as source spec. (Matches the upstream
+    // path. Otherwise treat as source spec. (Matches the upstream
     // shortcut.)
     if let Some(spec) = &args.spec {
         let looks_like_path = spec.starts_with('/');
@@ -189,9 +189,9 @@ fn matches_filters(e: &MountEntry, args: &Args) -> bool {
         }
     }
     if let Some(types) = &args.types {
-        // Positive types must match at least one; `no<fs>` entries
+        // Positive types must match at least one, and `no<fs>` entries
         // must NOT match. Mix like upstream:
-        // `-t ext4,noproc` ⇒ ext4-only, but excluding proc.
+        // `-t ext4,noproc` means ext4-only, but excluding proc.
         let mut positive: Vec<&str> = Vec::new();
         let mut negative: Vec<&str> = Vec::new();
         for t in types {

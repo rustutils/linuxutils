@@ -59,7 +59,7 @@ fn empty_input() {
 
 #[test]
 fn uneven_items_fill_columns() {
-    // 5 items in 3 cols → 2 rows, last column short
+    // 5 items in 3 cols gives 2 rows, last column short
     cmd()
         .args(["-c", "10", "-S", "2"])
         .write_stdin("a\nb\nc\nd\ne\n")
@@ -386,7 +386,7 @@ fn table_column_attr_right() {
     let stdout = std::str::from_utf8(&output.stdout).unwrap();
     let lines: Vec<&str> = stdout.lines().collect();
     // The first line is the `A B` header now that `-C name=…`
-    // counts as user-supplied column names; the data rows start at
+    // counts as user-supplied column names. The data rows start at
     // index 1. B column should be right-aligned.
     let pos1 = lines[1].rfind('1').unwrap();
     let pos3 = lines[3].rfind("333").unwrap() + 2;
