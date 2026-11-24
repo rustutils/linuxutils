@@ -57,3 +57,11 @@ testutil = { path = "testutil" }
 
 [workspace.metadata.crane]
 name = "linuxutils"
+
+# Release binaries are stripped at build time, so the packaging tools
+# don't need a strip that understands every target architecture.
+[profile.release]
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true

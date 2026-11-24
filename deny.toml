@@ -1,0 +1,41 @@
+# cargo-deny configuration. CI runs `cargo deny check` in the lint job.
+# See https://embarkstudios.github.io/cargo-deny/ for the options.
+
+[graph]
+all-features = true
+
+[advisories]
+ignore = [
+  # chrono is marked unmaintained, and there is no maintained release to
+  # move to. cal, dmesg, wall and write use it for dates and times.
+  # This is not a known vulnerability. Revisit when a replacement is
+  # chosen.
+  { id = "RUSTSEC-2026-0543", reason = "unmaintained, no replacement chosen yet" },
+]
+
+[licenses]
+allow = [
+  "Apache-2.0",
+  "BSD-3-Clause",
+  "ISC",
+  "MIT",
+  "MPL-2.0",
+  "Unicode-3.0",
+  "Zlib",
+]
+confidence-threshold = 0.8
+
+[licenses.private]
+ignore = true
+
+[bans]
+multiple-versions = "warn"
+wildcards = "deny"
+# Path dependencies between workspace crates have no registry version,
+# which cargo-deny would otherwise count as wildcards.
+allow-wildcard-paths = true
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]

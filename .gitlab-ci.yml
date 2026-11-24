@@ -1,15 +1,209 @@
+# GitLab CI for linuxutils.
+#
+# Pipeline:
+#   lint            rustfmt, clippy, rustdoc warnings and cargo-deny
+#   test            cargo test --workspace
+#   package         `just package`: .deb, .rpm, tarball and bare binary
+#                   for x86_64, aarch64 and riscv64
+#   release         GitLab release on a version tag, linking the packages
+#   release-github  the same release on github.com/rustutils/linuxutils
+#   deploy          mdbook to GitLab Pages (default branch only)
+#
+# Rust jobs use rust:slim-trixie (Debian with rustup), which picks up the
+# toolchain pinned in rust-toolchain.toml. Debian rather than Alpine,
+# because bindgen (used by compat/libsmartcols) has to dlopen libclang,
+# which musl's rustc can't do.
+
 stages:
-    - deploy
+  - lint
+  - test
+  - package
+  - release
+  - deploy
+
+workflow:
+  rules:
+    - if: $CI_COMMIT_BRANCH
+    - if: $CI_COMMIT_TAG
+
+variables:
+  # CARGO_HOME and RUSTUP_HOME stay where the image puts them, since rustup
+  # refuses to install toolchains into a CARGO_HOME it wasn't installed in.
+  # The crate registry is cached through a symlink instead (see .rust), and
+  # cargo install puts tools in CARGO_INSTALL_ROOT.
+  CARGO_INSTALL_ROOT: $CI_PROJECT_DIR/.cargo-tools
+  CARGO_INCREMENTAL: "0"
+  CARGO_TERM_COLOR: always
+  # sccache keeps compiler outputs in a local directory, which GitLab's
+  # cache carries from one pipeline to the next (see .cache-defs).
+  RUSTC_WRAPPER: sccache
+  SCCACHE_DIR: $CI_PROJECT_DIR/.sccache
+  SCCACHE_CACHE_SIZE: 2G
+  # Pinned tool versions. `cargo install --version` does nothing when the
+  # cached install already matches.
+  SCCACHE_VERSION: "0.15.0"
+  CARGO_DEB_VERSION: "3.6.4"
+  CARGO_GENERATE_RPM_VERSION: "0.20.0"
+  CARGO_ZIGBUILD_VERSION: "0.20.0"
+  CARGO_DENY_VERSION: "0.18.9"
+  # Debian's zig is too old for cargo-zigbuild, so the upstream tarball is
+  # used instead.
+  ZIG_VERSION: "0.13.0"
+  ALPINE_VERSION: "3.23"
+
+# Cache definitions, grouped by how often they change, and combined in
+# each job with YAML anchors.
+#
+# registry: downloaded crate sources and the index. Changes with
+#   Cargo.lock and is shared by every Rust job.
+# sccache: compiler outputs. One cache per job, since lint, test and
+#   package build with different profiles and targets. A job that finds
+#   no cache of its own starts from the test job's.
+# bin: tools installed with cargo install. Changes with this file, where
+#   their versions are pinned.
+#
+# target/ isn't cached. It is large and slow to upload, and sccache makes
+# rebuilding it cheap.
+.cache-defs:
+  cache:
+    - &cache-registry
+      key:
+        files: [Cargo.lock]
+      paths:
+        - .cargo-registry/cache
+        - .cargo-registry/index
+    - &cache-sccache
+      key: sccache-$CI_JOB_NAME
+      fallback_keys:
+        - sccache-test
+      paths:
+        - .sccache
+    - &cache-bin
+      key:
+        files: [.gitlab-ci.yml]
+      paths:
+        - .cargo-tools
+
+.rust:
+  image: rust:slim-trixie
+  cache:
+    - *cache-registry
+    - *cache-sccache
+  before_script:
+    - apt-get update -qq
+    - apt-get install -y --no-install-recommends git ca-certificates libclang-dev clang curl
+    - curl -fsSL "https://github.com/mozilla/sccache/releases/download/v$SCCACHE_VERSION/sccache-v$SCCACHE_VERSION-x86_64-unknown-linux-musl.tar.gz" | tar xz -C /opt
+    - export PATH="/opt/sccache-v$SCCACHE_VERSION-x86_64-unknown-linux-musl:$CARGO_INSTALL_ROOT/bin:$PATH"
+    - mkdir -p .cargo-registry
+    - rm -rf "$CARGO_HOME/registry"
+    - ln -s "$CI_PROJECT_DIR/.cargo-registry" "$CARGO_HOME/registry"
+    # Installs the toolchain pinned in rust-toolchain.toml.
+    - rustup toolchain install
+  after_script:
+    - export PATH="/opt/sccache-v$SCCACHE_VERSION-x86_64-unknown-linux-musl:$PATH"
+    - sccache --show-stats || true
+
+lint:
+  extends: .rust
+  stage: lint
+  cache:
+    - *cache-registry
+    - *cache-sccache
+    - *cache-bin
+  script:
+    - rustup toolchain install nightly --component rustfmt --profile minimal
+    - cargo +nightly fmt --all --check
+    - RUSTDOCFLAGS="-Dwarnings" cargo doc --no-deps --workspace
+    - cargo clippy --workspace --all-targets -- -Dwarnings
+    - cargo install --locked --version "$CARGO_DENY_VERSION" cargo-deny
+    - cargo deny check
+
+test:
+  extends: .rust
+  stage: test
+  script:
+    # The fixture tests need unprivileged user namespaces, which the
+    # shared runners don't allow, so they skip themselves here. The
+    # upstream util-linux test suite (just test-util-linux) needs root
+    # and still runs locally only.
+    - cargo test --workspace
+
+package:
+  extends: .rust
+  stage: package
+  cache:
+    - *cache-registry
+    - *cache-sccache
+    - *cache-bin
+  rules:
+    # Runs automatically for tags, to feed the release jobs.
+    - if: $CI_COMMIT_TAG
+      when: on_success
+    # On branches, a manual button for checking the packaging without
+    # tagging. allow_failure keeps the pipeline green when nobody uses it.
+    - when: manual
+      allow_failure: true
+  before_script:
+    - !reference [.rust, before_script]
+    - apt-get install -y --no-install-recommends zstd just xz-utils
+    - curl -fsSL "https://ziglang.org/download/$ZIG_VERSION/zig-linux-x86_64-$ZIG_VERSION.tar.xz" | tar xJ -C /opt
+    - export PATH="/opt/zig-linux-x86_64-$ZIG_VERSION:$PATH"
+    - cargo install --locked --version "$CARGO_ZIGBUILD_VERSION" cargo-zigbuild
+    - cargo install --locked --version "$CARGO_DEB_VERSION" cargo-deb
+    - cargo install --locked --version "$CARGO_GENERATE_RPM_VERSION" cargo-generate-rpm
+    # zigbuild provides the linker, but rustup still has to install the
+    # standard library for each target.
+    - rustup target add x86_64-unknown-linux-musl aarch64-unknown-linux-musl riscv64gc-unknown-linux-musl
+  script:
+    - export PATH="/opt/zig-linux-x86_64-$ZIG_VERSION:$PATH"
+    - just package
+  artifacts:
+    paths:
+      - target/dist/
+    # The release pages link to these, so keep them forever, or the
+    # download links break once the default expiry passes.
+    expire_in: never
+
+# Tags only. scripts/release.rb reads the matching CHANGELOG section,
+# links every file in target/dist/ as a release asset, and runs
+# release-cli.
+release:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  rules:
+    - if: $CI_COMMIT_TAG =~ /^v?\d+\.\d+\.\d+(-[\w.]+)?$/
+  needs:
+    - job: package
+      artifacts: true
+  script:
+    - apk add --no-cache ruby
+    - ruby scripts/release.rb
+
+# Creates the same release on github.com/<CI_PROJECT_PATH> with the gh
+# CLI. Kept separate from the GitLab release, so a GitHub failure doesn't
+# fail the GitLab side. Needs GITHUB_TOKEN as a protected variable on the
+# rustutils group.
+release-github:
+  stage: release
+  image: alpine:$ALPINE_VERSION
+  rules:
+    - if: $CI_COMMIT_TAG =~ /^v?\d+\.\d+\.\d+(-[\w.]+)?$/
+  needs:
+    - job: package
+      artifacts: true
+  script:
+    - apk add --no-cache ruby github-cli
+    - ruby scripts/release_github.rb
 
 pages:
-    image: alpine
-    stage: deploy
-    script:
-        - apk add mdbook
-        - mdbook build
-        - mv target/book public
-    artifacts:
-        paths:
-            - public
-    only:
-        - master
+  image: alpine:$ALPINE_VERSION
+  stage: deploy
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  script:
+    - apk add mdbook
+    - mdbook build
+    - mv target/book public
+  artifacts:
+    paths:
+      - public
